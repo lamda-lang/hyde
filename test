@@ -1,0 +1,32 @@
+echo "testing RTCreate"
+./RTCreateTest
+
+echo "testing RTDecode"
+./RTDecodeTest
+
+echo "testing RTExecute"
+./RTExecuteTest
+
+echo "testing RTFetch"
+./RTFetchTest
+
+echo "testing RTHash"
+./RTHashTest
+
+echo "testing RTIdentifier"
+./RTIdentifierTest
+
+echo "testing RTList"
+./RTListTest
+
+echo "testing RTMemory"
+./RTMemoryTest
+
+echo "testing RTModule"
+./RTModuleTest
+
+echo "testing RTPrimitive"
+./RTPrimitiveTest
+
+echo "testing RTString"
+./RTStringTest
