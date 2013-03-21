@@ -1,25 +1,24 @@
-#include "RTCreate.h"
 #include "RTDecode.h"
 #include "RTExecute.h"
-#include "RTFetch.h"
+#include "RTOperation.h"
 
 static RTCreate create[] = {
-  [0] = RTCreateIdentifier,
-  [1] = RTCreateList,
-  [2] = RTCreateModule,
-  [3] = RTCreateString
+  [0] = RTOperationCreateIdentifier,
+  [1] = RTOperationCreateList,
+  [2] = RTOperationCreateModule,
+  [3] = RTOperationCreateString
 };
 
 static RTFetch fetch[] = {
-  [0] = RTFetchList,
-  [1] = RTFetchModule
+  [0] = RTOperationFetchList,
+  [1] = RTOperationFetchModule
 };
 
-RTPrimitive RTExecuteBytecode(RTByte *code, RTPrimitive *reg) {
+RTValue RTExecuteBytecode(RTByte *code, RTValue *reg) {
   RTInteger32Bit createCount = RTDecodeVBRInteger32Bit(&code);
   for (RTIndex index = 0; index < createCount; index += 1) {
     RTInteger8Bit opcode = RTDecodeInteger8Bit(&code);
-    RTPrimitive primitive = create[opcode](&code);
+    RTValue primitive = create[opcode](&code);
     if (primitive == NULL) {
       return NULL;
     }

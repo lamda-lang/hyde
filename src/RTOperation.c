@@ -1,52 +1,52 @@
-#include "RTCreate.h"
 #include "RTDecode.h"
 #include "RTIdentifier.h"
 #include "RTList.h"
 #include "RTModule.h"
-#include "RTPrimitive.h"
+#include "RTOperation.h"
 #include "RTString.h"
+#include "RTValue.h"
 
-RTPrimitive RTCreateIdentifier(RTByte **instruction) {
+RTValue RTOperationCreateIdentifier(RTByte **instruction) {
   RTInteger8Bit length = RTDecodeInteger8Bit(instruction);
   RTIdentifier id = RTIdentifierCreate(length);
-  RTPrimitive primitive = RTPrimitiveCreate(id, IDENTIFIER);
-  if (primitive == NULL) {
+  RTValue value = RTValueCreateIdentifier(id);
+  if (value == NULL) {
     return NULL;
   }
   RTIdentifierDecode(id, instruction, length);
-  return primitive;
+  return value;
 }
 
-RTPrimitive RTCreateString(RTByte **instruction) {
+RTValue RTOperationCreateString(RTByte **instruction) {
   RTInteger32Bit length = RTDecodeVBRInteger32Bit(instruction);
   RTString string = RTStringCreate(length);
-  RTPrimitive primitive = RTPrimitiveCreate(string, STRING);
-  if (primitive == NULL) {
+  RTValue value = RTValueCreateString(string);
+  if (value == NULL) {
     return NULL;
   }
   RTStringDecode(string, instruction, length);
-  return primitive;
+  return value;
 }
 
-RTPrimitive RTCreateList(RTByte **instruction) {
+RTValue RTOperationCreateList(RTByte **instruction) {
   RTInteger32Bit length = RTDecodeVBRInteger32Bit(instruction);
   RTList list = RTListCreate(length);
-  RTPrimitive primitive = RTPrimitiveCreate(list, LIST);
-  if (primitive == NULL) {
+  RTValue value = RTValueCreateList(list);
+  if (value == NULL) {
     return NULL;
   }
   for (RTIndex index = 0; index < length; index += 1) {
     RTInteger32Bit elementIndex = RTDecodeVBRInteger32Bit(instruction);
     RTListSetRegisterIndexAtIndex(list, elementIndex, index);
   }
-  return primitive;
+  return value;
 }
 
-RTPrimitive RTCreateModule(RTByte **instruction) {
+RTValue RTOperationCreateModule(RTByte **instruction) {
   RTInteger32Bit capacity = RTDecodeVBRInteger32Bit(instruction);
   RTModule module = RTModuleCreate(capacity);
-  RTPrimitive primitive = RTPrimitiveCreate(module, MODULE);
-  if (primitive == NULL) {
+  RTValue value = RTValueCreateModule(module);
+  if (value == NULL) {
     return NULL;
   }
   for (RTIndex index = 0; index < capacity; index += 1) {
@@ -54,10 +54,22 @@ RTPrimitive RTCreateModule(RTByte **instruction) {
     RTInteger32Bit valueIndex = RTDecodeVBRInteger32Bit(instruction);
     RTModuleSetKeyValueIndexAtIndex(module, keyIndex, valueIndex, index);
   }
-  return primitive;
+  return value;
 }
 
-#ifdef RT_CREATE_TEST
+void RTOperationFetchList(RTByte **instruction, RTValue *reg) {
+  RTInteger32Bit index = RTDecodeVBRInteger32Bit(instruction);
+  RTList list = RTValueGetList(reg[index]);
+  RTListFetch(list, reg);
+}
+
+void RTOperationFetchModule(RTByte **instruction, RTValue *reg) {
+  RTInteger32Bit index = RTDecodeVBRInteger32Bit(instruction);
+  RTModule module = RTValueGetModule(reg[index]);
+  RTModuleFetch(module, reg);
+}
+
+#ifdef RT_OPERATION_TEST
 
 #define LENGTH 8
 

@@ -1,17 +1,8 @@
-echo "testing RTCreate"
-./RTCreateTest
-
 echo "testing RTDecode"
 ./RTDecodeTest
 
 echo "testing RTExecute"
 ./RTExecuteTest
-
-echo "testing RTFetch"
-./RTFetchTest
-
-echo "testing RTHash"
-./RTHashTest
 
 echo "testing RTIdentifier"
 ./RTIdentifierTest
@@ -25,8 +16,11 @@ echo "testing RTMemory"
 echo "testing RTModule"
 ./RTModuleTest
 
-echo "testing RTPrimitive"
-./RTPrimitiveTest
+echo "testing RTOperation"
+./RTOperationTest
 
 echo "testing RTString"
 ./RTStringTest
+
+echo "testing RTValue"
+./RTValueTest

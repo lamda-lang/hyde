@@ -6,6 +6,6 @@
 
 #include "Runtime.h"
 
-RTPrimitive RTExecuteBytecode(RTByte *code, RTPrimitive *reg);
+RTValue RTExecuteBytecode(RTByte *code, RTValue *reg);
 
 #endif

@@ -1,6 +1,3 @@
-/** @module RTMemory
-    @brief Low level API for memory operations. */
-
 #ifndef RT_MEMORY
 #define RT_MEMORY
 

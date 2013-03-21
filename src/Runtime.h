@@ -1,6 +1,3 @@
-/** @module Runtime
-    @brief Inclusions, macros and types of the runtime. */
-
 #ifndef RUNTIME
 #define RUNTIME
 
@@ -14,7 +11,7 @@
     @arg length The length of the array. */
 #define SIZE_OF(type, length) (sizeof(type) * length)
 
-/** @brief Prints an error if @code{condition} is @code{false}.
+/** @brief Prints an error message if @code{condition} is @code{false}.
     @arg condition A boolean condition. */
 #define ASSERT(condition) if (!(condition)) fprintf(stderr, "%s:%i: ASSERT(%s) did fail\n", __FILE__, __LINE__, #condition)
 
@@ -22,13 +19,14 @@
     @arg condition A boolean condition. */
 #define REQUIRE(condition) if (!(condition)) (fprintf(stderr, "%s:%i: REQUIRE(%s) did fail\n", __FILE__, __LINE__, #condition), exit(EXIT_FAILURE))
 
-/** @brief The smallest addressable unit of memory. */
+/** @brief The smallest addressable unit of memory.
+    @important It is valid to interpret any memory object as an array of type @{RTByte} without violating the strict aliasing rule. */
 typedef unsigned char RTByte;
 
 /** @brief An integer type capable of representing any member of the basic execution character set. */
 typedef char RTChar;
 
-/** @brief An integer type capable of representing @code{TRUE} and @{FALSE}. */
+/** @brief An boolean type capable of representing @code{TRUE} and @{FALSE}. */
 typedef _Bool RTBool;
 
 /** @brief An 8-bit unsigned integer type. */
@@ -46,7 +44,7 @@ typedef uint64_t RTInteger64Bit;
 /** @brief An unsigned integer type capable of representing any value of any unsigned integer type. */
 typedef uintmax_t RTIndex;
 
-/** @brief An unsigned integer type capable of representing the size of any buffer, in bytes. */
+/** @brief An unsigned integer type capable of representing the size of any memory object, in bytes. */
 typedef size_t RTSize;
 
 /** @brief The boolean values @code{TRUE} and @code{FALSE}. */
@@ -55,22 +53,8 @@ enum {
   FALSE = 0
 };
 
-/** @brief An enumeration of existing primitive types. */
-typedef enum {
-  IDENTIFIER = 0,
-  LIST = 1,
-  MODULE = 2,
-  STRING = 3
-} RTType;
-
-/** @brief An opaque data type that represents a bytecode block. */
-typedef struct RTBytecode *RTBytecode;
-
-/** @brief An opaque data type that represents a bytecode interpreter. */
-typedef struct RTInterpreter *RTInterpreter;
-
-/** @brief An opaque data type that represents a primitive. */
-typedef struct RTPrimitive *RTPrimitive;
+/** @brief An opaque data type that represents a value. */
+typedef struct RTValue *RTValue;
 
 /** @brief An opaque data type that represents an identifier. */
 typedef struct RTIdentifier *RTIdentifier;
@@ -84,19 +68,16 @@ typedef struct RTModule *RTModule;
 /** @brief An opaque data type that represents a string. */
 typedef struct RTString *RTString;
 
-/** */
-typedef RTPrimitive (*RTCreate)(RTByte **instruction);
+/** @brief A function of type @code{RTCreate} reads @code{instruction} and returns an @code{RTValue}.
+    @arg instruction The instruction to read.
+    @return An @code{RTValue}.
+    @effect @code{*instruction} points one past the byte segment that contains the instruction. */
+typedef RTValue (*RTCreate)(RTByte **instruction);
 
-/** */
-typedef void (*RTFetch)(RTByte **instruction, RTPrimitive *reg);
-
-/** */
-typedef void (*RTDealloc)(void *object);
-
-/** */
-typedef RTInteger32Bit (*RTHash)(void *object);
-
-/** */
-typedef RTBool (*RTEqual)(void *object, void *other);
+/** @brief A function of type @code{RTFetch} reads @code{instruction} and fetches the content of a collection in @code{reg}.
+    @arg instruction The instruction to read.
+    @arg reg The register set that contains the colection.
+    @effect @code{*instruction} points one past the byte segment that contains the instruction. */
+typedef void (*RTFetch)(RTByte **instruction, RTValue *reg);
 
 #endif

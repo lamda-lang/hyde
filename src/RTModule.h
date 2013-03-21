@@ -13,19 +13,19 @@ RTModule RTModuleCreate(RTInteger32Bit capacity);
 /** @brief
     @arg module
     @effect */
-void RTModuleDealloc(void *module_RModule);
+void RTModuleDealloc(RTModule module);
 
 /**  */
 void RTModuleSetKeyValueIndexAtIndex(RTModule module, RTInteger32Bit keyIndex, RTInteger32Bit valueIndex, RTInteger32Bit index);
 
 /** */
-void RTModuleFetch(RTModule module, RTPrimitive *reg);
+void RTModuleFetch(RTModule module, RTValue *reg);
 
 /**  */
-RTPrimitive RTModuleGetValueForKey(RTModule module, RTPrimitive key);
+RTValue RTModuleGetValueForKey(RTModule module, RTValue key);
 
-RTInteger32Bit RTModuleHash(void *module_RTModule);
+RTInteger32Bit RTModuleHash(RTModule module);
 
-RTBool RTModuleEqual(void *module_RTModule, void *other_RTModule);
+RTBool RTModuleEqual(RTModule module, RTModule other);
 
 #endif

@@ -1,10 +1,9 @@
-#include "RTHash.h"
 #include "RTMemory.h"
 #include "RTModule.h"
-#include "RTPrimitive.h"
+#include "RTValue.h"
 
 union RTElement {
-  RTPrimitive object;
+  RTValue value;
   RTInteger32Bit index;
 };
 
@@ -22,14 +21,14 @@ static inline RTInteger32Bit RTModuleHashIndex(RTModule module, RTInteger32Bit h
   return hash % (module->length >> 1);
 }
 
-static inline void RTModuleSetValueForKey(RTModule module, RTPrimitive value, RTPrimitive key) {
-  RTInteger32Bit hash = RTPrimitiveHash(key);
+static inline void RTModuleSetValueForKey(RTModule module, RTValue value, RTValue key) {
+  RTInteger32Bit hash = RTValueHash(key);
   RTInteger32Bit index = RTModuleHashIndex(module, hash);
-  while(module->pair[index].key.object != NULL) {
+  while(module->pair[index].key.value != NULL) {
     index = RTModuleHashIndex(module, index + 1);
   }
-  module->pair[index].key.object = key;
-  module->pair[index].value.object = value;
+  module->pair[index].key.value = key;
+  module->pair[index].value.value = value;
 }
 
 RTModule RTModuleCreate(RTInteger32Bit capacity) {
@@ -43,8 +42,8 @@ RTModule RTModuleCreate(RTInteger32Bit capacity) {
   return module;
 }
 
-void RTModuleDealloc(void *module_RTModule) {
-  RTMemoryDealloc(module_RTModule);
+void RTModuleDealloc(RTModule module) {
+  RTMemoryDealloc(module);
 }
 
 void RTModuleSetKeyValueIndexAtIndex(RTModule module, RTInteger32Bit keyIndex, RTInteger32Bit valueIndex, RTInteger32Bit index) {
@@ -52,59 +51,56 @@ void RTModuleSetKeyValueIndexAtIndex(RTModule module, RTInteger32Bit keyIndex, R
   module->pair[index].value.index = valueIndex;
 }
 
-void RTModuleFetch(RTModule module, RTPrimitive *reg) {
+void RTModuleFetch(RTModule module, RTValue *reg) {
   RTInteger32Bit length = module->length;
   struct RTPair pair[length];
   RTMemoryCopy(module->pair, pair, SIZE_OF(struct RTPair, length));
   for (RTIndex index = 0; index < module->length; index += 1) {
-    module->pair[index].key.object = NULL;
+    module->pair[index].key.value = NULL;
   }
   for (RTIndex index = 0; index < length; index += 1) {
-    RTPrimitive key = reg[module->pair[index].key.index];
-    RTPrimitive value = reg[module->pair[index].value.index];
+    RTValue key = reg[module->pair[index].key.index];
+    RTValue value = reg[module->pair[index].value.index];
     RTModuleSetValueForKey(module, value, key);
   }
 }
 
-RTPrimitive RTModuleGetValueForKey(RTModule module, RTPrimitive key) {
-  RTInteger32Bit hash = RTPrimitiveHash(key);
+RTValue RTModuleGetValueForKey(RTModule module, RTValue key) {
+  RTInteger32Bit hash = RTValueHash(key);
   RTInteger32Bit index = RTModuleHashIndex(module, hash);
-  RTPrimitive moduleKey = module->pair[index].key.object;
+  RTValue moduleKey = module->pair[index].key.value;
   while (key != NULL) {
-    if (RTPrimitiveEqual(key, moduleKey)) {
-      return module->pair[index].value.object;
+    if (RTValueEqual(key, moduleKey)) {
+      return module->pair[index].value.value;
     }
     index = RTModuleHashIndex(module, index + 1);
   }
   return NULL;
 }
 
-RTInteger32Bit RTModuleHash(void *module_RTModule) {
-  RTModule module = module_RTModule;
-  RTInteger32Bit hash = RTHashValue(&module->length, sizeof(RTInteger32Bit));
+RTInteger32Bit RTModuleHash(RTModule module) {
+  RTInteger32Bit hash = module->length;
   for (RTIndex index = 0; index < module->length; index += 1) {
-    RTPrimitive key = module->pair[index].key.object;
-    RTPrimitive value = module->pair[index].value.object;
+    RTValue key = module->pair[index].key.value;
+    RTValue value = module->pair[index].value.value;
     if (key != NULL) {
-      hash += RTPrimitiveHash(key) + RTPrimitiveHash(value);
+      hash += RTValueHash(key) + RTValueHash(value);
     }
   }
   return hash;
 }
 
-RTBool RTModuleEqual(void *module_RTModule, void *other_RTModule) {
-  RTModule module = module_RTModule;
-  RTModule other = other_RTModule;
+RTBool RTModuleEqual(RTModule module, RTModule other) {
   if (module->length != other->length) {
     return FALSE;
   }
   for (RTIndex index = 0; index < module->length; index += 1) {
-    RTPrimitive moduleKey = module->pair[index].key.object;
-    RTPrimitive moduleValue = module->pair[index].value.object;
-    RTPrimitive otherKey = other->pair[index].key.object;
-    RTPrimitive otherValue = other->pair[index].value.object;
+    RTValue moduleKey = module->pair[index].key.value;
+    RTValue moduleValue = module->pair[index].value.value;
+    RTValue otherKey = other->pair[index].key.value;
+    RTValue otherValue = other->pair[index].value.value;
     if (moduleKey != NULL && otherKey != NULL) {
-      return RTPrimitiveEqual(moduleKey, otherKey) && RTPrimitiveEqual(moduleValue, otherValue);
+      return RTValueEqual(moduleKey, otherKey) && RTValueEqual(moduleValue, otherValue);
     }
   }
   return TRUE;
@@ -120,22 +116,22 @@ RTModule FIXTURE_Module(void) {
   return module;
 }
 
-RTPrimitive FIXTURE_Primitive(void) {
+RTValue FIXTURE_Value(void) {
   RTModule module = RTModuleCreate(CAPACITY);
-  RTPrimitive value = RTPrimitiveCreate(module, MODULE);
+  RTValue value = RTValueCreateModule(module);
   REQUIRE(value != NULL);
   return value;
 }
 
 void TEST_RTModuleCreate_Success(void) {
-  RTPrimitive object = FIXTURE_Primitive();
+  RTValue value = FIXTURE_Value();
   RTModule module = RTModuleCreate(CAPACITY);
   REQUIRE(module != NULL);
   ASSERT(module->length == CAPACITY * 2);
   for (RTIndex index = 0; index < module->length; index += 1) {
-    module->pair[index].value.object = object;
-    ASSERT(module->pair[index].key.object == NULL);
-    ASSERT(module->pair[index].value.object == object);
+    module->pair[index].value.value = value;
+    ASSERT(module->pair[index].key.value == NULL);
+    ASSERT(module->pair[index].value.value == value);
   }
 }
 
@@ -144,29 +140,29 @@ void TEST_RTModuleDealloc_Success(void) {
   RTModuleDealloc(module);
 }
 
-void TEST_RTModuleSetPrimitiveForIdentifier_Success(void) {
+void TEST_RTModuleSetValueForIdentifier_Success(void) {
   RTModule module = FIXTURE_Module();
-  RTPrimitive value = FIXTURE_Primitive();
+  RTValue value = FIXTURE_Value();
   RTModuleSetValueForKey(module, value, value);
-  RTInteger32Bit hash = RTPrimitiveHash(value);
+  RTInteger32Bit hash = RTValueHash(value);
   RTInteger32Bit index = RTModuleHashIndex(module, hash);
-  ASSERT(module->pair[index].value.object == value);
+  ASSERT(module->pair[index].value.value == value);
 }
 
-void TEST_RTModuleGetPrimitiveForIdentifier_Success(void) {
+void TEST_RTModuleGetValueForIdentifier_Success(void) {
   RTModule module = FIXTURE_Module();
-  RTPrimitive value = FIXTURE_Primitive();
-  RTInteger32Bit hash = RTPrimitiveHash(value);
+  RTValue value = FIXTURE_Value();
+  RTInteger32Bit hash = RTValueHash(value);
   RTInteger32Bit index = RTModuleHashIndex(module, hash);
-  module->pair[index].value.object = value;
+  module->pair[index].value.value = value;
   ASSERT(RTModuleGetValueForKey(module, value) == value);
 }
 
 int main(void) {
   TEST_RTModuleCreate_Success();
   TEST_RTModuleDealloc_Success();
-  TEST_RTModuleSetPrimitiveForIdentifier_Success();
-  TEST_RTModuleGetPrimitiveForIdentifier_Success();
+  TEST_RTModuleSetValueForIdentifier_Success();
+  TEST_RTModuleGetValueForIdentifier_Success();
 }
 
 #endif
