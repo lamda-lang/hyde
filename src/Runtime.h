@@ -68,16 +68,4 @@ typedef struct RTModule *RTModule;
 /** @brief An opaque data type that represents a string. */
 typedef struct RTString *RTString;
 
-/** @brief A function of type @code{RTCreate} reads @code{instruction} and returns an @code{RTValue}.
-    @arg instruction The instruction to read.
-    @return An @code{RTValue}.
-    @effect @code{*instruction} points one past the byte segment that contains the instruction. */
-typedef RTValue (*RTCreate)(RTByte **instruction);
-
-/** @brief A function of type @code{RTFetch} reads @code{instruction} and fetches the content of a collection in @code{reg}.
-    @arg instruction The instruction to read.
-    @arg reg The register set that contains the colection.
-    @effect @code{*instruction} points one past the byte segment that contains the instruction. */
-typedef void (*RTFetch)(RTByte **instruction, RTValue *reg);
-
 #endif

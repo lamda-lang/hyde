@@ -16,9 +16,6 @@ echo "testing RTMemory"
 echo "testing RTModule"
 ./RTModuleTest
 
-echo "testing RTOperation"
-./RTOperationTest
-
 echo "testing RTString"
 ./RTStringTest
 

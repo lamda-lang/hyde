@@ -1,5 +1,5 @@
 echo "building RTDecodeTest"
-c99 -D RT_DECODE_TEST -o RTDecodeTest src/*.c
+c99 -g -D RT_DECODE_TEST -o RTDecodeTest src/*.c
 
 echo "building RTExecuteTest"
 c99 -D RT_EXECUTE_TEST -o RTExecuteTest src/*.c
@@ -15,9 +15,6 @@ c99 -D RT_MEMORY_TEST -o RTMemoryTest src/*.c
 
 echo "building RTModuleTest"
 c99 -D RT_MODULE_TEST -o RTModuleTest src/*.c
-
-echo "building RTOperationTest"
-c99 -D RT_OPERATION_TEST -o RTOperationTest src/*.c
 
 echo "building RTStringTest"
 c99 -D RT_STRING_TEST -o RTStringTest src/*.c

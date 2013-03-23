@@ -24,7 +24,7 @@ RTModule RTValueGetModule(RTValue value);
 
 RTString RTValueGetString(RTValue value);
 
-RTInteger32Bit RTValueHash(RTValue value);
+RTInteger32Bit RTValueHash(RTValue value, RTBool recursive);
 
 RTBool RTValueEqual(RTValue value, RTValue other);
 

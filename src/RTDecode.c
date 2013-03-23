@@ -40,16 +40,15 @@ RTInteger64Bit RTDecodeInteger64Bit(RTByte **data) {
 }
 
 RTInteger32Bit RTDecodeVBRInteger32Bit(RTByte **data) {
-  RTInteger32Bit value = 0;
-  while ((**data) >> 7 == 1) {
-    value <<= 7;
-    value |= (**data) & 0X7F;
+  RTInteger32Bit result = 0;
+  RTBool flag = TRUE;
+  for (RTIndex index = 0; flag == TRUE; index += 1) {
+    RTInteger32Bit value = (**data & 0X7F);
+    result |= value << index * 7;
+    flag = (**data & 0X80) != 0; 
     *data += 1;
-  } 
-  value <<= 7;
-  value |= (**data) & 0X7F;
-  *data += 1;
-  return value;
+  }
+  return result;
 }
 
 #ifdef RT_DECODE_TEST
@@ -89,12 +88,20 @@ void TEST_RTDecodeVBRInteger32Bit_AllBytesDistinct(void) {
   ASSERT(alias == data + sizeof(data));
 }
 
+void TEST_RTDecodeVBRInteger32Bit_OneByte(void) {
+  RTByte data[] = {0X01};
+  RTByte *alias = data;
+  ASSERT(RTDecodeVBRInteger32Bit(&alias) == 0X01);
+  ASSERT(alias == data + sizeof(data));
+}
+
 int main(void) {
   TEST_RTDecodeInteger8Bit_AllBytesDistinct();
   TEST_RTDecodeInteger16Bit_AllBytesDistinct();
   TEST_RTDecodeInteger32Bit_AllBytesDistinct();
   TEST_RTDecodeInteger64Bit_AllBytesDistinct();
   TEST_RTDecodeVBRInteger32Bit_AllBytesDistinct();
+  TEST_RTDecodeVBRInteger32Bit_OneByte();
 }
 
 #endif

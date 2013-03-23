@@ -24,7 +24,6 @@ void RTStringDealloc(RTString string) {
 void RTStringDecode(RTString string, RTByte **data, RTInteger32Bit length) {
   for (RTIndex index = 0; index < length; index += 1) {
     string->codepoint[index] = RTDecodeInteger8Bit(data);
-    *data += 1;
   }
 }
 

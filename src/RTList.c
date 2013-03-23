@@ -2,14 +2,9 @@
 #include "RTMemory.h"
 #include "RTValue.h"
 
-union RTElement {
-  RTValue value;
-  RTInteger32Bit index;
-};
-
 struct RTList {
   RTInteger32Bit length;
-  union RTElement element[];
+  RTValue element[];
 };
 
 RTList RTListCreate(RTInteger32Bit length) {
@@ -26,19 +21,8 @@ void RTListDealloc(RTList list) {
   RTMemoryDealloc(list);
 }
 
-void RTListSetRegisterIndexAtIndex(RTList list, RTInteger32Bit regIndex, RTInteger32Bit index) {
-  list->element[index].index = regIndex;
-}
-
 RTValue RTListGetValueAtIndex(RTList list, RTInteger32Bit index) {
-  return list->element[index].value;
-}
-
-void RTListFetch(RTList list, RTValue *reg) {
-  for (RTIndex index = 0; index < list->length; index += 1) {
-    RTInteger32Bit regIndex = list->element[index].index;
-    list->element[index].value = reg[regIndex];
-  }
+  return list->element[index];
 }
 
 RTBool RTListEqual(RTList list, RTList other) {
@@ -46,17 +30,20 @@ RTBool RTListEqual(RTList list, RTList other) {
     return FALSE;
   }
   for (RTIndex index = 0; index < list->length; index += 1) {
-    if (list->element[index].value != other->element[index].value) {
+    if (list->element[index] != other->element[index]) {
       return FALSE;
     }
   }
   return TRUE;
 }
 
-RTInteger32Bit RTListHash(RTList list) {
+RTInteger32Bit RTListHash(RTList list, RTBool recursive) {
+  if (recursive == FALSE) {
+    return list->length;;
+  }
   RTInteger32Bit hash = list->length;
   for (RTIndex index = 0; index < list->length; index += 1) {
-    hash += RTValueHash(list->element[index].value);
+    hash += RTValueHash(list->element[index], FALSE);
   }
   return hash;
 }
@@ -64,7 +51,7 @@ RTInteger32Bit RTListHash(RTList list) {
 #ifdef RT_LIST_TEST
 
 RTList FIXTURE_List(RTInteger32Bit length) {
-  RTList list = RTListCreate(8);
+  RTList list = RTListCreate(length);
   REQUIRE(list != NULL);
   return list;
 }
@@ -76,15 +63,13 @@ RTValue FIXTURE_Value(RTList list) {
 }
 
 void TEST_RTListCreate_Valid(void) {
-  RTValue value = FIXTURE_Value(0);
   RTList list = RTListCreate(8);
+  RTValue value = FIXTURE_Value(list);
   REQUIRE(list != NULL);
   ASSERT(list->length == 8);
   for (RTIndex index = 0; index < list->length; index += 1) {
-    list->element[index].index = index;
-    ASSERT(list->element[index].index == index);
-    list->element[index].value = value;
-    ASSERT(list->element[index].value == value);
+    list->element[index] = value;
+    ASSERT(list->element[index] == value);
   }
 }
 
@@ -93,26 +78,11 @@ void TEST_RTListDealloc_Valid(void) {
   RTListDealloc(list);
 }
 
-void TEST_RTListSetRegisterIndexAtIndex_Valid(void) {
-  RTList list = FIXTURE_List(1);
-  RTListSetRegisterIndexAtIndex(list, 1, 0);
-  ASSERT(list->element[0].index == 1);
-}
-
 void TEST_RTListGetValueAtIndex_Valid(void) {
-  RTValue value = FIXTURE_Value(0);
   RTList list = FIXTURE_List(1);
-  list->element[0].value = value;
+  RTValue value = FIXTURE_Value(list);
+  list->element[0] = value;
   ASSERT(RTListGetValueAtIndex(list, 0) == value);
-}
-
-void TEST_RTListFetch_Valid(void) {
-  RTValue value = FIXTURE_Value(0);
-  RTList list = FIXTURE_List(1);
-  RTValue reg[] = {value};
-  list->element[0].index = 0;
-  RTListFetch(list, reg);
-  ASSERT(list->element[0].value == value);
 }
 
 void TEST_RTListEqual_LengthMismatch(void) {
@@ -124,8 +94,8 @@ void TEST_RTListEqual_LengthMismatch(void) {
 void TEST_RTListEqual_ContentMismatch(void) {
   RTList list = FIXTURE_List(1);
   RTList other = FIXTURE_List(1);
-  list->element[0].value = FIXTURE_Value(other);
-  other->element[0].value = FIXTURE_Value(list);
+  list->element[0] = FIXTURE_Value(other);
+  other->element[0] = FIXTURE_Value(list);
   ASSERT(RTListEqual(list, other) == FALSE);
 }
 
@@ -136,26 +106,26 @@ void TEST_RTListEqual_Equal(void) {
 
 void TEST_RTListHash_Empty(void) {
   RTList list = FIXTURE_List(0);
-  ASSERT(RTListHash(list) == 0);
+  ASSERT(RTListHash(list, TRUE) == 0);
 }
 
 void TEST_RTListHash_NonEmpty(void) {
   RTList list = FIXTURE_List(1);
   RTList other = FIXTURE_List(0);
-  list->element[0].value = FIXTURE_Value(other);
-  ASSERT(RTListHash(list) == 1);
+  list->element[0] = FIXTURE_Value(other);
+  ASSERT(RTListHash(list, TRUE) == 1);
 }
 
 void TEST_RTListHash_Self(void) {
-  ASSERT(FALSE);
+  RTList list = FIXTURE_List(1);
+  list->element[0] = FIXTURE_Value(list);
+  ASSERT(RTListHash(list, TRUE) == 2);
 }
 
 int main(void) {
   TEST_RTListCreate_Valid();
   TEST_RTListDealloc_Valid();
-  TEST_RTListSetRegisterIndexAtIndex_Valid();
   TEST_RTListGetValueAtIndex_Valid();
-  TEST_RTListFetch_Valid();
   TEST_RTListEqual_LengthMismatch();
   TEST_RTListEqual_ContentMismatch();
   TEST_RTListEqual_Equal();
