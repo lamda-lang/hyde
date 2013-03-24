@@ -3,12 +3,12 @@
 #include "RTMemory.h"
 #include "RTValue.h"
 
-enum {
+typedef enum {
   CREATE_IDENTIFIER = 0,
   CREATE_LIST = 1,
   CREATE_MODULE = 2,
   CREATE_STRING = 3
-};
+} RTOpcode;
 
 static inline void DeallocRegisterSet(RTValue *reg, RTInteger32Bit count, RTBool recursive) {
   for (RTIndex index = 0; index < count; index += 1) {
