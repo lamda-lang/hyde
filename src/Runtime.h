@@ -68,4 +68,12 @@ typedef struct RTModule *RTModule;
 /** @brief An opaque data type that represents a string. */
 typedef struct RTString *RTString;
 
+/** @brief A generic pointer type */
+typedef union {
+  RTIdentifier id;
+  RTList list;
+  RTModule module;
+  RTString string;
+} RTPrimitive;
+
 #endif

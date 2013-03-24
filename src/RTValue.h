@@ -1,28 +1,21 @@
-/** @module RTValue */
-
 #ifndef RT_VALUE
 #define RT_VALUE
 
 #include "Runtime.h"
 
-/**  */
-RTValue RTValueCreateIdentifier(RTIdentifier id);
+RTValue RTValueCreate(void);
 
-RTValue RTValueCreateList(RTList list);
+void RTValueDealloc(RTValue value, RTBool recursive);
 
-RTValue RTValueCreateModule(RTModule module);
+void RTValueSetIdentifier(RTValue value, RTIdentifier id);
 
-RTValue RTValueCreateString(RTString string);
+void RTValueSetList(RTValue value, RTList list);
 
-void RTValueDealloc(RTValue value);
+void RTValueSetModule(RTValue value, RTModule module);
 
-RTIdentifier RTValueGetIdentifier(RTValue value);
+void RTValueSetString(RTValue value, RTString string);
 
-RTList RTValueGetList(RTValue value);
-
-RTModule RTValueGetModule(RTValue value);
-
-RTString RTValueGetString(RTValue value);
+RTPrimitive RTValueGetPrimitive(RTValue value);
 
 RTInteger32Bit RTValueHash(RTValue value, RTBool recursive);
 

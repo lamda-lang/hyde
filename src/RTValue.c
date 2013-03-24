@@ -6,7 +6,7 @@
 #include "RTValue.h"
 
 struct RTValue {
-  void *object;
+  RTPrimitive primitive;
   RTInteger8Bit type;
 };
 
@@ -17,80 +17,60 @@ typedef enum {
   STRING = 3
 } RTType;
 
-static inline void Dealloc(void *object, RTType type) {
-}
-
 RTValue RTValueCreate() {
-  RTValue value = RTMemoryAlloc(sizeof(struct RTValue));
-  if (value == NULL) {
-    return NULL;
+  return RTMemoryAlloc(sizeof(struct RTValue));
+}
+
+void RTValueDealloc(RTValue value,  RTBool recursive) {
+  if (recursive == TRUE) {
+    switch (value->type) {
+    case IDENTIFIER:
+      RTIdentifierDealloc(value->primitive.id);
+      break;
+    case LIST:
+      RTListDealloc(value->primitive.list);
+      break;
+    case MODULE:
+      RTModuleDealloc(value->primitive.module);
+      break;
+    case STRING:
+      RTStringDealloc(value->primitive.string);
+      break;
+    }
   }
-  value->object = NULL;
-  return value;
+  RTMemoryDealloc(value);
 }
 
-RTValue RTValueCreateIdentifier(RTIdentifier id) {
-  return RTValueCreate(id, IDENTIFIER);
+void RTValueSetIdentifier(RTValue value, RTIdentifier id) {
+  value->primitive.id = id;
+  value->type = IDENTIFIER;
 }
 
-RTValue RTValueCreateList(RTList list) {
-  return RTValueCreate(list, LIST);
+void RTValueSetList(RTValue value, RTList list) {
+  value->primitive.list = list;
+  value->type = LIST;
 }
 
-RTValue RTValueCreateModule(RTModule module) {
-  return RTValueCreate(module, MODULE);
+void RTValueSetModule(RTValue value, RTModule module) {
+  value->primitive.module = module;
+  value->type = MODULE;
 }
 
-RTValue RTValueCreateString(RTString string) {
-  return RTValueCreate(string, STRING);
-}
-
-RTIdentifier RTValueGetIdentifier(RTValue value) {
-  return value->object;
-}
-
-RTList RTValueGetList(RTValue value) {
-  return value->object;
-}
-
-RTModule RTValueGetModule(RTValue value) {
-  return value->object;
-}
-
-RTString RTValueGetString(RTValue value) {
-  return value->object;
-}
-
-void RTValueDealloc(RTValue value) {
-  if (value->object == NULL) {
-    return;
-  }
-  switch (type) {
-  case IDENTIFIER:
-    RTIdentifierDealloc(object);
-    return;
-  case LIST:
-    RTListDealloc(object);
-    return;
-  case MODULE:
-    RTModuleDealloc(object);
-    return;
-  case STRING:
-    RTStringDealloc(object);
-    return;
-  }
+void RTValueSetString(RTValue value, RTString string) {
+  value->primitive.string = string;
+  value->type = STRING;
 }
 
 RTInteger32Bit RTValueHash(RTValue value, RTBool recursive) {
   switch (value->type) {
   case IDENTIFIER:
-    return RTIdentifierHash(value->object);
+    return RTIdentifierHash(value->primitive.id);
   case LIST:
-    return RTListHash(value->object, recursive);
+    return RTListHash(value->primitive.list, recursive);
   case MODULE:
-    return RTModuleHash(value->object, recursive);
+    return RTModuleHash(value->primitive.module, recursive);
   case STRING:
-    return RTStringHash(value->object);
+    return RTStringHash(value->primitive.string);
   }
 }
 
@@ -100,13 +80,13 @@ RTBool RTValueEqual(RTValue value, RTValue other) {
   }
   switch (value->type) {
   case IDENTIFIER:
-    return RTIdentifierEqual(value->object, other->object);
+    return RTIdentifierEqual(value->primitive.id, other->primitive.id);
   case LIST:
-    return RTListEqual(value->object, other->object);
+    return RTListEqual(value->primitive.list, other->primitive.list);
   case MODULE:
-    return RTModuleEqual(value->object, other->object);
+    return RTModuleEqual(value->primitive.module, other->primitive.module);
   case STRING:
-    return RTStringEqual(value->object, other->object);
+    return RTStringEqual(value->primitive.string, other->primitive.string);
   }
 }
 

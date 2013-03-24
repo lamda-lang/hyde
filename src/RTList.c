@@ -8,7 +8,7 @@ struct RTList {
 };
 
 RTList RTListCreate(RTInteger32Bit length) {
-  RTSize size = sizeof(struct RTList) + SIZE_OF(union RTElement, length);
+  RTSize size = sizeof(struct RTList) + SIZE_OF(RTValue, length);
   RTList list = RTMemoryAlloc(size);
   if (list == NULL) {
     return NULL;
@@ -57,8 +57,9 @@ RTList FIXTURE_List(RTInteger32Bit length) {
 }
 
 RTValue FIXTURE_Value(RTList list) {
-  RTValue value = RTValueCreateList(list);
+  RTValue value = RTValueCreate();
   REQUIRE(value != NULL);
+  RTValueSetList( value, list);
   return value;
 }
 

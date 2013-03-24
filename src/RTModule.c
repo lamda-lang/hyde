@@ -18,12 +18,16 @@ static inline RTInteger32Bit RTModuleIndex(RTModule module, RTValue value, RTInt
 
 RTModule RTModuleCreate(RTInteger32Bit capacity) {
   RTInteger32Bit length = capacity * 2;
-  RTSize size = sizeof(struct RTModule) + SIZE_OF(struct RTPair, length);
+  RTSize size = sizeof(struct RTModule) + SIZE_OF(struct RTElement, length);
   RTModule module = RTMemoryAlloc(size);
   if (module == NULL) {
     return NULL;
   }
   module->length = length;
+  for (RTIndex index = 0; index < length; index += 1) {
+    module->element[index].key = NULL;
+    module->element[index].value = NULL;
+  }
   return module;
 }
 
@@ -32,16 +36,20 @@ void RTModuleDealloc(RTModule module) {
 }
 
 void RTModuleSetValueForKey(RTModule module, RTValue value, RTValue key) {
-  RTInteger32Bit index = RTModuleHashIndex(module, key, 0);
-  while(module->element[index].key != NULL) {
-    index = RTModuleHashIndex(module, key, index);
+  RTInteger32Bit index = RTModuleIndex(module, key, 0);
+  while (module->element[index].key != NULL) {
+    index = RTModuleIndex(module, key, index);
   }
   module->element[index].key = key;
   module->element[index].value = value;
 }
 
 RTValue RTModuleGetValueForKey(RTModule module, RTValue key) {
-  /* missing */
+  RTInteger32Bit index = RTModuleIndex(module, key, 0);
+  while (module->element[index].key != NULL && RTValueEqual(key, module->element[index].key) == FALSE) {
+    index = RTModuleIndex(module, key, index);
+  }
+  return module->element[index].value;
 }
 
 RTInteger32Bit RTModuleHash(RTModule module, RTBool recursive) {
@@ -65,8 +73,12 @@ RTBool RTModuleEqual(RTModule module, RTModule other) {
   }
   for (RTIndex index = 0; index < module->length; index += 1) {
     RTValue moduleKey = module->element[index].key;
-    if (moduleKey != NULL && RTModuleGetValueForKey(other, moduleKey) != NULL) {
-/**/      
+    if (moduleKey != NULL) {
+      RTValue moduleValue = RTModuleGetValueForKey(module, moduleKey);
+      RTValue otherValue = RTModuleGetValueForKey(other, moduleKey);
+      if (otherValue == NULL || RTValueEqual(moduleValue, otherValue) == FALSE) {
+	return  FALSE;
+      }
     }
   }
   return TRUE;
@@ -74,59 +86,8 @@ RTBool RTModuleEqual(RTModule module, RTModule other) {
 
 #ifdef RT_MODULE_TEST
 
-RTModule FIXTURE_Module(void) {
-  RTModule module = RTModuleCreate(CAPACITY);
-  REQUIRE(module != NULL);
-  return module;
-}
-
-RTValue FIXTURE_Value(void) {
-  RTModule module = RTModuleCreate(CAPACITY);
-  RTValue value = RTValueCreateModule(module);
-  REQUIRE(value != NULL);
-  return value;
-}
-
-void TEST_RTModuleCreate_Success(void) {
-  RTValue value = FIXTURE_Value();
-  RTModule module = RTModuleCreate(CAPACITY);
-  REQUIRE(module != NULL);
-  ASSERT(module->length == CAPACITY * 2);
-  for (RTIndex index = 0; index < module->length; index += 1) {
-    module->element[index].value = value;
-    ASSERT(module->element[index].key == NULL);
-    ASSERT(module->element[index].value == value);
-  }
-}
-
-void TEST_RTModuleDealloc_Success(void) {
-  RTModule module = FIXTURE_Module();
-  RTModuleDealloc(module);
-}
-
-void TEST_RTModuleSetValueForIdentifier_Success(void) {
-  RTModule module = FIXTURE_Module();
-  RTValue value = FIXTURE_Value();
-  RTModuleSetValueForKey(module, value, value);
-  RTInteger32Bit hash = RTValueHash(value, TRUE);
-  RTInteger32Bit index = RTModuleHashIndex(module, hash);
-  ASSERT(module->element[index].value == value);
-}
-
-void TEST_RTModuleGetValueForIdentifier_Success(void) {
-  RTModule module = FIXTURE_Module();
-  RTValue value = FIXTURE_Value();
-  RTInteger32Bit hash = RTValueHash(value, TRUE);
-  RTInteger32Bit index = RTModuleHashIndex(module, hash);
-  module->element[index].value = value;
-  ASSERT(RTModuleGetValueForKey(module, value) == value);
-}
-
 int main(void) {
-  TEST_RTModuleCreate_Success();
-  TEST_RTModuleDealloc_Success();
-  TEST_RTModuleSetValueForIdentifier_Success();
-  TEST_RTModuleGetValueForIdentifier_Success();
+
 }
 
 #endif
