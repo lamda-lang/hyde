@@ -4,6 +4,6 @@
 #include "Runtime.h"
 
 /** */
-RTBool ExecuteInstruction(RTByte **instruction, RTValue *reg, RTInteger32Bit index);
+RTBool RTOperationExecute(RTByte **instruction, RTValue *reg, RTInteger32Bit index);
 
 #endif

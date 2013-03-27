@@ -1,4 +1,17 @@
+#include "RTDecode.h"
+#include "RTIdentifier.h"
+#include "RTList.h"
+#include "RTModule.h"
 #include "RTOperation.h"
+#include "RTString.h"
+#include "RTValue.h"
+
+enum {
+  CREATE_IDENTIFIER = 0,
+  CREATE_LIST = 1,
+  CREATE_MODULE = 2,
+  CREATE_STRING = 3
+};
 
 static inline RTBool CreateIdentifier(RTByte **instruction, RTValue *reg, RTInteger32Bit index) {
   RTInteger8Bit length = RTDecodeInteger8Bit(instruction);
@@ -51,7 +64,7 @@ static inline RTBool CreateString(RTByte **instruction, RTValue *reg, RTInteger3
   return TRUE;
 }
 
-RTBool ExecuteInstruction(RTByte **instruction, RTValue *reg, RTInteger32Bit index) {
+RTBool RTOperationExecute(RTByte **instruction, RTValue *reg, RTInteger32Bit index) {
   RTInteger8Bit opcode = RTDecodeInteger8Bit(instruction);
   switch (opcode) {
   case CREATE_IDENTIFIER:

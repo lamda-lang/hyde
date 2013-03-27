@@ -21,6 +21,10 @@ void RTListDealloc(RTList list) {
   RTMemoryDealloc(list);
 }
 
+void RTListSetValueAtIndex(RTList list, RTValue value, RTInteger32Bit index) {
+  list->element[index] = value;
+}
+
 RTValue RTListGetValueAtIndex(RTList list, RTInteger32Bit index) {
   return list->element[index];
 }

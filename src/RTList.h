@@ -12,6 +12,9 @@ RTList RTListCreate(RTInteger32Bit length);
     @arg list The list to deallocate. */
 void RTListDealloc(RTList list);
 
+/** */
+void RTListSetValueAtIndex(RTList list, RTValue value, RTInteger32Bit index);
+
 /** @brief Returns the value at @code{index}.
     @arg list The list.
     @arg index The index of the list.
