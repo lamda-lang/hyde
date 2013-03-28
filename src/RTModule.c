@@ -83,11 +83,3 @@ RTBool RTModuleEqual(RTModule module, RTModule other) {
   }
   return TRUE;
 }
-
-#ifdef RT_MODULE_TEST
-
-int main(void) {
-
-}
-
-#endif
