@@ -1,0 +1,6 @@
+-std=c99
+-g
+-c
+-O0
+-I src/runtime
+-I src/test
