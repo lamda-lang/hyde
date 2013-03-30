@@ -1,0 +1,11 @@
+#!/bin/sh
+
+build/RTDecodeTest
+build/RTExecuteTest
+build/RTIdentifierTest
+build/RTListTest
+build/RTMemoryTest
+build/RTModuleTest
+build/RTOperationTest
+build/RTStringTest
+build/RTValueTest

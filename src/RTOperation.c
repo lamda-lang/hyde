@@ -77,3 +77,11 @@ RTBool RTOperationExecute(RTByte **instruction, RTValue *reg, RTInteger32Bit ind
     return CreateString(instruction, reg, index);
   }
 }
+
+#ifdef RT_OPERATION_TEST
+
+int main(void) {
+
+}
+
+#endif

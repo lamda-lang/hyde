@@ -89,3 +89,11 @@ RTBool RTValueEqual(RTValue value, RTValue other) {
     return RTStringEqual(value->primitive.string, other->primitive.string);
   }
 }
+
+#ifdef RT_VALUE_TEST
+
+int main(void) {
+
+}
+
+#endif
