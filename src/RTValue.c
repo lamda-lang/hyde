@@ -5,17 +5,17 @@
 #include "RTString.h"
 #include "RTValue.h"
 
-struct RTValue {
-  RTPrimitive primitive;
-  RTInteger8Bit type;
-};
-
 typedef enum {
   IDENTIFIER = 0,
   LIST = 1,
   MODULE = 2,
   STRING = 3
 } RTType;
+
+struct RTValue {
+  RTPrimitive primitive;
+  RTType type;
+};
 
 RTValue RTValueCreate() {
   return RTMemoryAlloc(sizeof(struct RTValue));

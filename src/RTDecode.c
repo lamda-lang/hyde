@@ -42,7 +42,7 @@ RTInteger64Bit RTDecodeInteger64Bit(RTByte **data) {
 RTInteger32Bit RTDecodeVBRInteger32Bit(RTByte **data) {
   RTInteger32Bit result = 0;
   RTBool flag = TRUE;
-  for (RTIndex index = 0; flag == TRUE; index += 1) {
+  for (RTInteger index = 0; flag == TRUE; index += 1) {
     RTInteger32Bit value = (**data & 0X7F);
     result |= value << index * 7;
     flag = (**data & 0X80) != 0; 
@@ -53,42 +53,42 @@ RTInteger32Bit RTDecodeVBRInteger32Bit(RTByte **data) {
 
 #ifdef RT_DECODE_TEST
 
-void TEST_RTDecodeInteger8Bit_AllBytesDistinct(void) {
+static void TEST_RTDecodeInteger8Bit_AllBytesDistinct(void) {
   RTByte data[] = {0X01};
   RTByte *alias = data;
   ASSERT(RTDecodeInteger8Bit(&alias) == 0X01);
   ASSERT(alias == data + sizeof(data));
 }
 
-void TEST_RTDecodeInteger16Bit_AllBytesDistinct(void) {
+static void TEST_RTDecodeInteger16Bit_AllBytesDistinct(void) {
   RTByte data[] = {0X01, 0X02};
   RTByte *alias = data;
   ASSERT(RTDecodeInteger16Bit(&alias) == 0X0201);
   ASSERT(alias == data + sizeof(data));
 }
 
-void TEST_RTDecodeInteger32Bit_AllBytesDistinct(void) {
+static void TEST_RTDecodeInteger32Bit_AllBytesDistinct(void) {
   RTByte data[] = {0X01, 0X02, 0X04, 0X08};
   RTByte *alias = data;
   ASSERT(RTDecodeInteger32Bit(&alias) == 0X08040201);
   ASSERT(alias == data + sizeof(data));
 }
 
-void TEST_RTDecodeInteger64Bit_AllBytesDistinct(void) {
+static void TEST_RTDecodeInteger64Bit_AllBytesDistinct(void) {
   RTByte data[] = {0X01, 0X02, 0X04, 0X08, 0X10, 0X20, 0X40, 0X80};
   RTByte *alias = data;
   ASSERT(RTDecodeInteger64Bit(&alias) == 0X8040201008040201);
   ASSERT(alias == data + sizeof(data));
 }
 
-void TEST_RTDecodeVBRInteger32Bit_AllBytesDistinct(void) {
+static void TEST_RTDecodeVBRInteger32Bit_AllBytesDistinct(void) {
   RTByte data[] = {0X81, 0X84, 0X90, 0X40};
   RTByte *alias = data;
   ASSERT(RTDecodeVBRInteger32Bit(&alias) == 0X08040201);
   ASSERT(alias == data + sizeof(data));
 }
 
-void TEST_RTDecodeVBRInteger32Bit_OneByte(void) {
+static void TEST_RTDecodeVBRInteger32Bit_OneByte(void) {
   RTByte data[] = {0X01};
   RTByte *alias = data;
   ASSERT(RTDecodeVBRInteger32Bit(&alias) == 0X01);

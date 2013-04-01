@@ -6,12 +6,12 @@
 #include "RTString.h"
 #include "RTValue.h"
 
-enum {
+typedef enum {
   CREATE_IDENTIFIER = 0,
   CREATE_LIST = 1,
   CREATE_MODULE = 2,
   CREATE_STRING = 3
-};
+} RTOpcode;
 
 static inline RTBool CreateIdentifier(RTByte **instruction, RTValue *reg, RTInteger32Bit index) {
   RTInteger8Bit length = RTDecodeInteger8Bit(instruction);
@@ -24,32 +24,32 @@ static inline RTBool CreateIdentifier(RTByte **instruction, RTValue *reg, RTInte
   return TRUE;
 }
 
-static inline RTBool CreateList(RTByte **instruction, RTValue *reg, RTInteger32Bit index) {
+static inline RTBool CreateList(RTByte **instruction, RTValue *reg, RTInteger32Bit listIndex) {
   RTInteger32Bit length = RTDecodeVBRInteger32Bit(instruction);
   RTList list = RTListCreate(length);
   if (list == NULL) {
     return FALSE;
   }
-  for (RTIndex index = 0; index < length; index += 1) {
+  for (RTInteger32Bit index = 0; index < length; index += 1) {
     RTValue value = reg[RTDecodeVBRInteger32Bit(instruction)];
     RTListSetValueAtIndex(list, value, index);
   }
-  RTValueSetList(reg[index], list);
+  RTValueSetList(reg[listIndex], list);
   return TRUE;
 }
 
-static inline RTBool CreateModule(RTByte **instruction, RTValue *reg, RTInteger32Bit index) {
+static inline RTBool CreateModule(RTByte **instruction, RTValue *reg, RTInteger32Bit moduleIndex) {
   RTInteger32Bit capacity = RTDecodeVBRInteger32Bit(instruction);
   RTModule module = RTModuleCreate(capacity);
   if (module == NULL) {
     return FALSE;
   }
-  for (RTIndex index = 0; index < capacity; index += 1) {
+  for (RTInteger index = 0; index < capacity; index += 1) {
     RTValue key = reg[RTDecodeVBRInteger32Bit(instruction)];
     RTValue value = reg[RTDecodeVBRInteger32Bit(instruction)];
     RTModuleSetValueForKey(module, value, key);
   }
-  RTValueSetModule(reg[index], module);
+  RTValueSetModule(reg[moduleIndex], module);
   return TRUE;
 }
 
@@ -65,7 +65,7 @@ static inline RTBool CreateString(RTByte **instruction, RTValue *reg, RTInteger3
 }
 
 RTBool RTOperationExecute(RTByte **instruction, RTValue *reg, RTInteger32Bit index) {
-  RTInteger8Bit opcode = RTDecodeInteger8Bit(instruction);
+  RTOpcode opcode = RTDecodeInteger8Bit(instruction);
   switch (opcode) {
   case CREATE_IDENTIFIER:
     return CreateIdentifier(instruction, reg, index);

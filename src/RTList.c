@@ -33,7 +33,7 @@ RTBool RTListEqual(RTList list, RTList other) {
   if (list->length != other->length) {
     return FALSE;
   }
-  for (RTIndex index = 0; index < list->length; index += 1) {
+  for (RTInteger32Bit index = 0; index < list->length; index += 1) {
     if (list->element[index] != other->element[index]) {
       return FALSE;
     }
@@ -46,7 +46,7 @@ RTInteger32Bit RTListHash(RTList list, RTBool recursive) {
     return list->length;;
   }
   RTInteger32Bit hash = list->length;
-  for (RTIndex index = 0; index < list->length; index += 1) {
+  for (RTInteger32Bit index = 0; index < list->length; index += 1) {
     hash += RTValueHash(list->element[index], FALSE);
   }
   return hash;
@@ -54,49 +54,49 @@ RTInteger32Bit RTListHash(RTList list, RTBool recursive) {
 
 #ifdef RT_LIST_TEST
 
-RTList FIXTURE_List(RTInteger32Bit length) {
+static RTList FIXTURE_List(RTInteger32Bit length) {
   RTList list = RTListCreate(length);
   REQUIRE(list != NULL);
   return list;
 }
 
-RTValue FIXTURE_Value(RTList list) {
+static RTValue FIXTURE_Value(RTList list) {
   RTValue value = RTValueCreate();
   REQUIRE(value != NULL);
   RTValueSetList( value, list);
   return value;
 }
 
-void TEST_RTListCreate_Valid(void) {
+static void TEST_RTListCreate_Valid(void) {
   RTList list = RTListCreate(8);
   RTValue value = FIXTURE_Value(list);
   REQUIRE(list != NULL);
   ASSERT(list->length == 8);
-  for (RTIndex index = 0; index < list->length; index += 1) {
+  for (RTInteger32Bit index = 0; index < list->length; index += 1) {
     list->element[index] = value;
     ASSERT(list->element[index] == value);
   }
 }
 
-void TEST_RTListDealloc_Valid(void) {
+static void TEST_RTListDealloc_Valid(void) {
   RTList list = FIXTURE_List(1);
   RTListDealloc(list);
 }
 
-void TEST_RTListGetValueAtIndex_Valid(void) {
+static void TEST_RTListGetValueAtIndex_Valid(void) {
   RTList list = FIXTURE_List(1);
   RTValue value = FIXTURE_Value(list);
   list->element[0] = value;
   ASSERT(RTListGetValueAtIndex(list, 0) == value);
 }
 
-void TEST_RTListEqual_LengthMismatch(void) {
+static void TEST_RTListEqual_LengthMismatch(void) {
   RTList list = FIXTURE_List(0);
   RTList other = FIXTURE_List(1);
   ASSERT(RTListEqual(list, other) == FALSE);
 }
 
-void TEST_RTListEqual_ContentMismatch(void) {
+static void TEST_RTListEqual_ContentMismatch(void) {
   RTList list = FIXTURE_List(1);
   RTList other = FIXTURE_List(1);
   list->element[0] = FIXTURE_Value(other);
@@ -104,24 +104,24 @@ void TEST_RTListEqual_ContentMismatch(void) {
   ASSERT(RTListEqual(list, other) == FALSE);
 }
 
-void TEST_RTListEqual_Equal(void) {
+static void TEST_RTListEqual_Equal(void) {
   RTList list = FIXTURE_List(1);
   ASSERT(RTListEqual(list, list) == TRUE);
 }
 
-void TEST_RTListHash_Empty(void) {
+static void TEST_RTListHash_Empty(void) {
   RTList list = FIXTURE_List(0);
   ASSERT(RTListHash(list, TRUE) == 0);
 }
 
-void TEST_RTListHash_NonEmpty(void) {
+static void TEST_RTListHash_NonEmpty(void) {
   RTList list = FIXTURE_List(1);
   RTList other = FIXTURE_List(0);
   list->element[0] = FIXTURE_Value(other);
   ASSERT(RTListHash(list, TRUE) == 1);
 }
 
-void TEST_RTListHash_Self(void) {
+static void TEST_RTListHash_Self(void) {
   RTList list = FIXTURE_List(1);
   list->element[0] = FIXTURE_Value(list);
   ASSERT(RTListHash(list, TRUE) == 2);

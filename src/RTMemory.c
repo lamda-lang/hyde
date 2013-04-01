@@ -18,31 +18,31 @@ RTBool RTMemoryCompare(void *buffer, void *other, RTSize size) {
 
 #ifdef RT_MEMORY_TEST
 
-void *FIXTURE_Buffer(void) {
+static void *FIXTURE_Buffer(void) {
   void *buffer = RTMemoryAlloc(8);
   REQUIRE(buffer != NULL);
   return buffer;
 }
 
-void TEST_RTMemoryAlloc_CheckReadWrite(void) {
-  RTIndex *buffer = RTMemoryAlloc(SIZE_OF(RTIndex, 8));
+static void TEST_RTMemoryAlloc_CheckReadWrite(void) {
+  RTByte *buffer = RTMemoryAlloc(SIZE_OF(RTByte, 8));
   REQUIRE(buffer != NULL);
-  for (RTIndex index = 0; index < 8; index += 1) {
+  for (RTByte index = 0; index < 8; index += 1) {
     buffer[index] = index;
     ASSERT(buffer[index] == index);
   }
 }
 
-void TEST_RTMemoryDealloc_ValidPointer(void) {
+static void TEST_RTMemoryDealloc_ValidPointer(void) {
   void *buffer = FIXTURE_Buffer();
   RTMemoryDealloc(buffer);
 }
 
-void TEST_RTMemoryDealloc_CheckNULL(void) {
+static void TEST_RTMemoryDealloc_CheckNULL(void) {
   RTMemoryDealloc(NULL);
 }
 
-void TEST_RTMemoryCopy_CheckSourceTarget(void) {
+static void TEST_RTMemoryCopy_CheckSourceTarget(void) {
   RTByte data[] = {0X01};
   RTByte buffer[] = {0X02};
   RTMemoryCopy(data, buffer, sizeof(data));
@@ -50,14 +50,14 @@ void TEST_RTMemoryCopy_CheckSourceTarget(void) {
   ASSERT(buffer[0] == 0X01);
 }
 
-void TEST_RTMemoryCopy_CheckBoundsZeroSize(void) {
+static void TEST_RTMemoryCopy_CheckBoundsZeroSize(void) {
   RTByte data[] = {0X01};
   RTByte buffer[] = {0X02};
   RTMemoryCopy(data, buffer, 0);
   ASSERT(buffer[0] == 0X02);
 }
 
-void TEST_RTMemoryCopy_CheckBounds(void) {
+static void TEST_RTMemoryCopy_CheckBounds(void) {
   RTByte data[] = {0X01, 0X02};
   RTByte buffer[] = {0X04, 0X08};
   RTMemoryCopy(data, buffer, 1);
@@ -65,13 +65,13 @@ void TEST_RTMemoryCopy_CheckBounds(void) {
   ASSERT(buffer[1] == 0X08);
 }
 
-void TEST_RTMemoryCompare_EqualBuffers(void) {
+static void TEST_RTMemoryCompare_EqualBuffers(void) {
   RTByte buffer[] = {0X01};
   RTByte other[] = {0X01};
   ASSERT(RTMemoryCompare(buffer, other, sizeof(buffer)) == TRUE);
 }
 
-void TEST_RTMemoryCompare_UnequalBuffers(void) {
+static void TEST_RTMemoryCompare_UnequalBuffers(void) {
   RTByte buffer[] = {0X01};
   RTByte other[] = {0X02};
   ASSERT(RTMemoryCompare(buffer, other, sizeof(buffer)) == FALSE);

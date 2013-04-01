@@ -24,7 +24,7 @@ RTModule RTModuleCreate(RTInteger32Bit capacity) {
     return NULL;
   }
   module->length = length;
-  for (RTIndex index = 0; index < length; index += 1) {
+  for (RTInteger32Bit index = 0; index < length; index += 1) {
     module->element[index].key = NULL;
     module->element[index].value = NULL;
   }
@@ -57,7 +57,7 @@ RTInteger32Bit RTModuleHash(RTModule module, RTBool recursive) {
     return module->length;
   }
   RTInteger32Bit hash = module->length;
-  for (RTIndex index = 0; index < module->length; index += 1) {
+  for (RTInteger32Bit index = 0; index < module->length; index += 1) {
     RTValue key = module->element[index].key;
     RTValue value = module->element[index].value;
     if (key != NULL) {
@@ -71,7 +71,7 @@ RTBool RTModuleEqual(RTModule module, RTModule other) {
   if (module->length != other->length) {
     return FALSE;
   }
-  for (RTIndex index = 0; index < module->length; index += 1) {
+  for (RTInteger32Bit index = 0; index < module->length; index += 1) {
     RTValue moduleKey = module->element[index].key;
     if (moduleKey != NULL) {
       RTValue moduleValue = RTModuleGetValueForKey(module, moduleKey);
