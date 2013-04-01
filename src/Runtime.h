@@ -41,6 +41,7 @@ typedef uint32_t RTInteger32Bit;
 /** @brief A 64-bit unsigned integer type. */
 typedef uint64_t RTInteger64Bit;
 
+/** @breif An unsigned integer type capable of representing any value of any unsigned integer type. */
 typedef uintmax_t RTInteger;
 
 /** @brief An unsigned integer type capable of representing the size of any memory object, in bytes. */
