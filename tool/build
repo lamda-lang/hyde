@@ -1,0 +1,12 @@
+#!/bin/sh
+
+mkdir -p build
+clang -std=c99 -O0 -g -w -D RT_DECODE_TEST -o build/RTDecodeTest src/*.c
+clang -std=c99 -O0 -g -w -D RT_EXECUTE_TEST -o build/RTExecuteTest src/*.c
+clang -std=c99 -O0 -g -w -D RT_IDENTIFIER_TEST -o build/RTIdentifierTest src/*.c
+clang -std=c99 -O0 -g -w -D RT_LIST_TEST -o build/RTListTest src/*.c
+clang -std=c99 -O0 -g -w -D RT_MEMORY_TEST -o build/RTMemoryTest src/*.c
+clang -std=c99 -O0 -g -w -D RT_MODULE_TEST -o build/RTModuleTest src/*.c
+clang -std=c99 -O0 -g -w -D RT_OPERATION_TEST -o build/RTOperationTest src/*.c
+clang -std=c99 -O0 -g -w -D RT_STRING_TEST -o build/RTStringTest src/*.c
+clang -std=c99 -O0 -g -w -D RT_VALUE_TEST -o build/RTValueTest src/*.c
