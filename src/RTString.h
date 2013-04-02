@@ -3,11 +3,6 @@
 
 #include "Runtime.h"
 
-/** -brief Creates an @code{RTString}.
-    -arg length The number of characters of the string.
-    -return An code{RTString}, or [NULL] if creation fails. */
-RTString RTStringCreate(RTInteger32Bit length);
-
 /** -brief Deallocates the memory occupied by [string].
     -arg string The string to deallocate. */
 void RTStringDealloc(RTString string);
@@ -18,13 +13,11 @@ RTSize RTStringEncodingSize(RTString);
 /** missing */
 void RTStringEncode(RTString string, RTByte *data);
 
-/** -brief Initializes [string] by decoding [data].
-    -arg string The string to initialize.
+/** -brief Creates an [RTString] by decoding [data].
     -arg data The data to decode.
-    -arg length The count of characters in [data].
-    -effect The content of [string] is overridden.
+    -return An [RTString] decoded from [data].
     -effect [*data] points one past the byte segment that contains the data. */
-void RTStringDecode(RTString string, RTByte **data, RTInteger32Bit length);
+RTString RTStringDecode(RTByte **data);
 
 /** -brief Returns a boolean value that indicates whether [string] and [other] are equal.
     -arg string A string.

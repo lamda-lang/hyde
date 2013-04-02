@@ -35,6 +35,11 @@ void RTEncodeInteger64Bit(RTInteger64Bit value, RTByte **data) {
   *data += 8;
 }
 
+void RTEncodeVBRInteger32Bit(RTInteger32Bit value, RTByte **data) {
+  value = 0;
+  data = NULL;
+}
+
 #ifdef RT_ENCODE_TEST
 
 int main(void) {

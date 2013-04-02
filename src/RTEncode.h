@@ -11,4 +11,6 @@ void RTEncodeInteger32Bit(RTInteger32Bit value, RTByte **data);
 
 void RTEncodeInteger64Bit(RTInteger64Bit value, RTByte **data);
 
+void RTEncodeVBRInteger32Bit(RTInteger32Bit value, RTByte **data);
+
 #endif

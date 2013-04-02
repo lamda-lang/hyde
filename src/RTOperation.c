@@ -8,12 +8,10 @@ typedef enum {
 } RTOpcode;
 
 static inline RTBool CreateIdentifier(RTByte **instruction, RTValue *reg, RTInteger32Bit index) {
-  RTInteger8Bit length = RTDecodeInteger8Bit(instruction);
-  RTIdentifier id = RTIdentifierCreate(length);
+  RTIdentifier id = RTIdentifierDecode(instruction);
   if (id == NULL) {
     return FALSE;
   }
-  RTIdentifierDecode(id, instruction, length);
   RTValueSetIdentifier(reg[index], id);
   return TRUE;
 }
@@ -48,12 +46,10 @@ static inline RTBool CreateModule(RTByte **instruction, RTValue *reg, RTInteger3
 }
 
 static inline RTBool CreateString(RTByte **instruction, RTValue *reg, RTInteger32Bit index) {
-  RTInteger32Bit length = RTDecodeVBRInteger32Bit(instruction);
-  RTString string = RTStringCreate(length);
+  RTString string = RTStringDecode(instruction);
   if (string == NULL) {
     return FALSE;
   }
-  RTStringDecode(string, instruction, length);
   RTValueSetString(reg[index], string);
   return TRUE;
 }

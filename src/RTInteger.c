@@ -5,7 +5,7 @@ struct RTInteger {
   RTInteger64Bit value[];
 };
 
-RTInteger RTIntegerCreate(RTInteger32Bit count) {
+static inline RTInteger RTIntegerCreate(RTInteger32Bit count) {
   RTSize size = sizeof(struct RTInteger) + SIZE_OF(RTInteger64Bit, count);
   RTInteger integer = RTMemoryAlloc(size);
   if (integer == NULL) {
@@ -31,10 +31,16 @@ void RTIntegerEncode(RTInteger integer, RTByte *buffer) {
   }
 }
 
-void RTIntegerDecode(RTInteger integer, RTByte **data, RTInteger32Bit count) {
+RTInteger RTIntegerDecode(RTByte **data) {
+  RTInteger32Bit count = RTDecodeVBRInteger32Bit(data);
+  RTInteger integer = RTIntegerCreate(count);
+  if (integer == NULL) {
+    return NULL;
+  }
   for (RTInteger32Bit index = 0; index < count; index += 1) {
     integer->value[index] = RTDecodeInteger64Bit(data);
   }
+  return integer;
 }
 
 RTBool RTIntegerEqual(RTInteger integer, RTInteger other) {
@@ -48,6 +54,12 @@ RTInteger32Bit RTIntegerHash(RTInteger integer) {
     hash += integer->value[index];
   }
   return hash;
+}
+
+RTInteger RTIntegerSum(RTInteger integer, RTInteger other) {
+  integer = NULL;
+  other = NULL;
+  return NULL;
 }
 
 #ifdef RT_INTEGER_TEST

@@ -3,18 +3,18 @@
 
 #include "Runtime.h"
 
-RTInteger RTIntegerCreate(RTInteger32Bit count);
-
 void RTIntegerDealloc(RTInteger integer);
 
 RTSize RTIntegerEncodingSize(RTInteger integer);
 
 void RTIntegerEncode(RTInteger integer, RTByte *buffer);
 
-void RTIntegerDecode(RTInteger integer, RTByte **data, RTInteger32Bit count);
+RTInteger RTIntegerDecode(RTByte **data);
 
 RTBool RTIntegerEqual(RTInteger integer, RTInteger other);
 
 RTInteger32Bit RTIntegerHash(RTInteger integer);
+
+RTInteger RTIntegerSum(RTInteger integer, RTInteger other);
 
 #endif

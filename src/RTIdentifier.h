@@ -3,11 +3,6 @@
 
 #include "Runtime.h"
 
-/** -brief Creates an [RTIdentifier].
-    -arg length The number of characters of the identifier.
-    -return An [RTIdentifier], or [NULL] if creation fails. */
-RTIdentifier RTIdentifierCreate(RTInteger8Bit length);
-
 /** -brief Deallocates the memory occupied by [id].
     -arg id The identifier to deallocate. */
 void RTIdentifierDealloc(RTIdentifier id);
@@ -18,13 +13,11 @@ RTSize RTIdentifierEncodingSize(RTIdentifier id);
 /** missing */
 void RTIdentifierEncode(RTIdentifier id, RTByte *data);
 
-/** -brief Initializes [id] by decoding [data].
-    -arg id The identifier to initialize.
+/** -brief Creates an [id] by decoding [data].
     -arg data The data to decode.
-    -arg length The count of characters in [data].
-    -effect The content of [id] is overridden.
+    -return An [RTIdentifier] decoded from [data].
     -effect [*data] points one past the byte segment that contains the data. */
-void RTIdentifierDecode(RTIdentifier id, RTByte **data, RTInteger8Bit length);
+RTIdentifier RTIdentifierDecode(RTByte **data);
 
 /** -brief Returns a boolean value that indicates whether [id] and [other] are equal.
     -arg id An identifier.
