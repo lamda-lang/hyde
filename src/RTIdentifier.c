@@ -1,3 +1,4 @@
+#include "RTEncode.h"
 #include "RTIdentifier.h"
 #include "RTMemory.h"
 
@@ -18,6 +19,16 @@ RTIdentifier RTIdentifierCreate(RTInteger8Bit length) {
 
 void RTIdentifierDealloc(RTIdentifier id) {
   RTMemoryDealloc(id);
+}
+
+RTSize RTIdentifierEncodingSize(RTIdentifier id) {
+  return sizeof(RTInteger8Bit) + SIZE_OF(RTInteger8Bit, id->length);
+}
+
+void RTIdentifierEncode(RTIdentifier id, RTByte *data) {
+  RTByte *alias = data;
+  RTEncodeInteger8Bit(id->length, &alias);
+  RTMemoryCopy(id->codepoint, data, id->length);
 }
 
 void RTIdentifierDecode(RTIdentifier id, RTByte **data, RTInteger8Bit length) {

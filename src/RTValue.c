@@ -61,6 +61,10 @@ void RTValueSetString(RTValue value, RTString string) {
   value->type = STRING;
 }
 
+RTPrimitive RTValueGetPrimitive(RTValue value) {
+ return value->primitive;
+}
+
 RTInteger32Bit RTValueHash(RTValue value, RTBool recursive) {
   switch (value->type) {
   case IDENTIFIER:

@@ -12,6 +12,12 @@ RTIdentifier RTIdentifierCreate(RTInteger8Bit length);
     @arg id The identifier to deallocate. */
 void RTIdentifierDealloc(RTIdentifier id);
 
+/** missing */
+RTSize RTIdentifierEncodingSize(RTIdentifier id);
+
+/** missing */
+void RTIdentifierEncode(RTIdentifier id, RTByte *data);
+
 /** @brief Initializes @code{id} by decoding @code{data}.
     @arg id The identifier to initialize.
     @arg data The data to decode.

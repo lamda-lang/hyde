@@ -1,4 +1,5 @@
 #include "RTDecode.h"
+#include "RTEncode.h"
 #include "RTMemory.h"
 #include "RTString.h"
 
@@ -19,6 +20,18 @@ RTString RTStringCreate(RTInteger32Bit length) {
 
 void RTStringDealloc(RTString string) {
   RTMemoryDealloc(string);
+}
+
+RTSize RTStringEncodingSize(RTString string) {
+ return sizeof(RTInteger32Bit) + SIZE_OF(RTInteger32Bit, string->length);
+}
+
+void RTStringEncode(RTString string, RTByte *data) {
+  RTByte *alias = data;
+  RTEncodeInteger32Bit(string->length, &alias);
+  for (RTInteger32Bit index = 0; index < string->length; index += 1) {
+    RTEncodeInteger32Bit(string->codepoint[index], &alias);
+  }
 }
 
 void RTStringDecode(RTString string, RTByte **data, RTInteger32Bit length) {

@@ -1,11 +1,12 @@
 #!/bin/sh
 
-clang -std=c99 -fsyntax-only -Weverything -D RT_DECODE_TEST -o build/RTDecodeTest src/*.c
-clang -std=c99 -fsyntax-only -Weverything -D RT_EXECUTE_TEST -o build/RTExecuteTest src/*.c
-clang -std=c99 -fsyntax-only -Weverything -D RT_IDENTIFIER_TEST -o build/RTIdentifierTest src/*.c
-clang -std=c99 -fsyntax-only -Weverything -D RT_LIST_TEST -o build/RTListTest src/*.c
-clang -std=c99 -fsyntax-only -Weverything -D RT_MEMORY_TEST -o build/RTMemoryTest src/*.c
-clang -std=c99 -fsyntax-only -Weverything -D RT_MODULE_TEST -o build/RTModuleTest src/*.c
-clang -std=c99 -fsyntax-only -Weverything -D RT_OPERATION_TEST -o build/RTOperationTest src/*.c
-clang -std=c99 -fsyntax-only -Weverything -D RT_STRING_TEST -o build/RTStringTest src/*.c
-clang -std=c99 -fsyntax-only -Weverything -D RT_VALUE_TEST -o build/RTValueTest src/*.c
+clang -std=c99 -fsyntax-only -Weverything -D RT_DECODE_TEST src/*.c
+clang -std=c99 -fsyntax-only -Weverything -D RT_ENCODE_TEST src/*.c
+clang -std=c99 -fsyntax-only -Weverything -D RT_EXECUTE_TEST src/*.c
+clang -std=c99 -fsyntax-only -Weverything -D RT_IDENTIFIER_TEST src/*.c
+clang -std=c99 -fsyntax-only -Weverything -D RT_LIST_TEST src/*.c
+clang -std=c99 -fsyntax-only -Weverything -D RT_MEMORY_TEST src/*.c
+clang -std=c99 -fsyntax-only -Weverything -D RT_MODULE_TEST src/*.c
+clang -std=c99 -fsyntax-only -Weverything -D RT_OPERATION_TEST src/*.c
+clang -std=c99 -fsyntax-only -Weverything -D RT_STRING_TEST src/*.c
+clang -std=c99 -fsyntax-only -Weverything -D RT_VALUE_TEST src/*.c

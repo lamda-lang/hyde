@@ -1,25 +1,35 @@
-TYPES
+# Bytecode Format
 
-Fixed width types:
+
+## Types
+
+.Fixed width types
+----
 8I: 8-bit integer
 16I: 16-bit integer
 32I: 32-bit integer
 64I: 64-bit integer
+----
 
-Variable width types:
+.Variable width types
+----
 32VBRI: 32-bit integer
+----
 
 
-HEADER
+## Header
 
+----
 32VBRI:registerCount
 32VBRI:instructionCount
-...opcodes...
+----
 
 
-OPCODES
+## Opcodes
 
+----
 CREATE_IDENTIFIER: 8I:0 8I:length [8I:character].length
 CREATE_LIST: 8I:1 32VBRI:length [32VBRI:elementIndex].length
 CREATE_MODULE: 8I:2 32VBR:capacity [32VBRI:keyIndex 32VBRI:valueIndex].capacity
 CREATE_STRING: 8I:3 8I:length [8I.character].length
+----

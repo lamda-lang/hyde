@@ -12,6 +12,12 @@ RTString RTStringCreate(RTInteger32Bit length);
     @arg string The string to deallocate. */
 void RTStringDealloc(RTString string);
 
+/** */
+RTSize RTStringEncodingSize(RTString);
+
+/** missing */
+void RTStringEncode(RTString string, RTByte *data);
+
 /** @brief Initializes @code{string} by decoding @code{data}.
     @arg string The string to initialize.
     @arg data The data to decode.
