@@ -3,58 +3,58 @@
 
 #include "Runtime.h"
 
-/** @brief Creates an @code{RTValue}.
-    @return An code{RTValue}, or @code{NULL} if creation fails. */
+/** -brief Creates an [RTValue].
+    -return An [RTValue], or [NULL] if creation fails. */
 RTValue RTValueCreate(void);
 
-/** @brief Deallocates the memory occupied by @code{value}.
-    @arg value The value to deallocate.
-    @recursive If @code{TRUE}, the primitive referenced by @code{value} is also deallocated.
-    @warning @code{recursive} must be @code{FALSE} if no primitive is set. */
+/** -brief Deallocates the memory occupied by [value].
+    -arg value The value to deallocate.
+    -recursive If [TRUE], the primitive referenced by [value] is also deallocated.
+    -warning [recursive] must be [FALSE] if no primitive is set. */
 void RTValueDealloc(RTValue value, RTBool recursive);
 
-/**  @brief Sets @code{id} as the primitive of @code{value}.
-     @arg value The value.
-     @arg id The primitive of @code{value}.
-     @effect The primitive reference of @code{value} is set to @code{id}. */
+/**  -brief Sets [id] as the primitive of [value].
+     -arg value The value.
+     -arg id The primitive of [value].
+     -effect The primitive reference of [value] is set to [id]. */
 void RTValueSetIdentifier(RTValue value, RTIdentifier id);
 
-/**  @brief Sets @code{list} as the primitive of @code{value}.
-     @arg value The value.
-     @arg module The primitive of @code{value}.
-     @effect The primitive reference of @code{value} is set to @code{list}. */
+/**  -brief Sets [list] as the primitive of [value].
+     -arg value The value.
+     -arg module The primitive of [value].
+     -effect The primitive reference of [value] is set to [list]. */
 void RTValueSetList(RTValue value, RTList list);
 
-/**  @brief Sets @code{module} as the primitive of @code{value}.
-     @arg value The value.
-     @arg module The primitive of @code{value}.
-     @effect The primitive reference of @code{value} is set to @code{module}. */
+/**  -brief Sets [module] as the primitive of [value].
+     -arg value The value.
+     -arg module The primitive of [value].
+     -effect The primitive reference of [value] is set to [module]. */
 void RTValueSetModule(RTValue value, RTModule module);
 
-/**  @brief Sets @code{string} as the primitive of @code{value}.
-     @arg value The value.
-     @arg string The primitive of @code{value}.
-     @effect The primitive reference of @code{value} is set to @code{string}. */
+/**  -brief Sets [string] as the primitive of [value].
+     -arg value The value.
+     -arg string The primitive of [value].
+     -effect The primitive reference of [value] is set to [string]. */
 void RTValueSetString(RTValue value, RTString string);
 
-/** @brief Returns the primitive of @code{value}.
-    @arg value The value.
-    @return The primitive of @code{value}.
-    @warning Access to a member of the return value is invalid if its type is the same type of the primitive set. */
+/** -brief Returns the primitive of [value].
+    -arg value The value.
+    -return The primitive of [value].
+    -warning Access to a member of the return value is invalid if its type is the same type of the primitive set. */
 RTPrimitive RTValueGetPrimitive(RTValue value);
 
-/** @brief Returns a hash value based on the content of @code{value}.
-    @important If two values are equal, they have the same hash value.
-    @arg value The value.
-    @arg recursive If @code{TRUE}, the hash value is calculated recursively.
-    @warning Recursively calculated hash values can result in infinite loops if an element cycle exists.
-    @return A hash value. */
+/** -brief Returns a hash value based on the content of [value].
+    -important If two values are equal, they have the same hash value.
+    -arg value The value.
+    -arg recursive If [TRUE], the hash value is calculated recursively.
+    -warning Recursively calculated hash values can result in infinite loops if an element cycle exists.
+    -return A hash value. */
 RTInteger32Bit RTValueHash(RTValue value, RTBool recursive);
 
-/** @brief Returns a boolean value that indicates whether @code{value} and @code{other} are equal.
-    @arg value A value.
-    @arg other Another value.
-    @return @code{TRUE} if @code{value} and @code{other} are equal, otherwise @code{FALSE}. */
+/** -brief Returns a boolean value that indicates whether [value] and [other] are equal.
+    -arg value A value.
+    -arg other Another value.
+    -return [TRUE] if [value] and [other] are equal, otherwise [FALSE]. */
 RTBool RTValueEqual(RTValue value, RTValue other);
 
 #endif

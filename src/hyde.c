@@ -1,12 +1,6 @@
 #include <stdio.h>
 #include <unistd.h>
-
 #include "Runtime.h"
-#include "RTExecute.h"
-#include "RTString.h"
-#include "RTDecode.h"
-#include "RTValue.h"
-
 
 #ifdef HYDE
 

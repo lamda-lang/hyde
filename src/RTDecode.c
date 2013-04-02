@@ -42,7 +42,7 @@ RTInteger64Bit RTDecodeInteger64Bit(RTByte **data) {
 RTInteger32Bit RTDecodeVBRInteger32Bit(RTByte **data) {
   RTInteger32Bit result = 0;
   RTBool flag = TRUE;
-  for (RTInteger index = 0; flag == TRUE; index += 1) {
+  for (RTIndex index = 0; flag == TRUE; index += 1) {
     RTInteger32Bit value = (**data & 0X7F);
     result |= value << index * 7;
     flag = (**data & 0X80) != 0; 

@@ -1,6 +1,4 @@
 #include "RTList.h"
-#include "RTMemory.h"
-#include "RTValue.h"
 
 struct RTList {
   RTInteger32Bit length;

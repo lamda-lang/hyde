@@ -4,6 +4,7 @@ clang -std=c99 -fsyntax-only -Weverything -D RT_DECODE_TEST src/*.c
 clang -std=c99 -fsyntax-only -Weverything -D RT_ENCODE_TEST src/*.c
 clang -std=c99 -fsyntax-only -Weverything -D RT_EXECUTE_TEST src/*.c
 clang -std=c99 -fsyntax-only -Weverything -D RT_IDENTIFIER_TEST src/*.c
+clang -std=c99 -fsyntax-only -Weverything -D RT_INTEGER_TEST src/*.c
 clang -std=c99 -fsyntax-only -Weverything -D RT_LIST_TEST src/*.c
 clang -std=c99 -fsyntax-only -Weverything -D RT_MEMORY_TEST src/*.c
 clang -std=c99 -fsyntax-only -Weverything -D RT_MODULE_TEST src/*.c

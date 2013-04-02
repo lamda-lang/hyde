@@ -3,9 +3,9 @@
 
 #include "Runtime.h"
 
-/* @brief Executes @code{code} and returns an @code{RTValue}.
-   @arg code The code to execute.
-   @return The return value of @code{code}. */
+/** -brief Executes [code] and returns an [RTValue].
+    -arg code The code to execute.
+    -return The return value of [code]. */
 RTValue RTExecuteBytecode(RTByte *code);
 
 #endif

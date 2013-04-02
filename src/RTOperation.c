@@ -1,10 +1,4 @@
-#include "RTDecode.h"
-#include "RTIdentifier.h"
-#include "RTList.h"
-#include "RTModule.h"
 #include "RTOperation.h"
-#include "RTString.h"
-#include "RTValue.h"
 
 typedef enum {
   CREATE_IDENTIFIER = 0,
@@ -44,7 +38,7 @@ static inline RTBool CreateModule(RTByte **instruction, RTValue *reg, RTInteger3
   if (module == NULL) {
     return FALSE;
   }
-  for (RTInteger index = 0; index < capacity; index += 1) {
+  for (RTIndex index = 0; index < capacity; index += 1) {
     RTValue key = reg[RTDecodeVBRInteger32Bit(instruction)];
     RTValue value = reg[RTDecodeVBRInteger32Bit(instruction)];
     RTModuleSetValueForKey(module, value, key);
