@@ -6,21 +6,20 @@
 #include <stdlib.h>
 #include <string.h>
 
-/** -brief The size of an array with [length] elements of type [type].
+/** -brief The size of an array with [length] elements of type [type], in bytes.
     -arg type The type of the elements.
-    -arg length The length of the array. */
+    -arg length The element count of the array. */
 #define SIZE_OF(type, length) (sizeof(type) * length)
 
-/** -brief Prints an error message if [condition] is [false].
+/** -brief Prints an error message if [condition] is [FALSE].
     -arg condition A boolean condition. */
 #define ASSERT(condition) if (!(condition)) fprintf(stderr, "%s:%i: ASSERT(%s) did fail\n", __FILE__, __LINE__, #condition)
 
-/** -brief Prints an error and terminates the process if [condition] is [false].
+/** -brief Prints an error and terminates the process if [condition] is [FALSE].
     -arg condition A boolean condition. */
 #define REQUIRE(condition) if (!(condition)) (fprintf(stderr, "%s:%i: REQUIRE(%s) did fail\n", __FILE__, __LINE__, #condition), exit(EXIT_FAILURE))
 
-/** -brief The smallest addressable unit of memory.
-    -important It is valid to interpret any memory object as an array of type [RTByte] without violating the strict aliasing rule. */
+/** -brief The smallest addressable unit of memory. */
 typedef unsigned char RTByte;
 
 /** -brief An integer type capable of representing any member of the basic execution character set. */
@@ -53,27 +52,28 @@ enum {
   FALSE = 0
 };
 
-/** -brief An opaque data type that represents a value. */
+/** -brief An opaque data type that represents a primitive value. */
 typedef struct RTValue *RTValue;
 
-/** -brief An opaque data type that represents an identifier. */
+/** -brief An opaque data type that represents a primitive identifier. */
 typedef struct RTIdentifier *RTIdentifier;
 
-/** missing */
+/** -brief An opaque data type that represents a primitive integer. */
 typedef struct RTInteger *RTInteger;
 
-/** -brief An opaque data type that represents a list. */
+/** -brief An opaque data type that represents a primitive list. */
 typedef struct RTList *RTList;
 
-/** -brief An opaque data type that represents a module. */
+/** -brief An opaque data type that represents a primitive module. */
 typedef struct RTModule *RTModule;
 
-/** -brief An opaque data type that represents a string. */
+/** -brief An opaque data type that represents a primitive string. */
 typedef struct RTString *RTString;
 
-/** -brief A generic pointer type */
+/** -brief A generic pointer type capable of storing a pointer to any primitive.. */
 typedef union {
   RTIdentifier id;
+  RTInteger integer;
   RTList list;
   RTModule module;
   RTString string;
