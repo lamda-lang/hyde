@@ -23,8 +23,8 @@ RTSize RTStringEncodingSize(RTString string) {
  return sizeof(RTInteger32Bit) + SIZE_OF(RTInteger32Bit, string->length);
 }
 
-void RTStringEncode(RTString string, RTByte *data) {
-  RTByte *alias = data;
+void RTStringEncode(RTString string, RTByte *buffer) {
+  RTByte *alias = buffer;
   RTEncodeInteger32Bit(string->length, &alias);
   for (RTInteger32Bit index = 0; index < string->length; index += 1) {
     RTEncodeInteger32Bit(string->codepoint[index], &alias);
@@ -53,7 +53,7 @@ RTInteger32Bit RTStringHash(RTString string) {
 
 RTBool RTStringEqual(RTString string, RTString other) {
   RTSize size = SIZE_OF(RTInteger32Bit, string->length);
-  return string->length == other->length && RTMemoryCompare(string->codepoint, other->codepoint, size);
+  return string->length == other->length && RTMemoryCompare(string->codepoint, other->codepoint, size) == TRUE;
 }
 
 #ifdef RT_STRING_TEST

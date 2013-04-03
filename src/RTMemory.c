@@ -18,27 +18,32 @@ RTBool RTMemoryCompare(void *buffer, void *other, RTSize size) {
 
 #ifdef RT_MEMORY_TEST
 
-static void *FIXTURE_Buffer(void) {
-  void *buffer = RTMemoryAlloc(8);
+static void *FIXTURE_Buffer(RTSize size) {
+  void *buffer = RTMemoryAlloc(size);
   REQUIRE(buffer != NULL);
   return buffer;
 }
 
+static void AFTER_Buffer(void *buffer) {
+  RTMemoryDealloc(buffer);
+}
+
 static void TEST_RTMemoryAlloc_CheckReadWrite(void) {
-  RTByte *buffer = RTMemoryAlloc(SIZE_OF(RTByte, 8));
+  RTByte *buffer = RTMemoryAlloc(8);
   REQUIRE(buffer != NULL);
   for (RTByte index = 0; index < 8; index += 1) {
     buffer[index] = index;
     ASSERT(buffer[index] == index);
   }
+  AFTER_Buffer(buffer);
 }
 
 static void TEST_RTMemoryDealloc_ValidPointer(void) {
-  void *buffer = FIXTURE_Buffer();
+  void *buffer = FIXTURE_Buffer(1);
   RTMemoryDealloc(buffer);
 }
 
-static void TEST_RTMemoryDealloc_CheckNULL(void) {
+static void TEST_RTMemoryDealloc_NULL(void) {
   RTMemoryDealloc(NULL);
 }
 
@@ -48,13 +53,6 @@ static void TEST_RTMemoryCopy_CheckSourceTarget(void) {
   RTMemoryCopy(data, buffer, sizeof(data));
   ASSERT(data[0] == 0X01);
   ASSERT(buffer[0] == 0X01);
-}
-
-static void TEST_RTMemoryCopy_CheckBoundsZeroSize(void) {
-  RTByte data[] = {0X01};
-  RTByte buffer[] = {0X02};
-  RTMemoryCopy(data, buffer, 0);
-  ASSERT(buffer[0] == 0X02);
 }
 
 static void TEST_RTMemoryCopy_CheckBounds(void) {
@@ -80,9 +78,8 @@ static void TEST_RTMemoryCompare_UnequalBuffers(void) {
 int main(void) {
   TEST_RTMemoryAlloc_CheckReadWrite();
   TEST_RTMemoryDealloc_ValidPointer();
-  TEST_RTMemoryDealloc_CheckNULL();
+  TEST_RTMemoryDealloc_NULL();
   TEST_RTMemoryCopy_CheckSourceTarget();
-  TEST_RTMemoryCopy_CheckBoundsZeroSize();
   TEST_RTMemoryCopy_CheckBounds();
   TEST_RTMemoryCompare_EqualBuffers();
   TEST_RTMemoryCompare_UnequalBuffers();

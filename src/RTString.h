@@ -7,11 +7,16 @@
     -arg string The string to deallocate. */
 void RTStringDealloc(RTString string);
 
-/** */
+/** -brief Returns the size required by [string] to encoding itself into a byte array.
+    -arg string The string to examine.
+    -return The encoding size of [string], in bytes. */
 RTSize RTStringEncodingSize(RTString);
 
-/** missing */
-void RTStringEncode(RTString string, RTByte *data);
+/** -brief Encodes [string] into [buffer].
+    -arg string The string to encode.
+    -arg buffer The buffer into which to encode [string].
+    -effect [buffer] is overridden. */
+void RTStringEncode(RTString string, RTByte *buffer);
 
 /** -brief Creates an [RTString] by decoding [data].
     -arg data The data to decode.
@@ -27,7 +32,7 @@ RTBool RTStringEqual(RTString string, RTString other);
 
 /** -brief Returns a hash value based on the content of [string].
     -important If two strings are equal, they have the same hash value.
-    -arg string The string.
+    -arg string The string to examine.
     -return A hash value. */
 RTInteger32Bit RTStringHash(RTString string);
 

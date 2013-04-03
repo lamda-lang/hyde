@@ -16,14 +16,14 @@ void RTMemoryDealloc(void *buffer);
     -warning [source] and [target] must not overlap.
     -arg source The buffer that is used as the source.
     -arg target The buffer that is used as the target.
-    -arg size The size of [source] that will be copied, in bytes.
-    -effect The content of [target] is overriden. */
+    -arg size The size of [source] to copy, in bytes.
+    -effect [target] is overriden. */
 void RTMemoryCopy(void *source, void *target, RTSize size);
 
 /** -brief Compares [size] bytes of [buffer] and [other].
     -arg buffer A buffer.
     -arg other Another buffer.
-    -arg size The size of the buffers that will be compared, in bytes.
+    -arg size The size of the buffers to compare, in bytes.
     -return [TRUE] if [size] bytes are equal, otherwise [FALSE]. */
 RTBool RTMemoryCompare(void *buffer, void *other, RTSize size);
 

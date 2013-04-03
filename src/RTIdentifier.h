@@ -7,13 +7,18 @@
     -arg id The identifier to deallocate. */
 void RTIdentifierDealloc(RTIdentifier id);
 
-/** missing */
+/** -brief Returns the size required by [id] to encoding itself into a byte array.
+    -arg id The identifier to examine.
+    -return The encoding size of [id], in bytes. */
 RTSize RTIdentifierEncodingSize(RTIdentifier id);
 
-/** missing */
-void RTIdentifierEncode(RTIdentifier id, RTByte *data);
+/** -brief Encodes [id] into [buffer].
+    -arg id The identifier to encode.
+    -arg buffer The buffer into which to encode [id].
+    -effect [buffer] is overridden. */
+void RTIdentifierEncode(RTIdentifier id, RTByte *buffer);
 
-/** -brief Creates an [id] by decoding [data].
+/** -brief Creates an [RTIdentifier] by decoding [data].
     -arg data The data to decode.
     -return An [RTIdentifier] decoded from [data].
     -effect [*data] points one past the byte segment that contains the data. */
@@ -27,7 +32,7 @@ RTBool RTIdentifierEqual(RTIdentifier id, RTIdentifier other);
 
 /** -brief Returns a hash value based on the content of [id].
     -important If two identifiers are equal, they have the same hash value.
-    -arg id The identifier.
+    -arg id The identifier to examine.
     -return A hash value. */
 RTInteger32Bit RTIdentifierHash(RTIdentifier id);
 
