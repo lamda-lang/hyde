@@ -1,6 +1,7 @@
 #!/bin/sh
 
 build/RTDecodeTest
+build/RTEncodeTest
 build/RTExecuteTest
 build/RTIdentifierTest
 build/RTListTest

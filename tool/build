@@ -2,6 +2,7 @@
 
 mkdir -p build
 clang -std=c99 -O0 -g -w -D RT_DECODE_TEST -o build/RTDecodeTest src/*.c
+clang -std=c99 -O0 -g -w -D RT_ENCODE_TEST -o build/RTEncodeTest src/*.c
 clang -std=c99 -O0 -g -w -D RT_EXECUTE_TEST -o build/RTExecuteTest src/*.c
 clang -std=c99 -O0 -g -w -D RT_IDENTIFIER_TEST -o build/RTIdentifierTest src/*.c
 clang -std=c99 -O0 -g -w -D RT_INTEGER_TEST -o build/RTIntegerTest src/*.c

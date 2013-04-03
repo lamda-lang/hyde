@@ -25,9 +25,9 @@ RTSize RTStringEncodingSize(RTString string) {
 
 void RTStringEncode(RTString string, RTByte *data) {
   RTByte *alias = data;
-  RTEncodeVBRInteger32Bit(string->length, &alias);
+  RTEncodeInteger32Bit(string->length, &alias);
   for (RTInteger32Bit index = 0; index < string->length; index += 1) {
-    RTEncodeVBRInteger32Bit(string->codepoint[index], &alias);
+    RTEncodeInteger32Bit(string->codepoint[index], &alias);
   }
 }
 
