@@ -34,6 +34,6 @@ RTBool RTStringEqual(RTString string, RTString other);
     -important If two strings are equal, they have the same hash value.
     -arg string The string to examine.
     -return A hash value. */
-RTInteger32Bit RTStringHash(RTString string);
+RTInteger64Bit RTStringHash(RTString string);
 
 #endif

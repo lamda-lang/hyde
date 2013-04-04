@@ -11,7 +11,7 @@ struct RTModule {
 };
 
 static inline RTInteger32Bit RTModuleIndex(RTModule module, RTValue value, RTInteger32Bit offset) {
-  return RTValueHash(value, TRUE) + offset % module->length;
+  return (RTValueHash(value, TRUE) + offset) % module->length;
 }
 
 RTModule RTModuleCreate(RTInteger32Bit capacity) {
@@ -50,11 +50,11 @@ RTValue RTModuleGetValueForKey(RTModule module, RTValue key) {
   return module->element[index].value;
 }
 
-RTInteger32Bit RTModuleHash(RTModule module, RTBool recursive) {
+RTInteger64Bit RTModuleHash(RTModule module, RTBool recursive) {
   if (recursive == FALSE) {
     return module->length;
   }
-  RTInteger32Bit hash = module->length;
+  RTInteger64Bit hash = module->length;
   for (RTInteger32Bit index = 0; index < module->length; index += 1) {
     RTValue key = module->element[index].key;
     RTValue value = module->element[index].value;

@@ -48,8 +48,8 @@ RTBool RTIdentifierEqual(RTIdentifier id, RTIdentifier other) {
   return id->length == other->length && RTMemoryCompare(id->codepoint, other->codepoint, size) == TRUE;
 }
 
-RTInteger32Bit RTIdentifierHash(RTIdentifier id) {
-  RTInteger32Bit hash = id->length;
+RTInteger64Bit RTIdentifierHash(RTIdentifier id) {
+  RTInteger64Bit hash = id->length;
   for (RTInteger8Bit index = 0; index < id->length; index += 1) {
     hash += id->codepoint[index];
   }

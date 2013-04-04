@@ -2,25 +2,35 @@
 
 typedef enum {
   IDENTIFIER = 0,
-  LIST = 1,
-  MODULE = 2,
-  STRING = 3
+  INTEGER = 1,
+  LIST = 2,
+  MODULE = 3,
+  STRING = 4
 } RTType;
 
 struct RTValue {
   RTPrimitive primitive;
   RTType type;
+  RTBool initialized;
 };
 
 RTValue RTValueCreate() {
-  return RTMemoryAlloc(sizeof(struct RTValue));
+  RTValue value = RTMemoryAlloc(sizeof(struct RTValue));
+  if (value == NULL) {
+    return NULL;
+  }
+  value->initialized = FALSE;
+  return value;
 }
 
-void RTValueDealloc(RTValue value,  RTBool recursive) {
-  if (recursive == TRUE) {
+void RTValueDealloc(RTValue value) {
+  if (value->initialized == TRUE) {
     switch (value->type) {
     case IDENTIFIER:
       RTIdentifierDealloc(value->primitive.id);
+      break;
+    case INTEGER:
+      RTIntegerDealloc(value->primitive.integer);
       break;
     case LIST:
       RTListDealloc(value->primitive.list);
@@ -39,31 +49,43 @@ void RTValueDealloc(RTValue value,  RTBool recursive) {
 void RTValueSetIdentifier(RTValue value, RTIdentifier id) {
   value->primitive.id = id;
   value->type = IDENTIFIER;
+  value->initialized = TRUE;
+}
+
+void RTValueSetInteger(RTValue value, RTInteger integer) {
+  value->primitive.integer = integer;
+  value->type = INTEGER;
+  value->initialized = TRUE;
 }
 
 void RTValueSetList(RTValue value, RTList list) {
   value->primitive.list = list;
   value->type = LIST;
+  value->initialized = TRUE;
 }
 
 void RTValueSetModule(RTValue value, RTModule module) {
   value->primitive.module = module;
   value->type = MODULE;
+  value->initialized = TRUE;
 }
 
 void RTValueSetString(RTValue value, RTString string) {
   value->primitive.string = string;
   value->type = STRING;
+  value->initialized = TRUE;
 }
 
 RTPrimitive RTValueGetPrimitive(RTValue value) {
- return value->primitive;
+  return value->primitive;
 }
 
-RTInteger32Bit RTValueHash(RTValue value, RTBool recursive) {
+RTInteger64Bit RTValueHash(RTValue value, RTBool recursive) {
   switch (value->type) {
   case IDENTIFIER:
     return RTIdentifierHash(value->primitive.id);
+  case INTEGER:
+    return RTIntegerHash(value->primitive.integer);
   case LIST:
     return RTListHash(value->primitive.list, recursive);
   case MODULE:
@@ -80,6 +102,8 @@ RTBool RTValueEqual(RTValue value, RTValue other) {
   switch (value->type) {
   case IDENTIFIER:
     return RTIdentifierEqual(value->primitive.id, other->primitive.id);
+  case INTEGER:
+    return RTIntegerEqual(value->primitive.integer, other->primitive.integer);
   case LIST:
     return RTListEqual(value->primitive.list, other->primitive.list);
   case MODULE:

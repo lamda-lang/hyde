@@ -2,21 +2,34 @@
 
 typedef enum {
   CREATE_IDENTIFIER = 0,
-  CREATE_LIST = 1,
-  CREATE_MODULE = 2,
-  CREATE_STRING = 3
+  CREATE_INTEGER = 1,
+  CREATE_LIST = 2,
+  CREATE_MODULE = 3,
+  CREATE_STRING = 4
 } RTOpcode;
 
-static inline RTBool CreateIdentifier(RTByte **instruction, RTValue *reg, RTInteger32Bit index) {
+static inline RTBool CreateIdentifier(RTByte **instruction, RTValue *reg) {
   RTIdentifier id = RTIdentifierDecode(instruction);
   if (id == NULL) {
     return FALSE;
   }
+  RTInteger32Bit index = RTDecodeVBRInteger32Bit(instruction);
   RTValueSetIdentifier(reg[index], id);
   return TRUE;
 }
 
-static inline RTBool CreateList(RTByte **instruction, RTValue *reg, RTInteger32Bit listIndex) {
+static inline RTBool CreateInteger(RTByte **instruction, RTValue *reg) {
+  RTInteger64Bit value = RTDecodeInteger64Bit(instruction);
+  RTInteger integer = RTIntegerCreate64Bit(value);
+  if (integer == NULL) {
+    return FALSE;
+  }
+  RTInteger32Bit index = RTDecodeVBRInteger32Bit(instruction);
+  RTValueSetInteger(reg[index], integer);
+  return TRUE;
+}
+
+static inline RTBool CreateList(RTByte **instruction, RTValue *reg) {
   RTInteger32Bit length = RTDecodeVBRInteger32Bit(instruction);
   RTList list = RTListCreate(length);
   if (list == NULL) {
@@ -26,45 +39,50 @@ static inline RTBool CreateList(RTByte **instruction, RTValue *reg, RTInteger32B
     RTValue value = reg[RTDecodeVBRInteger32Bit(instruction)];
     RTListSetValueAtIndex(list, value, index);
   }
-  RTValueSetList(reg[listIndex], list);
+  RTInteger32Bit index = RTDecodeVBRInteger32Bit(instruction);
+  RTValueSetList(reg[index], list);
   return TRUE;
 }
 
-static inline RTBool CreateModule(RTByte **instruction, RTValue *reg, RTInteger32Bit moduleIndex) {
+static inline RTBool CreateModule(RTByte **instruction, RTValue *reg) {
   RTInteger32Bit capacity = RTDecodeVBRInteger32Bit(instruction);
   RTModule module = RTModuleCreate(capacity);
   if (module == NULL) {
     return FALSE;
   }
-  for (RTIndex index = 0; index < capacity; index += 1) {
+  for (RTInteger32Bit index = 0; index < capacity; index += 1) {
     RTValue key = reg[RTDecodeVBRInteger32Bit(instruction)];
     RTValue value = reg[RTDecodeVBRInteger32Bit(instruction)];
     RTModuleSetValueForKey(module, value, key);
   }
-  RTValueSetModule(reg[moduleIndex], module);
+  RTInteger32Bit index = RTDecodeVBRInteger32Bit(instruction);
+  RTValueSetModule(reg[index], module);
   return TRUE;
 }
 
-static inline RTBool CreateString(RTByte **instruction, RTValue *reg, RTInteger32Bit index) {
+static inline RTBool CreateString(RTByte **instruction, RTValue *reg) {
   RTString string = RTStringDecode(instruction);
   if (string == NULL) {
     return FALSE;
   }
+  RTInteger32Bit index = RTDecodeVBRInteger32Bit(instruction);
   RTValueSetString(reg[index], string);
   return TRUE;
 }
 
-RTBool RTOperationExecute(RTByte **instruction, RTValue *reg, RTInteger32Bit index) {
+RTBool RTOperationExecute(RTByte **instruction, RTValue *reg) {
   RTOpcode opcode = RTDecodeInteger8Bit(instruction);
   switch (opcode) {
   case CREATE_IDENTIFIER:
-    return CreateIdentifier(instruction, reg, index);
+    return CreateIdentifier(instruction, reg);
+  case CREATE_INTEGER:
+    return CreateInteger(instruction, reg);
   case CREATE_LIST:
-    return CreateList(instruction, reg, index);
+    return CreateList(instruction, reg);
   case CREATE_MODULE:
-    return CreateModule(instruction, reg, index);
+    return CreateModule(instruction, reg);
   case CREATE_STRING:
-    return CreateString(instruction, reg, index);
+    return CreateString(instruction, reg);
   }
 }
 

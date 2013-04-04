@@ -34,6 +34,6 @@ RTBool RTIdentifierEqual(RTIdentifier id, RTIdentifier other);
     -important If two identifiers are equal, they have the same hash value.
     -arg id The identifier to examine.
     -return A hash value. */
-RTInteger32Bit RTIdentifierHash(RTIdentifier id);
+RTInteger64Bit RTIdentifierHash(RTIdentifier id);
 
 #endif

@@ -43,8 +43,8 @@ RTString RTStringDecode(RTByte **data) {
   return string;
 }
 
-RTInteger32Bit RTStringHash(RTString string) {
-  RTInteger32Bit hash = string->length;
+RTInteger64Bit RTStringHash(RTString string) {
+  RTInteger64Bit hash = string->length;
   for (RTInteger32Bit index = 0; index < string->length; index += 1) {
     hash += string->codepoint[index];
   }

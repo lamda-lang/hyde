@@ -32,18 +32,18 @@ RTBool RTListEqual(RTList list, RTList other) {
     return FALSE;
   }
   for (RTInteger32Bit index = 0; index < list->length; index += 1) {
-    if (list->element[index] != other->element[index]) {
+    if (RTValueEqual(list->element[index], other->element[index]) == FALSE) {
       return FALSE;
     }
   }
   return TRUE;
 }
 
-RTInteger32Bit RTListHash(RTList list, RTBool recursive) {
+RTInteger64Bit RTListHash(RTList list, RTBool recursive) {
   if (recursive == FALSE) {
     return list->length;;
   }
-  RTInteger32Bit hash = list->length;
+  RTInteger64Bit hash = list->length;
   for (RTInteger32Bit index = 0; index < list->length; index += 1) {
     hash += RTValueHash(list->element[index], FALSE);
   }

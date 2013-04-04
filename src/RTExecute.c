@@ -1,10 +1,9 @@
 #include "RTExecute.h"
 
-static inline void DeallocRegisterSet(RTValue *reg, RTInteger32Bit count, RTInteger32Bit recursiveCount) {
+static inline void DeallocRegisterSet(RTValue *reg, RTInteger32Bit count) {
   for (RTInteger32Bit index = 0; index < count; index += 1) {
-    RTValueDealloc(reg[index], index < recursiveCount);
+    RTValueDealloc(reg[index]);
   }
-  RTMemoryDealloc(reg);
 }
 
 static inline RTValue *CreateRegisterSet(RTInteger32Bit count) {
@@ -15,7 +14,7 @@ static inline RTValue *CreateRegisterSet(RTInteger32Bit count) {
   for (RTInteger32Bit index = 0; index < count; index += 1) {
     RTValue value = RTValueCreate();
     if (value == NULL) {
-      DeallocRegisterSet(reg, index, 0);
+      DeallocRegisterSet(reg, index);
       return NULL;
     }
     reg[index] = value;
@@ -31,8 +30,9 @@ RTValue RTExecuteBytecode(RTByte *code) {
     return NULL;
   }
   for (RTInteger32Bit index = 0; index < instCount; index += 1) {
-    if (RTOperationExecute(&code, reg, index) == FALSE) {
-      DeallocRegisterSet(reg, regCount, index);
+    if (RTOperationExecute(&code, reg) == FALSE) {
+      DeallocRegisterSet(reg, regCount);
+      return NULL;
     }
   }
   RTValue result = reg[0];
@@ -42,12 +42,12 @@ RTValue RTExecuteBytecode(RTByte *code) {
 
 #ifdef RT_EXECUTE_TEST
 
-static RTValue *FIXTURE_RegisterSet(RTInteger32Bit count) {
+/*static RTValue *FIXTURE_RegisterSet(RTInteger32Bit count) {
   RTValue *reg = CreateRegisterSet(count);
   REQUIRE(reg != NULL);
   return reg;
 }
-
+*/
 static void TEST_CreateRegisterSet_Valid(void) {
   RTValue *reg = CreateRegisterSet(1);
   REQUIRE(reg != NULL);
@@ -55,8 +55,8 @@ static void TEST_CreateRegisterSet_Valid(void) {
 }
 
 static void TEST_DeallocRegisterSet_Valid(void) {
-  RTValue *reg = FIXTURE_RegisterSet(1);
-  DeallocRegisterSet(reg, 1, FALSE);
+  //RTValue *reg = FIXTURE_RegisterSet(1);
+  //
 }
 
 int main(void) {

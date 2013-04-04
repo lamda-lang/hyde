@@ -3,7 +3,7 @@
 
 #include "Runtime.h"
 
-/** -brief Creates an [RTList].
+/** -brief Creates an empty [RTList].
     -arg length The number of elements of the list.
     -return An [RTList], or [NULL] if creation fails. */
 RTList RTListCreate(RTInteger32Bit length);
@@ -13,15 +13,15 @@ RTList RTListCreate(RTInteger32Bit length);
 void RTListDealloc(RTList list);
 
 /** -brief Sets [value] for [list] at [index].
-    -arg list The listi into which the value is being changed. 
+    -arg list The list into which the value is being set. 
     -arg value The value to set at [index].
-    -arg index The index at whoch to set [value]. 
+    -arg index The index at which to set [value]. 
     -effect The value of [list] at [index] is overridden. */
 void RTListSetValueAtIndex(RTList list, RTValue value, RTInteger32Bit index);
 
 /** -brief Returns the value at [index].
-    -arg list The list.
-    -arg index The index of the list.
+    -arg list The list to examine.
+    -arg index The index of the value.
     -return The value at [index]. */
 RTValue RTListGetValueAtIndex(RTList list, RTInteger32Bit index);
 
@@ -33,10 +33,10 @@ RTBool RTListEqual(RTList list, RTList other);
 
 /** -brief Returns a hash value based on the content of [list].
     -important If two lists are equal, they have the same hash value.
-    -arg list The list.
+    -arg list The list to examine.
     -arg recursive If [TRUE], the hash value is calculated recursively.
     -warning Recursively calculated hash values can result in infinite loops if an element cycle exists.
     -return A hash value. */
-RTInteger32Bit RTListHash(RTList list, RTBool recursive);
+RTInteger64Bit RTListHash(RTList list, RTBool recursive);
 
 #endif
