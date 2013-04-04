@@ -50,10 +50,8 @@ RTPrimitive RTValueGetPrimitive(RTValue value);
 /** -brief Returns a hash value based on the content of [value].
     -important If two values are equal, they have the same hash value.
     -arg value The value to examine.
-    -arg recursive If [TRUE], the hash value is calculated recursively.
-    -warning Recursively calculated hash values can result in infinite loops if an element cycle exists.
     -return A hash value. */
-RTInteger64Bit RTValueHash(RTValue value, RTBool recursive);
+RTInteger64Bit RTValueHash(RTValue value);
 
 /** -brief Returns a boolean value that indicates whether [value] and [other] are equal.
     -arg value A value.

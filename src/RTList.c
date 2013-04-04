@@ -39,15 +39,8 @@ RTBool RTListEqual(RTList list, RTList other) {
   return TRUE;
 }
 
-RTInteger64Bit RTListHash(RTList list, RTBool recursive) {
-  if (recursive == FALSE) {
-    return list->length;;
-  }
-  RTInteger64Bit hash = list->length;
-  for (RTInteger32Bit index = 0; index < list->length; index += 1) {
-    hash += RTValueHash(list->element[index], FALSE);
-  }
-  return hash;
+RTInteger64Bit RTListHash(RTList list) {
+  return list->length;
 }
 
 #ifdef RT_LIST_TEST

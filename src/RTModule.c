@@ -51,18 +51,7 @@ RTValue RTModuleGetValueForKey(RTModule module, RTValue key) {
 }
 
 RTInteger64Bit RTModuleHash(RTModule module, RTBool recursive) {
-  if (recursive == FALSE) {
-    return module->length;
-  }
-  RTInteger64Bit hash = module->length;
-  for (RTInteger32Bit index = 0; index < module->length; index += 1) {
-    RTValue key = module->element[index].key;
-    RTValue value = module->element[index].value;
-    if (key != NULL) {
-      hash += RTValueHash(key, FALSE) + RTValueHash(value, FALSE);
-    }
-  }
-  return hash;
+  return module->length;
 }
 
 RTBool RTModuleEqual(RTModule module, RTModule other) {

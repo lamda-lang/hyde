@@ -29,10 +29,8 @@ RTValue RTModuleGetValueForKey(RTModule module, RTValue key);
 /** -brief Returns a hash value based on the content of [module].
     -important If two modules are equal, they have the same hash value.
     -arg module The module to examine.
-    -arg recursive If [TRUE], the hash value is calculated recursively.
-    -warning Recursively calculated hash values can result in infinite loops if an element cycle exists.
     -return A hash value. */
-RTInteger64Bit RTModuleHash(RTModule module, RTBool recursive);
+RTInteger64Bit RTModuleHash(RTModule module);
 
 /** -brief Returns a boolean value that indicates whether [module] and [other] are equal.
     -arg module A module.

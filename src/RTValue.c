@@ -80,16 +80,16 @@ RTPrimitive RTValueGetPrimitive(RTValue value) {
   return value->primitive;
 }
 
-RTInteger64Bit RTValueHash(RTValue value, RTBool recursive) {
+RTInteger64Bit RTValueHash(RTValue value) {
   switch (value->type) {
   case IDENTIFIER:
     return RTIdentifierHash(value->primitive.id);
   case INTEGER:
     return RTIntegerHash(value->primitive.integer);
   case LIST:
-    return RTListHash(value->primitive.list, recursive);
+    return RTListHash(value->primitive.list);
   case MODULE:
-    return RTModuleHash(value->primitive.module, recursive);
+    return RTModuleHash(value->primitive.module);
   case STRING:
     return RTStringHash(value->primitive.string);
   }

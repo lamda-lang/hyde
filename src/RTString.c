@@ -44,11 +44,7 @@ RTString RTStringDecode(RTByte **data) {
 }
 
 RTInteger64Bit RTStringHash(RTString string) {
-  RTInteger64Bit hash = string->length;
-  for (RTInteger32Bit index = 0; index < string->length; index += 1) {
-    hash += string->codepoint[index];
-  }
-  return hash;
+  return string->length;
 }
 
 RTBool RTStringEqual(RTString string, RTString other) {

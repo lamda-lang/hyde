@@ -34,9 +34,7 @@ RTBool RTListEqual(RTList list, RTList other);
 /** -brief Returns a hash value based on the content of [list].
     -important If two lists are equal, they have the same hash value.
     -arg list The list to examine.
-    -arg recursive If [TRUE], the hash value is calculated recursively.
-    -warning Recursively calculated hash values can result in infinite loops if an element cycle exists.
     -return A hash value. */
-RTInteger64Bit RTListHash(RTList list, RTBool recursive);
+RTInteger64Bit RTListHash(RTList list);
 
 #endif
