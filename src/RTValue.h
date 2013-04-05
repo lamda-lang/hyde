@@ -25,15 +25,15 @@ void RTValueSetInteger(RTValue value, RTInteger integer);
 
 /** -brief Sets [list] as the primitive of [value].
     -arg value The value in which the primitive is to be changed.
-    -arg module The primitive of [value].
+    -arg map The primitive of [value].
     -effect The primitive reference of [value] is set to [list]. */
 void RTValueSetList(RTValue value, RTList list);
 
-/** -brief Sets [module] as the primitive of [value].
+/** -brief Sets [map] as the primitive of [value].
     -arg value The value in which the primitive is to be changed.
-    -arg module The primitive of [value].
-    -effect The primitive reference of [value] is set to [module]. */
-void RTValueSetModule(RTValue value, RTModule module);
+    -arg map The primitive of [value].
+    -effect The primitive reference of [value] is set to [map]. */
+void RTValueSetMap(RTValue value, RTMap map);
 
 /** -brief Sets [string] as the primitive of [value].
     -arg value The value in which the primitive is to be changed.

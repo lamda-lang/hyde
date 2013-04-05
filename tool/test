@@ -6,7 +6,7 @@ build/RTExecuteTest
 build/RTIdentifierTest
 build/RTListTest
 build/RTMemoryTest
-build/RTModuleTest
+build/RTMapTest
 build/RTOperationTest
 build/RTStringTest
 build/RTValueTest

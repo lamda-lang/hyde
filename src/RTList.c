@@ -102,20 +102,20 @@ static void TEST_RTListEqual_Equal(void) {
 
 static void TEST_RTListHash_Empty(void) {
   RTList list = FIXTURE_List(0);
-  ASSERT(RTListHash(list, TRUE) == 0);
+  ASSERT(RTListHash(list) == 0);
 }
 
 static void TEST_RTListHash_NonEmpty(void) {
   RTList list = FIXTURE_List(1);
   RTList other = FIXTURE_List(0);
   list->element[0] = FIXTURE_Value(other);
-  ASSERT(RTListHash(list, TRUE) == 1);
+  ASSERT(RTListHash(list) == 1);
 }
 
 static void TEST_RTListHash_Self(void) {
   RTList list = FIXTURE_List(1);
   list->element[0] = FIXTURE_Value(list);
-  ASSERT(RTListHash(list, TRUE) == 2);
+  ASSERT(RTListHash(list) == 2);
 }
 
 int main(void) {

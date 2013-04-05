@@ -8,9 +8,7 @@ clang -std=c99 -O0 -g -w -D RT_IDENTIFIER_TEST -o build/RTIdentifierTest src/*.c
 clang -std=c99 -O0 -g -w -D RT_INTEGER_TEST -o build/RTIntegerTest src/*.c
 clang -std=c99 -O0 -g -w -D RT_LIST_TEST -o build/RTListTest src/*.c
 clang -std=c99 -O0 -g -w -D RT_MEMORY_TEST -o build/RTMemoryTest src/*.c
-clang -std=c99 -O0 -g -w -D RT_MODULE_TEST -o build/RTModuleTest src/*.c
+clang -std=c99 -O0 -g -w -D RT_MAP_TEST -o build/RTMapTest src/*.c
 clang -std=c99 -O0 -g -w -D RT_OPERATION_TEST -o build/RTOperationTest src/*.c
 clang -std=c99 -O0 -g -w -D RT_STRING_TEST -o build/RTStringTest src/*.c
 clang -std=c99 -O0 -g -w -D RT_VALUE_TEST -o build/RTValueTest src/*.c
-
-clang -std=c99 -O0 -g -w -D HYDE -o build/hyde src/*.c

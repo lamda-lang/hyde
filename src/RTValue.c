@@ -4,7 +4,7 @@ typedef enum {
   IDENTIFIER = 0,
   INTEGER = 1,
   LIST = 2,
-  MODULE = 3,
+  MAP = 3,
   STRING = 4
 } RTType;
 
@@ -35,8 +35,8 @@ void RTValueDealloc(RTValue value) {
     case LIST:
       RTListDealloc(value->primitive.list);
       break;
-    case MODULE:
-      RTModuleDealloc(value->primitive.module);
+    case MAP:
+      RTMapDealloc(value->primitive.map);
       break;
     case STRING:
       RTStringDealloc(value->primitive.string);
@@ -64,9 +64,9 @@ void RTValueSetList(RTValue value, RTList list) {
   value->initialized = TRUE;
 }
 
-void RTValueSetModule(RTValue value, RTModule module) {
-  value->primitive.module = module;
-  value->type = MODULE;
+void RTValueSetMap(RTValue value, RTMap map) {
+  value->primitive.map = map;
+  value->type = MAP;
   value->initialized = TRUE;
 }
 
@@ -88,8 +88,8 @@ RTInteger64Bit RTValueHash(RTValue value) {
     return RTIntegerHash(value->primitive.integer);
   case LIST:
     return RTListHash(value->primitive.list);
-  case MODULE:
-    return RTModuleHash(value->primitive.module);
+  case MAP:
+    return RTMapHash(value->primitive.map);
   case STRING:
     return RTStringHash(value->primitive.string);
   }
@@ -106,8 +106,8 @@ RTBool RTValueEqual(RTValue value, RTValue other) {
     return RTIntegerEqual(value->primitive.integer, other->primitive.integer);
   case LIST:
     return RTListEqual(value->primitive.list, other->primitive.list);
-  case MODULE:
-    return RTModuleEqual(value->primitive.module, other->primitive.module);
+  case MAP:
+    return RTMapEqual(value->primitive.map, other->primitive.map);
   case STRING:
     return RTStringEqual(value->primitive.string, other->primitive.string);
   }

@@ -4,7 +4,7 @@ typedef enum {
   CREATE_IDENTIFIER = 0,
   CREATE_INTEGER = 1,
   CREATE_LIST = 2,
-  CREATE_MODULE = 3,
+  CREATE_MAP = 3,
   CREATE_STRING = 4
 } RTOpcode;
 
@@ -44,19 +44,19 @@ static inline RTBool CreateList(RTByte **instruction, RTValue *reg) {
   return TRUE;
 }
 
-static inline RTBool CreateModule(RTByte **instruction, RTValue *reg) {
+static inline RTBool CreateMap(RTByte **instruction, RTValue *reg) {
   RTInteger32Bit capacity = RTDecodeVBRInteger32Bit(instruction);
-  RTModule module = RTModuleCreate(capacity);
-  if (module == NULL) {
+  RTMap map = RTMapCreate(capacity);
+  if (map == NULL) {
     return FALSE;
   }
   for (RTInteger32Bit index = 0; index < capacity; index += 1) {
     RTValue key = reg[RTDecodeVBRInteger32Bit(instruction)];
     RTValue value = reg[RTDecodeVBRInteger32Bit(instruction)];
-    RTModuleSetValueForKey(module, value, key);
+    RTMapSetValueForKey(map, value, key);
   }
   RTInteger32Bit index = RTDecodeVBRInteger32Bit(instruction);
-  RTValueSetModule(reg[index], module);
+  RTValueSetMap(reg[index], map);
   return TRUE;
 }
 
@@ -79,8 +79,8 @@ RTBool RTOperationExecute(RTByte **instruction, RTValue *reg) {
     return CreateInteger(instruction, reg);
   case CREATE_LIST:
     return CreateList(instruction, reg);
-  case CREATE_MODULE:
-    return CreateModule(instruction, reg);
+  case CREATE_MAP:
+    return CreateMap(instruction, reg);
   case CREATE_STRING:
     return CreateString(instruction, reg);
   }

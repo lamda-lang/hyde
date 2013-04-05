@@ -64,8 +64,8 @@ typedef struct RTInteger *RTInteger;
 /** -brief An opaque data type that represents a primitive list. */
 typedef struct RTList *RTList;
 
-/** -brief An opaque data type that represents a primitive module. */
-typedef struct RTModule *RTModule;
+/** -brief An opaque data type that represents a primitive map. */
+typedef struct RTMap *RTMap;
 
 /** -brief An opaque data type that represents a primitive string. */
 typedef struct RTString *RTString;
@@ -75,7 +75,7 @@ typedef union {
   RTIdentifier id;
   RTInteger integer;
   RTList list;
-  RTModule module;
+  RTMap map;
   RTString string;
 } RTPrimitive;
 
@@ -87,8 +87,8 @@ typedef union {
 #include "RTIdentifier.h"
 #include "RTInteger.h"
 #include "RTList.h"
+#include "RTMap.h"
 #include "RTMemory.h"
-#include "RTModule.h"
 #include "RTOperation.h"
 #include "RTString.h"
 #include "RTValue.h"
