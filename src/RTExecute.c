@@ -4,6 +4,7 @@ static inline void DeallocRegisterSet(RTValue *reg, RTInteger32Bit count) {
   for (RTInteger32Bit index = 0; index < count; index += 1) {
     RTValueDealloc(reg[index]);
   }
+  RTMemoryDealloc(reg);
 }
 
 static inline RTValue *CreateRegisterSet(RTInteger32Bit count) {
@@ -36,7 +37,7 @@ RTValue RTExecuteBytecode(RTByte *code) {
     }
   }
   RTValue result = reg[0];
-  RTMemoryDealloc(reg);
+  DeallocRegisterSet(reg, 0);
   return result;
 }
 

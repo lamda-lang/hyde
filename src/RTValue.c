@@ -12,6 +12,7 @@ struct RTValue {
   RTPrimitive primitive;
   RTType type;
   RTBool initialized;
+  RTBool mark;
 };
 
 RTValue RTValueCreate() {
@@ -20,6 +21,7 @@ RTValue RTValueCreate() {
     return NULL;
   }
   value->initialized = FALSE;
+  value->mark = FALSE;
   return value;
 }
 
@@ -45,7 +47,6 @@ void RTValueDealloc(RTValue value) {
   }
   RTMemoryDealloc(value);
 }
-
 void RTValueSetIdentifier(RTValue value, RTIdentifier id) {
   value->primitive.id = id;
   value->type = IDENTIFIER;
