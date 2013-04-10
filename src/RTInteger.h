@@ -18,10 +18,11 @@ RTSize RTIntegerEncodingSize(RTInteger integer);
     -effect [buffer] is overridden. */
 void RTIntegerEncode(RTInteger integer, RTByte *buffer);
 
-/** -brief Creates an [RTInteger].
-    -arg value The value of the new [RTInteger].
-    -return An [RTInteger] representing [value]. */
-RTInteger RTIntegerCreate64Bit(RTInteger64Bit value);
+/** -brief Creates an [RTInteger] by decoding [data].
+    -arg data The data to decode.
+    -return An [RTInteger] decoded from [data].
+    -effect [*data] points one past the byte segment that contains the data. */
+RTInteger RTIntegerDecode(RTByte **data);
 
 /** -brief Returns a boolean value that indicates whether [integer] and [other] are equal.
     -arg integer An integer.

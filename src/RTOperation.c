@@ -19,8 +19,7 @@ static inline RTBool CreateIdentifier(RTByte **instruction, RTValue *reg) {
 }
 
 static inline RTBool CreateInteger(RTByte **instruction, RTValue *reg) {
-  RTInteger64Bit value = RTDecodeInteger64Bit(instruction);
-  RTInteger integer = RTIntegerCreate64Bit(value);
+  RTInteger integer = RTIntegerDecode(instruction);
   if (integer == NULL) {
     return FALSE;
   }
