@@ -5,7 +5,7 @@ struct RTIdentifier {
   RTInteger8Bit codepoint[];
 };
 
-static inline RTIdentifier RTIdentifierCreate(RTInteger8Bit length) {
+static inline RTIdentifier Create(RTInteger8Bit length) {
   RTSize size = sizeof(struct RTIdentifier) + SIZE_OF(RTInteger8Bit, length);
   RTIdentifier id = RTMemoryAlloc(size);
   if (id == NULL) {
@@ -33,7 +33,7 @@ void RTIdentifierEncode(RTIdentifier id, RTByte *buffer) {
 
 RTIdentifier RTIdentifierDecode(RTByte **data) {
   RTInteger8Bit length = RTDecodeInteger8Bit(data);
-  RTIdentifier id = RTIdentifierCreate(length);
+  RTIdentifier id = Create(length);
   if (id == NULL) {
     return NULL;
   }
@@ -55,19 +55,22 @@ RTInteger64Bit RTIdentifierHash(RTIdentifier id) {
 #ifdef RT_IDENTIFIER_TEST
 
 static RTIdentifier FIXTURE_Identifier(RTInteger8Bit length) {
-  RTIdentifier id = RTIdentifierCreate(length);
+  RTIdentifier id = Create(length);
   REQUIRE(id != NULL);
   return id;
 }
 
-static void TEST_RTIdentifierCreate_Valid(void) {
-  RTIdentifier id = RTIdentifierCreate(8);
+static void AFTER_Identifier(RTIdentifier id) {
+  RTIdentifierDealloc(id);
+}
+
+static void TEST_Create_Valid(void) {
+  RTIdentifier id = Create(1);
   REQUIRE(id != NULL);
-  ASSERT(id->length == 8);
-  for (RTByte index = 0; index < 8; index += 1) {
-    id->codepoint[index] = index;
-    ASSERT(id->codepoint[index] == index);
-  }
+  id->codepoint[0] = 0X02;
+  ASSERT(id->length == 1);
+  ASSERT(id->codepoint[0] == 0X02);
+  AFTER_Identifier(id);
 }
 
 static void TEST_RTIdentifierDealloc_Valid(void) {
@@ -75,49 +78,53 @@ static void TEST_RTIdentifierDealloc_Valid(void) {
   RTIdentifierDealloc(id);
 }
 
-static void TEST_RTIdentifierDecode_AllBytesDistinct(void) {
-  RTByte data[] = {0X01};
+static void TEST_RTIdentifierEncodingSize_Valid(void) {
+  RTIdentifier id = FIXTURE_Identifier(1);
+  RTSize size = sizeof(RTInteger8Bit) * 2;
+  ASSERT(RTIdentifierEncodingSize(id) == size);
+  AFTER_Identifier(id);
+}
+
+static void TEST_RTIdentifierEncode_Valid(void) {
+  RTIdentifier id = FIXTURE_Identifier(1);
+  RTByte buffer[] = {0X00, 0X00};
+  id->codepoint[0] = 0X02;
+  RTIdentifierEncode(id, buffer);
+  ASSERT(buffer[0] == 0X01);
+  ASSERT(buffer[1] == 0X02);
+  AFTER_Identifier(id);
+}
+
+static void TEST_RTIdentifierDecode_Valid(void) {
+  RTByte data[] = {0X01, 0X02};
   RTByte *alias = data;
-  RTIdentifierDecode(&alias);
-  //ASSERT(id->codepoint[0] == 0X01);
+  RTIdentifier id = RTIdentifierDecode(&alias);
+  REQUIRE(id != NULL);
+  ASSERT(id->length == 1);
+  ASSERT(id->codepoint[0] == 0X02);
   ASSERT(alias == data + sizeof(data));
+  AFTER_Identifier(id);
 }
 
-static void TEST_RTIdentifierEqual_Equal(void) {
+static void TEST_RTIdentifierEqual_Identity(void) {
   RTIdentifier id = FIXTURE_Identifier(1);
-  RTIdentifier other = FIXTURE_Identifier(1);
-  id->codepoint[0] = 0X01;
-  other->codepoint[0] = 0X01;
-  ASSERT(RTIdentifierEqual(id, other) == TRUE);
-}
-
-static void TEST_RTIdentifierEqual_LengthMismatch(void) {
-  RTIdentifier id = FIXTURE_Identifier(1);
-  RTIdentifier other = FIXTURE_Identifier(2);
-  ASSERT(RTIdentifierEqual(id, other) == FALSE);
-}
-
-static void TEST_RTIdentifierEqual_ContentMismatch(void) {
-  RTIdentifier id = FIXTURE_Identifier(1);
-  RTIdentifier other = FIXTURE_Identifier(1);
-  id->codepoint[0] = 0X01;
-  other->codepoint[0] = 0X02;
-  ASSERT(RTIdentifierEqual(id, other) == FALSE);
+  ASSERT(RTIdentifierEqual(id, id) == TRUE);
+  AFTER_Identifier(id);
 }
 
 static void TEST_RTIdentifierHash_NonEmpty(void) {
   RTIdentifier id = FIXTURE_Identifier(1);
-  id->codepoint[0] = 0X01;
-  ASSERT(RTIdentifierHash(id) == 0X02);
+  ASSERT(RTIdentifierHash(id) == 0X01);
+  AFTER_Identifier(id);
 }
 
 int main(void) {
-  TEST_RTIdentifierCreate_Valid();
+  TEST_Create_Valid();
   TEST_RTIdentifierDealloc_Valid();
-  TEST_RTIdentifierDecode_AllBytesDistinct();
-  TEST_RTIdentifierEqual_Equal();
-  TEST_RTIdentifierEqual_LengthMismatch();
-  TEST_RTIdentifierEqual_ContentMismatch();
+  TEST_RTIdentifierEncodingSize_Valid();
+  TEST_RTIdentifierEncode_Valid();
+  TEST_RTIdentifierDecode_Valid();
+  TEST_RTIdentifierEqual_Identity();
   TEST_RTIdentifierHash_NonEmpty();
 }
 
