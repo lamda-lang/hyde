@@ -4,6 +4,7 @@ build/RTDecodeTest
 build/RTEncodeTest
 build/RTExecuteTest
 build/RTIdentifierTest
+build/RTIntegerTest
 build/RTListTest
 build/RTMemoryTest
 build/RTMapTest
