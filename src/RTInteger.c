@@ -32,7 +32,7 @@ void RTIntegerEncode(RTInteger integer, RTByte *buffer) {
 }
 
 RTInteger RTIntegerDecode(RTByte **data) {
-  RTInteger32Bit count = RTDecodeInteger32Bit(data);
+  RTInteger32Bit count = RTDecodeVBRInteger32Bit(data);
   RTInteger integer = Create(count);
   if (integer == NULL) {
     return NULL;
@@ -113,7 +113,7 @@ static void TEST_RTIntegerEncode_Valid(void) {
 }
 
 static void TEST_RTIntegerDecode_Valid(void) {
-  RTByte data[] = {0X01, 0X00, 0X00, 0X00, 0X02, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00};
+  RTByte data[] = {0X01, 0X02, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00};
   RTByte *alias = data;
   RTInteger integer = RTIntegerDecode(&alias);
   ASSERT(integer->count == 1);

@@ -87,8 +87,87 @@ RTBool RTOperationExecute(RTByte **instruction, RTValue *reg) {
 
 #ifdef RT_OPERATION_TEST
 
-int main(void) {
+static RTValue *FIXTURE_Register(void) {
+  RTValue *reg = RTMemoryAlloc(sizeof(RTValue *));
+  REQUIRE(reg != NULL);
+  RTValue value = RTValueCreate();
+  REQUIRE(value != NULL);
+  reg[0] = value;
+  return reg;
+}
 
+static void AFTER_Register(RTValue *reg) {
+  RTValueDealloc(reg[0]);
+  RTMemoryDealloc(reg);
+}
+
+static void TEST_CreateIdentifier_Valid(void) {
+  RTByte instruction[] = {0X01, 0X02, 0X00};
+  RTByte *alias = instruction;
+  RTValue *reg = FIXTURE_Register();
+  REQUIRE(CreateIdentifier(&alias, reg) == TRUE);
+  ASSERT(RTValueGetPrimitive(reg[0]).id != NULL);
+  ASSERT(alias == instruction + sizeof(instruction));
+  AFTER_Register(reg);
+}
+
+static void TEST_CreateInteger_Valid(void) {
+  RTByte instruction[] = {0X01, 0X02, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00};
+  RTByte *alias = instruction;
+  RTValue *reg = FIXTURE_Register();
+  REQUIRE(CreateInteger(&alias, reg) == TRUE);
+  ASSERT(RTValueGetPrimitive(reg[0]).integer != NULL);
+  ASSERT(alias == instruction + sizeof(instruction));
+  AFTER_Register(reg);
+}
+
+static void TEST_CreateList_Valid(void) {
+  RTByte instruction[] = {0X00, 0X00};
+  RTByte *alias = instruction;
+  RTValue *reg = FIXTURE_Register();
+  REQUIRE(CreateList(&alias, reg) == TRUE);
+  ASSERT(RTValueGetPrimitive(reg[0]).list != NULL);
+  ASSERT(alias == instruction + sizeof(instruction));
+  AFTER_Register(reg);
+}
+
+static void TEST_CreateMap_Valid(void) {
+  RTByte instruction[] = {0X00, 0X00};
+  RTByte *alias = instruction;
+  RTValue *reg = FIXTURE_Register();
+  REQUIRE(CreateMap(&alias, reg) == TRUE);
+  ASSERT(RTValueGetPrimitive(reg[0]).map != NULL);
+  ASSERT(alias == instruction + sizeof(instruction));
+  AFTER_Register(reg);
+}
+
+static void TEST_CreateString_Valid(void) {
+  RTByte instruction[] = {0X01, 0X02, 0X00};
+  RTByte *alias = instruction;
+  RTValue *reg = FIXTURE_Register();
+  REQUIRE(CreateString(&alias, reg) == TRUE);
+  ASSERT(RTValueGetPrimitive(reg[0]).string != NULL);
+  ASSERT(alias == instruction + sizeof(instruction));
+  AFTER_Register(reg);
+}
+
+static void TEST_RTOperationExecute_Valid(void) {
+  RTByte instruction[] = {0X00, 0X00, 0X00};
+  RTByte *alias = instruction;
+  RTValue *reg = FIXTURE_Register();
+  REQUIRE(RTOperationExecute(&alias, reg));
+  ASSERT(RTValueGetPrimitive(reg[0]).id != NULL);
+  ASSERT(alias == instruction + sizeof(instruction));
+  AFTER_Register(reg);
+}
+
+int main(void) {
+  TEST_CreateIdentifier_Valid();
+  TEST_CreateInteger_Valid();
+  TEST_CreateList_Valid();
+  TEST_CreateMap_Valid();
+  TEST_CreateString_Valid();
+  TEST_RTOperationExecute_Valid();
 }
 
 #endif
