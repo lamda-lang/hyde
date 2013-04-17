@@ -1,68 +1,36 @@
 #include "RTExecute.h"
 
-static inline void DeallocRegisterSet(RTValue *reg, RTInteger32Bit count) {
-  for (RTInteger32Bit index = 0; index < count; index += 1) {
+static inline void DeallocValueSet(RTValue *reg, RTInteger32Bit from, RTInteger32Bit until) {
+  for (RTInteger32Bit index = from; index < until; index += 1) {
     RTValueDealloc(reg[index]);
   }
-  RTMemoryDealloc(reg);
 }
 
-static inline RTValue *CreateRegisterSet(RTInteger32Bit count) {
-  RTValue *reg = RTMemoryAlloc(SIZE_OF(RTValue, count));
-  if (reg == NULL) {
-    return NULL;
-  }
-  for (RTInteger32Bit index = 0; index < count; index += 1) {
-    RTValue value = RTValueCreate();
-    if (value == NULL) {
-      DeallocRegisterSet(reg, index);
-      return NULL;
-    }
-    reg[index] = value;
-  }
-  return reg;
-}
-
-RTValue RTExecuteBytecode(RTByte *code) {
+RTValue RTExecuteCode(RTByte *code, RTValue *arg, RTInteger8Bit argCount) {
   RTInteger32Bit regCount = RTDecodeVBRInteger32Bit(&code);
   RTInteger32Bit instCount = RTDecodeVBRInteger32Bit(&code);
-  RTValue *reg = CreateRegisterSet(regCount);
+  RTValue *reg = RTMemoryAlloc(SIZE_OF(RTValue *, regCount));
   if (reg == NULL) {
     return NULL;
+  }
+  for (RTInteger8Bit index = 0; index < argCount; index += 1) {
+    reg[index] = arg[index];
+  }
+  for (RTInteger32Bit index = argCount; index < regCount; index += 1) {
+    reg[index] = RTValueCreate();
+    if (reg[index] == NULL) {
+      DeallocValueSet(reg, argCount, index);
+      RTMemoryDealloc(reg);
+      return NULL;
+    }
   }
   for (RTInteger32Bit index = 0; index < instCount; index += 1) {
     if (RTOperationExecute(&code, reg) == FALSE) {
-      DeallocRegisterSet(reg, regCount);
+      DeallocValueSet(reg, argCount, regCount);
       return NULL;
     }
   }
-  RTValue result = reg[0];
-  DeallocRegisterSet(reg, 0);
+  RTValue result = reg[argCount];
+  RTMemoryDealloc(reg);
   return result;
 }
-
-#ifdef RT_EXECUTE_TEST
-
-/*static RTValue *FIXTURE_RegisterSet(RTInteger32Bit count) {
-  RTValue *reg = CreateRegisterSet(count);
-  REQUIRE(reg != NULL);
-  return reg;
-}
-*/
-static void TEST_CreateRegisterSet_Valid(void) {
-  RTValue *reg = CreateRegisterSet(1);
-  REQUIRE(reg != NULL);
-  ASSERT(reg[0] != NULL);
-}
-
-static void TEST_DeallocRegisterSet_Valid(void) {
-  //RTValue *reg = FIXTURE_RegisterSet(1);
-  //
-}
-
-int main(void) {
-  TEST_CreateRegisterSet_Valid();
-  TEST_DeallocRegisterSet_Valid();
-}
-
-#endif

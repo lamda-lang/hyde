@@ -61,6 +61,9 @@ typedef struct RTIdentifier *RTIdentifier;
 /** -brief An opaque data type that represents a primitive integer. */
 typedef struct RTInteger *RTInteger;
 
+/** -brief An opaque data type that represents a primitive lambda. */
+typedef struct RTLambda *RTLambda;
+
 /** -brief An opaque data type that represents a primitive list. */
 typedef struct RTList *RTList;
 
@@ -74,6 +77,7 @@ typedef struct RTString *RTString;
 typedef union {
   RTIdentifier id;
   RTInteger integer;
+  RTLambda lambda;
   RTList list;
   RTMap map;
   RTString string;
@@ -81,11 +85,13 @@ typedef union {
 
 #endif
 
+#include "RTCollect.h"
 #include "RTDecode.h"
 #include "RTEncode.h"
 #include "RTExecute.h"
 #include "RTIdentifier.h"
 #include "RTInteger.h"
+#include "RTLambda.h"
 #include "RTList.h"
 #include "RTMap.h"
 #include "RTMemory.h"

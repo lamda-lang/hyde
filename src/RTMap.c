@@ -70,11 +70,3 @@ RTBool RTMapEqual(RTMap map, RTMap other) {
   }
   return TRUE;
 }
-
-#ifdef RT_MAP_TEST
-
-int main(void) {
-
-}
-
-#endif

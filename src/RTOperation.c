@@ -3,171 +3,104 @@
 typedef enum {
   CREATE_IDENTIFIER = 0,
   CREATE_INTEGER = 1,
-  CREATE_LIST = 2,
-  CREATE_MAP = 3,
-  CREATE_STRING = 4
+  CREATE_LAMBDA = 2,
+  CREATE_LIST = 3,
+  CREATE_MAP = 4,
+  CREATE_STRING = 5
 } RTOpcode;
 
-static inline RTBool CreateIdentifier(RTByte **instruction, RTValue *reg) {
-  RTIdentifier id = RTIdentifierDecode(instruction);
+static inline RTBool CreateIdentifier(RTByte **code, RTValue *reg) {
+  RTIdentifier id = RTIdentifierDecode(code);
   if (id == NULL) {
     return FALSE;
   }
-  RTInteger32Bit index = RTDecodeVBRInteger32Bit(instruction);
-  RTValueSetIdentifier(reg[index], id);
+  RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
+  RTValueSetIdentifier(value, id);
   return TRUE;
 }
 
-static inline RTBool CreateInteger(RTByte **instruction, RTValue *reg) {
-  RTInteger integer = RTIntegerDecode(instruction);
+static inline RTBool CreateInteger(RTByte **code, RTValue *reg) {
+  RTInteger integer = RTIntegerDecode(code);
   if (integer == NULL) {
     return FALSE;
   }
-  RTInteger32Bit index = RTDecodeVBRInteger32Bit(instruction);
-  RTValueSetInteger(reg[index], integer);
+  RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
+  RTValueSetInteger(value, integer);
   return TRUE;
 }
 
-static inline RTBool CreateList(RTByte **instruction, RTValue *reg) {
-  RTInteger32Bit length = RTDecodeVBRInteger32Bit(instruction);
+static inline RTBool CreateLambda(RTByte **code, RTValue *reg) {
+  RTInteger8Bit arity = RTDecodeInteger8Bit(code);
+  RTInteger32Bit count = RTDecodeVBRInteger32Bit(code);
+  RTInteger32Bit length = RTDecodeVBRInteger32Bit(code);
+  RTLambda lambda = RTLambdaCreate(*code, length, arity, count);
+  if (lambda == NULL) {
+    return FALSE;
+  }
+  for (RTInteger32Bit index = 0; index < count; index += 1) {
+    RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
+    RTLambdaSetContextValueAtIndex(lambda, value, index);
+  }
+  RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
+  RTValueSetLambda(value, lambda);
+  return TRUE;
+}
+
+static inline RTBool CreateList(RTByte **code, RTValue *reg) {
+  RTInteger32Bit length = RTDecodeVBRInteger32Bit(code);
   RTList list = RTListCreate(length);
   if (list == NULL) {
     return FALSE;
   }
   for (RTInteger32Bit index = 0; index < length; index += 1) {
-    RTValue value = reg[RTDecodeVBRInteger32Bit(instruction)];
+    RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
     RTListSetValueAtIndex(list, value, index);
   }
-  RTInteger32Bit index = RTDecodeVBRInteger32Bit(instruction);
-  RTValueSetList(reg[index], list);
+  RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
+  RTValueSetList(value, list);
   return TRUE;
 }
 
-static inline RTBool CreateMap(RTByte **instruction, RTValue *reg) {
-  RTInteger32Bit capacity = RTDecodeVBRInteger32Bit(instruction);
+static inline RTBool CreateMap(RTByte **code, RTValue *reg) {
+  RTInteger32Bit capacity = RTDecodeVBRInteger32Bit(code);
   RTMap map = RTMapCreate(capacity);
   if (map == NULL) {
     return FALSE;
   }
   for (RTInteger32Bit index = 0; index < capacity; index += 1) {
-    RTValue key = reg[RTDecodeVBRInteger32Bit(instruction)];
-    RTValue value = reg[RTDecodeVBRInteger32Bit(instruction)];
+    RTValue key = reg[RTDecodeVBRInteger32Bit(code)];
+    RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
     RTMapSetValueForKey(map, value, key);
   }
-  RTInteger32Bit index = RTDecodeVBRInteger32Bit(instruction);
-  RTValueSetMap(reg[index], map);
+  RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
+  RTValueSetMap(value, map);
   return TRUE;
 }
 
-static inline RTBool CreateString(RTByte **instruction, RTValue *reg) {
-  RTString string = RTStringDecode(instruction);
+static inline RTBool CreateString(RTByte **code, RTValue *reg) {
+  RTString string = RTStringDecode(code);
   if (string == NULL) {
     return FALSE;
   }
-  RTInteger32Bit index = RTDecodeVBRInteger32Bit(instruction);
-  RTValueSetString(reg[index], string);
+  RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
+  RTValueSetString(value, string);
   return TRUE;
 }
 
-RTBool RTOperationExecute(RTByte **instruction, RTValue *reg) {
-  RTOpcode opcode = RTDecodeInteger8Bit(instruction);
+RTBool RTOperationExecute(RTByte **code, RTValue *reg) {
+  RTOpcode opcode = RTDecodeInteger8Bit(code);
   switch (opcode) {
   case CREATE_IDENTIFIER:
-    return CreateIdentifier(instruction, reg);
+    return CreateIdentifier(code, reg);
   case CREATE_INTEGER:
-    return CreateInteger(instruction, reg);
+    return CreateInteger(code, reg);
+  case CREATE_LAMBDA:
+    return CreateLambda(code, reg);
   case CREATE_LIST:
-    return CreateList(instruction, reg);
+    return CreateList(code, reg);
   case CREATE_MAP:
-    return CreateMap(instruction, reg);
+    return CreateMap(code, reg);
   case CREATE_STRING:
-    return CreateString(instruction, reg);
+    return CreateString(code, reg);
   }
 }
-
-#ifdef RT_OPERATION_TEST
-
-static RTValue *FIXTURE_Register(void) {
-  RTValue *reg = RTMemoryAlloc(sizeof(RTValue *));
-  REQUIRE(reg != NULL);
-  RTValue value = RTValueCreate();
-  REQUIRE(value != NULL);
-  reg[0] = value;
-  return reg;
-}
-
-static void AFTER_Register(RTValue *reg) {
-  RTValueDealloc(reg[0]);
-  RTMemoryDealloc(reg);
-}
-
-static void TEST_CreateIdentifier_Valid(void) {
-  RTByte instruction[] = {0X01, 0X02, 0X00};
-  RTByte *alias = instruction;
-  RTValue *reg = FIXTURE_Register();
-  REQUIRE(CreateIdentifier(&alias, reg) == TRUE);
-  ASSERT(RTValueGetPrimitive(reg[0]).id != NULL);
-  ASSERT(alias == instruction + sizeof(instruction));
-  AFTER_Register(reg);
-}
-
-static void TEST_CreateInteger_Valid(void) {
-  RTByte instruction[] = {0X01, 0X02, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00, 0X00};
-  RTByte *alias = instruction;
-  RTValue *reg = FIXTURE_Register();
-  REQUIRE(CreateInteger(&alias, reg) == TRUE);
-  ASSERT(RTValueGetPrimitive(reg[0]).integer != NULL);
-  ASSERT(alias == instruction + sizeof(instruction));
-  AFTER_Register(reg);
-}
-
-static void TEST_CreateList_Valid(void) {
-  RTByte instruction[] = {0X00, 0X00};
-  RTByte *alias = instruction;
-  RTValue *reg = FIXTURE_Register();
-  REQUIRE(CreateList(&alias, reg) == TRUE);
-  ASSERT(RTValueGetPrimitive(reg[0]).list != NULL);
-  ASSERT(alias == instruction + sizeof(instruction));
-  AFTER_Register(reg);
-}
-
-static void TEST_CreateMap_Valid(void) {
-  RTByte instruction[] = {0X00, 0X00};
-  RTByte *alias = instruction;
-  RTValue *reg = FIXTURE_Register();
-  REQUIRE(CreateMap(&alias, reg) == TRUE);
-  ASSERT(RTValueGetPrimitive(reg[0]).map != NULL);
-  ASSERT(alias == instruction + sizeof(instruction));
-  AFTER_Register(reg);
-}
-
-static void TEST_CreateString_Valid(void) {
-  RTByte instruction[] = {0X01, 0X02, 0X00};
-  RTByte *alias = instruction;
-  RTValue *reg = FIXTURE_Register();
-  REQUIRE(CreateString(&alias, reg) == TRUE);
-  ASSERT(RTValueGetPrimitive(reg[0]).string != NULL);
-  ASSERT(alias == instruction + sizeof(instruction));
-  AFTER_Register(reg);
-}
-
-static void TEST_RTOperationExecute_Valid(void) {
-  RTByte instruction[] = {0X00, 0X00, 0X00};
-  RTByte *alias = instruction;
-  RTValue *reg = FIXTURE_Register();
-  REQUIRE(RTOperationExecute(&alias, reg));
-  ASSERT(RTValueGetPrimitive(reg[0]).id != NULL);
-  ASSERT(alias == instruction + sizeof(instruction));
-  AFTER_Register(reg);
-}
-
-int main(void) {
-  TEST_CreateIdentifier_Valid();
-  TEST_CreateInteger_Valid();
-  TEST_CreateList_Valid();
-  TEST_CreateMap_Valid();
-  TEST_CreateString_Valid();
-  TEST_RTOperationExecute_Valid();
-}
-
-#endif

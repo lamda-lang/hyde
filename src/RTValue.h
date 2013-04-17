@@ -23,6 +23,12 @@ void RTValueSetIdentifier(RTValue value, RTIdentifier id);
     -effect The primitive reference of [value] is set to [id]. */
 void RTValueSetInteger(RTValue value, RTInteger integer); 
 
+/** -brief Sets [lambda] as the primitive of [value].
+    -arg value The value in which the primitive is to be changed.
+    -arg map The primitive of [value].
+    -effect The primitive reference of [value] is set to [lambda]. */
+void RTValueSetLambda(RTValue value, RTLambda lambda);
+
 /** -brief Sets [list] as the primitive of [value].
     -arg value The value in which the primitive is to be changed.
     -arg map The primitive of [value].

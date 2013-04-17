@@ -3,9 +3,10 @@
 typedef enum {
   IDENTIFIER = 0,
   INTEGER = 1,
-  LIST = 2,
-  MAP = 3,
-  STRING = 4
+  LAMBDA = 2,
+  LIST = 3,
+  MAP = 4,
+  STRING = 5
 } RTType;
 
 struct RTValue {
@@ -32,6 +33,9 @@ void RTValueDealloc(RTValue value) {
     case INTEGER:
       RTIntegerDealloc(value->primitive.integer);
       break;
+    case LAMBDA:
+      RTLambdaDealloc(value->primitive.lambda);
+      break;
     case LIST:
       RTListDealloc(value->primitive.list);
       break;
@@ -54,6 +58,12 @@ void RTValueSetIdentifier(RTValue value, RTIdentifier id) {
 void RTValueSetInteger(RTValue value, RTInteger integer) {
   value->primitive.integer = integer;
   value->type = INTEGER;
+  value->initialized = TRUE;
+}
+
+void RTValueSetLambda(RTValue value, RTLambda lambda) {
+  value->primitive.lambda = lambda;
+  value->type = LAMBDA;
   value->initialized = TRUE;
 }
 
@@ -85,6 +95,8 @@ RTInteger64Bit RTValueHash(RTValue value) {
     return RTIdentifierHash(value->primitive.id);
   case INTEGER:
     return RTIntegerHash(value->primitive.integer);
+  case LAMBDA:
+    return RTLambdaHash(value->primitive.lambda);
   case LIST:
     return RTListHash(value->primitive.list);
   case MAP:
@@ -103,6 +115,8 @@ RTBool RTValueEqual(RTValue value, RTValue other) {
     return RTIdentifierEqual(value->primitive.id, other->primitive.id);
   case INTEGER:
     return RTIntegerEqual(value->primitive.integer, other->primitive.integer);
+  case LAMBDA:
+    return RTLambdaEqual(value->primitive.lambda, other->primitive.lambda);
   case LIST:
     return RTListEqual(value->primitive.list, other->primitive.list);
   case MAP:
@@ -111,130 +125,3 @@ RTBool RTValueEqual(RTValue value, RTValue other) {
     return RTStringEqual(value->primitive.string, other->primitive.string);
   }
 }
-
-#ifdef RT_VALUE_TEST
-
-static RTValue FIXTURE_Value(void) {
-  RTValue value = RTValueCreate();
-  REQUIRE(value != NULL);
-  return value;
-}
-
-static RTValue FIXTURE_ValueInitialized(RTIdentifier id) {
-  RTValue value = RTValueCreate();
-  REQUIRE(value != NULL);
-  RTValueSetIdentifier(value, id);
-  return value;
-}
-
-static RTIdentifier FIXTURE_Identifier(void) {
-  RTByte data[] = {0X01, 0X02};
-  RTByte *alias = data;
-  RTIdentifier id = RTIdentifierDecode(&alias);
-  REQUIRE(id != NULL);
-  return id;
-}
-
-static void AFTER_Value(RTValue value) {
-  RTValueDealloc(value);
-}
-
-static void TEST_RTValueCreate_Valid(void) {
-  RTValue value = RTValueCreate();
-  REQUIRE(value != NULL);
-  ASSERT(value->initialized == FALSE);
-  AFTER_Value(value);
-}
-
-static void TEST_RTValueDealloc_NotInitialized(void) {
-  RTValue value = FIXTURE_Value();
-  RTValueDealloc(value);
-}
-
-static void TEST_RTValueDealloc_Initialized(void) {
-  RTIdentifier id = FIXTURE_Identifier();
-  RTValue value = FIXTURE_ValueInitialized(id);
-  RTValueDealloc(value);
-}
-
-static void TEST_RTValueSetIdentifier_Valid(void) {
-  RTValue value = FIXTURE_Value();
-  RTValueSetIdentifier(value, NULL);
-  ASSERT(value->type == IDENTIFIER);
-  ASSERT(value->primitive.id == NULL);
-  ASSERT(value->initialized == TRUE);
-  AFTER_Value(value);
-}
-
-static void TEST_RTValueSetInteger_Valid(void) {
-  RTValue value = FIXTURE_Value();
-  RTValueSetInteger(value, NULL);
-  ASSERT(value->type == INTEGER);
-  ASSERT(value->primitive.integer == NULL);
-  ASSERT(value->initialized == TRUE);
-  AFTER_Value(value);
-}
-
-static void TEST_RTValueSetList_Valid(void) {
-  RTValue value = FIXTURE_Value();
-  RTValueSetList(value, NULL);
-  ASSERT(value->type == LIST);
-  ASSERT(value->primitive.list == NULL);
-  ASSERT(value->initialized == TRUE);
-  AFTER_Value(value);
-}
-
-static void TEST_RTValueSetMap_Valid(void) {
-  RTValue value = FIXTURE_Value();
-  RTValueSetMap(value, NULL);
-  ASSERT(value->type == MAP);
-  ASSERT(value->primitive.map == NULL);
-  ASSERT(value->initialized == TRUE);
-  AFTER_Value(value);
-}
-
-static void TEST_RTValueSetString_Valid(void) {
-  RTValue value = FIXTURE_Value();
-  RTValueSetString(value, NULL);
-  ASSERT(value->type == STRING);
-  ASSERT(value->primitive.string == NULL);
-  ASSERT(value->initialized == TRUE);
-  AFTER_Value(value);
-}
-
-static void TEST_RTValueGetPrimitive_Valid(void) {
-  RTIdentifier id = FIXTURE_Identifier();
-  RTValue value = FIXTURE_ValueInitialized(id);
-  ASSERT(RTValueGetPrimitive(value).id == id);
-  AFTER_Value(value);
-}
-
-static void TEST_RTValueHash_IdentifierPrimitive(void) {
-  RTIdentifier id = FIXTURE_Identifier();
-  RTValue value = FIXTURE_ValueInitialized(id);
-  ASSERT(RTValueHash(value) == RTIdentifierHash(id));
-  AFTER_Value(value);
-}
-
-static void TEST_RTValueEqual_Identity(void) {
-  RTIdentifier id = FIXTURE_Identifier();
-  RTValue value = FIXTURE_ValueInitialized(id);
-  ASSERT(RTValueEqual(value, value) == TRUE);
-  AFTER_Value(value);
-}
-
-int main(void) {
-  TEST_RTValueCreate_Valid();
-  TEST_RTValueDealloc_NotInitialized();
-  TEST_RTValueDealloc_Initialized();
-  TEST_RTValueSetIdentifier_Valid();
-  TEST_RTValueSetInteger_Valid();
-  TEST_RTValueSetList_Valid();
-  TEST_RTValueSetMap_Valid();
-  TEST_RTValueSetString_Valid();
-  TEST_RTValueGetPrimitive_Valid();
-  TEST_RTValueHash_IdentifierPrimitive();
-  TEST_RTValueEqual_Identity();
-}
-
-#endif
