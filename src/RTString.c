@@ -6,7 +6,7 @@ struct RTString {
 };
 
 static inline RTString RTStringCreate(RTInteger32Bit length) {
-  RTSize size = sizeof(struct RTString) + SIZE_OF(RTInteger32Bit, length);
+  RTSize size = sizeof(struct RTString) + sizeof(RTInteger32Bit) * length;
   RTString string = RTMemoryAlloc(size);
   if (string == NULL) {
     return NULL;
@@ -20,7 +20,7 @@ void RTStringDealloc(RTString string) {
 }
 
 RTSize RTStringEncodingSize(RTString string) {
- return sizeof(RTInteger32Bit) + SIZE_OF(RTInteger32Bit, string->length);
+ return sizeof(RTInteger32Bit) + sizeof(RTInteger32Bit) * string->length;
 }
 
 void RTStringEncode(RTString string, RTByte *buffer) {
@@ -48,6 +48,6 @@ RTInteger64Bit RTStringHash(RTString string) {
 }
 
 RTBool RTStringEqual(RTString string, RTString other) {
-  RTSize size = SIZE_OF(RTInteger32Bit, string->length);
+  RTSize size = sizeof(RTInteger32Bit) * string->length;
   return string->length == other->length && RTMemoryCompare(string->codepoint, other->codepoint, size) == TRUE;
 }

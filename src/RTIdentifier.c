@@ -6,7 +6,7 @@ struct RTIdentifier {
 };
 
 static inline RTIdentifier Create(RTInteger8Bit length) {
-  RTSize size = sizeof(struct RTIdentifier) + SIZE_OF(RTInteger8Bit, length);
+  RTSize size = sizeof(struct RTIdentifier) + sizeof(RTInteger8Bit) * length;
   RTIdentifier id = RTMemoryAlloc(size);
   if (id == NULL) {
     return NULL;
@@ -20,7 +20,7 @@ void RTIdentifierDealloc(RTIdentifier id) {
 }
 
 RTSize RTIdentifierEncodingSize(RTIdentifier id) {
-  return sizeof(RTInteger8Bit) + SIZE_OF(RTInteger8Bit, id->length);
+  return sizeof(RTInteger8Bit) + sizeof(RTInteger8Bit) * id->length;
 }
 
 void RTIdentifierEncode(RTIdentifier id, RTByte *buffer) {
@@ -44,7 +44,7 @@ RTIdentifier RTIdentifierDecode(RTByte **data) {
 }
 
 RTBool RTIdentifierEqual(RTIdentifier id, RTIdentifier other) {
-  RTSize size = SIZE_OF(RTInteger8Bit, id->length);
+  RTSize size = sizeof(RTInteger8Bit) * id->length;
   return id->length == other->length && RTMemoryCompare(id->codepoint, other->codepoint, size);
 }
 

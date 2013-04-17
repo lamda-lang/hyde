@@ -1,15 +1,3 @@
 #!/bin/sh
 
-clang -std=c99 -fsyntax-only -Weverything src/RTCollect.c
-clang -std=c99 -fsyntax-only -Weverything src/RTDecode.c
-clang -std=c99 -fsyntax-only -Weverything src/RTEncode.c
-clang -std=c99 -fsyntax-only -Weverything src/RTExecute.c
-clang -std=c99 -fsyntax-only -Weverything src/RTIdentifier.c
-clang -std=c99 -fsyntax-only -Weverything src/RTInteger.c
-clang -std=c99 -fsyntax-only -Weverything src/RTLambda.c
-clang -std=c99 -fsyntax-only -Weverything src/RTList.c
-clang -std=c99 -fsyntax-only -Weverything src/RTMemory.c
-clang -std=c99 -fsyntax-only -Weverything src/RTMap.c
-clang -std=c99 -fsyntax-only -Weverything src/RTOperation.c
-clang -std=c99 -fsyntax-only -Weverything src/RTString.c
-clang -std=c99 -fsyntax-only -Weverything src/RTValue.c
+clang -std=c99 -fsyntax-only -Weverything src/*.c

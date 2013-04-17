@@ -16,7 +16,7 @@ static inline RTInteger32Bit RTMapIndex(RTMap map, RTValue value, RTInteger32Bit
 
 RTMap RTMapCreate(RTInteger32Bit capacity) {
   RTInteger32Bit length = capacity * 2;
-  RTSize size = sizeof(struct RTMap) + SIZE_OF(struct RTElement, length);
+  RTSize size = sizeof(struct RTMap) + sizeof(struct RTElement) * length;
   RTMap map = RTMemoryAlloc(size);
   if (map == NULL) {
     return NULL;

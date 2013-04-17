@@ -9,7 +9,8 @@ static inline void DeallocValueSet(RTValue *reg, RTInteger32Bit from, RTInteger3
 RTValue RTExecuteCode(RTByte *code, RTValue *arg, RTInteger8Bit argCount) {
   RTInteger32Bit regCount = RTDecodeVBRInteger32Bit(&code);
   RTInteger32Bit instCount = RTDecodeVBRInteger32Bit(&code);
-  RTValue *reg = RTMemoryAlloc(SIZE_OF(RTValue *, regCount));
+  RTSize size = sizeof(RTValue *) * regCount;
+  RTValue *reg = RTMemoryAlloc(size);
   if (reg == NULL) {
     return NULL;
   }

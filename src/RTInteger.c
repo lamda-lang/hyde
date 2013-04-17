@@ -6,7 +6,7 @@ struct RTInteger {
 };
 
 static inline RTInteger Create(RTInteger32Bit count) {
-  RTSize size = sizeof(struct RTInteger) + SIZE_OF(RTInteger64Bit, count);
+  RTSize size = sizeof(struct RTInteger) + sizeof(RTInteger64Bit) * count;
   RTInteger integer = RTMemoryAlloc(size);
   if (integer == NULL) {
     return NULL;
@@ -20,7 +20,7 @@ void RTIntegerDealloc(RTInteger integer) {
 }
 
 RTSize RTIntegerEncodingSize(RTInteger integer) {
-  return sizeof(RTInteger32Bit) + SIZE_OF(RTInteger64Bit, integer->count);
+  return sizeof(RTInteger32Bit) + sizeof(RTInteger64Bit) * integer->count;
 }
 
 void RTIntegerEncode(RTInteger integer, RTByte *buffer) {
@@ -44,7 +44,7 @@ RTInteger RTIntegerDecode(RTByte **data) {
 }
 
 RTBool RTIntegerEqual(RTInteger integer, RTInteger other) {
-  RTSize size = SIZE_OF(RTInteger64Bit, integer->count);
+  RTSize size = sizeof(RTInteger64Bit) * integer->count;
   return integer->count == other->count && RTMemoryCompare(integer->value, other->value, size);
 }
 

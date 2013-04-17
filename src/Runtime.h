@@ -2,22 +2,8 @@
 #define RUNTIME
 
 #include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-/** -brief The size of an array with [length] elements of type [type], in bytes.
-    -arg type The type of the elements.
-    -arg length The element count of the array. */
-#define SIZE_OF(type, length) (sizeof(type) * length)
-
-/** -brief Prints an error message if [condition] is [FALSE].
-    -arg condition A boolean condition. */
-#define ASSERT(condition) if (!(condition)) fprintf(stderr, "%s:%i: ASSERT(%s) did fail\n", __FILE__, __LINE__, #condition)
-
-/** -brief Prints an error and terminates the process if [condition] is [FALSE].
-    -arg condition A boolean condition. */
-#define REQUIRE(condition) if (!(condition)) (fprintf(stderr, "%s:%i: REQUIRE(%s) did fail\n", __FILE__, __LINE__, #condition), exit(EXIT_FAILURE))
 
 /** -brief The smallest addressable unit of memory. */
 typedef unsigned char RTByte;

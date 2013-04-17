@@ -13,7 +13,7 @@ static inline RTBool EqualMembers(RTLambda lambda, RTLambda other) {
 }
 
 RTLambda RTLambdaCreate(RTByte *code, RTInteger32Bit length, RTInteger8Bit arity, RTInteger32Bit count) {
-  RTSize size = sizeof(struct RTLambda) + SIZE_OF(RTValue, count);
+  RTSize size = sizeof(struct RTLambda) + sizeof(RTValue) * count;
   RTLambda lambda = RTMemoryAlloc(size);
   RTByte *buffer = RTMemoryAlloc(length);
   if (lambda == NULL || buffer == NULL) {

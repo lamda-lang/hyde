@@ -6,7 +6,7 @@ struct RTList {
 };
 
 RTList RTListCreate(RTInteger32Bit length) {
-  RTSize size = sizeof(struct RTList) + SIZE_OF(RTValue, length);
+  RTSize size = sizeof(struct RTList) + sizeof(RTValue) * length;
   RTList list = RTMemoryAlloc(size);
   if (list == NULL) {
     return NULL;
