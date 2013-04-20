@@ -4,6 +4,10 @@ void *RTMemoryAlloc(RTSize size) {
   return malloc(size);
 }
 
+void *RTMemoryRealloc(void *buffer, RTSize size) {
+  return realloc( buffer, size);
+}
+
 void RTMemoryDealloc(void *buffer) {
   free(buffer);
 }

@@ -8,6 +8,14 @@
     -return The memory buffer, or [NULL] if allocation fails. */
 void *RTMemoryAlloc(RTSize size);
 
+/** -brief Reallocates a memory buffer.
+    -arg buffer The buffer to reallocate.
+    -arg size The size of the new buffer, in bytes.
+    -return The reallocated memory buffer or [NULL] if allocation fail.
+    -warning [buffer] is invalid if allocation succeeds.
+    -warning [buffer] is not deallocated if allocation fails. */
+void *RTMemoryRealloc(void *buffer, RTSize size);
+
 /** -brief Deallocates a memory buffer.
     -arg buffer The memory buffer or [NULL]. */
 void RTMemoryDealloc(void *buffer);
