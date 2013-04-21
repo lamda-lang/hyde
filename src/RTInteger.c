@@ -1,31 +1,82 @@
 #include "RTInteger.h"
 
+typedef _Bool RTSign;
+
+enum {
+  POSITIVE = 1,
+  NEGATIVE = 0
+};
+
 struct RTInteger {
   RTInteger32Bit count;
-  RTBool positive;
+  RTSign sign;
   RTInteger32Bit value[];
 };
 
+typedef RTInteger64Bit (*RTCalculation)(RTInteger32Bit value, RTInteger32Bit other);
+
+static inline RTSize Size(RTInteger32Bit count) {
+  return sizeof(struct RTInteger) + sizeof(RTInteger32Bit) * count;
+}
+
 static inline RTInteger Create(RTInteger32Bit count) {
-  RTSize size = sizeof(struct RTInteger) + sizeof(RTInteger32Bit) * count;
+  RTSize size = Size(count);
   RTInteger integer = RTMemoryAlloc(size);
   if (integer == NULL) {
     return NULL;
   }
   integer->count = count;
-  integer->positive = TRUE;
+  integer->sign = POSITIVE;
   return integer;
 }
 
-static inline RTInteger Expand(RTInteger integer, RTInteger32Bit count) {
-  RTSize size = sizeof(struct RTInteger) + sizeof(RTInteger32Bit) * (integer->count + count);
+static inline RTInteger Carry(RTInteger integer, RTInteger32Bit carry) {
+  if (carry == 0) {
+    return integer;
+  }
+  RTSize size = Size(integer->count + 1);
   RTInteger new = RTMemoryRealloc(integer, size);
   if (new == NULL) {
     RTMemoryDealloc(integer);
     return NULL;
   }
-  new->count += count;
+  new->value[new->count] = carry;
+  new->count += 1;
   return new;
+}
+
+static inline RTInteger Result(RTInteger integer, RTInteger other, RTCalculation calc) {
+  RTInteger longer = integer;
+  RTInteger shorter = other;
+  if (other->count > integer->count) {
+    longer = other;
+    shorter = integer;
+  }
+  RTInteger new = Create(longer->count);
+  if (new == NULL) {
+    return NULL;
+  }
+  RTInteger32Bit carry = 0;
+  for (RTInteger32Bit index = 0; index < longer->count; index += 1) {
+    RTInteger32Bit longerValue = longer->value[index];
+    RTInteger32Bit shorterValue = (index < shorter->count ? shorter->value[index] : 0);
+    RTInteger64Bit result = calc(longerValue, shorterValue) + carry;
+    new->value[index] = result & 0X00000000FFFFFFFF;
+    carry = result >> 32;
+  }
+  return Carry(new, carry);
+}
+
+static inline RTInteger64Bit Sum(RTInteger32Bit value, RTInteger32Bit other) {
+  RTInteger64Bit value64Bit = value;
+  RTInteger64Bit other64Bit = other;
+  return value64Bit + other64Bit;
+}
+
+static inline RTInteger64Bit Product(RTInteger32Bit value, RTInteger32Bit other) {
+  RTInteger64Bit value64Bit = value;
+  RTInteger64Bit other64Bit = other;
+  return value64Bit * other64Bit;
 }
 
 void RTIntegerDealloc(RTInteger integer) {
@@ -66,30 +117,22 @@ RTInteger64Bit RTIntegerHash(RTInteger integer) {
 }
 
 RTInteger RTIntegerSum(RTInteger integer, RTInteger other) {
-  RTInteger longer = integer;
-  RTInteger shorter = other;
-  if (other->count > integer->count) {
-    longer = other;
-    shorter = integer;
-  }
-  RTInteger new = Create(longer->count);
-  if (new == NULL) {
+  return Result(integer, other, Sum);
+}
+
+RTInteger RTIntegerProduct(RTInteger integer, RTInteger other) {
+  RTInteger result = Result(integer, other, Product);
+  result->sign = integer->sign == other->sign ? POSITIVE : NEGATIVE;
+  return result;
+}
+
+RTInteger RTIntegerNegation(RTInteger integer) {
+  RTSize size = Size(integer->count);
+  RTInteger copy = RTMemoryAlloc(size);
+  if (copy == NULL) {
     return NULL;
   }
-  RTInteger32Bit carry = 0;
-  for (RTInteger32Bit index = 0; index < longer->count; index += 1) {
-    RTInteger64Bit longerValue = longer->value[index];
-    RTInteger64Bit shorterValue = (index < shorter->count ? shorter->value[index] : 0);
-    RTInteger64Bit sum = longerValue + shorterValue + carry;
-    new->value[index] = sum & 0X00000000FFFFFFFF;
-    carry = sum >> 32;
-  }
-  if (carry != 0) {
-    new = Expand(new, 1);
-    if (new == NULL) {
-      return NULL;
-    }
-    new->value[longer->count] = carry;
-  }
-  return new;
+  RTMemoryCopy(integer, copy, size);
+  copy->sign = integer->sign == POSITIVE ? NEGATIVE : POSITIVE;
+  return copy;
 }
