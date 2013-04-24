@@ -38,6 +38,9 @@ enum {
   FALSE = 0
 };
 
+/** -brief An opaque data type that represents a value pool. */
+typedef struct RTPool *RTPool;
+
 /** -brief An opaque data type that represents a primitive value. */
 typedef struct RTValue *RTValue;
 
@@ -71,7 +74,6 @@ typedef union {
 
 #endif
 
-#include "RTCollect.h"
 #include "RTDecode.h"
 #include "RTEncode.h"
 #include "RTExecute.h"
@@ -82,5 +84,6 @@ typedef union {
 #include "RTMap.h"
 #include "RTMemory.h"
 #include "RTOperation.h"
+#include "RTPool.h"
 #include "RTString.h"
 #include "RTValue.h"

@@ -13,8 +13,6 @@ struct RTInteger {
   RTInteger32Bit value[];
 };
 
-typedef RTInteger64Bit (*RTCalculation)(RTInteger32Bit value, RTInteger32Bit other);
-
 static inline RTSize Size(RTInteger32Bit count) {
   return sizeof(struct RTInteger) + sizeof(RTInteger32Bit) * count;
 }
@@ -43,40 +41,6 @@ static inline RTInteger Carry(RTInteger integer, RTInteger32Bit carry) {
   new->value[new->count] = carry;
   new->count += 1;
   return new;
-}
-
-static inline RTInteger Result(RTInteger integer, RTInteger other, RTCalculation calc) {
-  RTInteger longer = integer;
-  RTInteger shorter = other;
-  if (other->count > integer->count) {
-    longer = other;
-    shorter = integer;
-  }
-  RTInteger new = Create(longer->count);
-  if (new == NULL) {
-    return NULL;
-  }
-  RTInteger32Bit carry = 0;
-  for (RTInteger32Bit index = 0; index < longer->count; index += 1) {
-    RTInteger32Bit longerValue = longer->value[index];
-    RTInteger32Bit shorterValue = (index < shorter->count ? shorter->value[index] : 0);
-    RTInteger64Bit result = calc(longerValue, shorterValue) + carry;
-    new->value[index] = result & 0X00000000FFFFFFFF;
-    carry = result >> 32;
-  }
-  return Carry(new, carry);
-}
-
-static inline RTInteger64Bit Sum(RTInteger32Bit value, RTInteger32Bit other) {
-  RTInteger64Bit value64Bit = value;
-  RTInteger64Bit other64Bit = other;
-  return value64Bit + other64Bit;
-}
-
-static inline RTInteger64Bit Product(RTInteger32Bit value, RTInteger32Bit other) {
-  RTInteger64Bit value64Bit = value;
-  RTInteger64Bit other64Bit = other;
-  return value64Bit * other64Bit;
 }
 
 void RTIntegerDealloc(RTInteger integer) {
@@ -117,13 +81,25 @@ RTInteger64Bit RTIntegerHash(RTInteger integer) {
 }
 
 RTInteger RTIntegerSum(RTInteger integer, RTInteger other) {
-  return Result(integer, other, Sum);
-}
-
-RTInteger RTIntegerProduct(RTInteger integer, RTInteger other) {
-  RTInteger result = Result(integer, other, Product);
-  result->sign = integer->sign == other->sign ? POSITIVE : NEGATIVE;
-  return result;
+  RTInteger longer = integer;
+  RTInteger shorter = other;
+  if (other->count > integer->count) {
+    longer = other;
+    shorter = integer;
+  }
+  RTInteger new = Create(longer->count);
+  if (new == NULL) {
+    return NULL;
+  }
+  RTInteger32Bit carry = 0;
+  for (RTInteger32Bit index = 0; index < longer->count; index += 1) {
+    RTInteger64Bit longerValue = longer->value[index];
+    RTInteger64Bit shorterValue = (index < shorter->count ? shorter->value[index] : 0);
+    RTInteger64Bit result = longerValue + shorterValue + carry;
+    new->value[index] = result & 0X00000000FFFFFFFF;
+    carry = result >> 32;
+  }
+  return Carry(new, carry);
 }
 
 RTInteger RTIntegerNegation(RTInteger integer) {

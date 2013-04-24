@@ -42,12 +42,6 @@ RTInteger64Bit RTIntegerHash(RTInteger integer);
     -return An [RTInteger] representing the sum of [integer] and [other]. */
 RTInteger RTIntegerSum(RTInteger integer, RTInteger other);
 
-/** -brief Returns the product of [integer] and [other].
-    -arg integer An integer.
-    -arg other Another integer.
-    -return An [RTInteger] representing the product of [integer] and [other]. */
-RTInteger RTIntegerProduct(RTInteger integer, RTInteger other);
-
 /** -brief Returns the additive inverse of [integer].
     -arg integer The integer.
     -return An [RTInteger] representing the negation of [integer]. */
