@@ -1,31 +1,48 @@
 #include "RTValue.h"
 
-typedef enum {
+enum {
   IDENTIFIER = 0,
   INTEGER = 1,
   LAMBDA = 2,
   LIST = 3,
   MAP = 4,
   STRING = 5
-} RTType;
+};
+
+enum {
+  MARK = 1 << 0,
+  INIT = 1 << 1
+};
 
 struct RTValue {
   RTPrimitive primitive;
-  RTType type;
-  RTBool initialized;
+  RTInteger8Bit flag;
+  RTInteger8Bit type;
 };
+
+static inline void SetFlag(RTValue value, RTInteger8Bit flag, RTBool boolean) {
+  if (boolean == TRUE) {
+    value->flag |= flag;
+  } else {
+    value->flag &= ~flag;
+  }
+}
+
+static inline RTBool GetFlag(RTValue value, RTInteger8Bit flag) {
+  return (value->flag & flag) != 0;
+}
 
 RTValue RTValueCreate() {
   RTValue value = RTMemoryAlloc(sizeof(struct RTValue));
   if (value == NULL) {
     return NULL;
   }
-  value->initialized = FALSE;
+  SetFlag(value, INIT, FALSE);
   return value;
 }
 
 void RTValueDealloc(RTValue value) {
-  if (value->initialized == TRUE) {
+  if (GetFlag(value, INIT) == TRUE) {
     switch (value->type) {
     case IDENTIFIER:
       RTIdentifierDealloc(value->primitive.id);
@@ -52,37 +69,37 @@ void RTValueDealloc(RTValue value) {
 void RTValueSetIdentifier(RTValue value, RTIdentifier id) {
   value->primitive.id = id;
   value->type = IDENTIFIER;
-  value->initialized = TRUE;
+  SetFlag(value, INIT, TRUE);
 }
 
 void RTValueSetInteger(RTValue value, RTInteger integer) {
   value->primitive.integer = integer;
   value->type = INTEGER;
-  value->initialized = TRUE;
+  SetFlag(value, INIT, TRUE);
 }
 
 void RTValueSetLambda(RTValue value, RTLambda lambda) {
   value->primitive.lambda = lambda;
   value->type = LAMBDA;
-  value->initialized = TRUE;
+  SetFlag(value, INIT, TRUE);
 }
 
 void RTValueSetList(RTValue value, RTList list) {
   value->primitive.list = list;
   value->type = LIST;
-  value->initialized = TRUE;
+  SetFlag(value, INIT, TRUE);
 }
 
 void RTValueSetMap(RTValue value, RTMap map) {
   value->primitive.map = map;
   value->type = MAP;
-  value->initialized = TRUE;
+  SetFlag(value, INIT, TRUE);
 }
 
 void RTValueSetString(RTValue value, RTString string) {
   value->primitive.string = string;
   value->type = STRING;
-  value->initialized = TRUE;
+  SetFlag(value, INIT, TRUE);
 }
 
 RTPrimitive RTValueGetPrimitive(RTValue value) {
@@ -124,4 +141,26 @@ RTBool RTValueEqual(RTValue value, RTValue other) {
   case STRING:
     return RTStringEqual(value->primitive.string, other->primitive.string);
   }
+}
+
+void RTValueMark(RTValue value) {
+  if (GetFlag(value, MARK) == TRUE) {
+    return;
+  }
+  SetFlag(value, MARK, TRUE);
+  switch (value->type) {
+  case LAMBDA:
+    RTLambdaEnumerateContext(value->primitive.lambda, RTValueMark);
+  case LIST:
+    RTListEnumerateValues(value->primitive.list, RTValueMark);
+  case MAP:
+    RTMapEnumerateKeys(value->primitive.map, RTValueMark);
+    RTMapEnumerateValues(value->primitive.map, RTValueMark);
+  }
+}
+
+RTBool RTValueResetMark(RTValue value) {
+  RTBool mark = GetFlag(value, MARK);
+  SetFlag(value, MARK, FALSE);
+  return mark;
 }

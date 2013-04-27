@@ -70,3 +70,15 @@ RTBool RTMapEqual(RTMap map, RTMap other) {
   }
   return TRUE;
 }
+
+void RTMapEnumerateKeys(RTMap map, RTBlock block) {
+  for (RTInteger32Bit index = 0; index < map->length; index += 1) {
+    block(map->element[index].key);
+  }
+}
+
+void RTMapEnumerateValues(RTMap map, RTBlock block) {
+  for (RTInteger32Bit index = 0; index < map->length; index += 1) {
+    block(map->element[index].value);
+  }
+}

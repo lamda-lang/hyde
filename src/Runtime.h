@@ -72,6 +72,8 @@ typedef union {
   RTString string;
 } RTPrimitive;
 
+typedef void (*RTBlock)(RTValue value);
+
 #endif
 
 #include "RTDecode.h"

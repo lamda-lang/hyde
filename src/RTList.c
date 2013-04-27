@@ -42,3 +42,9 @@ RTBool RTListEqual(RTList list, RTList other) {
 RTInteger64Bit RTListHash(RTList list) {
   return list->length;
 }
+
+void RTListEnumerateValues(RTList list, RTBlock block) {
+  for (RTInteger32Bit index = 0; index < list->length; index += 1) {
+    block(list->element[index]);
+  }
+}

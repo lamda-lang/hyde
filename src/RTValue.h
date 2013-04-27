@@ -65,4 +65,8 @@ RTInteger64Bit RTValueHash(RTValue value);
     -return [TRUE] if [value] and [other] are equal, otherwise [FALSE]. */
 RTBool RTValueEqual(RTValue value, RTValue other);
 
+void RTValueMark(RTValue value);
+
+RTBool RTValueResetMark(RTValue value);
+
 #endif

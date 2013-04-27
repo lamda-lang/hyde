@@ -15,4 +15,6 @@ RTBool RTLambdaEqual(RTLambda lambda, RTLambda other);
 
 RTValue RTLambdaExecute(RTLambda lambda, RTValue *arg);
 
+void RTLambdaEnumerateContext(RTLambda lambda, RTBlock block);
+
 #endif

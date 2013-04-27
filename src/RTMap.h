@@ -38,4 +38,8 @@ RTInteger64Bit RTMapHash(RTMap map);
     -return [TRUE] if [map] and [other] are equal, otherwise [FALSE]. */
 RTBool RTMapEqual(RTMap map, RTMap other);
 
+void RTMapEnumerateKeys(RTMap map, RTBlock block);
+
+void RTMapEnumerateValues(RTMap map, RTBlock block);
+
 #endif

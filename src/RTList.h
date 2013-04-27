@@ -37,4 +37,6 @@ RTBool RTListEqual(RTList list, RTList other);
     -return A hash value. */
 RTInteger64Bit RTListHash(RTList list);
 
+void RTListEnumerateValues(RTList list, RTBlock block);
+
 #endif
