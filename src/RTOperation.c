@@ -7,7 +7,9 @@ enum {
   CREATE_LIST = 3,
   CREATE_MAP = 4,
   CREATE_NIL = 5,
-  CREATE_STRING = 6
+  CREATE_STRING = 6,
+  CREATE_TRUE = 7,
+  CREATE_FALSE = 8
 };
 
 static inline RTBool CreateIdentifier(RTByte **code, RTValue *reg) {
@@ -94,6 +96,18 @@ static inline RTBool CreateString(RTByte **code, RTValue *reg) {
   return TRUE;
 }
 
+static inline RTBool CreateTrue(RTByte **code, RTValue *reg) {
+  RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
+  RTValueSetBool(value, TRUE);
+  return TRUE;
+}
+
+static inline RTBool CreateFalse(RTByte **code, RTValue *reg) {
+  RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
+  RTValueSetBool(value, FALSE);
+  return TRUE;
+}
+
 RTBool RTOperationExecute(RTByte **code, RTValue *reg) {
   RTInteger8Bit opcode = RTDecodeInteger8Bit(code);
   switch (opcode) {
@@ -111,5 +125,9 @@ RTBool RTOperationExecute(RTByte **code, RTValue *reg) {
     return CreateNil(code, reg);
   case CREATE_STRING:
     return CreateString(code, reg);
+  case CREATE_TRUE:
+    return CreateTrue(code, reg);
+  case CREATE_FALSE:
+    return CreateFalse(code, reg);
   }
 }
