@@ -1,13 +1,14 @@
 #include "RTOperation.h"
 
-typedef enum {
+enum {
   CREATE_IDENTIFIER = 0,
   CREATE_INTEGER = 1,
   CREATE_LAMBDA = 2,
   CREATE_LIST = 3,
   CREATE_MAP = 4,
-  CREATE_STRING = 5
-} RTOpcode;
+  CREATE_NIL = 5,
+  CREATE_STRING = 6
+};
 
 static inline RTBool CreateIdentifier(RTByte **code, RTValue *reg) {
   RTIdentifier id = RTIdentifierDecode(code);
@@ -77,6 +78,12 @@ static inline RTBool CreateMap(RTByte **code, RTValue *reg) {
   return TRUE;
 }
 
+static inline RTBool CreateNil(RTByte **code, RTValue *reg) {
+  RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
+  RTValueSetNil(value);
+  return TRUE;
+}
+
 static inline RTBool CreateString(RTByte **code, RTValue *reg) {
   RTString string = RTStringDecode(code);
   if (string == NULL) {
@@ -88,7 +95,7 @@ static inline RTBool CreateString(RTByte **code, RTValue *reg) {
 }
 
 RTBool RTOperationExecute(RTByte **code, RTValue *reg) {
-  RTOpcode opcode = RTDecodeInteger8Bit(code);
+  RTInteger8Bit opcode = RTDecodeInteger8Bit(code);
   switch (opcode) {
   case CREATE_IDENTIFIER:
     return CreateIdentifier(code, reg);
@@ -100,6 +107,8 @@ RTBool RTOperationExecute(RTByte **code, RTValue *reg) {
     return CreateList(code, reg);
   case CREATE_MAP:
     return CreateMap(code, reg);
+  case CREATE_NIL:
+    return CreateNil(code, reg);
   case CREATE_STRING:
     return CreateString(code, reg);
   }

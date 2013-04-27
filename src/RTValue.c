@@ -6,12 +6,13 @@ enum {
   LAMBDA = 2,
   LIST = 3,
   MAP = 4,
-  STRING = 5
+  NIL = 5,
+  STRING = 6
 };
 
 enum {
   MARK = 1 << 0,
-  INIT = 1 << 1
+  PRIMITIVE = 1 << 1
 };
 
 struct RTValue {
@@ -37,12 +38,13 @@ RTValue RTValueCreate() {
   if (value == NULL) {
     return NULL;
   }
-  SetFlag(value, INIT, FALSE);
+  SetFlag(value, MARK, FALSE);
+  SetFlag(value, PRIMITIVE, FALSE);
   return value;
 }
 
 void RTValueDealloc(RTValue value) {
-  if (GetFlag(value, INIT) == TRUE) {
+  if (GetFlag(value, PRIMITIVE) == TRUE) {
     switch (value->type) {
     case IDENTIFIER:
       RTIdentifierDealloc(value->primitive.id);
@@ -66,40 +68,45 @@ void RTValueDealloc(RTValue value) {
   }
   RTMemoryDealloc(value);
 }
+
+void RTValueSetNil(RTValue value) {
+  value->type = NIL;
+}
+
 void RTValueSetIdentifier(RTValue value, RTIdentifier id) {
   value->primitive.id = id;
   value->type = IDENTIFIER;
-  SetFlag(value, INIT, TRUE);
+  SetFlag(value, PRIMITIVE, TRUE);
 }
 
 void RTValueSetInteger(RTValue value, RTInteger integer) {
   value->primitive.integer = integer;
   value->type = INTEGER;
-  SetFlag(value, INIT, TRUE);
+  SetFlag(value, PRIMITIVE, TRUE);
 }
 
 void RTValueSetLambda(RTValue value, RTLambda lambda) {
   value->primitive.lambda = lambda;
   value->type = LAMBDA;
-  SetFlag(value, INIT, TRUE);
+  SetFlag(value, PRIMITIVE, TRUE);
 }
 
 void RTValueSetList(RTValue value, RTList list) {
   value->primitive.list = list;
   value->type = LIST;
-  SetFlag(value, INIT, TRUE);
+  SetFlag(value, PRIMITIVE, TRUE);
 }
 
 void RTValueSetMap(RTValue value, RTMap map) {
   value->primitive.map = map;
   value->type = MAP;
-  SetFlag(value, INIT, TRUE);
+  SetFlag(value, PRIMITIVE, TRUE);
 }
 
 void RTValueSetString(RTValue value, RTString string) {
   value->primitive.string = string;
   value->type = STRING;
-  SetFlag(value, INIT, TRUE);
+  SetFlag(value, PRIMITIVE, TRUE);
 }
 
 RTPrimitive RTValueGetPrimitive(RTValue value) {
@@ -118,6 +125,8 @@ RTInteger64Bit RTValueHash(RTValue value) {
     return RTListHash(value->primitive.list);
   case MAP:
     return RTMapHash(value->primitive.map);
+  case NIL:
+    return 0;
   case STRING:
     return RTStringHash(value->primitive.string);
   }
@@ -138,6 +147,8 @@ RTBool RTValueEqual(RTValue value, RTValue other) {
     return RTListEqual(value->primitive.list, other->primitive.list);
   case MAP:
     return RTMapEqual(value->primitive.map, other->primitive.map);
+  case NIL:
+    return TRUE;
   case STRING:
     return RTStringEqual(value->primitive.string, other->primitive.string);
   }

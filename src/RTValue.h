@@ -11,6 +11,8 @@ RTValue RTValueCreate(void);
     -arg value The value to deallocate. */
 void RTValueDealloc(RTValue value);
 
+void RTValueSetNil(RTValue value);
+
 /** -brief Sets [id] as the primitive of [value].
     -arg value The value in which the primitive is to be changed.
     -arg id The primitive of [value].
