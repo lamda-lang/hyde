@@ -22,7 +22,7 @@ static inline RTNode Node(RTValue value, RTNode next) {
   return node;
 }
 
-RTPool RTPoolBuild(void) {
+RTPool RTPoolCreate(void) {
   RTSize size = sizeof(struct RTPool);
   RTPool pool = RTMemoryAlloc(size);
   if (pool == NULL) {
@@ -32,11 +32,16 @@ RTPool RTPoolBuild(void) {
   return pool;
 }
 
-RTValue RTPoolNewValue(RTPool pool) {
-  RTValue value = RTValueCreate();
-  if (value == NULL) {
-    return NULL;
+void RTPoolDealloc(RTPool pool) {
+  while (pool->root != NULL) {
+    RTNode node = pool->root;
+    pool->root = node->next;
+    RTMemoryDealloc(node);
   }
+  RTMemoryDealloc(pool);
+}
+
+RTValue RTPoolAddValue(RTPool pool, RTValue value) {
   RTNode node = Node(value, pool->root);
   if (node == NULL) {
     RTValueDealloc(value);

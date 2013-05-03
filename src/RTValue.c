@@ -1,29 +1,19 @@
 #include "RTValue.h"
 
-enum {
-  TYPE_BOOL = 0,
-  TYPE_IDENTIFIER = 1,
-  TYPE_INTEGER = 2,
-  TYPE_LAMBDA = 3,
-  TYPE_LIST = 4,
-  TYPE_MAP = 5,
-  TYPE_NIL = 6,
-  TYPE_STRING = 7
-};
-
-enum {
-  FLAG_BOOL= 1 << 0,
-  FLAG_MARK= 1 << 1,
-  FLAG_PRIMITIVE= 1 << 2
-};
+typedef enum {
+  FLAG_NONE = 0,
+  FLAG_BOOL = 1 << 0,
+  FLAG_MARK = 1 << 1,
+  FLAG_PRIMITIVE = 1 << 2
+} RTFlag;
 
 struct RTValue {
   RTPrimitive primitive;
-  RTInteger8Bit flag;
-  RTInteger8Bit type;
+  RTFlag flag;
+  RTType type;
 };
 
-static inline void SetFlag(RTValue value, RTInteger8Bit flag, RTBool boolean) {
+static inline void SetFlag(RTValue value, RTFlag flag, RTBool boolean) {
   if (boolean == TRUE) {
     value->flag |= flag;
   } else {
@@ -31,91 +21,96 @@ static inline void SetFlag(RTValue value, RTInteger8Bit flag, RTBool boolean) {
   }
 }
 
-static inline RTBool GetFlag(RTValue value, RTInteger8Bit flag) {
+static inline RTBool GetFlag(RTValue value, RTFlag flag) {
   return (value->flag & flag) != 0;
 }
 
-RTValue RTValueCreate() {
+static inline void DeallocPrimitive(RTPrimitive primitive, RTType type) {
+  switch (type) {
+  case TYPE_IDENTIFIER:
+    RTIdentifierDealloc(primitive.id);
+    return;
+  case TYPE_INTEGER:
+    RTIntegerDealloc(primitive.integer);
+    return;
+  case TYPE_LAMBDA:
+    RTLambdaDealloc(primitive.lambda);
+    return;
+  case TYPE_LIST:
+    RTListDealloc(primitive.list);
+    return;
+  case TYPE_MAP:
+    RTMapDealloc(primitive.map);
+    return;
+  case TYPE_STRING:
+    RTStringDealloc(primitive.string);
+    return;
+  }
+}
+
+static inline RTValue Create(RTType type, RTFlag flag) {
   RTValue value = RTMemoryAlloc(sizeof(struct RTValue));
   if (value == NULL) {
     return NULL;
   }
-  SetFlag(value, FLAG_MARK, FALSE);
-  SetFlag(value, FLAG_PRIMITIVE, FALSE);
+  value->type = type;
+  value->flag = flag;
   return value;
+}
+
+static inline RTValue CreatePrimitive(RTType type, RTFlag flag, RTPrimitive primitive) {
+  RTValue value = Create(type, flag);
+  if (value == NULL) {
+    return NULL;
+  }
+  value->primitive = primitive;
+  return value;
+}
+
+RTValue RTValueCreateIdentifier(RTIdentifier id) {
+  RTPrimitive primitive = {.id = id};
+  return CreatePrimitive(TYPE_IDENTIFIER, FLAG_PRIMITIVE, primitive);
+}
+
+RTValue RTValueCreateInteger(RTInteger integer) {
+  RTPrimitive primitive = {.integer = integer};
+  return CreatePrimitive(TYPE_INTEGER, FLAG_PRIMITIVE, primitive);
+}
+
+RTValue RTValueCreateLambda(RTLambda lambda) {
+  RTPrimitive primitive = {.lambda = lambda};
+  return CreatePrimitive(TYPE_LAMBDA, FLAG_PRIMITIVE, primitive);
+}
+
+RTValue RTValueCreateList(RTList list) {
+  RTPrimitive primitive = {.list = list};
+  return CreatePrimitive(TYPE_LIST, FLAG_PRIMITIVE, primitive);
+}
+
+RTValue RTValueCreateMap(RTMap map) {
+  RTPrimitive primitive = {.map = map};
+  return CreatePrimitive(TYPE_MAP, FLAG_PRIMITIVE, primitive);
+}
+
+RTValue RTValueCreateString(RTString string) {
+  RTPrimitive primitive = {.string = string};
+  return CreatePrimitive(TYPE_STRING, FLAG_PRIMITIVE, primitive);
+}
+
+RTValue RTValueCreateNil(void) {
+  return Create(TYPE_NIL, FLAG_NONE);
+}
+
+RTValue RTValueCreateBool(RTBool boolean) {
+  RTFlag flag = boolean ? FLAG_BOOL : FLAG_NONE;
+  return Create(TYPE_NIL, flag);
 }
 
 void RTValueDealloc(RTValue value) {
   if (GetFlag(value, FLAG_PRIMITIVE) == TRUE) {
-    switch (value->type) {
-    case TYPE_IDENTIFIER:
-      RTIdentifierDealloc(value->primitive.id);
-      break;
-    case TYPE_INTEGER:
-      RTIntegerDealloc(value->primitive.integer);
-      break;
-    case TYPE_LAMBDA:
-      RTLambdaDealloc(value->primitive.lambda);
-      break;
-    case TYPE_LIST:
-      RTListDealloc(value->primitive.list);
-      break;
-    case TYPE_MAP:
-      RTMapDealloc(value->primitive.map);
-      break;
-    case TYPE_STRING:
-      RTStringDealloc(value->primitive.string);
-      break;
-    }
+    DeallocPrimitive(value->primitive, value->type);
   }
   RTMemoryDealloc(value);
-}
-
-void RTValueSetNil(RTValue value) {
-  value->type = TYPE_NIL;
-  SetFlag(value, FLAG_PRIMITIVE, FALSE);
-}
-
-void RTValueSetBool(RTValue value, RTBool boolean) {
-  value->type = TYPE_BOOL;
-  SetFlag(value, FLAG_BOOL, boolean);
-  SetFlag(value, FLAG_PRIMITIVE, FALSE);
-}
-
-void RTValueSetIdentifier(RTValue value, RTIdentifier id) {
-  value->primitive.id = id;
-  value->type = TYPE_IDENTIFIER;
-  SetFlag(value, FLAG_PRIMITIVE, TRUE);
-}
-
-void RTValueSetInteger(RTValue value, RTInteger integer) {
-  value->primitive.integer = integer;
-  value->type = TYPE_INTEGER;
-  SetFlag(value, FLAG_PRIMITIVE, TRUE);
-}
-
-void RTValueSetLambda(RTValue value, RTLambda lambda) {
-  value->primitive.lambda = lambda;
-  value->type = TYPE_LAMBDA;
-  SetFlag(value, FLAG_PRIMITIVE, TRUE);
-}
-
-void RTValueSetList(RTValue value, RTList list) {
-  value->primitive.list = list;
-  value->type = TYPE_LIST;
-  SetFlag(value, FLAG_PRIMITIVE, TRUE);
-}
-
-void RTValueSetMap(RTValue value, RTMap map) {
-  value->primitive.map = map;
-  value->type = TYPE_MAP;
-  SetFlag(value, FLAG_PRIMITIVE, TRUE);
-}
-
-void RTValueSetString(RTValue value, RTString string) {
-  value->primitive.string = string;
-  value->type = TYPE_STRING;
-  SetFlag(value, FLAG_PRIMITIVE, TRUE);
 }
 
 RTPrimitive RTValueGetPrimitive(RTValue value) {
@@ -124,6 +119,8 @@ RTPrimitive RTValueGetPrimitive(RTValue value) {
 
 RTInteger64Bit RTValueHash(RTValue value) {
   switch (value->type) {
+  case TYPE_BOOL:
+    return GetFlag(value, FLAG_BOOL) ? 1 : 0;
   case TYPE_IDENTIFIER:
     return RTIdentifierHash(value->primitive.id);
   case TYPE_INTEGER:
@@ -146,6 +143,8 @@ RTBool RTValueEqual(RTValue value, RTValue other) {
     return FALSE;
   }
   switch (value->type) {
+  case TYPE_BOOL:
+    return GetFlag(value, FLAG_BOOL) == GetFlag(other, FLAG_BOOL);
   case TYPE_IDENTIFIER:
     return RTIdentifierEqual(value->primitive.id, other->primitive.id);
   case TYPE_INTEGER:

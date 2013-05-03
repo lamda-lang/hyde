@@ -3,53 +3,25 @@
 
 #include "Runtime.h"
 
-/** -brief Creates an [RTValue].
-    -return An [RTValue], or [NULL] if creation fails. */
-RTValue RTValueCreate(void);
+RTValue RTValueCreateIdentifier(RTIdentifier id, RTPool);
+
+RTValue RTValueCreateInteger(RTInteger integer);
+
+RTValue RTValueCreateLambda(RTLambda lambda);
+
+RTValue RTValueCreateList(RTList list);
+
+RTValue RTValueCreateMap(RTMap map);
+
+RTValue RTValueCreateString(RTString string);
+
+RTValue RTValueCreateNil(void);
+
+RTValue RTValueCreateBool(RTBool boolean);
 
 /** -brief Deallocates the memory occupied by [value].
     -arg value The value to deallocate. */
 void RTValueDealloc(RTValue value);
-
-void RTValueSetNil(RTValue value);
-
-void RTValueSetBool(RTValue value, RTBool boolean);
-
-/** -brief Sets [id] as the primitive of [value].
-    -arg value The value in which the primitive is to be changed.
-    -arg id The primitive of [value].
-    -effect The primitive reference of [value] is set to [id]. */
-void RTValueSetIdentifier(RTValue value, RTIdentifier id);
-
-/** -brief Sets [id] as the primitive of [value].
-    -arg value The value in which the primitive is to be changed.
-    -arg id The primitive of [value].
-    -effect The primitive reference of [value] is set to [id]. */
-void RTValueSetInteger(RTValue value, RTInteger integer); 
-
-/** -brief Sets [lambda] as the primitive of [value].
-    -arg value The value in which the primitive is to be changed.
-    -arg map The primitive of [value].
-    -effect The primitive reference of [value] is set to [lambda]. */
-void RTValueSetLambda(RTValue value, RTLambda lambda);
-
-/** -brief Sets [list] as the primitive of [value].
-    -arg value The value in which the primitive is to be changed.
-    -arg map The primitive of [value].
-    -effect The primitive reference of [value] is set to [list]. */
-void RTValueSetList(RTValue value, RTList list);
-
-/** -brief Sets [map] as the primitive of [value].
-    -arg value The value in which the primitive is to be changed.
-    -arg map The primitive of [value].
-    -effect The primitive reference of [value] is set to [map]. */
-void RTValueSetMap(RTValue value, RTMap map);
-
-/** -brief Sets [string] as the primitive of [value].
-    -arg value The value in which the primitive is to be changed.
-    -arg string The primitive of [value].
-    -effect The primitive reference of [value] is set to [string]. */
-void RTValueSetString(RTValue value, RTString string);
 
 /** -brief Returns the primitive of [value].
     -arg value The value to examine.
@@ -69,8 +41,15 @@ RTInteger64Bit RTValueHash(RTValue value);
     -return [TRUE] if [value] and [other] are equal, otherwise [FALSE]. */
 RTBool RTValueEqual(RTValue value, RTValue other);
 
+/** -brief Marks [value] recursively.
+    -arg The value to mark.
+    -effect [value] and all values reachable by [value] are marked. */
 void RTValueMark(RTValue value);
 
+/** -brief Unmarks [value].
+    -value The value to unmark.
+    -return [TRUE] if [value] is marked, otherwise [FALSE].
+    -effect Unmarks [value]. */
 RTBool RTValueResetMark(RTValue value);
 
 #endif

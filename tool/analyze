@@ -1,3 +1,3 @@
 #!/bin/sh
 
-clang -std=c99 -fsyntax-only -Weverything -Wno-return-type src/*.c
+clang -std=c99 -fsyntax-only -Weverything -Wno-switch -Wno-return-type -Wno-shadow src/*.c

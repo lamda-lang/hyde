@@ -3,11 +3,14 @@
 
 #include "Runtime.h"
 
-/** -brief Executes [code] and returns an [RTValue].
+/** -brief Executes [code].
     -arg code The code to execute.
-    -arg arg The arguments to use.
-    -arg count The number of arguments in [arg].
-    -return The return value of [code]. */
-RTValue RTExecuteCode(RTByte *code, RTValue *arg, RTInteger8Bit count);
+    -arg count The number of instructions in [code].
+    -arg reg The register set.
+    -arg pool The pool to use to create values.
+    -return [TRUE] on success, otherwise [FALSE].
+    -effect [reg] is modified according to the code being executed.
+    -effect All values created by executing [code] are part of [pool]. */
+RTBool RTExecuteCode(RTByte *code, RTInteger32Bit count, RTValue *reg, RTPool pool);
 
 #endif

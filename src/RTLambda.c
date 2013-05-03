@@ -55,7 +55,7 @@ RTBool RTLambdaEqual(RTLambda lambda, RTLambda other) {
 }
 
 RTValue RTLambdaExecute(RTLambda lambda, RTValue *arg) {
-  return RTExecuteCode(lambda->code, arg, lambda->arity);
+
 }
 
 void RTLambdaEnumerateContext(RTLambda lambda, RTBlock block) {

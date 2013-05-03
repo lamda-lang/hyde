@@ -38,6 +38,18 @@ enum {
   FALSE = 0
 };
 
+/** -brief An enumeration of types. */
+typedef enum {
+  TYPE_BOOL = 0,
+  TYPE_IDENTIFIER = 1,
+  TYPE_INTEGER = 2,
+  TYPE_LAMBDA = 3,
+  TYPE_LIST = 4,
+  TYPE_MAP = 5,
+  TYPE_NIL = 6,
+  TYPE_STRING = 7
+} RTType;
+
 /** -brief An opaque data type that represents a value pool. */
 typedef struct RTPool *RTPool;
 
@@ -85,7 +97,6 @@ typedef void (*RTBlock)(RTValue value);
 #include "RTList.h"
 #include "RTMap.h"
 #include "RTMemory.h"
-#include "RTOperation.h"
 #include "RTPool.h"
 #include "RTString.h"
 #include "RTValue.h"
