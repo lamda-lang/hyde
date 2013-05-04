@@ -6,6 +6,7 @@ struct RTElement {
 };
 
 struct RTMap {
+  RTBase base;
   RTInteger32Bit length;
   struct RTElement element[];
 };
@@ -21,6 +22,7 @@ RTMap RTMapCreate(RTInteger32Bit capacity) {
   if (map == NULL) {
     return NULL;
   }
+  map->base = BASE(TYPE_MAP);
   map->length = length;
   for (RTInteger32Bit index = 0; index < length; index += 1) {
     map->element[index].key = NULL;

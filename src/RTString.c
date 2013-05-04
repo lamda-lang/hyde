@@ -1,6 +1,7 @@
 #include "RTString.h"
 
 struct RTString {
+  RTBase base;
   RTInteger32Bit length;
   RTInteger32Bit codepoint[];
 };
@@ -11,6 +12,7 @@ static inline RTString RTStringCreate(RTInteger32Bit length) {
   if (string == NULL) {
     return NULL;
   }
+  string->base = BASE(TYPE_STRING);
   string->length = length;
   return string;
 }

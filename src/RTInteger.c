@@ -8,8 +8,9 @@ enum {
 };
 
 struct RTInteger {
-  RTInteger32Bit count;
+  RTBase base;
   RTSign sign;
+  RTInteger32Bit count;
   RTInteger32Bit value[];
 };
 
@@ -23,8 +24,9 @@ static inline RTInteger Create(RTInteger32Bit count) {
   if (integer == NULL) {
     return NULL;
   }
-  integer->count = count;
+  integer->base = BASE(TYPE_INTEGER);
   integer->sign = POSITIVE;
+  integer->count = count;
   return integer;
 }
 

@@ -1,6 +1,7 @@
 #include "RTList.h"
 
 struct RTList {
+  RTBase base;
   RTInteger32Bit length;
   RTValue element[];
 };
@@ -11,6 +12,7 @@ RTList RTListCreate(RTInteger32Bit length) {
   if (list == NULL) {
     return NULL;
   }
+  list->base = BASE(TYPE_LIST);
   list->length = length;
   return list;
 }

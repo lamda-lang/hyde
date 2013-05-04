@@ -3,43 +3,16 @@
 
 #include "Runtime.h"
 
-RTValue RTValueCreateIdentifier(RTIdentifier id, RTPool);
+#define VALUE(primitive) ((RTValue)primitive)
+#define BASE(type) 0
 
-RTValue RTValueCreateInteger(RTInteger integer);
+RTBool RTValueEqual();
 
-RTValue RTValueCreateLambda(RTLambda lambda);
-
-RTValue RTValueCreateList(RTList list);
-
-RTValue RTValueCreateMap(RTMap map);
-
-RTValue RTValueCreateString(RTString string);
-
-RTValue RTValueCreateNil(void);
-
-RTValue RTValueCreateBool(RTBool boolean);
+RTInteger64Bit RTValueHash();
 
 /** -brief Deallocates the memory occupied by [value].
     -arg value The value to deallocate. */
 void RTValueDealloc(RTValue value);
-
-/** -brief Returns the primitive of [value].
-    -arg value The value to examine.
-    -return The primitive of [value].
-    -warning Access to a member of the return value is invalid if its type is not the same type of the primitive set. */
-RTPrimitive RTValueGetPrimitive(RTValue value);
-
-/** -brief Returns a hash value based on the content of [value].
-    -important If two values are equal, they have the same hash value.
-    -arg value The value to examine.
-    -return A hash value. */
-RTInteger64Bit RTValueHash(RTValue value);
-
-/** -brief Returns a boolean value that indicates whether [value] and [other] are equal.
-    -arg value A value.
-    -arg other Another value.
-    -return [TRUE] if [value] and [other] are equal, otherwise [FALSE]. */
-RTBool RTValueEqual(RTValue value, RTValue other);
 
 /** -brief Marks [value] recursively.
     -arg The value to mark.

@@ -3,6 +3,8 @@
 
 #include "Runtime.h"
 
+#define MAP(value) ((RTMap)value)
+
 /** -brief Creates an empty [RTMap].
     -arg capacity The number of key-value pairs of the map.
     -return An [RTMap], or [NULL] if creation fails. */

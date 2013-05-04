@@ -3,6 +3,8 @@
 
 #include "Runtime.h"
 
+#define LIST(value) ((RTList)value)
+
 /** -brief Creates an empty [RTList].
     -arg length The number of elements of the list.
     -return An [RTList], or [NULL] if creation fails. */

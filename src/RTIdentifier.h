@@ -3,6 +3,8 @@
 
 #include "Runtime.h"
 
+#define IDENTIFIER(value) ((RTIdentifier)value)
+
 /** -brief Deallocates the memory occupied by [id].
     -arg id The identifier to deallocate. */
 void RTIdentifierDealloc(RTIdentifier id);

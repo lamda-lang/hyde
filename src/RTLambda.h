@@ -3,6 +3,8 @@
 
 #include "Runtime.h"
 
+#define LAMBDA(value) ((RTLambda)value)
+
 RTLambda RTLambdaCreate(RTByte *code, RTInteger32Bit length, RTInteger8Bit arity, RTInteger32Bit count);
 
 void RTLambdaDealloc(RTLambda lambda);

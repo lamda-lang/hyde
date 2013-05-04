@@ -32,6 +32,10 @@ typedef uintmax_t RTIndex;
 /** -brief An unsigned integer type capable of representing the size of any memory object, in bytes. */
 typedef size_t RTSize;
 
+typedef uint8_t RTBase;
+
+typedef RTBase *RTValue;
+
 /** -brief The boolean values [TRUE] and [FALSE]. */
 enum {
   TRUE = 1,
@@ -40,7 +44,7 @@ enum {
 
 /** -brief An enumeration of types. */
 typedef enum {
-  TYPE_BOOL = 0,
+  TYPE_BOOLEAN = 0,
   TYPE_IDENTIFIER = 1,
   TYPE_INTEGER = 2,
   TYPE_LAMBDA = 3,
@@ -52,9 +56,6 @@ typedef enum {
 
 /** -brief An opaque data type that represents a value pool. */
 typedef struct RTPool *RTPool;
-
-/** -brief An opaque data type that represents a primitive value. */
-typedef struct RTValue *RTValue;
 
 /** -brief An opaque data type that represents a primitive identifier. */
 typedef struct RTIdentifier *RTIdentifier;
@@ -74,20 +75,15 @@ typedef struct RTMap *RTMap;
 /** -brief An opaque data type that represents a primitive string. */
 typedef struct RTString *RTString;
 
-/** -brief A generic pointer type capable of storing a pointer to any primitive.. */
-typedef union {
-  RTIdentifier id;
-  RTInteger integer;
-  RTLambda lambda;
-  RTList list;
-  RTMap map;
-  RTString string;
-} RTPrimitive;
+typedef struct RTNil *RTNil;
+
+typedef struct RTBoolean *RTBoolean;
 
 typedef void (*RTBlock)(RTValue value);
 
 #endif
 
+#include "RTBoolean.h"
 #include "RTDecode.h"
 #include "RTEncode.h"
 #include "RTExecute.h"
@@ -97,6 +93,7 @@ typedef void (*RTBlock)(RTValue value);
 #include "RTList.h"
 #include "RTMap.h"
 #include "RTMemory.h"
+#include "RTNil.h"
 #include "RTPool.h"
 #include "RTString.h"
 #include "RTValue.h"

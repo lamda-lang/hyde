@@ -1,6 +1,7 @@
 #include "RTIdentifier.h"
 
 struct RTIdentifier {
+  RTBase base;
   RTInteger8Bit length;
   RTInteger8Bit codepoint[];
 };
@@ -11,6 +12,7 @@ static inline RTIdentifier Create(RTInteger8Bit length) {
   if (id == NULL) {
     return NULL;
   }
+  id->base = BASE(TYPE_IDENTIFIER);
   id->length = length;
   return id;
 }

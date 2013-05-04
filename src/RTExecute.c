@@ -6,47 +6,37 @@ typedef enum {
   OPCODE_CREATE_LAMBDA = 2,
   OPCODE_CREATE_LIST = 3,
   OPCODE_CREATE_MAP = 4,
-  OPCODE_CREATE_NIL = 5,
+  OPCODE_SINGLETON_NIL = 5,
   OPCODE_CREATE_STRING = 6,
-  OPCODE_CREATE_BOOL_TRUE = 7,
-  OPCODE_CREATE_BOOL_FALSE = 8,
+  OPCODE_SINGLETON_BOOLEAN_TRUE = 7,
+  OPCODE_SINGLETON_BOOLEAN_FALSE = 8,
   OPCODE_APPLY_ARGS = 9
 } RTOpcode;
 
-static inline void SetValue(RTByte **code, RTValue *reg, RTValue value) {
+static inline void InsertRegister(RTByte **code, RTValue *reg, RTValue value) {
   RTInteger32Bit index = RTDecodeVBRInteger32Bit(code);
   reg[index] = value;
 }
 
-static inline RTBool CreateIdentifier(RTByte **code, RTValue *reg) {
+static inline RTBool CreateIdentifier(RTByte **code, RTValue *reg, RTPool pool) {
   RTIdentifier id = RTIdentifierDecode(code);
   if (id == NULL) {
     return FALSE;
   }
-  RTValue value = RTValueCreateIdentifier(id);
-  if (value == NULL) {
-    RTIdentifierDealloc(id);
-    return FALSE;
-  }
-  SetValue(code, reg, value);
-  return TRUE;
+  InsertRegister(code, reg, VALUE(id));
+  return RTPoolAddValue(pool, VALUE(id));
 }
 
-static inline RTBool CreateInteger(RTByte **code, RTValue *reg) {
+static inline RTBool CreateInteger(RTByte **code, RTValue *reg, RTPool pool) {
   RTInteger integer = RTIntegerDecode(code);
   if (integer == NULL) {
     return FALSE;
   }
-  RTValue value = RTValueCreateInteger(integer);
-  if (value == NULL) {
-    RTIntegerDealloc(integer);
-    return FALSE;
-  }
-  SetValue(code, reg, value);
-  return TRUE;
+  InsertRegister(code, reg, VALUE(integer));
+  return RTPoolAddValue(pool, VALUE(integer));
 }
 
-static inline RTBool CreateLambda(RTByte **code, RTValue *reg) {
+static inline RTBool CreateLambda(RTByte **code, RTValue *reg, RTPool pool) {
   RTInteger8Bit arity = RTDecodeInteger8Bit(code);
   RTInteger32Bit count = RTDecodeVBRInteger32Bit(code);
   RTInteger32Bit length = RTDecodeVBRInteger32Bit(code);
@@ -58,16 +48,11 @@ static inline RTBool CreateLambda(RTByte **code, RTValue *reg) {
     RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
     RTLambdaSetContextValueAtIndex(lambda, value, index);
   }
-  RTValue value = RTValueCreateLambda(lambda);
-  if (value == NULL) {
-    RTLambdaDealloc(lambda);
-    return FALSE;
-  }
-  SetValue(code, reg, value);
-  return TRUE;
+  InsertRegister(code, reg, VALUE(lambda));
+  return RTPoolAddValue(pool, VALUE(lambda));
 }
 
-static inline RTBool CreateList(RTByte **code, RTValue *reg) {
+static inline RTBool CreateList(RTByte **code, RTValue *reg, RTPool pool) {
   RTInteger32Bit length = RTDecodeVBRInteger32Bit(code);
   RTList list = RTListCreate(length);
   if (list == NULL) {
@@ -77,16 +62,11 @@ static inline RTBool CreateList(RTByte **code, RTValue *reg) {
     RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
     RTListSetValueAtIndex(list, value, index);
   }
-  RTValue value = RTValueCreateList(list);
-  if (value == NULL) {
-    RTListDealloc(list);
-    return FALSE;
-  }
-  SetValue(code, reg, value);
-  return TRUE;
+  InsertRegister(code, reg, VALUE(list));
+  return RTPoolAddValue(pool, VALUE(list));
 }
 
-static inline RTBool CreateMap(RTByte **code, RTValue *reg) {
+static inline RTBool CreateMap(RTByte **code, RTValue *reg, RTPool pool) {
   RTInteger32Bit capacity = RTDecodeVBRInteger32Bit(code);
   RTMap map = RTMapCreate(capacity);
   if (map == NULL) {
@@ -97,48 +77,38 @@ static inline RTBool CreateMap(RTByte **code, RTValue *reg) {
     RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
     RTMapSetValueForKey(map, value, key);
   }
-  RTValue value = RTValueCreateMap(map);
-  if (value == NULL) {
-    RTMapDealloc(map);
-    return FALSE;
-  }
-  SetValue(code, reg, value);
+  InsertRegister(code, reg, VALUE(map));
+  return RTPoolAddValue(pool, VALUE(map));
+}
+
+static inline RTBool SingletonNil(RTByte **code, RTValue *reg) {
+  InsertRegister(code, reg, VALUE(RTNilSingleton));
   return TRUE;
 }
 
-static inline RTBool CreateNil(RTByte **code, RTValue *reg) {
-  RTValue value = RTValueCreateNil();
-  if (value == NULL) {
-    return FALSE;
-  }
-  SetValue(code, reg, value);
-  return TRUE;
-}
-
-static inline RTBool CreateString(RTByte **code, RTValue *reg) {
+static inline RTBool CreateString(RTByte **code, RTValue *reg, RTPool pool) {
   RTString string = RTStringDecode(code);
   if (string == NULL) {
     return FALSE;
   }
-  RTValue value = RTValueCreateString(string);
-  if (value == NULL) {
-    RTStringDealloc(string);
-    return FALSE;
-  }
-  SetValue(code, reg, value);
+  InsertRegister(code, reg, VALUE(string));
+  return RTPoolAddValue(pool, VALUE(string));
+}
+
+static inline RTBool SingletonBooleanTrue(RTByte **code, RTValue *reg) {
+  InsertRegister(code, reg, VALUE(RTBooleanTrueSingleton));
   return TRUE;
 }
 
-static inline RTBool CreateBool(RTByte **code, RTValue *reg, RTBool boolean) {
-  RTValue value = RTValueCreateBool(boolean);
-  if (value == NULL) {
-    return FALSE;
-  }
-  SetValue(code, reg, value);
+static inline RTBool SingletonBooleanFalse(RTByte **code, RTValue *reg) {
+  InsertRegister(code, reg, VALUE(RTBooleanFalseSingleton));
   return TRUE;
 }
 
-static inline RTBool ApplyArgs(RTByte **code, RTValue *reg) {
+static inline RTBool ApplyArgs(RTByte **code, RTValue *reg, RTPool pool) {
+  code = NULL;
+  reg = NULL;
+  pool = NULL;
   return TRUE;
 }
 
@@ -155,14 +125,14 @@ static inline RTBool ExecuteInstruction(RTByte **code, RTValue *reg, RTPool pool
     return CreateList(code, reg, pool);
   case OPCODE_CREATE_MAP:
     return CreateMap(code, reg, pool);
-  case OPCODE_CREATE_NIL:
-    return CreateNil(code, reg, pool);
+  case OPCODE_SINGLETON_NIL:
+    return SingletonNil(code, reg);
   case OPCODE_CREATE_STRING:
     return CreateString(code, reg, pool);
-  case OPCODE_CREATE_BOOL_TRUE:
-    return CreateBool(code, reg, pool, TRUE);
-  case OPCODE_CREATE_BOOL_FALSE:
-    return CreateBool(code, reg, pool, FALSE);
+  case OPCODE_SINGLETON_BOOLEAN_TRUE:
+    return SingletonBooleanTrue(code, reg);
+  case OPCODE_SINGLETON_BOOLEAN_FALSE:
+    return SingletonBooleanFalse(code, reg);
   case OPCODE_APPLY_ARGS:
     return ApplyArgs(code, reg, pool);
   }

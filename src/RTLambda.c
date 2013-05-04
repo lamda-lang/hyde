@@ -1,10 +1,11 @@
 #include "RTLambda.h"
 
 struct RTLambda {
-  RTByte *code;
+  RTBase base;
+  RTInteger8Bit arity;
   RTInteger32Bit length;
   RTInteger32Bit count;
-  RTInteger8Bit arity;
+  RTByte *code;
   RTValue context[];
 };
 
@@ -22,6 +23,7 @@ RTLambda RTLambdaCreate(RTByte *code, RTInteger32Bit length, RTInteger8Bit arity
     return NULL;
   }
   RTMemoryCopy(code, buffer, length);
+  lambda->base = BASE(TYPE_LAMBDA);
   lambda->code = buffer;
   lambda->length = length;
   lambda->count = count;
@@ -55,7 +57,9 @@ RTBool RTLambdaEqual(RTLambda lambda, RTLambda other) {
 }
 
 RTValue RTLambdaExecute(RTLambda lambda, RTValue *arg) {
-
+  lambda = NULL;
+  arg = NULL;
+  return NULL;
 }
 
 void RTLambdaEnumerateContext(RTLambda lambda, RTBlock block) {

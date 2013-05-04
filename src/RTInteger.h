@@ -3,6 +3,8 @@
 
 #include "Runtime.h"
 
+#define INTEGER(value) ((RTInteger)value)
+
 /** -brief Deallocates the memory occupied by [integer].
     -arg integer The integer to deallocate. */
 void RTIntegerDealloc(RTInteger integer);
