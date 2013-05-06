@@ -4,8 +4,20 @@ struct RTNil {
   RTBase base;
 };
 
-static struct RTNil Singleton = {
-  .base = 0
-};
+RTValue RTNilValueBridge(RTNil nil) {
+  return (RTValue)nil;
+}
 
-const RTNil RTNilSingleton = &Singleton;
+RTNil RTNilCreate(void) {
+  RTSize size = sizeof(struct RTNil);
+  RTNil nil = RTMemoryAlloc(size);
+  if (nil == NULL) {
+    return NULL;
+  }
+  nil->base = RTBaseInit(RTTypeNil, RTFlagNone);
+  return nil;
+}
+
+void RTNilDealloc(RTNil nil) {
+  RTMemoryDealloc(nil);
+}

@@ -3,7 +3,7 @@
 
 #include "Runtime.h"
 
-#define IDENTIFIER(value) ((RTIdentifier)value)
+RTValue RTIdentifierValueBridge(RTIdentifier id);
 
 /** -brief Deallocates the memory occupied by [id].
     -arg id The identifier to deallocate. */

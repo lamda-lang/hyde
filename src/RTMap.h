@@ -3,7 +3,7 @@
 
 #include "Runtime.h"
 
-#define MAP(value) ((RTMap)value)
+RTValue RTMapValueBridge(RTMap map);
 
 /** -brief Creates an empty [RTMap].
     -arg capacity The number of key-value pairs of the map.

@@ -12,9 +12,13 @@ static inline RTString RTStringCreate(RTInteger32Bit length) {
   if (string == NULL) {
     return NULL;
   }
-  string->base = BASE(TYPE_STRING);
+  string->base = RTBaseInit(RTTypeString, RTFlagNone);
   string->length = length;
   return string;
+}
+
+RTValue RTStringValueBridge(RTString string) {
+  return (RTValue)string;
 }
 
 void RTStringDealloc(RTString string) {

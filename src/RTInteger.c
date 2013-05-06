@@ -1,15 +1,7 @@
 #include "RTInteger.h"
 
-typedef _Bool RTSign;
-
-enum {
-  POSITIVE = 1,
-  NEGATIVE = 0
-};
-
 struct RTInteger {
   RTBase base;
-  RTSign sign;
   RTInteger32Bit count;
   RTInteger32Bit value[];
 };
@@ -24,8 +16,7 @@ static inline RTInteger Create(RTInteger32Bit count) {
   if (integer == NULL) {
     return NULL;
   }
-  integer->base = BASE(TYPE_INTEGER);
-  integer->sign = POSITIVE;
+  integer->base = RTBaseInit(RTTypeInteger, RTFlagNone);
   integer->count = count;
   return integer;
 }
@@ -43,6 +34,10 @@ static inline RTInteger Carry(RTInteger integer, RTInteger32Bit carry) {
   new->value[new->count] = carry;
   new->count += 1;
   return new;
+}
+
+RTValue RTIntegerValueBridge(RTInteger integer) {
+  return (RTValue)integer;
 }
 
 void RTIntegerDealloc(RTInteger integer) {
@@ -102,15 +97,4 @@ RTInteger RTIntegerSum(RTInteger integer, RTInteger other) {
     carry = result >> 32;
   }
   return Carry(new, carry);
-}
-
-RTInteger RTIntegerNegation(RTInteger integer) {
-  RTSize size = Size(integer->count);
-  RTInteger copy = RTMemoryAlloc(size);
-  if (copy == NULL) {
-    return NULL;
-  }
-  RTMemoryCopy(integer, copy, size);
-  copy->sign = integer->sign == POSITIVE ? NEGATIVE : POSITIVE;
-  return copy;
 }

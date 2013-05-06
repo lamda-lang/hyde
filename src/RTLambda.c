@@ -13,6 +13,10 @@ static inline RTBool EqualMembers(RTLambda lambda, RTLambda other) {
   return lambda->length == other->length && lambda->count == other->count && lambda->arity == other->arity;
 }
 
+RTValue RTLambdaValueBridge(RTLambda lambda) {
+  return (RTValue)lambda;
+}
+
 RTLambda RTLambdaCreate(RTByte *code, RTInteger32Bit length, RTInteger8Bit arity, RTInteger32Bit count) {
   RTSize size = sizeof(struct RTLambda) + sizeof(RTValue) * count;
   RTLambda lambda = RTMemoryAlloc(size);
@@ -23,7 +27,7 @@ RTLambda RTLambdaCreate(RTByte *code, RTInteger32Bit length, RTInteger8Bit arity
     return NULL;
   }
   RTMemoryCopy(code, buffer, length);
-  lambda->base = BASE(TYPE_LAMBDA);
+  lambda->base = RTBaseInit(RTTypeLambda, RTFlagNone);
   lambda->code = buffer;
   lambda->length = length;
   lambda->count = count;
@@ -56,9 +60,10 @@ RTBool RTLambdaEqual(RTLambda lambda, RTLambda other) {
   return TRUE;
 }
 
-RTValue RTLambdaExecute(RTLambda lambda, RTValue *arg) {
+RTValue RTLambdaExecute(RTLambda lambda, RTValue *arg, RTInteger8Bit count) {
   lambda = NULL;
   arg = NULL;
+  count = 0;
   return NULL;
 }
 

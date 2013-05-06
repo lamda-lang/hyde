@@ -3,7 +3,10 @@
 
 #include "Runtime.h"
 
-extern const RTBoolean RTBooleanTrueSingleton;
-extern const RTBoolean RTBooleanFalseSingleton;
+RTValue RTBooleanValueBridge(RTBoolean boolean);
+
+RTBoolean RTBooleanCreate(RTBool bool);
+
+void RTBooleanDealloc(RTBoolean boolean);
 
 #endif

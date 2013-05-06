@@ -1,21 +1,26 @@
 #include "RTExecute.h"
 
 typedef enum {
-  OPCODE_CREATE_IDENTIFIER = 0,
-  OPCODE_CREATE_INTEGER = 1,
-  OPCODE_CREATE_LAMBDA = 2,
-  OPCODE_CREATE_LIST = 3,
-  OPCODE_CREATE_MAP = 4,
-  OPCODE_SINGLETON_NIL = 5,
-  OPCODE_CREATE_STRING = 6,
-  OPCODE_SINGLETON_BOOLEAN_TRUE = 7,
-  OPCODE_SINGLETON_BOOLEAN_FALSE = 8,
-  OPCODE_APPLY_ARGS = 9
+  RTOpcodeCreateBooleanFalse = 0,
+  RTOpcodeCreateBooleanTrue = 1,
+  RTOpcodeCreateIdentifier = 2,
+  RTOpcodeCreateInteger = 3,
+  RTOpcodeCreateLambda = 4,
+  RTOpcodeCreateList = 5,
+  RTOpcodeCreateMap = 6,
+  RTOpcodeCreateNil = 7,
+  RTOpcodeCreateString = 8,
+  RTOpcodeApplyArgs = 9
 } RTOpcode;
 
-static inline void InsertRegister(RTByte **code, RTValue *reg, RTValue value) {
-  RTInteger32Bit index = RTDecodeVBRInteger32Bit(code);
-  reg[index] = value;
+static inline RTBool CreateBoolean(RTByte **code, RTValue *reg, RTPool pool, RTBool bool) {
+  RTBoolean boolean = RTBooleanCreate(bool);
+  if (boolean == NULL) {
+    return FALSE;
+  }
+  RTValue value = RTBooleanValueBridge(boolean);
+  reg[RTDecodeVBRInteger32Bit(code)] = value;
+  return RTPoolAddValue(pool, value);
 }
 
 static inline RTBool CreateIdentifier(RTByte **code, RTValue *reg, RTPool pool) {
@@ -23,8 +28,9 @@ static inline RTBool CreateIdentifier(RTByte **code, RTValue *reg, RTPool pool) 
   if (id == NULL) {
     return FALSE;
   }
-  InsertRegister(code, reg, VALUE(id));
-  return RTPoolAddValue(pool, VALUE(id));
+  RTValue value = RTIdentifierValueBridge(id);
+  reg[RTDecodeVBRInteger32Bit(code)] = value;
+  return RTPoolAddValue(pool, value);
 }
 
 static inline RTBool CreateInteger(RTByte **code, RTValue *reg, RTPool pool) {
@@ -32,8 +38,9 @@ static inline RTBool CreateInteger(RTByte **code, RTValue *reg, RTPool pool) {
   if (integer == NULL) {
     return FALSE;
   }
-  InsertRegister(code, reg, VALUE(integer));
-  return RTPoolAddValue(pool, VALUE(integer));
+  RTValue value = RTIntegerValueBridge(integer);
+  reg[RTDecodeVBRInteger32Bit(code)] = value;
+  return RTPoolAddValue(pool, value);
 }
 
 static inline RTBool CreateLambda(RTByte **code, RTValue *reg, RTPool pool) {
@@ -48,8 +55,9 @@ static inline RTBool CreateLambda(RTByte **code, RTValue *reg, RTPool pool) {
     RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
     RTLambdaSetContextValueAtIndex(lambda, value, index);
   }
-  InsertRegister(code, reg, VALUE(lambda));
-  return RTPoolAddValue(pool, VALUE(lambda));
+  RTValue value = RTLambdaValueBridge(lambda);
+  reg[RTDecodeVBRInteger32Bit(code)] = value;
+  return RTPoolAddValue(pool, value);
 }
 
 static inline RTBool CreateList(RTByte **code, RTValue *reg, RTPool pool) {
@@ -62,8 +70,9 @@ static inline RTBool CreateList(RTByte **code, RTValue *reg, RTPool pool) {
     RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
     RTListSetValueAtIndex(list, value, index);
   }
-  InsertRegister(code, reg, VALUE(list));
-  return RTPoolAddValue(pool, VALUE(list));
+  RTValue value = RTListValueBridge(list);
+  reg[RTDecodeVBRInteger32Bit(code)] = value;
+  return RTPoolAddValue(pool, value);
 }
 
 static inline RTBool CreateMap(RTByte **code, RTValue *reg, RTPool pool) {
@@ -77,13 +86,19 @@ static inline RTBool CreateMap(RTByte **code, RTValue *reg, RTPool pool) {
     RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
     RTMapSetValueForKey(map, value, key);
   }
-  InsertRegister(code, reg, VALUE(map));
-  return RTPoolAddValue(pool, VALUE(map));
+  RTValue value = RTMapValueBridge(map);
+  reg[RTDecodeVBRInteger32Bit(code)] = value;
+  return RTPoolAddValue(pool, value);
 }
 
-static inline RTBool SingletonNil(RTByte **code, RTValue *reg) {
-  InsertRegister(code, reg, VALUE(RTNilSingleton));
-  return TRUE;
+static inline RTBool CreateNil(RTByte **code, RTValue *reg, RTPool pool) {
+  RTNil nil = RTNilCreate();
+  if (nil == NULL) {
+    return FALSE;
+  }
+  RTValue value = RTNilValueBridge(nil);
+  reg[RTDecodeVBRInteger32Bit(code)] = value;
+  return RTPoolAddValue(pool, value);
 }
 
 static inline RTBool CreateString(RTByte **code, RTValue *reg, RTPool pool) {
@@ -91,49 +106,52 @@ static inline RTBool CreateString(RTByte **code, RTValue *reg, RTPool pool) {
   if (string == NULL) {
     return FALSE;
   }
-  InsertRegister(code, reg, VALUE(string));
-  return RTPoolAddValue(pool, VALUE(string));
-}
-
-static inline RTBool SingletonBooleanTrue(RTByte **code, RTValue *reg) {
-  InsertRegister(code, reg, VALUE(RTBooleanTrueSingleton));
-  return TRUE;
-}
-
-static inline RTBool SingletonBooleanFalse(RTByte **code, RTValue *reg) {
-  InsertRegister(code, reg, VALUE(RTBooleanFalseSingleton));
-  return TRUE;
+  RTValue value = RTStringValueBridge(string);
+  reg[RTDecodeVBRInteger32Bit(code)] = value;
+  return RTPoolAddValue(pool, value);
 }
 
 static inline RTBool ApplyArgs(RTByte **code, RTValue *reg, RTPool pool) {
-  code = NULL;
-  reg = NULL;
-  pool = NULL;
-  return TRUE;
+  RTValue target = reg[RTDecodeVBRInteger32Bit(code)];
+  RTLambda lambda = RTValueLambdaBridge(target);
+  if (lambda == NULL) {
+    return FALSE;
+  }
+  RTInteger8Bit count = RTDecodeInteger8Bit(code);
+  RTValue arg[count];
+  for (RTInteger8Bit index = 0; index < count; index += 1) {
+    arg[index] = reg[RTDecodeVBRInteger32Bit(code)];
+  }
+  RTValue result = RTLambdaExecute(lambda, arg, count);
+  if (result == NULL) {
+    return FALSE;
+  }
+  reg[RTDecodeVBRInteger32Bit(code)] = result;
+  return RTPoolAddValue(pool, result);
 }
 
 static inline RTBool ExecuteInstruction(RTByte **code, RTValue *reg, RTPool pool) {
   RTOpcode opcode = RTDecodeInteger8Bit(code);
   switch (opcode) {
-  case OPCODE_CREATE_IDENTIFIER:
+  case RTOpcodeCreateIdentifier:
     return CreateIdentifier(code, reg, pool);
-  case OPCODE_CREATE_INTEGER:
+  case RTOpcodeCreateInteger:
     return CreateInteger(code, reg, pool);
-  case OPCODE_CREATE_LAMBDA:
+  case RTOpcodeCreateLambda:
     return CreateLambda(code, reg, pool);
-  case OPCODE_CREATE_LIST:
+  case RTOpcodeCreateList:
     return CreateList(code, reg, pool);
-  case OPCODE_CREATE_MAP:
+  case RTOpcodeCreateMap:
     return CreateMap(code, reg, pool);
-  case OPCODE_SINGLETON_NIL:
-    return SingletonNil(code, reg);
-  case OPCODE_CREATE_STRING:
+  case RTOpcodeCreateNil:
+    return CreateNil(code, reg, pool);
+  case RTOpcodeCreateString:
     return CreateString(code, reg, pool);
-  case OPCODE_SINGLETON_BOOLEAN_TRUE:
-    return SingletonBooleanTrue(code, reg);
-  case OPCODE_SINGLETON_BOOLEAN_FALSE:
-    return SingletonBooleanFalse(code, reg);
-  case OPCODE_APPLY_ARGS:
+  case RTOpcodeCreateBooleanFalse:
+    return CreateBoolean(code, reg, pool, FALSE);
+  case RTOpcodeCreateBooleanTrue:
+    return CreateBoolean(code, reg, pool, TRUE);
+  case RTOpcodeApplyArgs:
     return ApplyArgs(code, reg, pool);
   }
 }
@@ -147,4 +165,3 @@ RTBool RTExecuteCode(RTByte *code, RTInteger32Bit count, RTValue *reg, RTPool po
   }
   return TRUE;
 }
-

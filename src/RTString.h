@@ -3,7 +3,7 @@
 
 #include "Runtime.h"
 
-#define STRING(value) ((RTString)value)
+RTValue RTStringValueBridge(RTString string);
 
 /** -brief Deallocates the memory occupied by [string].
     -arg string The string to deallocate. */

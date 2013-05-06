@@ -3,7 +3,7 @@
 
 #include "Runtime.h"
 
-#define INTEGER(value) ((RTInteger)value)
+RTValue RTIntegerValueBridge(RTInteger integer);
 
 /** -brief Deallocates the memory occupied by [integer].
     -arg integer The integer to deallocate. */
@@ -43,10 +43,5 @@ RTInteger64Bit RTIntegerHash(RTInteger integer);
     -arg other Another integer.
     -return An [RTInteger] representing the sum of [integer] and [other]. */
 RTInteger RTIntegerSum(RTInteger integer, RTInteger other);
-
-/** -brief Returns the additive inverse of [integer].
-    -arg integer The integer.
-    -return An [RTInteger] representing the negation of [integer]. */
-RTInteger RTIntegerNegation(RTInteger integer);
 
 #endif

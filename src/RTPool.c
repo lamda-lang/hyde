@@ -22,6 +22,10 @@ static inline RTNode Node(RTValue value, RTNode next) {
   return node;
 }
 
+static inline void DeallocValue(RTValue value) {
+  value = NULL;
+}
+
 RTPool RTPoolCreate(void) {
   RTSize size = sizeof(struct RTPool);
   RTPool pool = RTMemoryAlloc(size);
@@ -44,7 +48,7 @@ void RTPoolDealloc(RTPool pool) {
 RTValue RTPoolAddValue(RTPool pool, RTValue value) {
   RTNode node = Node(value, pool->root);
   if (node == NULL) {
-    RTValueDealloc(value);
+    DeallocValue(value);
     return NULL;
   }
   pool->root = node;
@@ -52,12 +56,15 @@ RTValue RTPoolAddValue(RTPool pool, RTValue value) {
 }
 
 void RTPoolDrain(RTPool pool, RTValue root) {
-  RTValueMark(root);
+  RTValueSetFlag(root, RTFlagMark, TRUE);
   while (pool->root != NULL) {
     RTNode node = pool->root;
+    RTValue value = node->value;
     pool->root = node->next;
-    if (RTValueResetMark(node->value) == FALSE) {
-      RTValueDealloc(node->value);
+    if (RTValueGetFlag(value, RTFlagMark) == FALSE) {
+      DeallocValue(value);
+    } else {
+      RTValueSetFlag(value, RTFlagMark, FALSE);
     }
     RTMemoryDealloc(node);
   } 

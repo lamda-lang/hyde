@@ -2,15 +2,24 @@
 
 struct RTBoolean {
   RTBase base;
+  RTBool bool;
 };
 
-struct RTBoolean TrueSingleton = {
-  .base = 0
-};
+RTValue RTBooleanValueBridge(RTBoolean boolean) {
+  return (RTValue)boolean;
+}
 
-struct RTBoolean FalseSingleton = {
-  .base = 0
-};
+RTBoolean RTBooleanCreate(RTBool bool) {
+  RTSize size = sizeof(struct RTBoolean);
+  RTBoolean boolean = RTMemoryAlloc(size);
+  if (boolean == NULL) {
+    return NULL;
+  }
+  boolean->base = RTBaseInit(RTTypeBoolean, RTFlagNone);
+  boolean->bool = bool;
+  return boolean;
+}
 
-const RTBoolean RTBooleanTrueSingleton = &TrueSingleton;
-const RTBoolean RTBooleanFalseSingleton = &FalseSingleton;
+void RTBooleanDealloc(RTBoolean boolean) {
+  RTMemoryDealloc(boolean);
+}

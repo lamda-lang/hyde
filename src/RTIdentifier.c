@@ -12,9 +12,13 @@ static inline RTIdentifier Create(RTInteger8Bit length) {
   if (id == NULL) {
     return NULL;
   }
-  id->base = BASE(TYPE_IDENTIFIER);
+  id->base = RTBaseInit(RTTypeIdentifier, RTFlagNone);
   id->length = length;
   return id;
+}
+
+RTValue RTIdentifierValueBridge(RTIdentifier id) {
+  return (RTValue)id;
 }
 
 void RTIdentifierDealloc(RTIdentifier id) {

@@ -3,26 +3,30 @@
 
 #include "Runtime.h"
 
-#define VALUE(primitive) ((RTValue)primitive)
-#define BASE(type) 0
-
 RTBool RTValueEqual();
 
 RTInteger64Bit RTValueHash();
 
-/** -brief Deallocates the memory occupied by [value].
-    -arg value The value to deallocate. */
-void RTValueDealloc(RTValue value);
+RTBoolean RTValueBooleanBridge(RTValue value);
 
-/** -brief Marks [value] recursively.
-    -arg The value to mark.
-    -effect [value] and all values reachable by [value] are marked. */
-void RTValueMark(RTValue value);
+RTIdentifier RTValueIdentifierBridge(RTValue value);
 
-/** -brief Unmarks [value].
-    -value The value to unmark.
-    -return [TRUE] if [value] is marked, otherwise [FALSE].
-    -effect Unmarks [value]. */
-RTBool RTValueResetMark(RTValue value);
+RTInteger RTValueIntegerBridge(RTValue value);
+
+RTLambda RTValueLambdaBridge(RTValue value);
+
+RTList RTValueListBridge(RTValue value);
+
+RTMap RTValueMapBridge(RTValue value);
+
+RTNil RTValueNilBridge(RTValue value);
+
+RTString RTValueStringBridge(RTValue value);
+
+void RTValueSetFlag(RTValue value, RTFlag flag, RTBool boolean);
+
+RTBool RTValueGetFlag(RTValue value, RTFlag flag);
+
+RTType RTValueGetType(RTValue value);
 
 #endif

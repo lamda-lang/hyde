@@ -6,13 +6,17 @@ struct RTList {
   RTValue element[];
 };
 
+RTValue RTListValueBridge(RTList list) {
+  return (RTValue)list;
+}
+
 RTList RTListCreate(RTInteger32Bit length) {
   RTSize size = sizeof(struct RTList) + sizeof(RTValue) * length;
   RTList list = RTMemoryAlloc(size);
   if (list == NULL) {
     return NULL;
   }
-  list->base = BASE(TYPE_LIST);
+  list->base = RTBaseInit(RTTypeList, RTFlagNone);
   list->length = length;
   return list;
 }

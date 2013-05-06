@@ -3,6 +3,10 @@
 
 #include "Runtime.h"
 
-extern const RTNil RTNilSingleton;
+RTValue RTNilValueBridge(RTNil nil);
+
+RTNil RTNilCreate(void);
+
+void RTNilDealloc(RTNil nil);
 
 #endif

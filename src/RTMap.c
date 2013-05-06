@@ -15,6 +15,10 @@ static inline RTInteger32Bit RTMapIndex(RTMap map, RTValue value, RTInteger32Bit
   return (RTValueHash(value) + offset) % map->length;
 }
 
+RTValue RTMapValueBridge(RTMap map) {
+  return (RTValue)map;
+}
+
 RTMap RTMapCreate(RTInteger32Bit capacity) {
   RTInteger32Bit length = capacity * 2;
   RTSize size = sizeof(struct RTMap) + sizeof(struct RTElement) * length;
@@ -22,7 +26,7 @@ RTMap RTMapCreate(RTInteger32Bit capacity) {
   if (map == NULL) {
     return NULL;
   }
-  map->base = BASE(TYPE_MAP);
+  map->base = RTBaseInit(RTTypeMap, RTFlagNone);
   map->length = length;
   for (RTInteger32Bit index = 0; index < length; index += 1) {
     map->element[index].key = NULL;

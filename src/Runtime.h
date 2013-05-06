@@ -38,27 +38,43 @@ typedef RTBase *RTValue;
 
 /** -brief The boolean values [TRUE] and [FALSE]. */
 enum {
-  TRUE = 1,
-  FALSE = 0
+  FALSE = 0,
+  TRUE = 1
 };
 
 /** -brief An enumeration of types. */
-typedef enum {
-  TYPE_BOOLEAN = 0,
-  TYPE_IDENTIFIER = 1,
-  TYPE_INTEGER = 2,
-  TYPE_LAMBDA = 3,
-  TYPE_LIST = 4,
-  TYPE_MAP = 5,
-  TYPE_NIL = 6,
-  TYPE_STRING = 7
-} RTType;
+typedef uint8_t RTType;
+
+enum {
+  RTTypeBoolean = 0 << 4,
+  RTTypeIdentifier = 1 << 4,
+  RTTypeInteger = 2 << 4,
+  RTTypeLambda = 3 << 4,
+  RTTypeList = 4 << 4,
+  RTTypeMap = 5 << 4,
+  RTTypeNil = 6 << 4,
+  RTTypeString = 7 << 4
+};
+
+/** -brief An enumeration of flags. */
+typedef uint8_t RTFlag;
+
+enum {
+  RTFlagNone = 0,
+  RTFlagMark = 1 << 0,
+  RTFlagSign = 1 << 1
+};
 
 /** -brief An opaque data type that represents a value pool. */
 typedef struct RTPool *RTPool;
 
 /** -brief An opaque data type that represents a primitive identifier. */
 typedef struct RTIdentifier *RTIdentifier;
+
+typedef union {
+  RTIdentifier id;
+  RTValue value;
+} RTIdentifierBridge;
 
 /** -brief An opaque data type that represents a primitive integer. */
 typedef struct RTInteger *RTInteger;
@@ -83,6 +99,7 @@ typedef void (*RTBlock)(RTValue value);
 
 #endif
 
+#include "RTBase.h"
 #include "RTBoolean.h"
 #include "RTDecode.h"
 #include "RTEncode.h"

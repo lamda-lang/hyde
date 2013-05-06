@@ -3,7 +3,7 @@
 
 #include "Runtime.h"
 
-#define LAMBDA(value) ((RTLambda)value)
+RTValue RTLambdaValueBridge(RTLambda lambda);
 
 RTLambda RTLambdaCreate(RTByte *code, RTInteger32Bit length, RTInteger8Bit arity, RTInteger32Bit count);
 
@@ -15,7 +15,7 @@ RTInteger64Bit RTLambdaHash(RTLambda lambda);
 
 RTBool RTLambdaEqual(RTLambda lambda, RTLambda other);
 
-RTValue RTLambdaExecute(RTLambda lambda, RTValue *arg);
+RTValue RTLambdaExecute(RTLambda lambda, RTValue *arg, RTInteger8Bit count);
 
 void RTLambdaEnumerateContext(RTLambda lambda, RTBlock block);
 

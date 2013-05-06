@@ -3,7 +3,7 @@
 
 #include "Runtime.h"
 
-#define LIST(value) ((RTList)value)
+RTValue RTListValueBridge(RTList list);
 
 /** -brief Creates an empty [RTList].
     -arg length The number of elements of the list.

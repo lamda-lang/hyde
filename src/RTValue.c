@@ -1,34 +1,45 @@
 #include "RTValue.h"
 
-void RTValueDealloc(RTValue value) {
-  RTType type = 0;
-  switch (type) {
-  case TYPE_IDENTIFIER:
-      RTIdentifierDealloc(IDENTIFIER(value));
-      return;
-  case TYPE_INTEGER:
-      RTIntegerDealloc(INTEGER(value));
-      return;
-  case TYPE_LAMBDA:
-      RTLambdaDealloc(LAMBDA(value));
-      return;
-  case TYPE_LIST:
-      RTListDealloc(LIST(value));
-      return;
-  case TYPE_MAP:
-      RTMapDealloc(MAP(value));
-      return;
-  case TYPE_STRING:
-      RTStringDealloc(STRING(value));
-      return;
-  }
+RTBoolean RTValueBooleanBridge(RTValue value) {
+  return RTValueGetType(value) ==  RTTypeBoolean ? (RTBoolean)value : NULL;
 }
 
-void RTValueMark(RTValue value) {
-  value = NULL;
+RTIdentifier RTValueIdentifierBridge(RTValue value) {
+  return RTValueGetType(value) == RTTypeIdentifier ? (RTIdentifier)value : NULL;
 }
 
-RTBool RTValueResetMark(RTValue value) {
-  value = NULL;
-  return TRUE;
+RTInteger RTValueIntegerBridge(RTValue value) {
+  return RTValueGetType(value) == RTTypeInteger ? (RTInteger)value : NULL;
+}
+
+RTLambda RTValueLambdaBridge(RTValue value) {
+  return RTValueGetType(value) == RTTypeLambda ? (RTLambda)value : NULL;
+}
+
+RTList RTValueListBridge(RTValue value) {
+  return RTValueGetType(value) == RTTypeList ? (RTList)value : NULL;
+}
+
+RTMap RTValueMapBridge(RTValue value) {
+  return RTValueGetType(value) == RTTypeMap ? (RTMap)value : NULL;
+}
+
+RTNil RTValueNilBridge(RTValue value) {
+  return RTValueGetType(value) == RTTypeNil ? (RTNil)value : NULL;
+}
+
+RTString RTValueStringBridge(RTValue value) {
+  return RTValueGetType(value) == RTTypeString ? (RTString)value : NULL;
+}
+
+void RTValueSetFlag(RTValue value, RTFlag flag, RTBool bool) {
+  *value = RTBaseSetFlag(*value, flag, bool);
+}
+
+RTBool RTValueGetFlag(RTValue value, RTFlag flag) {
+  return RTBaseGetFlag(*value, flag);
+}
+
+RTType RTValueGetType(RTValue value) {
+  return RTBaseGetType(*value);
 }
