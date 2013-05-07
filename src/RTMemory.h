@@ -33,6 +33,6 @@ void RTMemoryCopy(void *source, void *target, RTSize size);
     -arg other Another buffer.
     -arg size The size of the buffers to compare, in bytes.
     -return [TRUE] if [size] bytes are equal, otherwise [FALSE]. */
-RTBool RTMemoryCompare(void *buffer, void *other, RTSize size);
+RTBool RTMemoryEqual(void *buffer, void *other, RTSize size);
 
 #endif

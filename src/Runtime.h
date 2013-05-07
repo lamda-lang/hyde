@@ -46,14 +46,14 @@ enum {
 typedef uint8_t RTType;
 
 enum {
-  RTTypeBoolean = 0 << 4,
-  RTTypeIdentifier = 1 << 4,
-  RTTypeInteger = 2 << 4,
-  RTTypeLambda = 3 << 4,
-  RTTypeList = 4 << 4,
-  RTTypeMap = 5 << 4,
-  RTTypeNil = 6 << 4,
-  RTTypeString = 7 << 4
+  RTTypeBoolean = 0,
+  RTTypeIdentifier = 1,
+  RTTypeInteger = 2,
+  RTTypeLambda = 3,
+  RTTypeList = 4,
+  RTTypeMap = 5,
+  RTTypeNil = 6,
+  RTTypeString = 7
 };
 
 /** -brief An enumeration of flags. */
@@ -61,8 +61,9 @@ typedef uint8_t RTFlag;
 
 enum {
   RTFlagNone = 0,
-  RTFlagMark = 1 << 0,
-  RTFlagSign = 1 << 1
+  RTFlagMark = 1 << 4,
+  RTFlagAlpha = 1 << 6,
+  RTFlagBeta = 1<< 7
 };
 
 /** -brief An opaque data type that represents a value pool. */

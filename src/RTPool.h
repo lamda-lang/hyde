@@ -15,10 +15,10 @@ void RTPoolDealloc(RTPool pool);
 /** -brief Adds [value] to [pool].
     -arg pool The pool to which [value] is to be added.
     -arg value The value to add to [pool].
-    -return [value] if function succeeds, otherwise [NULL].
+    -return [TRUE] if function succeeds, otherwise [FALSE].
     -effect [value] is deallocated if function fails.
     -effect [value] is part of [pool]. */
-RTValue RTPoolAddValue(RTPool pool, RTValue value);
+RTBool RTPoolAddValue(RTPool pool, RTValue value);
 
 /** -brief Deallocates all values contained by [pool] that are not reachablefrom [root]. 
     -arg pool The pool to drain.

@@ -1,5 +1,9 @@
 #include "RTInteger.h"
 
+enum {
+  RTFlagPositive = RTFlagAlpha
+};
+
 struct RTInteger {
   RTBase base;
   RTInteger32Bit count;
@@ -16,7 +20,7 @@ static inline RTInteger Create(RTInteger32Bit count) {
   if (integer == NULL) {
     return NULL;
   }
-  integer->base = RTBaseInit(RTTypeInteger, RTFlagNone);
+  integer->base = RTBaseInit(RTTypeInteger, RTFlagPositive);
   integer->count = count;
   return integer;
 }
@@ -70,7 +74,9 @@ RTInteger RTIntegerDecode(RTByte **data) {
 
 RTBool RTIntegerEqual(RTInteger integer, RTInteger other) {
   RTSize size = sizeof(RTInteger32Bit) * integer->count;
-  return integer->count == other->count && RTMemoryCompare(integer->value, other->value, size);
+  return integer->count == other->count &&
+         RTBaseEqualFlag(integer->base, other->base, RTFlagPositive) &&
+         RTMemoryEqual(integer->value, other->value, size);
 }
 
 RTInteger64Bit RTIntegerHash(RTInteger integer) {

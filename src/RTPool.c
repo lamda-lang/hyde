@@ -23,7 +23,82 @@ static inline RTNode Node(RTValue value, RTNode next) {
 }
 
 static inline void DeallocValue(RTValue value) {
-  value = NULL;
+  RTType type = RTValueGetType(value);
+  switch (type) {
+  case RTTypeBoolean: {
+      RTBoolean boolean = RTValueBooleanBridge(value);
+      RTBooleanDealloc(boolean);
+      break;
+    }
+  case RTTypeIdentifier: {
+      RTIdentifier id = RTValueIdentifierBridge(value);
+      RTIdentifierDealloc(id);
+      break;
+    }
+  case RTTypeLambda: {
+      RTLambda lambda = RTValueLambdaBridge(value);
+      RTLambdaDealloc(lambda);
+      break;
+    }
+  case RTTypeList: {
+      RTList list = RTValueListBridge(value);
+      RTListDealloc(list);
+      break;
+    }
+  case RTTypeMap: {
+      RTMap map = RTValueMapBridge(value);
+      RTMapDealloc(map);
+      break;
+    }
+  case RTTypeNil: {
+      RTNil nil = RTValueNilBridge(value);
+      RTNilDealloc(nil);
+      break;
+    }
+  case RTTypeString: {
+      RTString string = RTValueStringBridge(value);
+      RTStringDealloc(string);
+      break;
+    }
+  }
+}
+
+static inline void EnumerateBlock(RTValue value, RTBlock block) {
+  RTType type = RTValueGetType(value);
+  switch (type) {
+  case RTTypeLambda: {
+      RTLambda lambda = RTValueLambdaBridge(value);
+      RTLambdaEnumerateContext(lambda, block);
+      break;
+    }
+  case RTTypeList: {
+      RTList list = RTValueListBridge(value);
+      RTListEnumerateValues(list, block);
+      break;
+    }
+  case RTTypeMap: {
+      RTMap map = RTValueMapBridge(value);
+      RTMapEnumerateKeys(map, block);
+      RTMapEnumerateValues(map, block);
+      break;
+    }
+  }
+}
+
+static inline void MarkValue(RTValue value) {
+  if (RTValueGetFlag(value, RTFlagMark) == TRUE) {
+    return;
+  }
+  RTValueSetFlag(value, RTFlagMark, TRUE);
+  EnumerateBlock(value, MarkValue);
+}
+
+static inline void UnmarkValue(RTValue value) {
+  if (RTValueGetFlag(value, RTFlagMark) == FALSE) {
+    return;
+  }
+  RTValueSetFlag(value, RTFlagMark, FALSE);
+  EnumerateBlock(value, UnmarkValue);
 }
 
 RTPool RTPoolCreate(void) {
@@ -45,27 +120,25 @@ void RTPoolDealloc(RTPool pool) {
   RTMemoryDealloc(pool);
 }
 
-RTValue RTPoolAddValue(RTPool pool, RTValue value) {
+RTBool RTPoolAddValue(RTPool pool, RTValue value) {
   RTNode node = Node(value, pool->root);
   if (node == NULL) {
-    DeallocValue(value);
-    return NULL;
+    return FALSE;
   }
   pool->root = node;
-  return value;
+  return TRUE;
 }
 
 void RTPoolDrain(RTPool pool, RTValue root) {
-  RTValueSetFlag(root, RTFlagMark, TRUE);
+  MarkValue(root);
   while (pool->root != NULL) {
     RTNode node = pool->root;
     RTValue value = node->value;
     pool->root = node->next;
     if (RTValueGetFlag(value, RTFlagMark) == FALSE) {
       DeallocValue(value);
-    } else {
-      RTValueSetFlag(value, RTFlagMark, FALSE);
     }
     RTMemoryDealloc(node);
-  } 
+  }
+  UnmarkValue(root);
 }

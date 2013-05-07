@@ -51,7 +51,8 @@ RTIdentifier RTIdentifierDecode(RTByte **data) {
 
 RTBool RTIdentifierEqual(RTIdentifier id, RTIdentifier other) {
   RTSize size = sizeof(RTInteger8Bit) * id->length;
-  return id->length == other->length && RTMemoryCompare(id->codepoint, other->codepoint, size);
+  return id->length == other->length &&
+         RTMemoryEqual(id->codepoint, other->codepoint, size);
 }
 
 RTInteger64Bit RTIdentifierHash(RTIdentifier id) {

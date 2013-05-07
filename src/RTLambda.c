@@ -49,7 +49,7 @@ RTInteger64Bit RTLambdaHash(RTLambda lambda) {
 }
 
 RTBool RTLambdaEqual(RTLambda lambda, RTLambda other) {
-  if (EqualMembers(lambda, other) == FALSE || RTMemoryCompare(lambda->code, other->code, lambda->length)) {
+  if (EqualMembers(lambda, other) == FALSE || RTMemoryEqual(lambda->code, other->code, lambda->length)) {
     return FALSE;
   }
   for (RTInteger32Bit index = 0; index < lambda->count; index += 1) {

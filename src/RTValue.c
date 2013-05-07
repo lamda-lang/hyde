@@ -32,8 +32,8 @@ RTString RTValueStringBridge(RTValue value) {
   return RTValueGetType(value) == RTTypeString ? (RTString)value : NULL;
 }
 
-void RTValueSetFlag(RTValue value, RTFlag flag, RTBool bool) {
-  *value = RTBaseSetFlag(*value, flag, bool);
+void RTValueSetFlag(RTValue value, RTFlag flag, RTBool set) {
+  *value = RTBaseSetFlag(*value, flag, set);
 }
 
 RTBool RTValueGetFlag(RTValue value, RTFlag flag) {

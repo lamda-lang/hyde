@@ -55,5 +55,6 @@ RTInteger64Bit RTStringHash(RTString string) {
 
 RTBool RTStringEqual(RTString string, RTString other) {
   RTSize size = sizeof(RTInteger32Bit) * string->length;
-  return string->length == other->length && RTMemoryCompare(string->codepoint, other->codepoint, size) == TRUE;
+  return string->length == other->length &&
+         RTMemoryEqual(string->codepoint, other->codepoint, size);
 }

@@ -23,7 +23,7 @@ RTNil RTValueNilBridge(RTValue value);
 
 RTString RTValueStringBridge(RTValue value);
 
-void RTValueSetFlag(RTValue value, RTFlag flag, RTBool boolean);
+void RTValueSetFlag(RTValue value, RTFlag flag, RTBool set);
 
 RTBool RTValueGetFlag(RTValue value, RTFlag flag);
 
