@@ -5,10 +5,7 @@
 
 RTValue RTListValueBridge(RTList list);
 
-/** -brief Creates an empty [RTList].
-    -arg length The number of elements of the list.
-    -return An [RTList], or [NULL] if creation fails. */
-RTList RTListCreate(RTInteger32Bit length);
+RTList RTListDecode(RTByte **data);
 
 /** -brief Deallocates the memory occupied by [list].
     -arg list The list to deallocate. */

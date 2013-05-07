@@ -5,7 +5,7 @@
 
 RTValue RTLambdaValueBridge(RTLambda lambda);
 
-RTLambda RTLambdaCreate(RTByte *code, RTInteger32Bit length, RTInteger8Bit arity, RTInteger32Bit count);
+RTLambda RTLambdaDecode(RTByte **code);
 
 void RTLambdaDealloc(RTLambda lambda);
 

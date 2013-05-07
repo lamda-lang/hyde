@@ -47,9 +47,16 @@ static inline RTBool CreateInteger(RTByte **code, RTValue *reg, RTPool pool) {
 }
 
 static inline RTBool CreateLambda(RTByte **code, RTValue *reg, RTPool pool) {
-  RTLambda lambda = RTLambdaDecode(code);
+  RTInteger8Bit arity = RTDecodeInteger8Bit(code);
+  RTInteger32Bit count = RTDecodeVBRInteger32Bit(code);
+  RTInteger32Bit length = RTDecodeVBRInteger32Bit(code);
+  RTLambda lambda = RTLambdaCreate(*code, length, arity, count);
   if (lambda == NULL) {
     return FALSE;
+  }
+  for (RTInteger32Bit index = 0; index < count; index += 1) {
+    RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
+    RTLambdaSetContextValueAtIndex(lambda, value, index);
   }
   RTValue value = RTLambdaValueBridge(lambda);
   reg[RTDecodeVBRInteger32Bit(code)] = value;
@@ -57,9 +64,14 @@ static inline RTBool CreateLambda(RTByte **code, RTValue *reg, RTPool pool) {
 }
 
 static inline RTBool CreateList(RTByte **code, RTValue *reg, RTPool pool) {
-  RTList list = RTListDecode(code);
+  RTInteger32Bit length = RTDecodeVBRInteger32Bit(code);
+  RTList list = RTListCreate(length);
   if (list == NULL) {
     return FALSE;
+  }
+  for (RTInteger32Bit index = 0; index < length; index += 1) {
+    RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
+    RTListSetValueAtIndex(list, value, index);
   }
   RTValue value = RTListValueBridge(list);
   reg[RTDecodeVBRInteger32Bit(code)] = value;
@@ -67,9 +79,15 @@ static inline RTBool CreateList(RTByte **code, RTValue *reg, RTPool pool) {
 }
 
 static inline RTBool CreateMap(RTByte **code, RTValue *reg, RTPool pool) {
-  RTMap map = RTMapDecode(code);
+  RTInteger32Bit capacity = RTDecodeVBRInteger32Bit(code);
+  RTMap map = RTMapCreate(capacity);
   if (map == NULL) {
     return FALSE;
+  }
+  for (RTInteger32Bit index = 0; index < capacity; index += 1) {
+    RTValue key = reg[RTDecodeVBRInteger32Bit(code)];
+    RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
+    RTMapSetValueForKey(map, value, key);
   }
   RTValue value = RTMapValueBridge(map);
   reg[RTDecodeVBRInteger32Bit(code)] = value;
@@ -115,49 +133,6 @@ static inline RTBool ApplyArg(RTByte **code, RTValue *reg, RTPool pool) {
   return RTPoolAddValue(pool, result);
 }
 
-static inline RTBool FetchLambda(RTByte **code, RTValue *reg) {
-  RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
-  RTLambda lambda = RTValueLambdaBridge(value);
-  if (lambda == NULL) {
-    return FALSE;
-  }
-  RTInteger32Bit count = RTDecodeVBRInteger32Bit(code);
-  for (RTInteger32Bit index = 0; index < count; index += 1) {
-    RTValue context = reg[RTDecodeVBRInteger32Bit(code)];
-    RTLambdaSetContextValueAtIndex(lambda, context, index);
-  }
-  return TRUE;
-}
-
-static inline RTBool FetchList(RTByte **code, RTValue *reg) {
-  RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
-  RTList list = RTValueListBridge(value);
-  if (list == NULL) {
-    return FALSE;
-  }
-  RTInteger32Bit count = RTDecodeVBRInteger32Bit(code);
-  for (RTInteger32Bit index = 0; index < count; index += 1) {
-    RTValue element = reg[RTDecodeVBRInteger32Bit(code)];
-    RTListSetValueAtIndex(list, element, index);
-  }
-  return TRUE;
-}
-
-static inline RTBool FetchMap(RTByte **code, RTValue *reg) {
-  RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
-  RTMap map = RTValueMapBridge(value);
-  if (map == NULL) {
-    return FALSE;
-  }
-  RTInteger32Bit count = RTDecodeVBRInteger32Bit(code);
-  for (RTInteger32Bit index = 0; index < count; index += 1) {
-    RTValue key = reg[RTDecodeVBRInteger32Bit(code)];
-    RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
-    RTMapSetValueForKey(map, value, key);
-  }
-  return TRUE;
-}
-
 static inline RTBool ExecuteInstruction(RTByte **code, RTValue *reg, RTPool pool) {
   RTInteger8Bit opcode = RTDecodeInteger8Bit(code);
   switch (opcode) {
@@ -181,13 +156,9 @@ static inline RTBool ExecuteInstruction(RTByte **code, RTValue *reg, RTPool pool
     return CreateString(code, reg, pool);
   case APPLY_ARG:
     return ApplyArg(code, reg, pool);
+  }
   case FETCH_LAMBDA:
     return FetchLambda(code, reg);
-  case FETCH_LIST:
-    return FetchList(code, reg);
-  case FETCH_MAP:
-    return FetchMap(code, reg);
-  }
 }
 
 RTBool RTExecuteCode(RTByte *code, RTInteger32Bit count, RTValue *reg, RTPool pool) {

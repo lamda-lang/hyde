@@ -12,15 +12,19 @@ struct RTMap {
 };
 
 static inline RTInteger32Bit RTMapIndex(RTMap map, RTValue value, RTInteger32Bit offset) {
-  return (RTValueHash(value) + offset) % map->length;
+  /* missing */
+  map = NULL;
+  value = NULL;
+  offset = 0;
+  return 0;
 }
 
 RTValue RTMapValueBridge(RTMap map) {
   return (RTValue)map;
 }
 
-RTMap RTMapCreate(RTInteger32Bit capacity) {
-  RTInteger32Bit length = capacity * 2;
+RTMap RTMapDecode(RTByte **data) {
+  RTInteger32Bit length = RTDecodeVBRInteger32Bit(data) * 2;
   RTSize size = sizeof(struct RTMap) + sizeof(struct RTElement) * length;
   RTMap map = RTMemoryAlloc(size);
   if (map == NULL) {
@@ -50,9 +54,7 @@ void RTMapSetValueForKey(RTMap map, RTValue value, RTValue key) {
 
 RTValue RTMapGetValueForKey(RTMap map, RTValue key) {
   RTInteger32Bit index = RTMapIndex(map, key, 0);
-  while (map->element[index].key != NULL && RTValueEqual(key, map->element[index].key) == FALSE) {
-    index = RTMapIndex(map, key, index);
-  }
+  /* missing */
   return map->element[index].value;
 }
 
@@ -67,11 +69,7 @@ RTBool RTMapEqual(RTMap map, RTMap other) {
   for (RTInteger32Bit index = 0; index < map->length; index += 1) {
     RTValue mapKey = map->element[index].key;
     if (mapKey != NULL) {
-      RTValue mapValue = RTMapGetValueForKey(map, mapKey);
-      RTValue otherValue = RTMapGetValueForKey(other, mapKey);
-      if (otherValue == NULL || RTValueEqual(mapValue, otherValue) == FALSE) {
-	return  FALSE;
-      }
+      /* missing */
     }
   }
   return TRUE;

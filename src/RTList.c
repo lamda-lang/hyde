@@ -10,7 +10,8 @@ RTValue RTListValueBridge(RTList list) {
   return (RTValue)list;
 }
 
-RTList RTListCreate(RTInteger32Bit length) {
+RTList RTListDecode(RTByte **data) {
+  RTInteger32Bit length = RTDecodeVBRInteger32Bit(data);
   RTSize size = sizeof(struct RTList) + sizeof(RTValue) * length;
   RTList list = RTMemoryAlloc(size);
   if (list == NULL) {
@@ -38,9 +39,7 @@ RTBool RTListEqual(RTList list, RTList other) {
     return FALSE;
   }
   for (RTInteger32Bit index = 0; index < list->length; index += 1) {
-    if (RTValueEqual(list->element[index], other->element[index]) == FALSE) {
-      return FALSE;
-    }
+    /* missing */
   }
   return TRUE;
 }

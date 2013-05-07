@@ -3,10 +3,6 @@
 
 #include "Runtime.h"
 
-RTBool RTValueEqual();
-
-RTInteger64Bit RTValueHash();
-
 RTBoolean RTValueBooleanBridge(RTValue value);
 
 RTIdentifier RTValueIdentifierBridge(RTValue value);
