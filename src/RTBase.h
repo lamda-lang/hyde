@@ -7,10 +7,10 @@ RTBase RTBaseInit(RTType type, RTFlag mask);
 
 RTType RTBaseGetType(RTBase base);
 
-RTBase RTBaseSetFlag(RTBase base, RTFlag flag, RTBool value);
+RTBase RTBaseSetFlag(RTBase base, RTFlag flag, RTBool truth);
 
-RTBool RTBaseGetFlag(RTBase base, RTFlag flag);
+RTBool RTBaseFlagSet(RTBase base, RTFlag flag);
 
-RTBool RTBaseEqualFlag(RTBase base, RTBase other, RTFlag flag);
+RTBool RTBaseFlagEqual(RTBase base, RTBase other, RTFlag flag);
 
 #endif

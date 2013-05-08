@@ -21,7 +21,7 @@ RTString RTValueStringBridge(RTValue value);
 
 void RTValueSetFlag(RTValue value, RTFlag flag, RTBool set);
 
-RTBool RTValueGetFlag(RTValue value, RTFlag flag);
+RTBool RTValueFlagSet(RTValue value, RTFlag flag);
 
 RTType RTValueGetType(RTValue value);
 

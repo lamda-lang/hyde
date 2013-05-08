@@ -59,7 +59,7 @@ RTBool RTLambdaEqual(RTLambda lambda, RTLambda other) {
       lambda->registerCount != other->registerCount ||
       lambda->instructionCount != other->instructionCount || 
       lambda->contextLength != other->contextLength ||
-      RTMemoryEqual(lambda->code, other->code, lambda->codeSize) == FALSE) {
+      !RTMemoryEqual(lambda->code, other->code, lambda->codeSize)) {
     return FALSE;
   }
   for (RTInteger32Bit index = 0; index < lambda->contextLength; index += 1) {

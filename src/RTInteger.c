@@ -75,7 +75,7 @@ RTInteger RTIntegerDecode(RTByte **data) {
 RTBool RTIntegerEqual(RTInteger integer, RTInteger other) {
   RTSize size = sizeof(RTInteger32Bit) * integer->count;
   return integer->count == other->count &&
-         RTBaseEqualFlag(integer->base, other->base, RTFlagPositive) &&
+         RTBaseFlagEqual(integer->base, other->base, RTFlagPositive) &&
          RTMemoryEqual(integer->value, other->value, size);
 }
 

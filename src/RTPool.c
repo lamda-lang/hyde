@@ -86,7 +86,7 @@ static inline void EnumerateBlock(RTValue value, RTBlock block) {
 }
 
 static inline void MarkValue(RTValue value) {
-  if (RTValueGetFlag(value, RTFlagMark) == TRUE) {
+  if (RTValueFlagSet(value, RTFlagMark)) {
     return;
   }
   RTValueSetFlag(value, RTFlagMark, TRUE);
@@ -94,7 +94,7 @@ static inline void MarkValue(RTValue value) {
 }
 
 static inline void UnmarkValue(RTValue value) {
-  if (RTValueGetFlag(value, RTFlagMark) == FALSE) {
+  if (!RTValueFlagSet(value, RTFlagMark)) {
     return;
   }
   RTValueSetFlag(value, RTFlagMark, FALSE);
@@ -135,7 +135,7 @@ void RTPoolDrain(RTPool pool, RTValue root) {
     RTNode node = pool->root;
     RTValue value = node->value;
     pool->root = node->next;
-    if (RTValueGetFlag(value, RTFlagMark) == FALSE) {
+    if (!RTValueFlagSet(value, RTFlagMark)) {
       DeallocValue(value);
     }
     RTMemoryDealloc(node);

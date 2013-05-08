@@ -36,8 +36,8 @@ void RTValueSetFlag(RTValue value, RTFlag flag, RTBool set) {
   *value = RTBaseSetFlag(*value, flag, set);
 }
 
-RTBool RTValueGetFlag(RTValue value, RTFlag flag) {
-  return RTBaseGetFlag(*value, flag);
+RTBool RTValueFlagSet(RTValue value, RTFlag flag) {
+  return RTBaseFlagSet(*value, flag);
 }
 
 RTType RTValueGetType(RTValue value) {

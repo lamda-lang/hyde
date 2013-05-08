@@ -2,21 +2,21 @@
 
 struct RTBoolean {
   RTBase base;
-  RTBool value;
+  RTBool truth;
 };
 
 RTValue RTBooleanValueBridge(RTBoolean boolean) {
   return (RTValue)boolean;
 }
 
-RTBoolean RTBooleanCreate(RTBool value) {
+RTBoolean RTBooleanCreate(RTBool truth) {
   RTSize size = sizeof(struct RTBoolean);
   RTBoolean boolean = RTMemoryAlloc(size);
   if (boolean == NULL) {
     return NULL;
   }
   boolean->base = RTBaseInit(RTTypeBoolean, RTFlagNone);
-  boolean->value = value;
+  boolean->truth = truth;
   return boolean;
 }
 

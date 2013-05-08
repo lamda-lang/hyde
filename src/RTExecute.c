@@ -192,7 +192,7 @@ static inline RTBool ExecuteInstruction(RTByte **code, RTValue *reg, RTPool pool
 
 RTBool RTExecuteCode(RTByte *code, RTInteger32Bit count, RTValue *reg, RTPool pool) {
   while (count > 0) {
-    if (ExecuteInstruction(&code, reg, pool) == FALSE) {
+    if (!ExecuteInstruction(&code, reg, pool)) {
       return FALSE;
     }
     count -= 1;
