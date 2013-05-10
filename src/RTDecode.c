@@ -41,7 +41,7 @@ RTInteger64Bit RTDecodeInteger64Bit(RTByte **data) {
 
 RTInteger32Bit RTDecodeVBRInteger32Bit(RTByte **data) {
   RTInteger32Bit result = 0;
-  RTBool more = TRUE;
+  bool more = true;
   for (RTIndex index = 0; more; index += 1) {
     RTInteger32Bit value = (**data & 0X7F);
     result |= value << index * 7;

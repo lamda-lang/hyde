@@ -1,35 +1,39 @@
 #include "RTIdentifier.h"
 
+enum {
+  RTImplementationBase = RTImplementationAlpha
+};
+
 struct RTIdentifier {
-  RTBase base;
+  RTValue base;
   RTInteger8Bit length;
   RTInteger8Bit codepoint[];
 };
 
-static inline RTIdentifier Create(RTInteger8Bit length) {
+static inline RTIdentifier *Create(RTInteger8Bit length) {
   RTSize size = sizeof(struct RTIdentifier) + sizeof(RTInteger8Bit) * length;
-  RTIdentifier id = RTMemoryAlloc(size);
+  RTIdentifier *id = RTMemoryAlloc(size);
   if (id == NULL) {
     return NULL;
   }
-  id->base = RTBaseInit(RTTypeIdentifier, RTFlagNone);
+  id->base = RTValueInit(RTTypeIdentifier, RTImplementationBase, RTFlagNone);
   id->length = length;
   return id;
 }
 
-RTValue RTIdentifierValueBridge(RTIdentifier id) {
-  return (RTValue)id;
+RTValue *RTIdentifierValueBridge(RTIdentifier *id) {
+  return (RTValue *)id;
 }
 
-void RTIdentifierDealloc(RTIdentifier id) {
+void RTIdentifierDealloc(RTIdentifier *id) {
   RTMemoryDealloc(id);
 }
 
-RTSize RTIdentifierEncodingSize(RTIdentifier id) {
+RTSize RTIdentifierEncodingSize(RTIdentifier *id) {
   return sizeof(RTInteger8Bit) + sizeof(RTInteger8Bit) * id->length;
 }
 
-void RTIdentifierEncode(RTIdentifier id, RTByte *buffer) {
+void RTIdentifierEncode(RTIdentifier *id, RTByte *buffer) {
   RTByte *alias = buffer;
   RTEncodeInteger8Bit(id->length, &alias);
   for (RTInteger8Bit index = 0; index < id->length; index +=1) {
@@ -37,9 +41,9 @@ void RTIdentifierEncode(RTIdentifier id, RTByte *buffer) {
   }
 }
 
-RTIdentifier RTIdentifierDecode(RTByte **data) {
+RTIdentifier *RTIdentifierDecode(RTByte **data) {
   RTInteger8Bit length = RTDecodeInteger8Bit(data);
-  RTIdentifier id = Create(length);
+  RTIdentifier *id = Create(length);
   if (id == NULL) {
     return NULL;
   }
@@ -49,12 +53,12 @@ RTIdentifier RTIdentifierDecode(RTByte **data) {
   return id;
 }
 
-RTBool RTIdentifierEqual(RTIdentifier id, RTIdentifier other) {
+bool RTIdentifierEqual(RTIdentifier *id, RTIdentifier *other) {
   RTSize size = sizeof(RTInteger8Bit) * id->length;
   return id->length == other->length &&
          RTMemoryEqual(id->codepoint, other->codepoint, size);
 }
 
-RTInteger64Bit RTIdentifierHash(RTIdentifier id) {
+RTInteger64Bit RTIdentifierHash(RTIdentifier *id) {
   return id->length;
 }

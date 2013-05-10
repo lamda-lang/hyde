@@ -1,23 +1,27 @@
 #include "RTNil.h"
 
-struct RTNil {
-  RTBase base;
+enum {
+  RTImplementationBase = RTImplementationAlpha
 };
 
-RTValue RTNilValueBridge(RTNil nil) {
-  return (RTValue)nil;
+struct RTNil {
+  RTValue base;
+};
+
+RTValue *RTNilValueBridge(RTNil *nil) {
+  return (RTValue *)nil;
 }
 
-RTNil RTNilCreate(void) {
+RTNil *RTNilCreate(void) {
   RTSize size = sizeof(struct RTNil);
-  RTNil nil = RTMemoryAlloc(size);
+  RTNil *nil = RTMemoryAlloc(size);
   if (nil == NULL) {
     return NULL;
   }
-  nil->base = RTBaseInit(RTTypeNil, RTFlagNone);
+  nil->base = RTValueInit(RTTypeNil, RTImplementationBase, RTFlagNone);
   return nil;
 }
 
-void RTNilDealloc(RTNil nil) {
+void RTNilDealloc(RTNil *nil) {
   RTMemoryDealloc(nil);
 }

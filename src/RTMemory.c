@@ -16,6 +16,6 @@ void RTMemoryCopy(void *source, void *target, RTSize size) {
   memcpy(target, source, size);
 }
 
-RTBool RTMemoryEqual(void *buffer, void *other, RTSize size) {
+bool RTMemoryEqual(void *buffer, void *other, RTSize size) {
   return memcmp(buffer, other, size) == 0;
 }

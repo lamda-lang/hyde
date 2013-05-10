@@ -1,201 +1,195 @@
 #include "RTExecute.h"
 
-enum {
-  CREATE_BOOLEAN_FALSE = 0,
-  CREATE_BOOLEAN_TRUE = 1,
-  CREATE_IDENTIFIER = 2,
-  CREATE_INTEGER = 3,
-  CREATE_LAMBDA = 4,
-  CREATE_LIST = 5,
-  CREATE_MAP = 6,
-  CREATE_NIL = 7,
-  CREATE_STRING = 8,
-  APPLY_ARG = 9,
-  FETCH_LAMBDA = 10,
-  FETCH_LIST = 11,
-  FETCH_MAP = 12
-};
+static inline RTError AddToPool(RTPool *pool, RTValue *value) {
+  return RTPoolAddValue(pool, value) == NULL ? RTErrorOutOfMemory : RTErrorNone;
+}
 
-static inline RTBool CreateBoolean(RTByte **code, RTValue *reg, RTPool pool, RTBool flag) {
-  RTBoolean boolean = RTBooleanCreate(flag);
+static inline RTError CreateBoolean(RTByte **code, RTValue **reg, RTPool *pool, bool flag) {
+  RTBoolean *boolean = RTBooleanCreate(flag);
   if (boolean == NULL) {
-    return FALSE;
+    return RTErrorOutOfMemory;
   }
-  RTValue value = RTBooleanValueBridge(boolean);
+  RTValue *value = RTBooleanValueBridge(boolean);
   reg[RTDecodeVBRInteger32Bit(code)] = value;
-  return RTPoolAddValue(pool, value);
+  return AddToPool(pool, value);
 }
 
-static inline RTBool CreateIdentifier(RTByte **code, RTValue *reg, RTPool pool) {
-  RTIdentifier id = RTIdentifierDecode(code);
+static inline RTError CreateIdentifier(RTByte **code, RTValue **reg, RTPool *pool) {
+  RTIdentifier *id = RTIdentifierDecode(code);
   if (id == NULL) {
-    return FALSE;
+    return RTErrorOutOfMemory;
   }
-  RTValue value = RTIdentifierValueBridge(id);
+  RTValue *value = RTIdentifierValueBridge(id);
   reg[RTDecodeVBRInteger32Bit(code)] = value;
-  return RTPoolAddValue(pool, value);
+  return AddToPool(pool, value);
 }
 
-static inline RTBool CreateInteger(RTByte **code, RTValue *reg, RTPool pool) {
-  RTInteger integer = RTIntegerDecode(code);
+static inline RTError CreateInteger(RTByte **code, RTValue **reg, RTPool *pool) {
+  RTInteger *integer = RTIntegerDecode(code);
   if (integer == NULL) {
-    return FALSE;
+    return RTErrorOutOfMemory;
   }
-  RTValue value = RTIntegerValueBridge(integer);
+  RTValue *value = RTIntegerValueBridge(integer);
   reg[RTDecodeVBRInteger32Bit(code)] = value;
-  return RTPoolAddValue(pool, value);
+  return AddToPool(pool, value);
 }
 
-static inline RTBool CreateLambda(RTByte **code, RTValue *reg, RTPool pool) {
-  RTLambda lambda = RTLambdaDecode(code);
+static inline RTError CreateLambda(RTByte **code, RTValue **reg, RTPool *pool) {
+  RTLambda *lambda = RTLambdaDecode(code);
   if (lambda == NULL) {
-    return FALSE;
+    return RTErrorOutOfMemory;
   }
-  RTValue value = RTLambdaValueBridge(lambda);
+  RTValue *value = RTLambdaValueBridge(lambda);
   reg[RTDecodeVBRInteger32Bit(code)] = value;
-  return RTPoolAddValue(pool, value);
+  return AddToPool(pool, value);
 }
 
-static inline RTBool CreateList(RTByte **code, RTValue *reg, RTPool pool) {
-  RTList list = RTListDecode(code);
+static inline RTError CreateList(RTByte **code, RTValue **reg, RTPool *pool) {
+  RTList *list = RTListDecode(code);
   if (list == NULL) {
-    return FALSE;
+    return RTErrorOutOfMemory;
   }
-  RTValue value = RTListValueBridge(list);
+  RTValue *value = RTListValueBridge(list);
   reg[RTDecodeVBRInteger32Bit(code)] = value;
-  return RTPoolAddValue(pool, value);
+  return AddToPool(pool, value);
 }
 
-static inline RTBool CreateMap(RTByte **code, RTValue *reg, RTPool pool) {
-  RTMap map = RTMapDecode(code);
+static inline RTError CreateMap(RTByte **code, RTValue **reg, RTPool *pool) {
+  RTMap *map = RTMapDecode(code);
   if (map == NULL) {
-    return FALSE;
+    return RTErrorOutOfMemory;
   }
-  RTValue value = RTMapValueBridge(map);
+  RTValue *value = RTMapValueBridge(map);
   reg[RTDecodeVBRInteger32Bit(code)] = value;
-  return RTPoolAddValue(pool, value);
+  return AddToPool(pool, value);
 }
 
-static inline RTBool CreateNil(RTByte **code, RTValue *reg, RTPool pool) {
-  RTNil nil = RTNilCreate();
+static inline RTError CreateNil(RTByte **code, RTValue **reg, RTPool *pool) {
+  RTNil *nil = RTNilCreate();
   if (nil == NULL) {
-    return FALSE;
+    return RTErrorOutOfMemory;
   }
-  RTValue value = RTNilValueBridge(nil);
+  RTValue *value = RTNilValueBridge(nil);
   reg[RTDecodeVBRInteger32Bit(code)] = value;
-  return RTPoolAddValue(pool, value);
+  return AddToPool(pool, value);
 }
 
-static inline RTBool CreateString(RTByte **code, RTValue *reg, RTPool pool) {
-  RTString string = RTStringDecode(code);
+static inline RTError CreateString(RTByte **code, RTValue **reg, RTPool *pool) {
+  RTString *string = RTStringDecode(code);
   if (string == NULL) {
-    return FALSE;
+    return RTErrorOutOfMemory;
   }
-  RTValue value = RTStringValueBridge(string);
+  RTValue *value = RTStringValueBridge(string);
   reg[RTDecodeVBRInteger32Bit(code)] = value;
-  return RTPoolAddValue(pool, value);
+  return AddToPool(pool, value);
 }
 
-static inline RTBool ApplyArg(RTByte **code, RTValue *reg, RTPool pool) {
-  RTValue target = reg[RTDecodeVBRInteger32Bit(code)];
-  RTLambda lambda = RTValueLambdaBridge(target);
-  if (lambda == NULL) {
-    return FALSE;
+static inline RTError ApplyArg(RTByte **code, RTValue **reg, RTPool *pool) {
+  RTValue *target = reg[RTDecodeVBRInteger32Bit(code)];
+  if (RTValueType(target) != RTTypeLambda) {
+    return RTErrorInvalidType;
   }
-  RTInteger8Bit count = RTDecodeInteger8Bit(code);
-  RTValue arg[count];
-  for (RTInteger8Bit index = 0; index < count; index += 1) {
-    arg[index] = reg[RTDecodeVBRInteger32Bit(code)];
+  RTLambda *lambda = RTValueLambdaBridge(target);
+  RTInteger32Bit registerCount = RTLambdaRegisterCount(lambda);
+  RTSize size = sizeof(RTValue *) * registerCount;
+  RTValue **frame = RTMemoryAlloc(size);
+  RTInteger8Bit arity = RTDecodeInteger8Bit(code);
+  for (RTInteger8Bit index = 0; index < arity; index += 1) {
+    frame[index + 1] = reg[RTDecodeVBRInteger32Bit(code)];
   }
-  RTValue result = RTLambdaExecute(lambda, arg, count);
-  if (result == NULL) {
-    return FALSE;
+  RTError error = RTLambdaExecute(lambda, frame, arity, pool);
+  if (error != RTErrorNone) {
+    return error;
   }
-  reg[RTDecodeVBRInteger32Bit(code)] = result;
-  return RTPoolAddValue(pool, result);
+  reg[RTDecodeVBRInteger32Bit(code)] = frame[0];
+  RTMemoryDealloc(frame);
+  return RTErrorNone;
 }
 
-static inline RTBool FetchLambda(RTByte **code, RTValue *reg) {
-  RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
-  RTLambda lambda = RTValueLambdaBridge(value);
-  if (lambda == NULL) {
-    return FALSE;
+static inline RTError FetchLambda(RTByte **code, RTValue **reg) {
+  RTValue *value = reg[RTDecodeVBRInteger32Bit(code)];
+  if (RTValueType(value) != RTTypeLambda) {
+    return RTErrorInvalidType;
   }
+  RTLambda *lambda = RTValueLambdaBridge(value);
   RTInteger32Bit count = RTDecodeVBRInteger32Bit(code);
   for (RTInteger32Bit index = 0; index < count; index += 1) {
-    RTValue context = reg[RTDecodeVBRInteger32Bit(code)];
+    RTValue *context = reg[RTDecodeVBRInteger32Bit(code)];
     RTLambdaSetContextValueAtIndex(lambda, context, index);
   }
-  return TRUE;
+  return RTErrorNone;
 }
 
-static inline RTBool FetchList(RTByte **code, RTValue *reg) {
-  RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
-  RTList list = RTValueListBridge(value);
-  if (list == NULL) {
-    return FALSE;
+static inline RTError FetchList(RTByte **code, RTValue **reg) {
+  RTValue *value = reg[RTDecodeVBRInteger32Bit(code)];
+  if (RTValueType(value) != RTTypeList) {
+    return RTErrorInvalidType;
   }
+  RTList *list = RTValueListBridge(value);
   RTInteger32Bit count = RTDecodeVBRInteger32Bit(code);
   for (RTInteger32Bit index = 0; index < count; index += 1) {
-    RTValue element = reg[RTDecodeVBRInteger32Bit(code)];
+    RTValue *element = reg[RTDecodeVBRInteger32Bit(code)];
     RTListSetValueAtIndex(list, element, index);
   }
-  return TRUE;
+  return RTErrorNone;
 }
 
-static inline RTBool FetchMap(RTByte **code, RTValue *reg) {
-  RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
-  RTMap map = RTValueMapBridge(value);
-  if (map == NULL) {
-    return FALSE;
+static inline RTError FetchMap(RTByte **code, RTValue **reg) {
+  RTValue *value = reg[RTDecodeVBRInteger32Bit(code)];
+  if (RTValueType(value) != RTTypeMap) {
+    return RTErrorInvalidType;
   }
+  RTMap *map = RTValueMapBridge(value);
   RTInteger32Bit count = RTDecodeVBRInteger32Bit(code);
   for (RTInteger32Bit index = 0; index < count; index += 1) {
-    RTValue key = reg[RTDecodeVBRInteger32Bit(code)];
-    RTValue value = reg[RTDecodeVBRInteger32Bit(code)];
+    RTValue *key = reg[RTDecodeVBRInteger32Bit(code)];
+    RTValue *value = reg[RTDecodeVBRInteger32Bit(code)];
     RTMapSetValueForKey(map, value, key);
   }
-  return TRUE;
+  return RTErrorNone;
 }
 
-static inline RTBool ExecuteInstruction(RTByte **code, RTValue *reg, RTPool pool) {
+static inline RTError ExecuteInstruction(RTByte **code, RTValue **reg, RTPool *pool) {
   RTInteger8Bit opcode = RTDecodeInteger8Bit(code);
   switch (opcode) {
-  case CREATE_BOOLEAN_FALSE:
-    return CreateBoolean(code, reg, pool, FALSE);
-  case CREATE_BOOLEAN_TRUE:
-    return CreateBoolean(code, reg, pool, TRUE);
-  case CREATE_IDENTIFIER:
+  case 0:
+    return CreateBoolean(code, reg, pool, false);
+  case 1:
+    return CreateBoolean(code, reg, pool, true);
+  case 2:
     return CreateIdentifier(code, reg, pool);
-  case CREATE_INTEGER:
+  case 3:
     return CreateInteger(code, reg, pool);
-  case CREATE_LAMBDA:
+  case 4:
     return CreateLambda(code, reg, pool);
-  case CREATE_LIST:
+  case 5:
     return CreateList(code, reg, pool);
-  case CREATE_MAP:
+  case 6:
     return CreateMap(code, reg, pool);
-  case CREATE_NIL:
+  case 7:
     return CreateNil(code, reg, pool);
-  case CREATE_STRING:
+  case 8:
     return CreateString(code, reg, pool);
-  case APPLY_ARG:
+  case 9:
     return ApplyArg(code, reg, pool);
-  case FETCH_LAMBDA:
+  case 10:
     return FetchLambda(code, reg);
-  case FETCH_LIST:
+  case 11:
     return FetchList(code, reg);
-  case FETCH_MAP:
+  case 12:
     return FetchMap(code, reg);
+  default:
+    return RTErrorInvalidOpcode;
   }
 }
 
-RTBool RTExecuteCode(RTByte *code, RTInteger32Bit count, RTValue *reg, RTPool pool) {
+RTError RTExecuteCode(RTByte *code, RTInteger32Bit count, RTValue **reg, RTPool *pool) {
   while (count > 0) {
-    if (!ExecuteInstruction(&code, reg, pool)) {
-      return FALSE;
+    RTError error = ExecuteInstruction(&code, reg, pool);
+    if (error != RTErrorNone) {
+      return error;
     }
     count -= 1;
   }
-  return TRUE;
+  return RTErrorNone;
 }

@@ -3,20 +3,22 @@
 
 #include "Runtime.h"
 
-RTValue RTLambdaValueBridge(RTLambda lambda);
+RTValue *RTLambdaValueBridge(RTLambda *lambda);
 
-RTLambda RTLambdaDecode(RTByte **code);
+RTLambda *RTLambdaDecode(RTByte **code);
 
-void RTLambdaDealloc(RTLambda lambda);
+void RTLambdaDealloc(RTLambda *lambda);
 
-void RTLambdaSetContextValueAtIndex(RTLambda lambda, RTValue value, RTInteger32Bit index);
+void RTLambdaSetContextValueAtIndex(RTLambda *lambda, RTValue *value, RTInteger32Bit index);
 
-RTInteger64Bit RTLambdaHash(RTLambda lambda);
+RTInteger64Bit RTLambdaHash(RTLambda *lambda);
 
-RTBool RTLambdaEqual(RTLambda lambda, RTLambda other);
+bool RTLambdaEqual(RTLambda *lambda, RTLambda *other);
 
-RTValue RTLambdaExecute(RTLambda lambda, RTValue *arg, RTInteger8Bit count);
+RTInteger32Bit RTLambdaRegisterCount(RTLambda *lambda);
 
-void RTLambdaEnumerateContext(RTLambda lambda, RTBlock block);
+RTError RTLambdaExecute(RTLambda *lambda, RTValue **reg, RTInteger8Bit arity, RTPool *pool);
+
+void RTLambdaEnumerateContext(RTLambda *lambda, RTBlock *block);
 
 #endif

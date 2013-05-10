@@ -3,10 +3,10 @@
 
 #include "Runtime.h"
 
-RTValue RTBooleanValueBridge(RTBoolean boolean);
+RTValue *RTBooleanValueBridge(RTBoolean *boolean);
 
-RTBoolean RTBooleanCreate(RTBool bool);
+RTBoolean *RTBooleanCreate(bool truth);
 
-void RTBooleanDealloc(RTBoolean boolean);
+void RTBooleanDealloc(RTBoolean *boolean);
 
 #endif

@@ -3,10 +3,10 @@
 
 #include "Runtime.h"
 
-RTValue RTNilValueBridge(RTNil nil);
+RTValue *RTNilValueBridge(RTNil *nil);
 
-RTNil RTNilCreate(void);
+RTNil *RTNilCreate(void);
 
-void RTNilDealloc(RTNil nil);
+void RTNilDealloc(RTNil *nil);
 
 #endif

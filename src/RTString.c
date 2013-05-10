@@ -1,35 +1,39 @@
 #include "RTString.h"
 
+enum {
+  RTImplementationBase = RTImplementationAlpha
+};
+
 struct RTString {
-  RTBase base;
+  RTValue base;
   RTInteger32Bit length;
   RTInteger32Bit codepoint[];
 };
 
-static inline RTString RTStringCreate(RTInteger32Bit length) {
+static inline RTString *RTStringCreate(RTInteger32Bit length) {
   RTSize size = sizeof(struct RTString) + sizeof(RTInteger32Bit) * length;
-  RTString string = RTMemoryAlloc(size);
+  RTString *string = RTMemoryAlloc(size);
   if (string == NULL) {
     return NULL;
   }
-  string->base = RTBaseInit(RTTypeString, RTFlagNone);
+  string->base = RTValueInit(RTTypeString, RTImplementationBase, RTFlagNone);
   string->length = length;
   return string;
 }
 
-RTValue RTStringValueBridge(RTString string) {
-  return (RTValue)string;
+RTValue *RTStringValueBridge(RTString *string) {
+  return (RTValue *)string;
 }
 
-void RTStringDealloc(RTString string) {
+void RTStringDealloc(RTString *string) {
   RTMemoryDealloc(string);
 }
 
-RTSize RTStringEncodingSize(RTString string) {
+RTSize RTStringEncodingSize(RTString *string) {
  return sizeof(RTInteger32Bit) + sizeof(RTInteger32Bit) * string->length;
 }
 
-void RTStringEncode(RTString string, RTByte *buffer) {
+void RTStringEncode(RTString *string, RTByte *buffer) {
   RTByte *alias = buffer;
   RTEncodeInteger32Bit(string->length, &alias);
   for (RTInteger32Bit index = 0; index < string->length; index += 1) {
@@ -37,9 +41,9 @@ void RTStringEncode(RTString string, RTByte *buffer) {
   }
 }
 
-RTString RTStringDecode(RTByte **data) {
+RTString *RTStringDecode(RTByte **data) {
   RTInteger32Bit length = RTDecodeVBRInteger32Bit(data);
-  RTString string = RTStringCreate(length);
+  RTString *string = RTStringCreate(length);
   if (string == NULL) {
     return NULL;
   }
@@ -49,11 +53,11 @@ RTString RTStringDecode(RTByte **data) {
   return string;
 }
 
-RTInteger64Bit RTStringHash(RTString string) {
+RTInteger64Bit RTStringHash(RTString *string) {
   return string->length;
 }
 
-RTBool RTStringEqual(RTString string, RTString other) {
+bool RTStringEqual(RTString *string, RTString *other) {
   RTSize size = sizeof(RTInteger32Bit) * string->length;
   return string->length == other->length &&
          RTMemoryEqual(string->codepoint, other->codepoint, size);

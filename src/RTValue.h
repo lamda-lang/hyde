@@ -3,26 +3,30 @@
 
 #include "Runtime.h"
 
-RTBoolean RTValueBooleanBridge(RTValue value);
+RTValue RTValueInit(RTType type, RTImplementation implementation, RTFlag mask);
 
-RTIdentifier RTValueIdentifierBridge(RTValue value);
+RTBoolean *RTValueBooleanBridge(RTValue *value);
 
-RTInteger RTValueIntegerBridge(RTValue value);
+RTIdentifier *RTValueIdentifierBridge(RTValue *value);
 
-RTLambda RTValueLambdaBridge(RTValue value);
+RTInteger *RTValueIntegerBridge(RTValue *value);
 
-RTList RTValueListBridge(RTValue value);
+RTLambda *RTValueLambdaBridge(RTValue *value);
 
-RTMap RTValueMapBridge(RTValue value);
+RTList *RTValueListBridge(RTValue *value);
 
-RTNil RTValueNilBridge(RTValue value);
+RTMap *RTValueMapBridge(RTValue *value);
 
-RTString RTValueStringBridge(RTValue value);
+RTNil *RTValueNilBridge(RTValue *value);
 
-void RTValueSetFlag(RTValue value, RTFlag flag, RTBool set);
+RTString *RTValueStringBridge(RTValue *value);
 
-RTBool RTValueFlagSet(RTValue value, RTFlag flag);
+void RTValueSetFlag(RTValue *value, RTFlag flag, bool truth);
 
-RTType RTValueGetType(RTValue value);
+bool RTValueFlagSet(RTValue *value, RTFlag flag);
+
+RTType RTValueType(RTValue *value);
+
+RTImplementation RTValueImplementation(RTValue *value);
 
 #endif

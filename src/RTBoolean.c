@@ -1,25 +1,29 @@
 #include "RTBoolean.h"
 
-struct RTBoolean {
-  RTBase base;
-  RTBool truth;
+enum {
+  RTImplementationBase = RTImplementationAlpha,
+  RTFlagPositive = RTFlagAlpha
 };
 
-RTValue RTBooleanValueBridge(RTBoolean boolean) {
-  return (RTValue)boolean;
+struct RTBoolean {
+  RTValue base;
+};
+
+RTValue *RTBooleanValueBridge(RTBoolean *boolean) {
+  return (RTValue *)boolean;
 }
 
-RTBoolean RTBooleanCreate(RTBool truth) {
-  RTSize size = sizeof(struct RTBoolean);
-  RTBoolean boolean = RTMemoryAlloc(size);
+RTBoolean *RTBooleanCreate(bool truth) {
+  RTSize size = sizeof(RTBoolean);
+  RTBoolean *boolean = RTMemoryAlloc(size);
   if (boolean == NULL) {
     return NULL;
   }
-  boolean->base = RTBaseInit(RTTypeBoolean, RTFlagNone);
-  boolean->truth = truth;
+  RTFlag mask = truth ? RTFlagPositive : RTFlagNone;
+  boolean->base = RTValueInit(RTTypeBoolean, RTImplementationBase, mask);
   return boolean;
 }
 
-void RTBooleanDealloc(RTBoolean boolean) {
+void RTBooleanDealloc(RTBoolean *boolean) {
   RTMemoryDealloc(boolean);
 }

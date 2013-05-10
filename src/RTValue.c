@@ -1,45 +1,53 @@
 #include "RTValue.h"
 
-RTBoolean RTValueBooleanBridge(RTValue value) {
-  return RTValueGetType(value) ==  RTTypeBoolean ? (RTBoolean)value : NULL;
+RTValue RTValueInit(RTType type, RTImplementation implementation, RTFlag mask) {
+  return type | implementation | mask;
 }
 
-RTIdentifier RTValueIdentifierBridge(RTValue value) {
-  return RTValueGetType(value) == RTTypeIdentifier ? (RTIdentifier)value : NULL;
+RTBoolean *RTValueBooleanBridge(RTValue *value) {
+  return (RTBoolean *)value;
 }
 
-RTInteger RTValueIntegerBridge(RTValue value) {
-  return RTValueGetType(value) == RTTypeInteger ? (RTInteger)value : NULL;
+RTIdentifier *RTValueIdentifierBridge(RTValue *value) {
+  return (RTIdentifier *)value;
 }
 
-RTLambda RTValueLambdaBridge(RTValue value) {
-  return RTValueGetType(value) == RTTypeLambda ? (RTLambda)value : NULL;
+RTInteger *RTValueIntegerBridge(RTValue *value) {
+  return (RTInteger *)value;
 }
 
-RTList RTValueListBridge(RTValue value) {
-  return RTValueGetType(value) == RTTypeList ? (RTList)value : NULL;
+RTLambda *RTValueLambdaBridge(RTValue *value) {
+  return (RTLambda *)value;
 }
 
-RTMap RTValueMapBridge(RTValue value) {
-  return RTValueGetType(value) == RTTypeMap ? (RTMap)value : NULL;
+RTList *RTValueListBridge(RTValue *value) {
+  return (RTList *)value;
 }
 
-RTNil RTValueNilBridge(RTValue value) {
-  return RTValueGetType(value) == RTTypeNil ? (RTNil)value : NULL;
+RTMap *RTValueMapBridge(RTValue *value) {
+  return (RTMap *)value;
 }
 
-RTString RTValueStringBridge(RTValue value) {
-  return RTValueGetType(value) == RTTypeString ? (RTString)value : NULL;
+RTNil *RTValueNilBridge(RTValue *value) {
+  return (RTNil *)value;
 }
 
-void RTValueSetFlag(RTValue value, RTFlag flag, RTBool set) {
-  *value = RTBaseSetFlag(*value, flag, set);
+RTString *RTValueStringBridge(RTValue *value) {
+  return (RTString *)value;
 }
 
-RTBool RTValueFlagSet(RTValue value, RTFlag flag) {
-  return RTBaseFlagSet(*value, flag);
+void RTValueSetFlag(RTValue *value, RTFlag flag, bool truth) {
+  *value = truth ? *value | flag : *value & ~flag;
 }
 
-RTType RTValueGetType(RTValue value) {
-  return RTBaseGetType(*value);
+bool RTValueFlagSet(RTValue *value, RTFlag flag) {
+  return (*value & flag) == flag;
+}
+
+RTType RTValueType(RTValue *value) {
+  return *value & 0XF;
+}
+
+RTImplementation RTValueImplementation(RTValue *value) {
+  return *value & 0X30;
 }

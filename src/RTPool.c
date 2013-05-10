@@ -1,19 +1,19 @@
 #include "RTPool.h"
 
-typedef struct RTNode *RTNode;
+typedef struct RTNode RTNode;
 
 struct RTNode {
-  RTValue value;
-  RTNode next;
+  RTValue *value;
+  RTNode *next;
 };
 
 struct RTPool {
-  RTNode root;
+  RTNode *root;
 };
 
-static inline RTNode Node(RTValue value, RTNode next) {
+static inline RTNode *Node(RTValue *value, RTNode *next) {
   RTSize size = sizeof(struct RTNode);
-  RTNode node = RTMemoryAlloc(size);
+  RTNode *node = RTMemoryAlloc(size);
   if (node == NULL) {
     return NULL;
   }
@@ -22,62 +22,60 @@ static inline RTNode Node(RTValue value, RTNode next) {
   return node;
 }
 
-static inline void DeallocValue(RTValue value) {
-  RTType type = RTValueGetType(value);
-  switch (type) {
+static inline void DeallocValue(RTValue *value) {
+  switch (RTValueType(value)) {
   case RTTypeBoolean: {
-      RTBoolean boolean = RTValueBooleanBridge(value);
+      RTBoolean *boolean = RTValueBooleanBridge(value);
       RTBooleanDealloc(boolean);
       break;
     }
   case RTTypeIdentifier: {
-      RTIdentifier id = RTValueIdentifierBridge(value);
+      RTIdentifier *id = RTValueIdentifierBridge(value);
       RTIdentifierDealloc(id);
       break;
     }
   case RTTypeLambda: {
-      RTLambda lambda = RTValueLambdaBridge(value);
+      RTLambda *lambda = RTValueLambdaBridge(value);
       RTLambdaDealloc(lambda);
       break;
     }
   case RTTypeList: {
-      RTList list = RTValueListBridge(value);
+      RTList *list = RTValueListBridge(value);
       RTListDealloc(list);
       break;
     }
   case RTTypeMap: {
-      RTMap map = RTValueMapBridge(value);
+      RTMap *map = RTValueMapBridge(value);
       RTMapDealloc(map);
       break;
     }
   case RTTypeNil: {
-      RTNil nil = RTValueNilBridge(value);
+      RTNil *nil = RTValueNilBridge(value);
       RTNilDealloc(nil);
       break;
     }
   case RTTypeString: {
-      RTString string = RTValueStringBridge(value);
+      RTString *string = RTValueStringBridge(value);
       RTStringDealloc(string);
       break;
     }
   }
 }
 
-static inline void EnumerateBlock(RTValue value, RTBlock block) {
-  RTType type = RTValueGetType(value);
-  switch (type) {
+static inline void EnumerateBlock(RTValue *value, RTBlock *block) {
+  switch (RTValueType(value)) {
   case RTTypeLambda: {
-      RTLambda lambda = RTValueLambdaBridge(value);
+      RTLambda *lambda = RTValueLambdaBridge(value);
       RTLambdaEnumerateContext(lambda, block);
       break;
     }
   case RTTypeList: {
-      RTList list = RTValueListBridge(value);
+      RTList *list = RTValueListBridge(value);
       RTListEnumerateValues(list, block);
       break;
     }
   case RTTypeMap: {
-      RTMap map = RTValueMapBridge(value);
+      RTMap *map = RTValueMapBridge(value);
       RTMapEnumerateKeys(map, block);
       RTMapEnumerateValues(map, block);
       break;
@@ -85,25 +83,25 @@ static inline void EnumerateBlock(RTValue value, RTBlock block) {
   }
 }
 
-static inline void MarkValue(RTValue value) {
+static inline void MarkValue(RTValue *value) {
   if (RTValueFlagSet(value, RTFlagMark)) {
     return;
   }
-  RTValueSetFlag(value, RTFlagMark, TRUE);
+  RTValueSetFlag(value, RTFlagMark, true);
   EnumerateBlock(value, MarkValue);
 }
 
-static inline void UnmarkValue(RTValue value) {
+static inline void UnmarkValue(RTValue *value) {
   if (!RTValueFlagSet(value, RTFlagMark)) {
     return;
   }
-  RTValueSetFlag(value, RTFlagMark, FALSE);
+  RTValueSetFlag(value, RTFlagMark, false);
   EnumerateBlock(value, UnmarkValue);
 }
 
-RTPool RTPoolCreate(void) {
-  RTSize size = sizeof(struct RTPool);
-  RTPool pool = RTMemoryAlloc(size);
+RTPool *RTPoolCreate(void) {
+  RTSize size = sizeof(RTPool);
+  RTPool *pool = RTMemoryAlloc(size);
   if (pool == NULL) {
     return NULL;
   }
@@ -111,29 +109,30 @@ RTPool RTPoolCreate(void) {
   return pool;
 }
 
-void RTPoolDealloc(RTPool pool) {
+void RTPoolDealloc(RTPool *pool) {
   while (pool->root != NULL) {
-    RTNode node = pool->root;
+    RTNode *node = pool->root;
     pool->root = node->next;
     RTMemoryDealloc(node);
   }
   RTMemoryDealloc(pool);
 }
 
-RTBool RTPoolAddValue(RTPool pool, RTValue value) {
-  RTNode node = Node(value, pool->root);
+RTValue *RTPoolAddValue(RTPool *pool, RTValue *value) {
+  RTNode *node = Node(value, pool->root);
   if (node == NULL) {
-    return FALSE;
+    DeallocValue(value);
+    return NULL;;
   }
   pool->root = node;
-  return TRUE;
+  return value;
 }
 
-void RTPoolDrain(RTPool pool, RTValue root) {
+void RTPoolDrain(RTPool *pool, RTValue *root) {
   MarkValue(root);
   while (pool->root != NULL) {
-    RTNode node = pool->root;
-    RTValue value = node->value;
+    RTNode *node = pool->root;
+    RTValue *value = node->value;
     pool->root = node->next;
     if (!RTValueFlagSet(value, RTFlagMark)) {
       DeallocValue(value);
