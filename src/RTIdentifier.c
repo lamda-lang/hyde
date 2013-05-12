@@ -1,9 +1,5 @@
 #include "RTIdentifier.h"
 
-enum {
-  RTImplementationBase = RTImplementationAlpha
-};
-
 struct RTIdentifier {
   RTValue base;
   RTInteger8Bit length;
@@ -16,7 +12,7 @@ static inline RTIdentifier *Create(RTInteger8Bit length) {
   if (id == NULL) {
     return NULL;
   }
-  id->base = RTValueInit(RTTypeIdentifier, RTImplementationBase, RTFlagNone);
+  id->base = RTValueInit(RTTypeIdentifier);
   id->length = length;
   return id;
 }

@@ -1,10 +1,5 @@
 #include "RTLambda.h"
 
-enum {
-  RTImplementationNative = RTImplementationAlpha,
-  RTImplementationForeign = RTImplementationBeta
-};
-
 struct RTLambda {
   RTValue base;
   RTInteger8Bit arity;
@@ -34,7 +29,7 @@ RTLambda *RTLambdaDecode(RTByte **code) {
     RTMemoryDealloc(buffer);
     return NULL;
   }
-  lambda->base = RTValueInit(RTTypeLambda, RTImplementationForeign, RTFlagNone);
+  lambda->base = RTValueInit(RTTypeLambda);
   lambda->arity = arity;
   lambda->registerCount = registerCount;
   lambda->instructionCount = instructionCount;

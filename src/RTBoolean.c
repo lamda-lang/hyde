@@ -1,7 +1,6 @@
 #include "RTBoolean.h"
 
 enum {
-  RTImplementationBase = RTImplementationAlpha,
   RTFlagPositive = RTFlagAlpha
 };
 
@@ -19,8 +18,7 @@ RTBoolean *RTBooleanCreate(bool truth) {
   if (boolean == NULL) {
     return NULL;
   }
-  RTFlag mask = truth ? RTFlagPositive : RTFlagNone;
-  boolean->base = RTValueInit(RTTypeBoolean, RTImplementationBase, mask);
+  boolean->base = RTValueInit(RTTypeBoolean) | RTValueMask(RTFlagPositive, truth);
   return boolean;
 }
 

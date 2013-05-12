@@ -1,7 +1,6 @@
 #include "RTInteger.h"
 
 enum {
-  RTImplementationBase = RTImplementationAlpha,
   RTFlagPositive = RTFlagAlpha
 };
 
@@ -21,7 +20,7 @@ static inline RTInteger *Create(RTInteger32Bit count) {
   if (integer == NULL) {
     return NULL;
   }
-  integer->base = RTValueInit(RTTypeInteger, RTImplementationBase, RTFlagPositive);
+  integer->base = RTValueInit(RTTypeInteger) | RTValueMask(RTFlagPositive, true);
   integer->count = count;
   return integer;
 }

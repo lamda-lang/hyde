@@ -33,34 +33,22 @@ typedef size_t RTSize;
 typedef uint8_t RTValue;
 
 /** -brief An enumeration of types. */
-typedef uint8_t RTType;
-enum {
-  RTTypeBoolean = 0 << 0,
-  RTTypeIdentifier = 1 << 0,
-  RTTypeInteger = 2 << 0,
-  RTTypeLambda = 3 << 0,
-  RTTypeList = 4 << 0,
-  RTTypeMap = 5 << 0,
-  RTTypeNil = 6 << 0,
-  RTTypeString = 7 << 0
-};
-
-/** -brief An enumeration of types. */
-typedef uint8_t RTImplementation;
-enum {
-  RTImplementationAlpha = 0 << 4,
-  RTImplementationBeta = 1 << 4,
-  RTImplementationGamma = 2 << 4,
-  RTImplementationDelta = 3 << 4,
-};
+typedef enum {
+  RTTypeBoolean = 0,
+  RTTypeIdentifier = 1,
+  RTTypeInteger = 2,
+  RTTypeLambda = 3,
+  RTTypeList = 4,
+  RTTypeMap = 5,
+  RTTypeNil = 6,
+  RTTypeString = 7
+} RTType;
 
 /** -brief An enumeration of flags. */
-typedef uint8_t RTFlag;
-enum {
-  RTFlagNone = 0,
-  RTFlagMark = 1 << 6,
-  RTFlagAlpha = 1 << 7
-};
+typedef enum {
+  RTFlagMark = 1 << 0,
+  RTFlagAlpha = 1 << 1,
+} RTFlag;
 
 typedef enum {
   RTErrorNone = 0,

@@ -1,9 +1,5 @@
 #include "RTList.h"
 
-enum {
-  RTImplementationBase = RTImplementationAlpha
-};
-
 struct RTList {
   RTValue base;
   RTInteger32Bit length;
@@ -21,7 +17,7 @@ RTList *RTListDecode(RTByte **data) {
   if (list == NULL) {
     return NULL;
   }
-  list->base = RTValueInit(RTTypeList, RTImplementationBase, RTFlagNone);
+  list->base = RTValueInit(RTTypeList);
   list->length = length;
   return list;
 }

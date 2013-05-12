@@ -1,9 +1,5 @@
 #include "RTString.h"
 
-enum {
-  RTImplementationBase = RTImplementationAlpha
-};
-
 struct RTString {
   RTValue base;
   RTInteger32Bit length;
@@ -16,7 +12,7 @@ static inline RTString *RTStringCreate(RTInteger32Bit length) {
   if (string == NULL) {
     return NULL;
   }
-  string->base = RTValueInit(RTTypeString, RTImplementationBase, RTFlagNone);
+  string->base = RTValueInit(RTTypeString);
   string->length = length;
   return string;
 }

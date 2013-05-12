@@ -1,7 +1,15 @@
 #include "RTValue.h"
 
-RTValue RTValueInit(RTType type, RTImplementation implementation, RTFlag mask) {
-  return type | implementation | mask;
+static inline RTValue Mask(RTFlag flag) {
+  return (RTInteger64Bit)flag << 4 & 0XFF;
+}
+
+RTValue RTValueInit(RTType type) {
+  return (RTValue)type;
+}
+
+RTValue RTValueMask(RTFlag flag, bool truth) {
+  return truth ? Mask(flag) : 0;
 }
 
 RTBoolean *RTValueBooleanBridge(RTValue *value) {
@@ -37,17 +45,15 @@ RTString *RTValueStringBridge(RTValue *value) {
 }
 
 void RTValueSetFlag(RTValue *value, RTFlag flag, bool truth) {
-  *value = truth ? *value | flag : *value & ~flag;
+  RTValue mask = Mask(flag);
+  *value = truth ? *value | mask : *value & ~mask;
 }
 
 bool RTValueFlagSet(RTValue *value, RTFlag flag) {
-  return (*value & flag) == flag;
+  RTValue mask = Mask(flag);
+  return (*value & mask) == mask;
 }
 
 RTType RTValueType(RTValue *value) {
-  return *value & 0XF;
-}
-
-RTImplementation RTValueImplementation(RTValue *value) {
-  return *value & 0X30;
+  return (RTType)(*value & 0XF);
 }

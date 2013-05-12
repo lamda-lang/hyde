@@ -1,9 +1,5 @@
 #include "RTNil.h"
 
-enum {
-  RTImplementationBase = RTImplementationAlpha
-};
-
 struct RTNil {
   RTValue base;
 };
@@ -18,7 +14,7 @@ RTNil *RTNilCreate(void) {
   if (nil == NULL) {
     return NULL;
   }
-  nil->base = RTValueInit(RTTypeNil, RTImplementationBase, RTFlagNone);
+  nil->base = RTValueInit(RTTypeNil);
   return nil;
 }
 
