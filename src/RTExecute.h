@@ -6,10 +6,9 @@
 /** -brief Executes [code].
     -arg code The code to execute.
     -arg count The number of instructions in [code].
-    -arg reg The register set.
-    -arg pool The pool to use to create values.
+    -arg stack The stack to use.
     -effect [reg] is modified according to the code being executed.
     -effect All values created by executing [code] are part of [pool]. */
-RTError RTExecuteCode(RTByte *code, RTInteger32Bit count, RTValue **reg, RTPool *pool);
+RTError RTExecuteCode(RTByte *code, RTInteger32Bit count, RTStack *stack);
 
 #endif

@@ -1,7 +1,8 @@
 #include "RTLambda.h"
 
 enum {
-  RTImplementationForeign = RTImplementationAlpha
+  RTImplementationNative = RTImplementationAlpha,
+  RTImplementationForeign = RTImplementationBeta
 };
 
 struct RTLambda {
@@ -76,12 +77,11 @@ RTInteger32Bit RTLambdaRegisterCount(RTLambda *lambda) {
   return lambda->registerCount;
 }
 
-RTError RTLambdaExecute(RTLambda *lambda, RTValue **reg, RTInteger8Bit arity, RTPool *pool) {
+RTError RTLambdaExecute(RTLambda *lambda, RTStack *stack, RTInteger8Bit arity) {
   /* missing */
   lambda = NULL;
-  reg = NULL;
+  stack = NULL;
   arity = 0;
-  pool = NULL;
   return RTErrorNone;
 }
 

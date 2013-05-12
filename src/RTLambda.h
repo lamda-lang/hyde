@@ -17,7 +17,7 @@ bool RTLambdaEqual(RTLambda *lambda, RTLambda *other);
 
 RTInteger32Bit RTLambdaRegisterCount(RTLambda *lambda);
 
-RTError RTLambdaExecute(RTLambda *lambda, RTValue **reg, RTInteger8Bit arity, RTPool *pool);
+RTError RTLambdaExecute(RTLambda *lambda, RTStack *stack, RTInteger8Bit arity);
 
 void RTLambdaEnumerateContext(RTLambda *lambda, RTBlock *block);
 

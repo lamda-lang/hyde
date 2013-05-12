@@ -69,8 +69,7 @@ typedef enum {
   RTErrorInvalidOpcode = 3
 } RTError;
 
-/** -brief An opaque data type that represents a value pool. */
-typedef struct RTPool RTPool;
+typedef struct RTStack RTStack;
 
 /** -brief An opaque data type that represents a primitive identifier. */
 typedef struct RTIdentifier RTIdentifier;
@@ -99,6 +98,7 @@ typedef void RTBlock(RTValue *value);
 #endif
 
 #include "RTBoolean.h"
+#include "RTCollect.h"
 #include "RTDecode.h"
 #include "RTEncode.h"
 #include "RTExecute.h"
@@ -109,6 +109,6 @@ typedef void RTBlock(RTValue *value);
 #include "RTMap.h"
 #include "RTMemory.h"
 #include "RTNil.h"
-#include "RTPool.h"
+#include "RTStack.h"
 #include "RTString.h"
 #include "RTValue.h"
