@@ -20,7 +20,7 @@ static inline RTInteger *Create(RTInteger32Bit count) {
   if (integer == NULL) {
     return NULL;
   }
-  integer->base = RTValueInit(RTTypeInteger) | RTValueMask(RTFlagPositive, true);
+  integer->base = RTValueInit(RTTypeInteger, RTFlagPositive);
   integer->count = count;
   return integer;
 }

@@ -12,7 +12,7 @@ static inline RTString *RTStringCreate(RTInteger32Bit length) {
   if (string == NULL) {
     return NULL;
   }
-  string->base = RTValueInit(RTTypeString);
+  string->base = RTValueInit(RTTypeString, RTFlagNone);
   string->length = length;
   return string;
 }

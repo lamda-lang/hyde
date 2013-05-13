@@ -33,7 +33,8 @@ typedef size_t RTSize;
 typedef uint8_t RTValue;
 
 /** -brief An enumeration of types. */
-typedef enum {
+typedef uint8_t RTType;
+enum {
   RTTypeBoolean = 0,
   RTTypeIdentifier = 1,
   RTTypeInteger = 2,
@@ -42,20 +43,25 @@ typedef enum {
   RTTypeMap = 5,
   RTTypeNil = 6,
   RTTypeString = 7
-} RTType;
+};
 
 /** -brief An enumeration of flags. */
-typedef enum {
-  RTFlagMark = 1 << 0,
-  RTFlagAlpha = 1 << 1,
-} RTFlag;
+typedef uint8_t RTFlag;
+enum {
+  RTFlagNone = 0,
+  RTFlagMark = 1 << 4,
+  RTFlagRetain = 1 << 5,
+  RTFlagAlpha = 1 << 6,
+  RTFlagBeta = 1 << 7
+};
 
-typedef enum {
+typedef uint_fast8_t RTError;
+enum {
   RTErrorNone = 0,
   RTErrorOutOfMemory = 1,
   RTErrorInvalidType = 2,
   RTErrorInvalidOpcode = 3
-} RTError;
+};
 
 typedef struct RTStack RTStack;
 

@@ -30,7 +30,7 @@ RTMap *RTMapDecode(RTByte **data) {
   if (map == NULL) {
     return NULL;
   }
-  map->base = RTValueInit(RTTypeMap);
+  map->base = RTValueInit(RTTypeMap, RTFlagNone);
   map->length = length;
   for (RTInteger32Bit index = 0; index < length; index += 1) {
     map->element[index].key = NULL;

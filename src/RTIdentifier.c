@@ -12,7 +12,7 @@ static inline RTIdentifier *Create(RTInteger8Bit length) {
   if (id == NULL) {
     return NULL;
   }
-  id->base = RTValueInit(RTTypeIdentifier);
+  id->base = RTValueInit(RTTypeIdentifier, RTFlagNone);
   id->length = length;
   return id;
 }

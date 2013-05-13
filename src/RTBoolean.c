@@ -18,7 +18,8 @@ RTBoolean *RTBooleanCreate(bool truth) {
   if (boolean == NULL) {
     return NULL;
   }
-  boolean->base = RTValueInit(RTTypeBoolean) | RTValueMask(RTFlagPositive, truth);
+  RTFlag mask = truth ? RTFlagPositive : RTFlagNone;
+  boolean->base = RTValueInit(RTTypeBoolean, mask);
   return boolean;
 }
 

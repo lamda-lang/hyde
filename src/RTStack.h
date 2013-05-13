@@ -7,28 +7,16 @@ RTStack *RTStackCreate(RTInteger32Bit capacity);
 
 void RTStackDealloc(RTStack *stack);
 
-void RTStackClear(RTStack *stack);
+RTError RTStackBuildNextFrame(RTStack *stack, RTInteger32Bit length);
 
-RTInteger32Bit RTStackTopFrame(RTStack *stack);
+void RTStackPushNextFrame(RTStack *stack);
 
-RTError RTStackBuildFrame(RTStack *stack, RTInteger32Bit lenght);
-
-void RTStackSetValueInFrame(RTStack *stack, RTValue *value, RTInteger32Bit index, RTInteger32Bit frame);
-
-void RTStackSetValueInTopFrame(RTStack *stack, RTValue *value, RTInteger32Bit index);
-
-RTValue *RTStackGetValueFromFrame(RTStack *stack, RTInteger32Bit index, RTInteger32Bit frame);
+RTValue *RTStackReturnFromTopFrame(RTStack *stack);
 
 RTValue *RTStackGetValueFromTopFrame(RTStack *stack, RTInteger32Bit index);
 
-void RTStackSetArgInFrame(RTStack *stack, RTValue *value, RTInteger8Bit index, RTInteger32Bit frame);
+void RTStackSetValueInTopFrame(RTStack *stack, RTValue *value, RTInteger32Bit index);
 
-void RTStackSetArgInTopFrame(RTStack *stack, RTValue *value, RTInteger8Bit index);
-
-RTValue *RTStackResultFromFrame(RTStack *stack, RTInteger32Bit frame);
-
-RTValue *RTStackResultFromTopFrame(RTStack *stack);
-
-void RTStackEnumerateValues(RTStack *stack, RTBlock *block);
+void RTStackSetArgInNextFrame(RTStack *stack, RTValue *value, RTInteger8Bit index);
 
 #endif

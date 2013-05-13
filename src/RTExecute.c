@@ -96,24 +96,24 @@ static inline RTError ApplyArg(RTByte **code, RTStack *stack) {
   }
   RTLambda *lambda = RTValueLambdaBridge(target);
   RTInteger32Bit frameLength = RTLambdaRegisterCount(lambda);
-  RTInteger32Bit frame = RTStackTopFrame(stack);
-  RTError stackError = RTStackBuildFrame(stack, frameLength);
+  RTError stackError = RTStackBuildNextFrame(stack, frameLength);
   if (stackError != RTErrorNone) {
     return stackError;
   }
   RTInteger8Bit argCount = RTDecodeInteger8Bit(code);
   for (RTInteger8Bit index = 0; index < argCount; index += 1) {
     RTInteger32Bit argIndex = RTDecodeVBRInteger32Bit(code);
-    RTValue *arg = RTStackGetValueFromFrame(stack, argIndex, frame);
-    RTStackSetArgInTopFrame(stack, arg, index);
+    RTValue *arg = RTStackGetValueFromTopFrame(stack, argIndex);
+    RTStackSetArgInNextFrame(stack, arg, index);
   }
+  RTStackPushNextFrame(stack);
   RTError lambdaError = RTLambdaExecute(lambda, stack, argCount);
   if (lambdaError != RTErrorNone) {
     return lambdaError;
   }
-  RTValue *result = RTStackResultFromTopFrame(stack);
+  RTValue *result = RTStackReturnFromTopFrame(stack);
   RTInteger32Bit resultIndex = RTDecodeVBRInteger32Bit(code);
-  RTStackSetValueInFrame(stack, result, resultIndex, frame);
+  RTStackSetValueInTopFrame(stack, result, resultIndex);
   return RTErrorNone;
 }
 

@@ -5,8 +5,8 @@
 
 void RTCollectValue(RTValue *value);
 
-void RTCollectMarkValue(RTValue *value);
+void RTCollectRetainValue(RTValue *value);
 
-void RTCollectUnmarkValue(RTValue *value);
+void RTCollectReleaseValue(RTValue *value);
 
 #endif

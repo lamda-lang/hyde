@@ -3,9 +3,13 @@
 
 #include "Runtime.h"
 
-RTValue RTValueInit(RTType type);
+RTValue RTValueInit(RTType type, RTFlag mask);
 
-RTValue RTValueMask(RTFlag flag, bool truth);
+RTType RTValueType(RTValue *value);
+
+void RTValueSetFlag(RTValue *value, RTFlag mask, bool truth);
+
+bool RTValueFlagSet(RTValue *value, RTFlag mask);
 
 RTBoolean *RTValueBooleanBridge(RTValue *value);
 
@@ -23,10 +27,8 @@ RTNil *RTValueNilBridge(RTValue *value);
 
 RTString *RTValueStringBridge(RTValue *value);
 
-void RTValueSetFlag(RTValue *value, RTFlag flag, bool truth);
+void RTValueEnumerate(RTValue *value, RTBlock *block);
 
-bool RTValueFlagSet(RTValue *value, RTFlag flag);
-
-RTType RTValueType(RTValue *value);
+void RTValueDealloc(RTValue *value);
 
 #endif

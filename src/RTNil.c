@@ -14,7 +14,7 @@ RTNil *RTNilCreate(void) {
   if (nil == NULL) {
     return NULL;
   }
-  nil->base = RTValueInit(RTTypeNil);
+  nil->base = RTValueInit(RTTypeNil, RTFlagNone);
   return nil;
 }
 

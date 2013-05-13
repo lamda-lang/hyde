@@ -1,15 +1,19 @@
 #include "RTValue.h"
 
-static inline RTValue Mask(RTFlag flag) {
-  return (RTInteger64Bit)flag << 4 & 0XFF;
+RTValue RTValueInit(RTType type, RTFlag mask) {
+  return type | mask;
 }
 
-RTValue RTValueInit(RTType type) {
-  return (RTValue)type;
+RTType RTValueType(RTValue *value) {
+  return *value & 0XF;
 }
 
-RTValue RTValueMask(RTFlag flag, bool truth) {
-  return truth ? Mask(flag) : 0;
+void RTValueSetFlag(RTValue *value, RTFlag mask, bool truth) {
+  *value = truth ? *value | mask : *value & ~mask;
+}
+
+bool RTValueFlagSet(RTValue *value, RTFlag mask) {
+  return (*value & mask) == mask;
 }
 
 RTBoolean *RTValueBooleanBridge(RTValue *value) {
@@ -44,16 +48,63 @@ RTString *RTValueStringBridge(RTValue *value) {
   return (RTString *)value;
 }
 
-void RTValueSetFlag(RTValue *value, RTFlag flag, bool truth) {
-  RTValue mask = Mask(flag);
-  *value = truth ? *value | mask : *value & ~mask;
+void RTValueEnumerate(RTValue *value, RTBlock *block) {
+  switch (RTValueType(value)) {
+  case RTTypeLambda: {
+      RTLambda *lambda = RTValueLambdaBridge(value);
+      RTLambdaEnumerateContext(lambda, block);
+      break;
+    }
+  case RTTypeList: {
+      RTList *list = RTValueListBridge(value);
+      RTListEnumerateValues(list, block);
+      break;
+    }
+  case RTTypeMap: {
+      RTMap *map = RTValueMapBridge(value);
+      RTMapEnumerateKeys(map, block);
+      RTMapEnumerateValues(map, block);
+      break;
+    }
+  }
 }
 
-bool RTValueFlagSet(RTValue *value, RTFlag flag) {
-  RTValue mask = Mask(flag);
-  return (*value & mask) == mask;
-}
-
-RTType RTValueType(RTValue *value) {
-  return (RTType)(*value & 0XF);
+void RTValueDealloc(RTValue *value) {
+  switch (RTValueType(value)) {
+  case RTTypeBoolean: {
+      RTBoolean *boolean = RTValueBooleanBridge(value);
+      RTBooleanDealloc(boolean);
+      break;
+    }
+  case RTTypeIdentifier: {
+      RTIdentifier *id = RTValueIdentifierBridge(value);
+      RTIdentifierDealloc(id);
+      break;
+    }
+  case RTTypeLambda: {
+      RTLambda *lambda = RTValueLambdaBridge(value);
+      RTLambdaDealloc(lambda);
+      break;
+    }
+  case RTTypeList: {
+      RTList *list = RTValueListBridge(value);
+      RTListDealloc(list);
+      break;
+    }
+  case RTTypeMap: {
+      RTMap *map = RTValueMapBridge(value);
+      RTMapDealloc(map);
+      break;
+    }
+  case RTTypeNil: {
+      RTNil *nil = RTValueNilBridge(value);
+      RTNilDealloc(nil);
+      break;
+    }
+  case RTTypeString: {
+      RTString *string = RTValueStringBridge(value);
+      RTStringDealloc(string);
+      break;
+    }
+  }
 }

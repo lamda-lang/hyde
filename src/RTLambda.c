@@ -29,7 +29,7 @@ RTLambda *RTLambdaDecode(RTByte **code) {
     RTMemoryDealloc(buffer);
     return NULL;
   }
-  lambda->base = RTValueInit(RTTypeLambda);
+  lambda->base = RTValueInit(RTTypeLambda, RTFlagNone);
   lambda->arity = arity;
   lambda->registerCount = registerCount;
   lambda->instructionCount = instructionCount;

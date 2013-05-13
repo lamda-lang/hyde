@@ -17,7 +17,7 @@ RTList *RTListDecode(RTByte **data) {
   if (list == NULL) {
     return NULL;
   }
-  list->base = RTValueInit(RTTypeList);
+  list->base = RTValueInit(RTTypeList, RTFlagNone);
   list->length = length;
   return list;
 }
