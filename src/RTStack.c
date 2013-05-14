@@ -1,8 +1,8 @@
 #include "RTStack.h"
 
-#define RESULT_INDEX 1
-#define VALUE_INDEX 1
-#define ARG_INDEX 2
+#define HEADER_LENGTH 1
+#define VALUE_OFFSET 1
+#define ARG_OFFSET 2
 
 typedef struct {
   RTInteger32Bit index;
@@ -21,15 +21,18 @@ struct RTStack {
   RTInteger32Bit capacity;
 };
 
-static inline void UnmarkElements(RTValue *value) {
-  if (!RTValueFlagSet(value, RTFlagRetain)) {
-    RTValueSetFlag(value, RTFlagRetain, true);
-    RTValueSetFlag(value, RTFlagMark, false);
-    RTValueEnumerate(value, RTCollectRetainValue);
+static inline void RemoveGarbageFlagWithRoot(RTValue *root) {
+  if (!RTValueFlagSet(root, RTFlagMark)) {
+    RTValueSetFlag(root, RTFlagMark, true);
+    RTValueSetFlag(root, RTFlagGarbage, false);
+    RTValueEnumerate(root, RemoveGarbageFlagWithRoot);
   }
-  if (RTValueFlagSet(value, RTFlagRetain)) {
-    RTValueSetFlag(value, RTFlagRetain, false);
-    RTValueEnumerate(value, RTCollectReleaseValue);
+}
+
+static inline void RemoveMarkFlagWithRoot(RTValue *root) {
+  if (RTValueFlagSet(root, RTFlagMark)) {
+    RTValueSetFlag(root, RTFlagMark, false);
+    RTValueEnumerate(root, RemoveMarkFlagWithRoot);
   }
 }
 
@@ -55,8 +58,9 @@ void RTStackDealloc(RTStack *stack) {
   RTMemoryDealloc(stack);
 }
 
-RTError RTStackBuildNextFrame(RTStack *stack, RTInteger32Bit length) {
+RTError RTStackBuildNextFrame(RTStack *stack, RTInteger32Bit count) {
   RTFrame top = stack->top;
+  RTInteger32Bit length = HEADER_LENGTH + count;
   if (top.index + top.length + length > stack->capacity) { 
     RTInteger32Bit capacity = stack->capacity * 2;
     RTElement *root = RTMemoryRealloc(stack->root, capacity);
@@ -78,11 +82,12 @@ void RTStackPushNextFrame(RTStack *stack) {
 
 RTValue *RTStackReturnFromTopFrame(RTStack *stack) {
   RTFrame top = stack->top;
-  RTValue *result = stack->root[top.index + RESULT_INDEX].value;
-  UnmarkElements(result);
-  for (RTInteger32Bit index = RESULT_INDEX; index < top.length; index += 1) {
-    RTValue *value = stack->root[index].value;
-    if (RTValueFlagSet(value, RTFlagMark)) {
+  RTValue *result = stack->root[top.index + VALUE_OFFSET].value;
+  RemoveGarbageFlagWithRoot(result);
+  RemoveMarkFlagWithRoot(result);
+  for (RTInteger32Bit index = VALUE_OFFSET; index < top.length; index += 1) {
+    RTValue *value = stack->root[top.index + index].value;
+    if (RTValueFlagSet(value, RTFlagGarbage)) {
       RTValueDealloc(value);
     }
   }
@@ -91,13 +96,13 @@ RTValue *RTStackReturnFromTopFrame(RTStack *stack) {
 }
 
 RTValue *RTStackGetValueFromTopFrame(RTStack *stack, RTInteger32Bit index) {
-  return stack->root[stack->top.index + VALUE_INDEX + index].value;
+  return stack->root[stack->top.index + VALUE_OFFSET + index].value;
 }
 
 void RTStackSetValueInTopFrame(RTStack *stack, RTValue *value, RTInteger32Bit index) {
-  stack->root[stack->top.index + VALUE_INDEX + index].value = value;
+  stack->root[stack->top.index + VALUE_OFFSET + index].value = value;
 }
 
 void RTStackSetArgInNextFrame(RTStack *stack, RTValue *value, RTInteger8Bit index) {
-  stack->root[stack->next.index + ARG_INDEX + index].value = value;
+  stack->root[stack->next.index + ARG_OFFSET + index].value = value;
 }

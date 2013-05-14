@@ -49,8 +49,8 @@ enum {
 typedef uint8_t RTFlag;
 enum {
   RTFlagNone = 0,
-  RTFlagMark = 1 << 4,
-  RTFlagRetain = 1 << 5,
+  RTFlagGarbage = 1 << 4,
+  RTFlagMark = 1 << 5,
   RTFlagAlpha = 1 << 6,
   RTFlagBeta = 1 << 7
 };
@@ -92,7 +92,6 @@ typedef void RTBlock(RTValue *value);
 #endif
 
 #include "RTBoolean.h"
-#include "RTCollect.h"
 #include "RTDecode.h"
 #include "RTEncode.h"
 #include "RTExecute.h"
