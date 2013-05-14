@@ -63,7 +63,9 @@ bool RTLambdaEqual(RTLambda *lambda, RTLambda *other) {
     return false;
   }
   for (RTInteger32Bit index = 0; index < lambda->contextLength; index += 1) {
-    /* missing */
+    if (!RTValueEqual(lambda->context[index], other->context[index])) {
+      return false;
+    }
   }
   return true;
 }
@@ -73,11 +75,8 @@ RTInteger32Bit RTLambdaRegisterCount(RTLambda *lambda) {
 }
 
 RTError RTLambdaExecute(RTLambda *lambda, RTStack *stack, RTInteger8Bit arity) {
-  /* missing */
-  lambda = NULL;
-  stack = NULL;
-  arity = 0;
-  return RTErrorNone;
+  if (arity != lambda->arity) return RTErrorArityMismatch;
+  return RTExecuteCode(lambda->code, lambda->instructionCount, stack);
 }
 
 void RTLambdaEnumerateContext(RTLambda *lambda, RTBlock *block) {

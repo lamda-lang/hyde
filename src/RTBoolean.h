@@ -9,4 +9,8 @@ RTBoolean *RTBooleanCreate(bool truth);
 
 void RTBooleanDealloc(RTBoolean *boolean);
 
+bool RTBooleanEqual(RTBoolean *boolean, RTBoolean *other);
+
+RTInteger64Bit RTBooleanHash(RTBoolean *boolean);
+
 #endif

@@ -1,8 +1,9 @@
 #include "RTStack.h"
 
 #define HEADER_LENGTH 1
-#define VALUE_OFFSET 1
+#define RESULT_OFFSET 1
 #define ARG_OFFSET 2
+#define VALUE_OFFSET 1
 
 typedef struct {
   RTInteger32Bit index;
@@ -95,12 +96,20 @@ RTValue *RTStackReturnFromTopFrame(RTStack *stack) {
   return result;
 }
 
+void RTStackSetResultInTopFrame(RTStack *stack, RTValue *result) {
+  stack->root[stack->top.index + RESULT_OFFSET].value = result;
+}
+
 RTValue *RTStackGetValueFromTopFrame(RTStack *stack, RTInteger32Bit index) {
   return stack->root[stack->top.index + VALUE_OFFSET + index].value;
 }
 
 void RTStackSetValueInTopFrame(RTStack *stack, RTValue *value, RTInteger32Bit index) {
   stack->root[stack->top.index + VALUE_OFFSET + index].value = value;
+}
+
+RTValue *RTStackGetArgFromTopFrame(RTStack *stack, RTInteger8Bit index) {
+  return stack->root[stack->top.index + ARG_OFFSET + index].value;
 }
 
 void RTStackSetArgInNextFrame(RTStack *stack, RTValue *value, RTInteger8Bit index) {

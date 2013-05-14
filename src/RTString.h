@@ -38,4 +38,6 @@ bool RTStringEqual(RTString *string, RTString *other);
     -return A hash value. */
 RTInteger64Bit RTStringHash(RTString *string);
 
+RTString *RTStringConcatenate(RTString *string, RTString *other);
+
 #endif

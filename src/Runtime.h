@@ -60,7 +60,8 @@ enum {
   RTErrorNone = 0,
   RTErrorOutOfMemory = 1,
   RTErrorInvalidType = 2,
-  RTErrorInvalidOpcode = 3
+  RTErrorInvalidOpcode = 3,
+  RTErrorArityMismatch = 4
 };
 
 typedef struct RTStack RTStack;
@@ -89,6 +90,8 @@ typedef struct RTBoolean RTBoolean;
 
 typedef void RTBlock(RTValue *value);
 
+typedef RTError RTKernel(RTInteger8Bit arity, RTStack *stack);
+
 #endif
 
 #include "RTBoolean.h"
@@ -97,7 +100,9 @@ typedef void RTBlock(RTValue *value);
 #include "RTExecute.h"
 #include "RTIdentifier.h"
 #include "RTInteger.h"
+#include "RTKernel.h"
 #include "RTLambda.h"
+#include "RTLambdaNative.h"
 #include "RTList.h"
 #include "RTMap.h"
 #include "RTMemory.h"

@@ -1,8 +1,6 @@
 #include "RTInteger.h"
 
-enum {
-  RTFlagPositive = RTFlagAlpha
-};
+#define RTFlagPositive RTFlagAlpha
 
 struct RTInteger {
   RTValue base;
@@ -75,7 +73,7 @@ RTInteger *RTIntegerDecode(RTByte **data) {
 bool RTIntegerEqual(RTInteger *integer, RTInteger *other) {
   RTSize size = sizeof(RTInteger32Bit) * integer->count;
   return integer->count == other->count &&
-  /* missing */
+         RTValueBaseFlagSet(integer->base, RTFlagPositive) == RTValueBaseFlagSet(other->base, RTFlagPositive) &&
          RTMemoryEqual(integer->value, other->value, size);
 }
 

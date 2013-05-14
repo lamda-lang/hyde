@@ -12,11 +12,7 @@ struct RTMap {
 };
 
 static inline RTInteger32Bit Index(RTMap *map, RTValue *value, RTInteger32Bit offset) {
-  /* missing */
-  map = NULL;
-  value = NULL;
-  offset = 0;
-  return 0;
+  return (RTValueHash(value) + offset) % map->length;
 }
 
 RTValue *RTMapValueBridge(RTMap *map) {
@@ -54,7 +50,9 @@ void RTMapSetValueForKey(RTMap *map, RTValue *value, RTValue *key) {
 
 RTValue *RTMapGetValueForKey(RTMap *map, RTValue *key) {
   RTInteger32Bit index = Index(map, key, 0);
-  /* missing */
+  while (map->element[index].key != NULL && !RTValueEqual(key, map->element[index].key)) {
+    index = Index(map, key, index);
+  }
   return map->element[index].value;
 }
 
@@ -69,7 +67,9 @@ bool RTMapEqual(RTMap *map, RTMap *other) {
   for (RTInteger32Bit index = 0; index < map->length; index += 1) {
     RTValue *mapKey = map->element[index].key;
     if (mapKey != NULL) {
-      /* missing */
+      RTValue *mapValue = RTMapGetValueForKey(map, mapKey);
+      RTValue *otherValue = RTMapGetValueForKey(other, mapKey);
+      if (otherValue == NULL || RTValueEqual(mapValue, otherValue)) return false;
     }
   }
   return true;

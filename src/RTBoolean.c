@@ -1,8 +1,6 @@
 #include "RTBoolean.h"
 
-enum {
-  RTFlagPositive = RTFlagAlpha
-};
+#define RTFlagTrue RTFlagAlpha
 
 struct RTBoolean {
   RTValue base;
@@ -18,11 +16,19 @@ RTBoolean *RTBooleanCreate(bool truth) {
   if (boolean == NULL) {
     return NULL;
   }
-  RTFlag mask = truth ? RTFlagPositive : RTFlagNone;
+  RTFlag mask = truth ? RTFlagTrue : RTFlagNone;
   boolean->base = RTValueInit(RTTypeBoolean, mask);
   return boolean;
 }
 
 void RTBooleanDealloc(RTBoolean *boolean) {
   RTMemoryDealloc(boolean);
+}
+
+bool RTBooleanEqual(RTBoolean *boolean, RTBoolean *other) {
+  return RTValueBaseFlagSet(boolean->base, RTFlagTrue) == RTValueBaseFlagSet(other->base, RTFlagTrue);
+}
+
+RTInteger64Bit RTBooleanHash(RTBoolean *boolean) {
+  return RTValueBaseFlagSet(boolean->base, RTFlagTrue) ? 1 : 0;
 }

@@ -6,7 +6,7 @@ struct RTString {
   RTInteger32Bit codepoint[];
 };
 
-static inline RTString *RTStringCreate(RTInteger32Bit length) {
+static inline RTString *Create(RTInteger32Bit length) {
   RTSize size = sizeof(struct RTString) + sizeof(RTInteger32Bit) * length;
   RTString *string = RTMemoryAlloc(size);
   if (string == NULL) {
@@ -39,7 +39,7 @@ void RTStringEncode(RTString *string, RTByte *buffer) {
 
 RTString *RTStringDecode(RTByte **data) {
   RTInteger32Bit length = RTDecodeVBRInteger32Bit(data);
-  RTString *string = RTStringCreate(length);
+  RTString *string = Create(length);
   if (string == NULL) {
     return NULL;
   }
@@ -57,4 +57,14 @@ bool RTStringEqual(RTString *string, RTString *other) {
   RTSize size = sizeof(RTInteger32Bit) * string->length;
   return string->length == other->length &&
          RTMemoryEqual(string->codepoint, other->codepoint, size);
+}
+
+RTString *RTStringConcatenate(RTString *string, RTString *other) {
+  RTInteger32Bit stringLength = string->length;
+  RTInteger32Bit otherLength = other->length;
+  RTString *result = Create(stringLength + otherLength);
+  if (result == NULL) return NULL;
+  RTMemoryCopy(string->codepoint, result->codepoint, sizeof(RTInteger32Bit) * stringLength);
+  RTMemoryCopy(other->codepoint, result->codepoint + stringLength, sizeof(RTInteger32Bit) * otherLength);
+  return result;
 }

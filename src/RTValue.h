@@ -11,6 +11,8 @@ void RTValueSetFlag(RTValue *value, RTFlag mask, bool truth);
 
 bool RTValueFlagSet(RTValue *value, RTFlag mask);
 
+bool RTValueBaseFlagSet(RTValue value, RTFlag mask);
+
 RTBoolean *RTValueBooleanBridge(RTValue *value);
 
 RTIdentifier *RTValueIdentifierBridge(RTValue *value);
@@ -30,5 +32,9 @@ RTString *RTValueStringBridge(RTValue *value);
 void RTValueEnumerate(RTValue *value, RTBlock *block);
 
 void RTValueDealloc(RTValue *value);
+
+bool RTValueEqual(RTValue *value, RTValue *other);
+
+RTInteger64Bit RTValueHash(RTValue *value);
 
 #endif

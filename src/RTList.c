@@ -39,7 +39,7 @@ bool RTListEqual(RTList *list, RTList *other) {
     return false;
   }
   for (RTInteger32Bit index = 0; index < list->length; index += 1) {
-    /* missing */
+    if (!RTValueEqual(list->element[index], other->element[index])) return false;
   }
   return true;
 }
