@@ -1,7 +1,7 @@
 #ifndef RT_DECODE
 #define RT_DECODE
 
-#include "Runtime.h"
+#include "runtime.h"
 
 /** -brief Returns an [RTInteger8Bit] by decoding one byte from [data].
     -arg data The byte array to decode.

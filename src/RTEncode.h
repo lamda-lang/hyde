@@ -1,7 +1,7 @@
 #ifndef RT_ENCODE
 #define RT_ENCODE
 
-#include "Runtime.h"
+#include "runtime.h"
 
 /** -brief Encodes [value] into [buffer].
     -arg value The value to encode.

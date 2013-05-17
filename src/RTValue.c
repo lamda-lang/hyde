@@ -115,6 +115,7 @@ bool RTValueEqual(RTValue *value, RTValue *other) {
       RTString *second = RTValueStringBridge(other);
       return RTStringEqual(string, second);
     }
+  default : return false;
   }
 }
 
@@ -196,5 +197,6 @@ RTInteger64Bit RTValueHash(RTValue *value) {
       RTString *string = RTValueStringBridge(value);
       return RTStringHash(string);
     }
+  default: return 0;
   }
 }

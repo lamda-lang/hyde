@@ -1,9 +1,7 @@
 #ifndef RT_KERNEL
 #define RT_KERNEL
 
-#include "Runtime.h"
-
-RTError RTKernelEqual(RTInteger8Bit arity, RTStack *stack);
+#include "runtime.h"
 
 RTError RTKernelStringConcatenate(RTInteger8Bit arity, RTStack *stack);
 

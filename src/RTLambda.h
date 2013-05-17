@@ -1,7 +1,7 @@
 #ifndef RT_LAMBDA
 #define RT_LAMBDA
 
-#include "Runtime.h"
+#include "runtime.h"
 
 RTValue *RTLambdaValueBridge(RTLambda *lambda);
 

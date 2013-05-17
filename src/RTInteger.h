@@ -1,7 +1,7 @@
 #ifndef RT_INTEGER
 #define RT_INTEGER
 
-#include "Runtime.h"
+#include "runtime.h"
 
 RTValue *RTIntegerValueBridge(RTInteger *integer);
 

@@ -1,7 +1,7 @@
 #ifndef RT_IDENTIFIER
 #define RT_IDENTIFIER
 
-#include "Runtime.h"
+#include "runtime.h"
 
 RTValue *RTIdentifierValueBridge(RTIdentifier *id);
 

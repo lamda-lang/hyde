@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 /** -brief The smallest addressable unit of memory. */
 typedef unsigned char RTByte;
@@ -61,10 +62,20 @@ enum {
   RTErrorOutOfMemory = 1,
   RTErrorInvalidType = 2,
   RTErrorInvalidOpcode = 3,
-  RTErrorArityMismatch = 4
+  RTErrorArityMismatch = 4,
+  RTErrorFileRead = 5
+};
+
+typedef int RTFile;
+enum {
+  RTFileStandartIn = STDIN_FILENO,
+  RTFileStandartOut = STDOUT_FILENO,
+  RTFileStandartError = STDERR_FILENO
 };
 
 typedef struct RTStack RTStack;
+
+typedef struct RTData RTData;
 
 /** -brief An opaque data type that represents a primitive identifier. */
 typedef struct RTIdentifier RTIdentifier;
@@ -95,14 +106,15 @@ typedef RTError RTKernel(RTInteger8Bit arity, RTStack *stack);
 #endif
 
 #include "RTBoolean.h"
+#include "RTData.h"
 #include "RTDecode.h"
 #include "RTEncode.h"
 #include "RTExecute.h"
+#include "RTFile.h"
 #include "RTIdentifier.h"
 #include "RTInteger.h"
 #include "RTKernel.h"
 #include "RTLambda.h"
-#include "RTLambdaNative.h"
 #include "RTList.h"
 #include "RTMap.h"
 #include "RTMemory.h"

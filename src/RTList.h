@@ -1,7 +1,7 @@
 #ifndef RT_LIST
 #define RT_LIST
 
-#include "Runtime.h"
+#include "runtime.h"
 
 RTValue *RTListValueBridge(RTList *list);
 
