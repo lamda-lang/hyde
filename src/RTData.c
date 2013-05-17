@@ -27,7 +27,7 @@ RTError RTDataAppend(RTData *data, RTByte *source, RTSize size) {
   return RTErrorNone;
 }
 
-const RTByte *RTDataBytes(RTData *data) {
+RTByte *RTDataBytes(RTData *data) {
   return data->bytes;
 }
 

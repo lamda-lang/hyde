@@ -5,4 +5,6 @@
 
 RTError RTFileRead(RTFile file, RTData *data);
 
+RTError RTFileWrite(RTFile file, void *buffer, RTSize size);
+
 #endif

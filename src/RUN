@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -63,7 +64,8 @@ enum {
   RTErrorInvalidType = 2,
   RTErrorInvalidOpcode = 3,
   RTErrorArityMismatch = 4,
-  RTErrorFileRead = 5
+  RTErrorReadFile = 5,
+  RTErrorWriteFile = 6
 };
 
 typedef int RTFile;

@@ -9,7 +9,7 @@ void RTDataDealloc(RTData *data);
 
 RTError RTDataAppend(RTData *data, RTByte *source, RTSize size);
 
-const RTByte *RTDataBytes(RTData *data);
+RTByte *RTDataBytes(RTData *data);
 
 RTSize RTDataSize(RTData *data);
 
