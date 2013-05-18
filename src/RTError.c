@@ -6,9 +6,10 @@ const char *message[] = {
   [RTErrorInvalidOpcode] = "RTErrorInvalidOpcode",
   [RTErrorArityMismatch] = "RTErrorArityMismatch",
   [RTErrorReadFile] = "RTErrorReadFile",
-  [RTErrorWriteFile] = "RTErrorWriteFile"
+  [RTErrorWriteFile] = "RTErrorWriteFile",
+  [RTErrorInvalidEncoding] = "RTErrorInvalidEncoding"
 };
 
 void RTErrorShow(RTError error) {
-  perror(message[error]);
+  fprintf(stderr, "runtime error: %s\n", message[error]);
 }

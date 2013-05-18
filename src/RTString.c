@@ -57,13 +57,13 @@ RTString *RTStringConcatenate(RTString *string, RTString *other) {
   return result;
 }
 
-RTError RTStringWriteToFile(RTString *string, RTFile file) {
+RTError RTStringEncodeASCII(RTString *string, RTBuffer *buffer) {
   for (RTInteger32Bit index = 0; index < string->length; index += 1) {
     RTInteger32Bit codepoint = string->codepoint[index];
-    RTInteger8Bit character = codepoint <= 127 ? (RTInteger8Bit)codepoint : 95;
-    RTError writeError = RTFileWrite(file, &character, sizeof(character));
-    if (writeError != RTErrorNone) return writeError;
+    if (codepoint > 127) return RTErrorInvalidEncoding;
+    RTInteger8Bit character = codepoint & 0XFF;
+    RTError appendError = RTBufferAppend(buffer, &character, sizeof(character));
+    if (appendError != RTErrorNone) return RTErrorOutOfMemory;
   }
-  RTInteger8Bit newLine = '\n';
-  return RTFileWrite(file, &newLine, sizeof(newLine));
+  return RTErrorNone;
 }

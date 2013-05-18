@@ -65,7 +65,8 @@ enum {
   RTErrorInvalidOpcode = 3,
   RTErrorArityMismatch = 4,
   RTErrorReadFile = 5,
-  RTErrorWriteFile = 6
+  RTErrorWriteFile = 6,
+  RTErrorInvalidEncoding = 7
 };
 
 typedef int RTFile;

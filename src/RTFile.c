@@ -13,8 +13,10 @@ RTError RTFileRead(RTFile file, RTBuffer *buffer) {
   return RTErrorNone;
 }
 
-RTError RTFileWrite(RTFile file, void *buffer, RTSize size) {
-  ssize_t written = write(file, buffer, size);
+RTError RTFileWrite(RTFile file, RTBuffer *buffer) {
+  RTSize size = RTBufferSize(buffer);
+  RTByte *bytes = RTBufferBytes(buffer);
+  ssize_t written = write(file, bytes, size);
   if (written == -1 || (RTSize)written != size) return RTErrorWriteFile;
   return RTErrorNone;
 }

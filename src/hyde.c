@@ -11,6 +11,19 @@ static inline void Exit(RTBuffer *buffer, RTStack *stack, RTValue *result, RTErr
   RTProcessExitFailure();
 }
 
+static inline RTError RTLog(RTString *string) {
+  RTBuffer *buffer = RTBufferCreate();
+  if (buffer == NULL) return RTErrorOutOfMemory;
+  RTError encodeError = RTStringEncodeASCII(string, buffer);
+  if (encodeError != RTErrorNone) return encodeError;
+  RTInteger8Bit newline = '\n';
+  RTError appendError = RTBufferAppend(buffer, &newline, sizeof(newline));
+  if (appendError != RTErrorNone) return appendError;
+  RTError writeError = RTFileWrite(RTFileStandartOut, buffer);
+  RTBufferDealloc(buffer);
+  return writeError;
+}
+
 int main(void) {
   RTBuffer *buffer = RTBufferCreate();
   RTStack *stack = RTStackCreate(1024);
@@ -27,7 +40,6 @@ int main(void) {
   if (codeError != RTErrorNone) Exit(buffer, stack, NULL, codeError);
   RTValue *result = RTStackReturnFromTopFrame(stack);
   RTString *string = RTValueStringBridge(result);
-  RTError writeError = RTStringWriteToFile(string, RTFileStandartOut);
-  if (writeError != RTErrorNone) Exit(buffer, stack, result, writeError);
-  Exit(buffer, stack, result, RTErrorNone);
+  RTError logError = RTLog(string);
+  Exit(buffer, stack, result, logError);
 }

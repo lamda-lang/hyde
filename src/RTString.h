@@ -29,6 +29,6 @@ RTInteger64Bit RTStringHash(RTString *string);
 
 RTString *RTStringConcatenate(RTString *string, RTString *other);
 
-RTError RTStringWriteToFile(RTString *string, RTFile file);
+RTError RTStringEncodeASCII(RTString *string, RTBuffer *buffer);
 
 #endif
