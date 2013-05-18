@@ -9,17 +9,6 @@ RTValue *RTStringValueBridge(RTString *string);
     -arg string The string to deallocate. */
 void RTStringDealloc(RTString *string);
 
-/** -brief Returns the size required by [string] to encoding itself into a byte array.
-    -arg string The string to examine.
-    -return The encoding size of [string], in bytes. */
-RTSize RTStringEncodingSize(RTString *string);
-
-/** -brief Encodes [string] into [buffer].
-    -arg string The string to encode.
-    -arg buffer The buffer into which to encode [string].
-    -effect [buffer] is overridden. */
-void RTStringEncode(RTString *string, RTByte *buffer);
-
 /** -brief Creates an [RTString] by decoding [data].
     -arg data The data to decode.
     -return An [RTString] decoded from [data].
@@ -39,5 +28,7 @@ bool RTStringEqual(RTString *string, RTString *other);
 RTInteger64Bit RTStringHash(RTString *string);
 
 RTString *RTStringConcatenate(RTString *string, RTString *other);
+
+RTError RTStringWriteToFile(RTString *string, RTFile file);
 
 #endif

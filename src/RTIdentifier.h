@@ -9,17 +9,6 @@ RTValue *RTIdentifierValueBridge(RTIdentifier *id);
     -arg id The identifier to deallocate. */
 void RTIdentifierDealloc(RTIdentifier *id);
 
-/** -brief Returns the size required by [id] to encoding itself into a byte array.
-    -arg id The identifier to examine.
-    -return The encoding size of [id], in bytes. */
-RTSize RTIdentifierEncodingSize(RTIdentifier *id);
-
-/** -brief Encodes [id] into [buffer].
-    -arg id The identifier to encode.
-    -arg buffer The buffer into which to encode [id].
-    -effect [buffer] is overridden. */
-void RTIdentifierEncode(RTIdentifier *id, RTByte *buffer);
-
 /** -brief Creates an [RTIdentifier] by decoding [data].
     -arg data The data to decode.
     -return An [RTIdentifier] decoded from [data].

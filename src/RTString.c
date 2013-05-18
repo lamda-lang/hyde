@@ -25,18 +25,6 @@ void RTStringDealloc(RTString *string) {
   RTMemoryDealloc(string);
 }
 
-RTSize RTStringEncodingSize(RTString *string) {
- return sizeof(RTInteger32Bit) + sizeof(RTInteger32Bit) * string->length;
-}
-
-void RTStringEncode(RTString *string, RTByte *buffer) {
-  RTByte *alias = buffer;
-  RTEncodeInteger32Bit(string->length, &alias);
-  for (RTInteger32Bit index = 0; index < string->length; index += 1) {
-    RTEncodeInteger32Bit(string->codepoint[index], &alias);
-  }
-}
-
 RTString *RTStringDecode(RTByte **data) {
   RTInteger32Bit length = RTDecodeVBRInteger32Bit(data);
   RTString *string = Create(length);
@@ -67,4 +55,15 @@ RTString *RTStringConcatenate(RTString *string, RTString *other) {
   RTMemoryCopy(string->codepoint, result->codepoint, sizeof(RTInteger32Bit) * stringLength);
   RTMemoryCopy(other->codepoint, result->codepoint + stringLength, sizeof(RTInteger32Bit) * otherLength);
   return result;
+}
+
+RTError RTStringWriteToFile(RTString *string, RTFile file) {
+  for (RTInteger32Bit index = 0; index < string->length; index += 1) {
+    RTInteger32Bit codepoint = string->codepoint[index];
+    RTInteger8Bit character = codepoint <= 127 ? (RTInteger8Bit)codepoint : 95;
+    RTError writeError = RTFileWrite(file, &character, sizeof(character));
+    if (writeError != RTErrorNone) return writeError;
+  }
+  RTInteger8Bit newLine = '\n';
+  return RTFileWrite(file, &newLine, sizeof(newLine));
 }

@@ -1,36 +1,46 @@
 #include "RTEncode.h"
 
-void RTEncodeInteger8Bit(RTInteger8Bit value, RTByte **data) {
-  RTByte *alias = *data;
-  alias[0] = value;
-  *data += 1;
+RTError RTEncodeInteger8Bit(RTInteger8Bit value, RTBuffer *buffer) {
+  RTByte byte[] = {
+    value >> 0 & 0XFF
+  };
+  return RTBufferAppend(buffer, byte, sizeof(value));
 }
 
-void RTEncodeInteger16Bit(RTInteger16Bit value, RTByte **data) {
-  RTByte *alias = *data;
-  alias[0] = value & 0XFF;
-  alias[1] = value >> 8 & 0XFF;
-  *data += 2;
+RTError RTEncodeInteger16Bit(RTInteger16Bit value, RTBuffer *buffer) {
+  RTByte byte[] = {
+    value >> 0 & 0XFF,
+    value >> 8 & 0XFF
+  };
+  return RTBufferAppend(buffer, byte, sizeof(value));
 }
 
-void RTEncodeInteger32Bit(RTInteger32Bit value, RTByte **data) {
-  RTByte *alias = *data;
-  alias[0] = value & 0XFF;
-  alias[1] = value >> 8 & 0XFF;
-  alias[2] = value >> 16 & 0XFF;
-  alias[3] = value >> 24 & 0XFF;
-  *data += 4;
+RTError RTEncodeInteger32Bit(RTInteger32Bit value, RTBuffer *buffer) {
+  RTByte byte[] = {
+    value >> 0 & 0XFF,
+    value >> 8 & 0XFF,
+    value >> 16 & 0XFF,
+    value >> 24 & 0XFF
+  };
+  return RTBufferAppend(buffer, byte, sizeof(value));
 }
 
-void RTEncodeInteger64Bit(RTInteger64Bit value, RTByte **data) {
-  RTByte *alias = *data;
-  alias[0] = value & 0XFF;
-  alias[1] = value >> 8 & 0XFF;
-  alias[2] = value >> 16 & 0XFF;
-  alias[3] = value >> 24 & 0XFF;
-  alias[4] = value >> 32 & 0XFF;
-  alias[5] = value >> 40 & 0XFF;
-  alias[6] = value >> 48 & 0XFF;
-  alias[7] = value >> 56 & 0XFF;
-  *data += 8;
+RTError RTEncodeInteger64Bit(RTInteger64Bit value, RTBuffer *buffer) {
+  RTByte byte[] = {
+    value >> 0 & 0XFF,
+    value >> 8 & 0XFF,
+    value >> 16 & 0XFF,
+    value >> 24 & 0XFF,
+    value >> 32 & 0XFF,
+    value >> 40 & 0XFF,
+    value >> 48 & 0XFF,
+    value >> 56 & 0XFF
+  };
+  return RTBufferAppend(buffer, byte, sizeof(value));
+}
+
+RTError RTEncodeVBRInteger32Bit(RTInteger32Bit value, RTBuffer *buffer) {
+  value = 0;
+  buffer = NULL;
+  return RTErrorNone;
 }

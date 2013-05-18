@@ -9,17 +9,6 @@ RTValue *RTIntegerValueBridge(RTInteger *integer);
     -arg integer The integer to deallocate. */
 void RTIntegerDealloc(RTInteger *integer);
 
-/** -brief Returns the size required by [integer] to encoding itself into a byte array.
-    -arg integer The integer to examine.
-    -return The encoding size of [integer], in bytes. */
-RTSize RTIntegerEncodingSize(RTInteger *integer);
-
-/** -brief Encodes [integer] into [buffer].
-    -arg integer The integer to encode.
-    -arg buffer The buffer into which to encode [integer].
-    -effect [buffer] is overridden. */
-void RTIntegerEncode(RTInteger *integer, RTByte *buffer);
-
 /** -brief Creates an [RTInteger] by decoding [data].
     -arg data The data to decode.
     -return An [RTInteger] decoded from [data].

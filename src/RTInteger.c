@@ -46,18 +46,6 @@ void RTIntegerDealloc(RTInteger *integer) {
   RTMemoryDealloc(integer);
 }
 
-RTSize RTIntegerEncodingSize(RTInteger *integer) {
-  return sizeof(RTInteger32Bit) + sizeof(RTInteger32Bit) * integer->count;
-}
-
-void RTIntegerEncode(RTInteger *integer, RTByte *buffer) {
-  RTByte *alias = buffer;
-  RTEncodeInteger32Bit(integer->count, &alias);
-  for (RTInteger32Bit index = 0; index < integer->count; index += 1) {
-    RTEncodeInteger32Bit(integer->value[index], &alias);
-  }
-}
-
 RTInteger *RTIntegerDecode(RTByte **data) {
   RTInteger32Bit count = RTDecodeVBRInteger32Bit(data);
   RTInteger *integer = Create(count);

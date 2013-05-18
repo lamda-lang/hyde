@@ -77,7 +77,7 @@ enum {
 
 typedef struct RTStack RTStack;
 
-typedef struct RTData RTData;
+typedef struct RTBuffer RTBuffer;
 
 /** -brief An opaque data type that represents a primitive identifier. */
 typedef struct RTIdentifier RTIdentifier;
@@ -108,7 +108,7 @@ typedef RTError RTKernel(RTInteger8Bit arity, RTStack *stack);
 #endif
 
 #include "RTBoolean.h"
-#include "RTData.h"
+#include "RTBuffer.h"
 #include "RTDecode.h"
 #include "RTEncode.h"
 #include "RTError.h"

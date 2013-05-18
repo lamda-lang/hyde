@@ -3,7 +3,7 @@
 
 #include "runtime.h"
 
-RTError RTFileRead(RTFile file, RTData *data);
+RTError RTFileRead(RTFile file, RTBuffer *buffer);
 
 RTError RTFileWrite(RTFile file, void *buffer, RTSize size);
 
