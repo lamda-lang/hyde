@@ -8,6 +8,7 @@ struct RTData {
 RTData *RTDataCreate(void) {
   RTData *data = RTMemoryAlloc(sizeof(RTData));
   if (data == NULL) return NULL;
+  data->bytes = NULL;
   data->size = 0;
   return data;
 }

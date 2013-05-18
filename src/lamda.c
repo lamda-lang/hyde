@@ -22,4 +22,5 @@ int main(void) {
   RTError codeError = RTExecuteCode(code, instructionCount, stack);
   if (codeError != RTErrorNone) Exit(data, stack, codeError);
   RTValue *result = RTStackReturnFromTopFrame(stack);
+  RTValueDealloc(result);
 }
