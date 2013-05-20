@@ -25,6 +25,6 @@ void RTMapSetValueForKey(RTMap *map, RTValue *value, RTValue *key);
     -return A hash value. */
 RTInteger64Bit RTMapHash(RTValue *map_RTMap);
 
-void RTMapEnumerate(RTValue *map_RTValue, RTBlock *block);
+void RTMapEnumerate(RTValue *map_RTValue, void (*block)(RTValue *value));
 
 #endif

@@ -96,7 +96,7 @@ RTString *RTValueStringBridge(RTValue *value) {
   return (RTString *)value;
 }
 
-void RTValueEnumerate(RTValue *value, RTBlock *block) {
+void RTValueEnumerate(RTValue *value, void (*block)(RTValue *value)) {
   RTType type = RTValueType(value);
   RTEnumerate *enumerate = class[type].enumerate;
   if (enumerate != NULL) {

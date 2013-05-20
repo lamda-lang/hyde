@@ -1,29 +1,5 @@
 #include "runtime.h"
 
-static inline RTStatus Print(RTString *string) {
-  RTBuffer *buffer = RTBufferCreate();
-  if (buffer == NULL) {
-    goto error;
-  }
-  if (!RTStringEncodeASCII(string, buffer)) {
-    goto errorBuffer;
-  }
-  RTInteger8Bit newline = '\n';
-  if (!RTBufferAppend(buffer, &newline, sizeof(newline))) {
-    goto errorBuffer;
-  }
-  if (!RTFileWrite(RTFileStandartOut, buffer)) {
-    goto errorBuffer;
-  }
-  RTBufferDealloc(buffer);
-  return RTStatusSuccess;
-
-errorBuffer:
-  RTBufferDealloc(buffer);
-error:
-  return RTStatusFailure;
-}
-
 int main(void) {
   RTBuffer *buffer = RTBufferCreate();
   if (buffer == NULL) {
@@ -48,9 +24,7 @@ int main(void) {
   }
   RTValue *result = RTStackReturnFromTopFrame(stack);
   RTString *string = RTValueStringBridge(result);
-  if (!Print(string)) {
-    goto errorStack;
-  }
+  RTLogString(string);
   RTStackDealloc(stack);
   RTBufferDealloc(buffer);
   return EXIT_SUCCESS;

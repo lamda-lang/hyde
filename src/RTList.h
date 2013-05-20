@@ -30,6 +30,6 @@ RTValue *RTListGetValueAtIndex(RTList *list, RTInteger32Bit index);
     -return A hash value. */
 RTInteger64Bit RTListHash(RTValue *list_RTValue);
 
-void RTListEnumerate(RTValue *list_RTList, RTBlock *block);
+void RTListEnumerate(RTValue *list_RTList, void (*block)(RTValue *value));
 
 #endif

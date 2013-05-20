@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -94,15 +95,13 @@ typedef struct RTNil RTNil;
 
 typedef struct RTBoolean RTBoolean;
 
-typedef void RTBlock(RTValue *value);
-
 typedef bool RTKernel(RTInteger8Bit arity, RTStack *stack);
 
 typedef void RTDealloc(RTValue *dealloc);
 
 typedef RTInteger64Bit RTHash(RTValue *value);
 
-typedef void RTEnumerate(RTValue *value, RTBlock *block);
+typedef void RTEnumerate(RTValue *value, void (*block)(RTValue *value));
 
 #endif
 
@@ -116,6 +115,7 @@ typedef void RTEnumerate(RTValue *value, RTBlock *block);
 #include "RTKernel.h"
 #include "RTLambda.h"
 #include "RTList.h"
+#include "RTLog.h"
 #include "RTMap.h"
 #include "RTMemory.h"
 #include "RTNil.h"

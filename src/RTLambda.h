@@ -17,6 +17,6 @@ RTInteger32Bit RTLambdaRegisterCount(RTLambda *lambda);
 
 RTStatus RTLambdaExecute(RTLambda *lambda, RTStack *stack, RTInteger8Bit arity);
 
-void RTLambdaEnumerate(RTValue *lambda_RTLambda, RTBlock *block);
+void RTLambdaEnumerate(RTValue *lambda_RTLambda, void (*block)(RTValue *value));
 
 #endif

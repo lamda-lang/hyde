@@ -56,7 +56,7 @@ RTInteger64Bit RTMapHash(RTValue *map_RTMap) {
   return map->length;
 }
 
-void RTMapEnumerate(RTValue *map_RTMap, RTBlock *block) {
+void RTMapEnumerate(RTValue *map_RTMap, void (*block)(RTValue *value)) {
   RTMap *map = RTValueMapBridge(map_RTMap);
   for (RTInteger32Bit index = 0; index < map->length; index += 1) {
     block(map->element[index].key);

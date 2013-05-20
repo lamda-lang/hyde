@@ -63,19 +63,8 @@ error:
   return NULL;
 }
 
-RTStatus RTStringEncodeASCII(RTString *string, RTBuffer *buffer) {
+void RTStringEnumerateCodepoints(RTString *string, void (*block)(RTInteger32Bit codepoint)) {
   for (RTInteger32Bit index = 0; index < string->length; index += 1) {
-    RTInteger32Bit codepoint = string->codepoint[index];
-    if (codepoint > 127) {
-      goto error;
-    }
-    RTInteger8Bit character = codepoint & 0XFF;
-    if (RTBufferAppend(buffer, &character, sizeof(character)) == RTStatusFailure) {
-      goto error;
-    }
+    block(string->codepoint[index]);
   }
-  return RTStatusSuccess;
-
-error:
-  return RTStatusFailure;
 }

@@ -23,6 +23,6 @@ RTInteger64Bit RTStringHash(RTValue *string_RTString);
 
 RTString *RTStringConcatenate(RTString *string, RTString *other);
 
-RTStatus RTStringEncodeASCII(RTString *string, RTBuffer *buffer);
+void RTStringEnumerateCodepoints(RTString *string, void (*block)(RTInteger32Bit codepoint));
 
 #endif

@@ -42,7 +42,7 @@ RTInteger64Bit RTListHash(RTValue *list_RTList) {
   return list->length;
 }
 
-void RTListEnumerate(RTValue *list_RTList, RTBlock *block) {
+void RTListEnumerate(RTValue *list_RTList, void (*block)(RTValue *value)) {
   RTList *list = RTValueListBridge(list_RTList);
   for (RTInteger32Bit index = 0; index < list->length; index += 1) {
     block(list->element[index]);

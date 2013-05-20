@@ -76,7 +76,7 @@ error:
   return RTStatusFailure;
 }
 
-void RTLambdaEnumerate(RTValue *lambda_RTLambda, RTBlock *block) {
+void RTLambdaEnumerate(RTValue *lambda_RTLambda, void (*block)(RTValue *value)) {
   RTLambda *lambda = RTValueLambdaBridge(lambda_RTLambda);
   for (RTInteger32Bit index = 0; index < lambda->contextLength; index += 1) {
     block(lambda->context[index]);

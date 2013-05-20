@@ -29,7 +29,7 @@ RTNil *RTValueNilBridge(RTValue *value);
 
 RTString *RTValueStringBridge(RTValue *value);
 
-void RTValueEnumerate(RTValue *value, RTBlock *block);
+void RTValueEnumerate(RTValue *value, void (*block)(RTValue *value));
 
 void RTValueDealloc(RTValue *value);
 
