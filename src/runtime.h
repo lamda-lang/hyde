@@ -3,7 +3,6 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -34,6 +33,11 @@ typedef size_t RTSize;
 
 typedef uint8_t RTValue;
 
+typedef enum {
+  RTStatusSuccess = true,
+  RTStatusFailure = false
+} RTStatus;
+
 /** -brief An enumeration of types. */
 typedef uint8_t RTType;
 enum {
@@ -55,18 +59,6 @@ enum {
   RTFlagMark = 1 << 5,
   RTFlagAlpha = 1 << 6,
   RTFlagBeta = 1 << 7
-};
-
-typedef uint_fast8_t RTError;
-enum {
-  RTErrorNone = 0,
-  RTErrorOutOfMemory = 1,
-  RTErrorInvalidType = 2,
-  RTErrorInvalidOpcode = 3,
-  RTErrorArityMismatch = 4,
-  RTErrorReadFile = 5,
-  RTErrorWriteFile = 6,
-  RTErrorInvalidEncoding = 7
 };
 
 typedef int RTFile;
@@ -104,15 +96,19 @@ typedef struct RTBoolean RTBoolean;
 
 typedef void RTBlock(RTValue *value);
 
-typedef RTError RTKernel(RTInteger8Bit arity, RTStack *stack);
+typedef bool RTKernel(RTInteger8Bit arity, RTStack *stack);
+
+typedef void RTDealloc(RTValue *dealloc);
+
+typedef RTInteger64Bit RTHash(RTValue *value);
+
+typedef void RTEnumerate(RTValue *value, RTBlock *block);
 
 #endif
 
 #include "RTBoolean.h"
 #include "RTBuffer.h"
 #include "RTDecode.h"
-#include "RTEncode.h"
-#include "RTError.h"
 #include "RTExecute.h"
 #include "RTFile.h"
 #include "RTIdentifier.h"
@@ -123,7 +119,6 @@ typedef RTError RTKernel(RTInteger8Bit arity, RTStack *stack);
 #include "RTMap.h"
 #include "RTMemory.h"
 #include "RTNil.h"
-#include "RTProcess.h"
 #include "RTStack.h"
 #include "RTString.h"
 #include "RTValue.h"

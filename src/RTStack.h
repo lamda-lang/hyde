@@ -7,11 +7,13 @@ RTStack *RTStackCreate(RTInteger32Bit capacity);
 
 void RTStackDealloc(RTStack *stack);
 
-RTError RTStackBuildNextFrame(RTStack *stack, RTInteger32Bit count);
+bool RTStackBuildNextFrame(RTStack *stack, RTInteger32Bit count);
 
 void RTStackPushNextFrame(RTStack *stack);
 
 RTValue *RTStackReturnFromTopFrame(RTStack *stack);
+
+void RTStackCleanTopFrame(RTStack *stack);
 
 void RTStackSetResultInTopFrame(RTStack *stack, RTValue *result);
 

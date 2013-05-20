@@ -7,6 +7,8 @@ RTValue *RTNilValueBridge(RTNil *nil);
 
 RTNil *RTNilCreate(void);
 
-void RTNilDealloc(RTNil *nil);
+void RTNilDealloc(RTValue *nil_RTNil);
+
+RTInteger64Bit RTNilHash(RTValue *nil_RTNil);
 
 #endif

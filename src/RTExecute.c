@@ -1,104 +1,143 @@
 #include "RTExecute.h"
 
-static inline RTError CreateBoolean(RTByte **code, RTStack *stack, bool flag) {
-  RTBoolean *boolean = RTBooleanCreate(flag);
+typedef RTStatus RTInstruction(RTByte **code, RTStack *stack);
+
+static inline RTStatus CreateBooleanTrue(RTByte **code, RTStack *stack) {
+  RTBoolean *boolean = RTBooleanCreate(true);
   if (boolean == NULL) {
-    return RTErrorOutOfMemory;
+    goto error;
   }
   RTValue *value = RTBooleanValueBridge(boolean);
   RTInteger32Bit index = RTDecodeVBRInteger32Bit(code);
   RTStackSetValueInTopFrame(stack, value, index);
-  return RTErrorNone;
+  return RTStatusSuccess;
+
+error:
+  return RTStatusFailure;
 }
 
-static inline RTError CreateIdentifier(RTByte **code, RTStack *stack) {
+static inline RTStatus CreateBooleanFalse(RTByte **code, RTStack *stack) {
+  RTBoolean *boolean = RTBooleanCreate(false);
+  if (boolean == NULL) {
+    goto error;
+  }
+  RTValue *value = RTBooleanValueBridge(boolean);
+  RTInteger32Bit index = RTDecodeVBRInteger32Bit(code);
+  RTStackSetValueInTopFrame(stack, value, index);
+  return RTStatusSuccess;
+
+error:
+  return RTStatusFailure;
+}
+
+static inline RTStatus CreateIdentifier(RTByte **code, RTStack *stack) {
   RTIdentifier *id = RTIdentifierDecode(code);
   if (id == NULL) {
-    return RTErrorOutOfMemory;
+    goto error;
   }
   RTValue *value = RTIdentifierValueBridge(id);
   RTInteger32Bit index = RTDecodeVBRInteger32Bit(code);
   RTStackSetValueInTopFrame(stack, value, index);
-  return RTErrorNone;
+  return RTStatusSuccess;
+
+error:
+  return RTStatusFailure;
 }
 
-static inline RTError CreateInteger(RTByte **code, RTStack *stack) {
+static inline RTStatus CreateInteger(RTByte **code, RTStack *stack) {
   RTInteger *integer = RTIntegerDecode(code);
   if (integer == NULL) {
-    return RTErrorOutOfMemory;
+    goto error;
   }
   RTValue *value = RTIntegerValueBridge(integer);
   RTInteger32Bit index = RTDecodeVBRInteger32Bit(code);
   RTStackSetValueInTopFrame(stack, value, index);
-  return RTErrorNone;
+  return RTStatusSuccess;
+
+error:
+  return RTStatusFailure;
 }
 
-static inline RTError CreateLambda(RTByte **code, RTStack *stack) {
+static inline RTStatus CreateLambda(RTByte **code, RTStack *stack) {
   RTLambda *lambda = RTLambdaDecode(code);
   if (lambda == NULL) {
-    return RTErrorOutOfMemory;
+    goto error;
   }
   RTValue *value = RTLambdaValueBridge(lambda);
   RTInteger32Bit index = RTDecodeVBRInteger32Bit(code);
   RTStackSetValueInTopFrame(stack, value, index);
-  return RTErrorNone;
+  return RTStatusSuccess;
+
+error:
+  return RTStatusFailure;
 }
 
-static inline RTError CreateList(RTByte **code, RTStack *stack) {
+static inline RTStatus CreateList(RTByte **code, RTStack *stack) {
   RTList *list = RTListDecode(code);
   if (list == NULL) {
-    return RTErrorOutOfMemory;
+    goto error;
   }
   RTValue *value = RTListValueBridge(list);
   RTInteger32Bit index = RTDecodeVBRInteger32Bit(code);
   RTStackSetValueInTopFrame(stack, value, index);
-  return RTErrorNone;
+  return RTStatusSuccess;
+
+error:
+  return RTStatusFailure;
 }
 
-static inline RTError CreateMap(RTByte **code, RTStack *stack) {
+static inline RTStatus CreateMap(RTByte **code, RTStack *stack) {
   RTMap *map = RTMapDecode(code);
   if (map == NULL) {
-    return RTErrorOutOfMemory;
+    goto error;
   }
   RTValue *value = RTMapValueBridge(map);
   RTInteger32Bit index = RTDecodeVBRInteger32Bit(code);
   RTStackSetValueInTopFrame(stack, value, index);
-  return RTErrorNone;
+  return RTStatusSuccess;
+
+error:
+  return RTStatusFailure;
 }
 
-static inline RTError CreateNil(RTByte **code, RTStack *stack) {
+static inline RTStatus CreateNil(RTByte **code, RTStack *stack) {
   RTNil *nil = RTNilCreate();
   if (nil == NULL) {
-    return RTErrorOutOfMemory;
+    goto error;
   }
   RTValue *value = RTNilValueBridge(nil);
   RTInteger32Bit index = RTDecodeVBRInteger32Bit(code);
   RTStackSetValueInTopFrame(stack, value, index);
-  return RTErrorNone;
+  return RTStatusSuccess;
+
+error:
+  return RTStatusFailure;
 }
 
-static inline RTError CreateString(RTByte **code, RTStack *stack) {
+static inline RTStatus CreateString(RTByte **code, RTStack *stack) {
   RTString *string = RTStringDecode(code);
   if (string == NULL) {
-    return RTErrorOutOfMemory;
+    goto error;
   }
   RTValue *value = RTStringValueBridge(string);
   RTInteger32Bit index = RTDecodeVBRInteger32Bit(code);
   RTStackSetValueInTopFrame(stack, value, index);
-  return RTErrorNone;
+  return RTStatusSuccess;
+
+error:
+  return RTStatusFailure;
 }
 
-static inline RTError ApplyArg(RTByte **code, RTStack *stack) {
+static inline RTStatus ApplyArg(RTByte **code, RTStack *stack) {
   RTInteger32Bit targetIndex = RTDecodeVBRInteger32Bit(code);
   RTValue *target = RTStackGetValueFromTopFrame(stack, targetIndex);
   if (RTValueType(target) != RTTypeLambda) {
-    return RTErrorInvalidType;
+    goto error;
   }
   RTLambda *lambda = RTValueLambdaBridge(target);
   RTInteger32Bit frameLength = RTLambdaRegisterCount(lambda);
-  RTError stackError = RTStackBuildNextFrame(stack, frameLength);
-  if (stackError != RTErrorNone) {
-    return stackError;
+  if (!RTStackBuildNextFrame(stack, frameLength)) {
+    goto error;
   }
   RTInteger8Bit argCount = RTDecodeInteger8Bit(code);
   for (RTInteger8Bit index = 0; index < argCount; index += 1) {
@@ -107,21 +146,25 @@ static inline RTError ApplyArg(RTByte **code, RTStack *stack) {
     RTStackSetArgInNextFrame(stack, arg, index);
   }
   RTStackPushNextFrame(stack);
-  RTError lambdaError = RTLambdaExecute(lambda, stack, argCount);
-  if (lambdaError != RTErrorNone) {
-    return lambdaError;
+  if (!RTLambdaExecute(lambda, stack, argCount)) {
+    goto errorExecute;
   }
   RTValue *result = RTStackReturnFromTopFrame(stack);
   RTInteger32Bit resultIndex = RTDecodeVBRInteger32Bit(code);
   RTStackSetValueInTopFrame(stack, result, resultIndex);
-  return RTErrorNone;
+  return RTStatusSuccess;
+
+errorExecute:
+  RTStackCleanTopFrame(stack);
+error:
+  return RTStatusFailure;
 }
 
-static inline RTError FetchLambda(RTByte **code, RTStack *stack) {
+static inline RTStatus FetchLambda(RTByte **code, RTStack *stack) {
   RTInteger32Bit lambdaIndex = RTDecodeVBRInteger32Bit(code);
   RTValue *value = RTStackGetValueFromTopFrame(stack, lambdaIndex);
   if (RTValueType(value) != RTTypeLambda) {
-    return RTErrorInvalidType;
+    goto error;
   }
   RTLambda *lambda = RTValueLambdaBridge(value);
   RTInteger32Bit count = RTDecodeVBRInteger32Bit(code);
@@ -130,14 +173,17 @@ static inline RTError FetchLambda(RTByte **code, RTStack *stack) {
     RTValue *context = RTStackGetValueFromTopFrame(stack, contextIndex);
     RTLambdaSetContextValueAtIndex(lambda, context, index);
   }
-  return RTErrorNone;
+  return RTStatusSuccess;
+
+error:
+  return RTStatusFailure;
 }
 
-static inline RTError FetchList(RTByte **code, RTStack *stack) {
+static inline RTStatus FetchList(RTByte **code, RTStack *stack) {
   RTInteger32Bit listIndex = RTDecodeVBRInteger32Bit(code);
   RTValue *value = RTStackGetValueFromTopFrame(stack, listIndex);
   if (RTValueType(value) != RTTypeList) {
-    return RTErrorInvalidType;
+    goto error;
   }
   RTList *list = RTValueListBridge(value);
   RTInteger32Bit count = RTDecodeVBRInteger32Bit(code);
@@ -146,14 +192,17 @@ static inline RTError FetchList(RTByte **code, RTStack *stack) {
     RTValue *element = RTStackGetValueFromTopFrame(stack, elementIndex);
     RTListSetValueAtIndex(list, element, index);
   }
-  return RTErrorNone;
+  return RTStatusSuccess;
+
+error:
+  return RTStatusFailure;
 }
 
-static inline RTError FetchMap(RTByte **code, RTStack *stack) {
+static inline RTStatus FetchMap(RTByte **code, RTStack *stack) {
   RTInteger32Bit mapIndex = RTDecodeVBRInteger32Bit(code);
   RTValue *value = RTStackGetValueFromTopFrame(stack, mapIndex);
   if (RTValueType(value) != RTTypeMap) {
-    return RTErrorInvalidType;
+    goto error;
   }
   RTMap *map = RTValueMapBridge(value);
   RTInteger32Bit count = RTDecodeVBRInteger32Bit(code);
@@ -164,50 +213,38 @@ static inline RTError FetchMap(RTByte **code, RTStack *stack) {
     RTValue *value = RTStackGetValueFromTopFrame(stack, valueIndex);
     RTMapSetValueForKey(map, value, key);
   }
-  return RTErrorNone;
+  return RTStatusSuccess;
+
+error:
+  return RTStatusFailure;
 }
 
-static inline RTError ExecuteInstruction(RTByte **code, RTStack *stack) {
-  RTInteger8Bit opcode = RTDecodeInteger8Bit(code);
-  switch (opcode) {
-  case 0:
-    return CreateBoolean(code, stack, false);
-  case 1:
-    return CreateBoolean(code, stack, true);
-  case 2:
-    return CreateIdentifier(code, stack);
-  case 3:
-    return CreateInteger(code, stack);
-  case 4:
-    return CreateLambda(code, stack);
-  case 5:
-    return CreateList(code, stack);
-  case 6:
-    return CreateMap(code, stack);
-  case 7:
-    return CreateNil(code, stack);
-  case 8:
-    return CreateString(code, stack);
-  case 9:
-    return ApplyArg(code, stack);
-  case 10:
-    return FetchLambda(code, stack);
-  case 11:
-    return FetchList(code, stack);
-  case 12:
-    return FetchMap(code, stack);
-  default:
-    return RTErrorInvalidOpcode;
-  }
-}
+static RTInstruction *instruction[] = {
+  [0] = CreateBooleanTrue,
+  [1] = CreateBooleanFalse,
+  [2] = CreateIdentifier,
+  [3] = CreateInteger,
+  [4] = CreateLambda,
+  [5] = CreateList,
+  [6] = CreateMap,
+  [7] = CreateNil,
+  [8] = CreateString,
+  [9] = ApplyArg,
+  [10] = FetchLambda,
+  [11] = FetchList,
+  [12] = FetchMap
+};
 
-RTError RTExecuteCode(RTByte *code, RTInteger32Bit count, RTStack *stack) {
+RTStatus RTExecuteCode(RTByte *code, RTInteger32Bit count, RTStack *stack) {
   while (count > 0) {
-    RTError error = ExecuteInstruction(&code, stack);
-    if (error != RTErrorNone) {
-      return error;
+    RTInteger8Bit opcode = RTDecodeInteger8Bit(&code);
+    if (!instruction[opcode](&code, stack)) {
+      goto error;
     }
     count -= 1;
   }
-  return RTErrorNone;
+  return RTStatusSuccess;
+
+error:
+  return RTStatusFailure;
 }

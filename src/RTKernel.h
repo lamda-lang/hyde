@@ -3,6 +3,6 @@
 
 #include "runtime.h"
 
-RTError RTKernelStringConcatenate(RTInteger8Bit arity, RTStack *stack);
+RTStatus RTKernelStringConcatenate(RTInteger8Bit arity, RTStack *stack);
 
 #endif

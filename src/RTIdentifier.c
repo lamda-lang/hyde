@@ -10,18 +10,21 @@ static inline RTIdentifier *Create(RTInteger8Bit length) {
   RTSize size = sizeof(struct RTIdentifier) + sizeof(RTInteger8Bit) * length;
   RTIdentifier *id = RTMemoryAlloc(size);
   if (id == NULL) {
-    return NULL;
+    goto error;
   }
   id->base = RTValueInit(RTTypeIdentifier, RTFlagNone);
   id->length = length;
   return id;
+
+error:
+  return NULL;
 }
 
 RTValue *RTIdentifierValueBridge(RTIdentifier *id) {
   return (RTValue *)id;
 }
 
-void RTIdentifierDealloc(RTIdentifier *id) {
+void RTIdentifierDealloc(RTValue *id) {
   RTMemoryDealloc(id);
 }
 
@@ -29,20 +32,18 @@ RTIdentifier *RTIdentifierDecode(RTByte **data) {
   RTInteger8Bit length = RTDecodeInteger8Bit(data);
   RTIdentifier *id = Create(length);
   if (id == NULL) {
-    return NULL;
+    goto error;
   }
   for (RTInteger8Bit index = 0; index < length; index += 1) {
     id->codepoint[index] = RTDecodeInteger8Bit(data);
   }
   return id;
+
+error:
+  return NULL;
 }
 
-bool RTIdentifierEqual(RTIdentifier *id, RTIdentifier *other) {
-  RTSize size = sizeof(RTInteger8Bit) * id->length;
-  return id->length == other->length &&
-         RTMemoryEqual(id->codepoint, other->codepoint, size);
-}
-
-RTInteger64Bit RTIdentifierHash(RTIdentifier *id) {
+RTInteger64Bit RTIdentifierHash(RTValue *id_RTIdentifier) {
+  RTIdentifier *id = RTValueIdentifierBridge(id_RTIdentifier);
   return id->length;
 }

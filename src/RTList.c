@@ -15,14 +15,17 @@ RTList *RTListDecode(RTByte **data) {
   RTSize size = sizeof(struct RTList) + sizeof(RTValue) * length;
   RTList *list = RTMemoryAlloc(size);
   if (list == NULL) {
-    return NULL;
+    goto error;
   }
   list->base = RTValueInit(RTTypeList, RTFlagNone);
   list->length = length;
   return list;
+
+error:
+  return NULL;
 }
 
-void RTListDealloc(RTList *list) {
+void RTListDealloc(RTValue *list) {
   RTMemoryDealloc(list);
 }
 
@@ -34,21 +37,13 @@ RTValue *RTListGetValueAtIndex(RTList *list, RTInteger32Bit index) {
   return list->element[index];
 }
 
-bool RTListEqual(RTList *list, RTList *other) {
-  if (list->length != other->length) {
-    return false;
-  }
-  for (RTInteger32Bit index = 0; index < list->length; index += 1) {
-    if (!RTValueEqual(list->element[index], other->element[index])) return false;
-  }
-  return true;
-}
-
-RTInteger64Bit RTListHash(RTList *list) {
+RTInteger64Bit RTListHash(RTValue *list_RTList) {
+  RTList *list = RTValueListBridge(list_RTList);
   return list->length;
 }
 
-void RTListEnumerateValues(RTList *list, RTBlock *block) {
+void RTListEnumerate(RTValue *list_RTList, RTBlock *block) {
+  RTList *list = RTValueListBridge(list_RTList);
   for (RTInteger32Bit index = 0; index < list->length; index += 1) {
     block(list->element[index]);
   }

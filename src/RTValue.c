@@ -1,5 +1,49 @@
 #include "RTValue.h"
 
+typedef struct {
+  RTDealloc *dealloc;
+  RTHash *hash;
+  RTEnumerate *enumerate;
+} RTClass;
+
+RTClass class[] = {
+  [RTTypeBoolean] = {
+    .dealloc = RTBooleanDealloc,
+    .hash = RTBooleanHash
+  },
+  [RTTypeIdentifier] = {
+    .dealloc = RTIdentifierDealloc,
+    .hash = RTIdentifierHash
+  },
+  [RTTypeInteger] = {
+    .dealloc = RTIntegerDealloc,
+    .hash = RTIntegerHash
+  },
+  [RTTypeLambda] = {
+    .dealloc = RTLambdaDealloc,
+    .hash = RTLambdaHash,
+    .enumerate = RTLambdaEnumerate
+  },
+  [RTTypeList] = {
+    .dealloc = RTListDealloc,
+    .hash = RTListHash,
+    .enumerate = RTListEnumerate
+  },
+  [RTTypeMap] = {
+    .dealloc = RTMapDealloc,
+    .hash = RTMapHash,
+    .enumerate = RTMapEnumerate
+  },
+  [RTTypeNil] = {
+    .dealloc = RTNilDealloc,
+    .hash = RTNilHash
+  },
+  [RTTypeString] = {
+    .dealloc = RTStringDealloc,
+    .hash = RTStringHash
+  }
+};
+
 RTValue RTValueInit(RTType type, RTFlag mask) {
   return type | mask;
 }
@@ -53,150 +97,22 @@ RTString *RTValueStringBridge(RTValue *value) {
 }
 
 void RTValueEnumerate(RTValue *value, RTBlock *block) {
-  switch (RTValueType(value)) {
-  case RTTypeLambda: {
-      RTLambda *lambda = RTValueLambdaBridge(value);
-      RTLambdaEnumerateContext(lambda, block);
-      break;
-    }
-  case RTTypeList: {
-      RTList *list = RTValueListBridge(value);
-      RTListEnumerateValues(list, block);
-      break;
-    }
-  case RTTypeMap: {
-      RTMap *map = RTValueMapBridge(value);
-      RTMapEnumerateKeys(map, block);
-      RTMapEnumerateValues(map, block);
-      break;
-    }
-  }
-}
-
-bool RTValueEqual(RTValue *value, RTValue *other) {
   RTType type = RTValueType(value);
-  if (type != RTValueType(other)) return false;
-  switch (type) {
-  case RTTypeBoolean: {
-      RTBoolean *boolean = RTValueBooleanBridge(value);
-      RTBoolean *second = RTValueBooleanBridge(other);
-      return RTBooleanEqual(boolean, second);
-    }
-  case RTTypeIdentifier: {
-      RTIdentifier *id = RTValueIdentifierBridge(value);
-      RTIdentifier *second = RTValueIdentifierBridge(other);
-      return RTIdentifierEqual(id, second);
-    }
-  case RTTypeInteger: {
-      RTInteger *integer = RTValueIntegerBridge(value);
-      RTInteger *second = RTValueIntegerBridge(other);
-      return RTIntegerEqual(integer, second);
-    }
-  case RTTypeLambda: {
-      RTLambda *lambda = RTValueLambdaBridge(value);
-      RTLambda *second = RTValueLambdaBridge(other);
-      return RTLambdaEqual(lambda, second);
-    }
-  case RTTypeList: {
-      RTList *list = RTValueListBridge(value);
-      RTList *second = RTValueListBridge(other);
-      return RTListEqual(list, second);
-    }
-  case RTTypeMap: {
-      RTMap *map = RTValueMapBridge(value);
-      RTMap *second = RTValueMapBridge(other);
-      return RTMapEqual(map, second);
-    }
-  case RTTypeNil: {
-      return true;
-    }
-  case RTTypeString: {
-      RTString *string = RTValueStringBridge(value);
-      RTString *second = RTValueStringBridge(other);
-      return RTStringEqual(string, second);
-    }
-  default : return false;
+  RTEnumerate *enumerate = class[type].enumerate;
+  if (enumerate != NULL) {
+    enumerate(value, block);
   }
 }
 
 void RTValueDealloc(RTValue *value) {
-  switch (RTValueType(value)) {
-  case RTTypeBoolean: {
-      RTBoolean *boolean = RTValueBooleanBridge(value);
-      RTBooleanDealloc(boolean);
-      break;
-    }
-  case RTTypeIdentifier: {
-      RTIdentifier *id = RTValueIdentifierBridge(value);
-      RTIdentifierDealloc(id);
-      break;
-    }
-  case RTTypeInteger: {
-      RTInteger *integer = RTValueIntegerBridge(value);
-      RTIntegerDealloc(integer);
-      break;
-    }
-  case RTTypeLambda: {
-      RTLambda *lambda = RTValueLambdaBridge(value);
-      RTLambdaDealloc(lambda);
-      break;
-    }
-  case RTTypeList: {
-      RTList *list = RTValueListBridge(value);
-      RTListDealloc(list);
-      break;
-    }
-  case RTTypeMap: {
-      RTMap *map = RTValueMapBridge(value);
-      RTMapDealloc(map);
-      break;
-    }
-  case RTTypeNil: {
-      RTNil *nil = RTValueNilBridge(value);
-      RTNilDealloc(nil);
-      break;
-    }
-  case RTTypeString: {
-      RTString *string = RTValueStringBridge(value);
-      RTStringDealloc(string);
-      break;
-    }
+  RTType type = RTValueType(value);
+  RTDealloc *dealloc = class[type].dealloc;
+  if (dealloc != NULL) {
+    dealloc(value);
   }
 }
 
 RTInteger64Bit RTValueHash(RTValue *value) {
-  switch (RTValueType(value)) {
-  case RTTypeBoolean: {
-      RTBoolean *boolean = RTValueBooleanBridge(value);
-      return RTBooleanHash(boolean);
-    }
-  case RTTypeIdentifier: {
-      RTIdentifier *id = RTValueIdentifierBridge(value);
-      return RTIdentifierHash(id);
-    }
-  case RTTypeInteger: {
-      RTInteger *integer = RTValueIntegerBridge(value);
-      return RTIntegerHash(integer);
-    }
-  case RTTypeLambda: {
-      RTLambda *lambda = RTValueLambdaBridge(value);
-      return RTLambdaHash(lambda);
-    }
-  case RTTypeList: {
-      RTList *list = RTValueListBridge(value);
-      return RTListHash(list);
-    }
-  case RTTypeMap: {
-      RTMap *map = RTValueMapBridge(value);
-      return RTMapHash(map);
-    }
-  case RTTypeNil: {
-      return 0;
-    }
-  case RTTypeString: {
-      RTString *string = RTValueStringBridge(value);
-      return RTStringHash(string);
-    }
-  default: return 0;
-  }
+  RTType type = RTValueType(value);
+  return class[type].hash(value);
 }

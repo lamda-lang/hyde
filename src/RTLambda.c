@@ -23,11 +23,12 @@ RTLambda *RTLambdaDecode(RTByte **code) {
   RTInteger8Bit arity = RTDecodeInteger8Bit(code);
   RTSize size = sizeof(struct RTLambda) + sizeof(RTValue) * contextLength;
   RTLambda *lambda = RTMemoryAlloc(size);
+  if (lambda == NULL) {
+    goto error;
+  }
   RTByte *buffer = RTMemoryAlloc(codeSize);
-  if (lambda == NULL || buffer == NULL) {
-    RTMemoryDealloc(lambda);
-    RTMemoryDealloc(buffer);
-    return NULL;
+  if (buffer == NULL) {
+    goto errorBuffer;
   }
   lambda->base = RTValueInit(RTTypeLambda, RTFlagNone);
   lambda->arity = arity;
@@ -39,9 +40,15 @@ RTLambda *RTLambdaDecode(RTByte **code) {
   RTMemoryCopy(&code, buffer, codeSize);
   *code += codeSize;
   return lambda;
+
+errorBuffer:
+  RTMemoryDealloc(lambda);
+error:
+  return NULL;
 }
 
-void RTLambdaDealloc(RTLambda *lambda) {
+void RTLambdaDealloc(RTValue *lambda_RTLambda) {
+  RTLambda *lambda = RTValueLambdaBridge(lambda_RTLambda);
   RTMemoryDealloc(lambda->code);
   RTMemoryDealloc(lambda);
 }
@@ -50,36 +57,27 @@ void RTLambdaSetContextValueAtIndex(RTLambda *lambda, RTValue *value, RTInteger3
   lambda->context[index] = value;
 }
 
-RTInteger64Bit RTLambdaHash(RTLambda *lambda) {
+RTInteger64Bit RTLambdaHash(RTValue *lambda_RTLambda) {
+  RTLambda *lambda = RTValueLambdaBridge(lambda_RTLambda);
   return lambda->registerCount;
-}
-
-bool RTLambdaEqual(RTLambda *lambda, RTLambda *other) {
-  if (lambda->arity != other->arity ||
-      lambda->registerCount != other->registerCount ||
-      lambda->instructionCount != other->instructionCount || 
-      lambda->contextLength != other->contextLength ||
-      !RTMemoryEqual(lambda->code, other->code, lambda->codeSize)) {
-    return false;
-  }
-  for (RTInteger32Bit index = 0; index < lambda->contextLength; index += 1) {
-    if (!RTValueEqual(lambda->context[index], other->context[index])) {
-      return false;
-    }
-  }
-  return true;
 }
 
 RTInteger32Bit RTLambdaRegisterCount(RTLambda *lambda) {
   return lambda->registerCount;
 }
 
-RTError RTLambdaExecute(RTLambda *lambda, RTStack *stack, RTInteger8Bit arity) {
-  if (arity != lambda->arity) return RTErrorArityMismatch;
+RTStatus RTLambdaExecute(RTLambda *lambda, RTStack *stack, RTInteger8Bit arity) {
+  if (arity != lambda->arity) {
+    goto error;
+  }
   return RTExecuteCode(lambda->code, lambda->instructionCount, stack);
+
+error:
+  return RTStatusFailure;
 }
 
-void RTLambdaEnumerateContext(RTLambda *lambda, RTBlock *block) {
+void RTLambdaEnumerate(RTValue *lambda_RTLambda, RTBlock *block) {
+  RTLambda *lambda = RTValueLambdaBridge(lambda_RTLambda);
   for (RTInteger32Bit index = 0; index < lambda->contextLength; index += 1) {
     block(lambda->context[index]);
   }

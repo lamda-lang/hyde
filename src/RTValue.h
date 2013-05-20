@@ -33,8 +33,6 @@ void RTValueEnumerate(RTValue *value, RTBlock *block);
 
 void RTValueDealloc(RTValue *value);
 
-bool RTValueEqual(RTValue *value, RTValue *other);
-
 RTInteger64Bit RTValueHash(RTValue *value);
 
 #endif

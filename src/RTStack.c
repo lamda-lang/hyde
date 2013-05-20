@@ -39,11 +39,12 @@ static inline void RemoveMarkFlagWithRoot(RTValue *root) {
 
 RTStack *RTStackCreate(RTInteger32Bit capacity) {
   RTStack *stack = RTMemoryAlloc(sizeof(RTStack));
+  if (stack == NULL) {
+    goto error;
+  }
   RTElement *root = RTMemoryAlloc(sizeof(RTElement) * capacity);
-  if (stack == NULL || root == NULL) {
-    RTMemoryDealloc(stack);
-    RTMemoryDealloc(root);
-    return NULL;
+  if (root == NULL) {
+    goto errorRoot;
   }
   stack->capacity = capacity;
   stack->root = root;
@@ -52,6 +53,11 @@ RTStack *RTStackCreate(RTInteger32Bit capacity) {
   stack->next.index = 0;
   stack->next.length = 0;
   return stack;
+
+errorRoot:
+  RTMemoryDealloc(stack);
+error:
+  return NULL;
 }
 
 void RTStackDealloc(RTStack *stack) {
@@ -59,21 +65,24 @@ void RTStackDealloc(RTStack *stack) {
   RTMemoryDealloc(stack);
 }
 
-RTError RTStackBuildNextFrame(RTStack *stack, RTInteger32Bit count) {
+bool RTStackBuildNextFrame(RTStack *stack, RTInteger32Bit count) {
   RTFrame top = stack->top;
   RTInteger32Bit length = HEADER_LENGTH + count;
   if (top.index + top.length + length > stack->capacity) { 
     RTInteger32Bit capacity = stack->capacity * 2;
     RTElement *root = RTMemoryRealloc(stack->root, capacity);
     if (root == NULL) {
-      return RTErrorOutOfMemory;
+      goto error;
     }
     stack->capacity = capacity;
     stack->root = root;
   }
   stack->next.index = top.index + top.length;
   stack->next.length = length;
-  return RTErrorNone;
+  return true;
+
+error:
+  return false;
 }
 
 void RTStackPushNextFrame(RTStack *stack) {
@@ -98,6 +107,10 @@ RTValue *RTStackReturnFromTopFrame(RTStack *stack) {
 
 void RTStackSetResultInTopFrame(RTStack *stack, RTValue *result) {
   stack->root[stack->top.index + RESULT_OFFSET].value = result;
+}
+
+void RTStackCleanTopFrame(RTStack *stack) {
+
 }
 
 RTValue *RTStackGetValueFromTopFrame(RTStack *stack, RTInteger32Bit index) {

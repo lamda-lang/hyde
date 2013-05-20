@@ -9,7 +9,7 @@ RTList *RTListDecode(RTByte **data);
 
 /** -brief Deallocates the memory occupied by [list].
     -arg list The list to deallocate. */
-void RTListDealloc(RTList *list);
+void RTListDealloc(RTValue *list_RTList);
 
 /** -brief Sets [value] for [list] at [index].
     -arg list The list into which the value is being set. 
@@ -24,18 +24,12 @@ void RTListSetValueAtIndex(RTList *list, RTValue *value, RTInteger32Bit index);
     -return The value at [index]. */
 RTValue *RTListGetValueAtIndex(RTList *list, RTInteger32Bit index);
 
-/** -brief Returns a boolean value that indicates whether [list] and [other] are equal.
-    -arg list A list.
-    -arg other Another list.
-    -return [true] if [list] and [other] are equal, otherwise [false]. */
-bool RTListEqual(RTList *list, RTList *other);
-
 /** -brief Returns a hash value based on the content of [list].
     -important If two lists are equal, they have the same hash value.
     -arg list The list to examine.
     -return A hash value. */
-RTInteger64Bit RTListHash(RTList *list);
+RTInteger64Bit RTListHash(RTValue *list_RTValue);
 
-void RTListEnumerateValues(RTList *list, RTBlock *block);
+void RTListEnumerate(RTValue *list_RTList, RTBlock *block);
 
 #endif

@@ -9,6 +9,6 @@
     -arg stack The stack to use.
     -effect [reg] is modified according to the code being executed.
     -effect All values created by executing [code] are part of [pool]. */
-RTError RTExecuteCode(RTByte *code, RTInteger32Bit count, RTStack *stack);
+RTStatus RTExecuteCode(RTByte *code, RTInteger32Bit count, RTStack *stack);
 
 #endif

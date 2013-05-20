@@ -7,7 +7,7 @@ RTBuffer *RTBufferCreate(void);
 
 void RTBufferDealloc(RTBuffer *buffer);
 
-RTError RTBufferAppend(RTBuffer *buffer, RTByte *source, RTSize size);
+RTStatus RTBufferAppend(RTBuffer *buffer, RTByte *source, RTSize size);
 
 RTByte *RTBufferBytes(RTBuffer *buffer);
 

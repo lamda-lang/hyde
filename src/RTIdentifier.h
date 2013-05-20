@@ -7,7 +7,7 @@ RTValue *RTIdentifierValueBridge(RTIdentifier *id);
 
 /** -brief Deallocates the memory occupied by [id].
     -arg id The identifier to deallocate. */
-void RTIdentifierDealloc(RTIdentifier *id);
+void RTIdentifierDealloc(RTValue *id_RTIdentifier);
 
 /** -brief Creates an [RTIdentifier] by decoding [data].
     -arg data The data to decode.
@@ -15,16 +15,10 @@ void RTIdentifierDealloc(RTIdentifier *id);
     -effect [*data] points one past the byte segment that contains the data. */
 RTIdentifier *RTIdentifierDecode(RTByte **data);
 
-/** -brief Returns a boolean value that indicates whether [id] and [other] are equal.
-    -arg id An identifier.
-    -arg other Another identifier.
-    -return [true] if [id] and [other] are equal, otherwise [false]. */
-bool RTIdentifierEqual(RTIdentifier *id, RTIdentifier *other);
-
 /** -brief Returns a hash value based on the content of [id].
     -important If two identifiers are equal, they have the same hash value.
     -arg id The identifier to examine.
     -return A hash value. */
-RTInteger64Bit RTIdentifierHash(RTIdentifier *id);
+RTInteger64Bit RTIdentifierHash(RTValue *id_RTIdentifier);
 
 #endif

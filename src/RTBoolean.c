@@ -14,21 +14,20 @@ RTBoolean *RTBooleanCreate(bool truth) {
   RTSize size = sizeof(RTBoolean);
   RTBoolean *boolean = RTMemoryAlloc(size);
   if (boolean == NULL) {
-    return NULL;
+    goto error;
   }
   RTFlag mask = truth ? RTFlagTrue : RTFlagNone;
   boolean->base = RTValueInit(RTTypeBoolean, mask);
   return boolean;
+
+error:
+  return NULL;
 }
 
-void RTBooleanDealloc(RTBoolean *boolean) {
+void RTBooleanDealloc(RTValue *boolean) {
   RTMemoryDealloc(boolean);
 }
 
-bool RTBooleanEqual(RTBoolean *boolean, RTBoolean *other) {
-  return RTValueBaseFlagSet(boolean->base, RTFlagTrue) == RTValueBaseFlagSet(other->base, RTFlagTrue);
-}
-
-RTInteger64Bit RTBooleanHash(RTBoolean *boolean) {
-  return RTValueBaseFlagSet(boolean->base, RTFlagTrue) ? 1 : 0;
+RTInteger64Bit RTBooleanHash(RTValue *boolean) {
+  return RTValueFlagSet(boolean, RTFlagTrue) ? 1 : 0;
 }
