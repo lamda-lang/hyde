@@ -1,7 +1,7 @@
 #ifndef RT_MAP
 #define RT_MAP
 
-#include "Runtime.h"
+#include "runtime.h"
 
 RTValue *RTMapValueBridge(RTMap *map);
 
@@ -13,7 +13,7 @@ void RTMapDealloc(RTValue *map_RTMap);
 
 /** -brief Sets a given key-value pair in [map].
     -warning Setting two keys that are equal is an error.
-    -arg map The map into which the pair is being set. 
+    -arg map The map into which the pair is being set.
     -arg value The value for [key].
     -arg key The key for [value].
     -effect References to [key] and [value] are stored in [map]. */

@@ -1,7 +1,7 @@
 #ifndef RT_STACK
 #define RT_STACK
 
-#include "Runtime.h"
+#include "runtime.h"
 
 RTStack *RTStackCreate(RTInteger32Bit capacity);
 

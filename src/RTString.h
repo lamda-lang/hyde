@@ -1,7 +1,7 @@
 #ifndef RT_STRING
 #define RT_STRING
 
-#include "Runtime.h"
+#include "runtime.h"
 
 RTValue *RTStringValueBridge(RTString *string);
 

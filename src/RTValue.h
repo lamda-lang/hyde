@@ -1,7 +1,7 @@
 #ifndef RT_VALUE
 #define RT_VALUE
 
-#include "Runtime.h"
+#include "runtime.h"
 
 RTValue RTValueInit(RTType type, RTFlag mask);
 

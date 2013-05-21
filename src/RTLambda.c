@@ -37,7 +37,7 @@ RTLambda *RTLambdaDecode(RTByte **code) {
   lambda->contextLength = contextLength;
   lambda->codeSize = codeSize;
   lambda->code = buffer;
-  RTMemoryCopy(&code, buffer, codeSize);
+  RTMemoryCopy(*code, buffer, codeSize);
   *code += codeSize;
   return lambda;
 

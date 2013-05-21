@@ -1,7 +1,7 @@
 #ifndef RT_NIL
 #define RT_NIL
 
-#include "Runtime.h"
+#include "runtime.h"
 
 RTValue *RTNilValueBridge(RTNil *nil);
 

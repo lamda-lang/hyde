@@ -1,7 +1,7 @@
 #ifndef RT_MEMORY
 #define RT_MEMORY
 
-#include "Runtime.h"
+#include "runtime.h"
 
 /** -brief Allocates a memory buffer.
     -arg size The size of the memory buffer, in bytes.
