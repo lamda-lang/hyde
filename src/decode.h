@@ -1,7 +1,7 @@
 #ifndef DECODE_H
 #define DECODE_H
 
-#include "runtime.h"
+#include "api.h"
 
 Integer8Bit DecodeInteger8Bit(Byte **data);
 

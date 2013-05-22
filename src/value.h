@@ -1,7 +1,7 @@
 #ifndef VALUE_H
 #define VALUE_H
 
-#include "runtime.h"
+#include "api.h"
 
 Value ValueInit(Type type, Flag mask);
 

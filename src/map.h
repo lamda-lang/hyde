@@ -1,7 +1,7 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include "runtime.h"
+#include "api.h"
 
 Value *MapValueBridge(Map *map);
 

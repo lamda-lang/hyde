@@ -1,7 +1,7 @@
 #ifndef FILE_H
 #define FILE_H
 
-#include "runtime.h"
+#include "api.h"
 
 Status FileRead(File file, Buffer *buffer);
 

@@ -1,7 +1,7 @@
 #ifndef IDENTIFIER_H
 #define IDENTIFIER_H
 
-#include "runtime.h"
+#include "api.h"
 
 Value *IdentifierValueBridge(Identifier *id);
 

@@ -1,7 +1,7 @@
 #ifndef LAMBDA_H
 #define LAMBDA_H
 
-#include "runtime.h"
+#include "api.h"
 
 Value *LambdaValueBridge(Lambda *lambda);
 

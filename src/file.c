@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include "file.h"
 
 #define BUFFER_SIZE 1024

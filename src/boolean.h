@@ -1,7 +1,7 @@
 #ifndef BOOLEAN_H
 #define BOOLEAN_H
 
-#include "runtime.h"
+#include "api.h"
 
 Value *BooleanValueBridge(Boolean *boolean);
 

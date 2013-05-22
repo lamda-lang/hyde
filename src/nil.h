@@ -1,7 +1,7 @@
 #ifndef NIL_H
 #define NIL_H
 
-#include "runtime.h"
+#include "api.h"
 
 Value *NilValueBridge(Nil *nil);
 

@@ -1,7 +1,7 @@
 #ifndef INTEGER_H
 #define INTEGER_H
 
-#include "runtime.h"
+#include "api.h"
 
 Value *IntegerValueBridge(Integer *integer);
 

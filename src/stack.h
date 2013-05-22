@@ -1,7 +1,7 @@
 #ifndef STACK_H
 #define STACK_H
 
-#include "runtime.h"
+#include "api.h"
 
 Stack *StackCreate(Integer32Bit capacity);
 

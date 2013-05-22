@@ -1,7 +1,7 @@
 #ifndef BUFFER_H
 #define BUFFER_H
 
-#include "runtime.h"
+#include "api.h"
 
 Buffer *BufferCreate(void);
 

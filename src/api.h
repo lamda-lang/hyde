@@ -1,12 +1,9 @@
-#ifndef RUNTIME_H
-#define RUNTIME_H
+#ifndef API_H
+#define API_H
 
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 
 typedef unsigned char Byte;
 
@@ -51,11 +48,6 @@ enum {
 };
 
 typedef int File;
-enum {
-  FileStandartIn = STDIN_FILENO,
-  FileStandartOut = STDOUT_FILENO,
-  FileStandartError = STDERR_FILENO
-};
 
 typedef struct Stack Stack;
 
@@ -85,8 +77,6 @@ typedef Integer64Bit Hash(Value *value);
 
 typedef void Enumerate(Value *value, void (*block)(Value *value));
 
-#endif
-
 #include "boolean.h"
 #include "buffer.h"
 #include "decode.h"
@@ -97,10 +87,11 @@ typedef void Enumerate(Value *value, void (*block)(Value *value));
 #include "kernel.h"
 #include "lambda.h"
 #include "list.h"
-#include "log.h"
 #include "map.h"
 #include "memory.h"
 #include "nil.h"
 #include "stack.h"
 #include "string.h"
 #include "value.h"
+
+#endif
