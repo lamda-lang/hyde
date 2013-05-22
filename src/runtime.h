@@ -1,5 +1,5 @@
-#ifndef RUNTIME
-#define RUNTIME
+#ifndef RUNTIME_H
+#define RUNTIME_H
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -8,117 +8,99 @@
 #include <string.h>
 #include <unistd.h>
 
-/** -brief The smallest addressable unit of memory. */
-typedef unsigned char RTByte;
+typedef unsigned char Byte;
 
-/** -brief An integer type capable of representing any member of the basic execution character set. */
-typedef char RTChar;
+typedef uint8_t Integer8Bit;
 
-/** -brief An 8-bit unsigned integer type. */
-typedef uint8_t RTInteger8Bit;
+typedef uint16_t Integer16Bit;
 
-/** -brief A 16-bit unsigned integer type. */
-typedef uint16_t RTInteger16Bit;
+typedef uint32_t Integer32Bit;
 
-/** -brief A 32-bit unsigned integer type. */
-typedef uint32_t RTInteger32Bit;
+typedef uint64_t Integer64Bit;
 
-/** -brief A 64-bit unsigned integer type. */
-typedef uint64_t RTInteger64Bit;
+typedef uintmax_t Index;
 
-/** -brief An unsigned integer type capable of representing any value of any unsigned integer type. */
-typedef uintmax_t RTIndex;
+typedef size_t Size;
 
-/** -brief An unsigned integer type capable of representing the size of any memory object, in bytes. */
-typedef size_t RTSize;
-
-typedef uint8_t RTValue;
+typedef uint8_t Value;
 
 typedef enum {
-  RTStatusSuccess = true,
-  RTStatusFailure = false
-} RTStatus;
+  StatusSuccess = true,
+  StatusFailure = false
+} Status;
 
-/** -brief An enumeration of types. */
-typedef uint8_t RTType;
+typedef uint8_t Type;
 enum {
-  RTTypeBoolean = 0,
-  RTTypeIdentifier = 1,
-  RTTypeInteger = 2,
-  RTTypeLambda = 3,
-  RTTypeList = 4,
-  RTTypeMap = 5,
-  RTTypeNil = 6,
-  RTTypeString = 7
+  TypeBoolean = 0,
+  TypeIdentifier = 1,
+  TypeInteger = 2,
+  TypeLambda = 3,
+  TypeList = 4,
+  TypeMap = 5,
+  TypeNil = 6,
+  TypeString = 7
 };
 
-/** -brief An enumeration of flags. */
-typedef uint8_t RTFlag;
+typedef uint8_t Flag;
 enum {
-  RTFlagNone = 0,
-  RTFlagGarbage = 1 << 4,
-  RTFlagMark = 1 << 5,
-  RTFlagAlpha = 1 << 6,
-  RTFlagBeta = 1 << 7
+  FlagNone = 0,
+  FlagGarbage = 1 << 4,
+  FlagMark = 1 << 5,
+  FlagAlpha = 1 << 6,
+  FlagBeta = 1 << 7
 };
 
-typedef int RTFile;
+typedef int File;
 enum {
-  RTFileStandartIn = STDIN_FILENO,
-  RTFileStandartOut = STDOUT_FILENO,
-  RTFileStandartError = STDERR_FILENO
+  FileStandartIn = STDIN_FILENO,
+  FileStandartOut = STDOUT_FILENO,
+  FileStandartError = STDERR_FILENO
 };
 
-typedef struct RTStack RTStack;
+typedef struct Stack Stack;
 
-typedef struct RTBuffer RTBuffer;
+typedef struct Buffer Buffer;
 
-/** -brief An opaque data type that represents a primitive identifier. */
-typedef struct RTIdentifier RTIdentifier;
+typedef struct Identifier Identifier;
 
-/** -brief An opaque data type that represents a primitive integer. */
-typedef struct RTInteger RTInteger;
+typedef struct Integer Integer;
 
-/** -brief An opaque data type that represents a primitive lambda. */
-typedef struct RTLambda RTLambda;
+typedef struct Lambda Lambda;
 
-/** -brief An opaque data type that represents a primitive list. */
-typedef struct RTList RTList;
+typedef struct List List;
 
-/** -brief An opaque data type that represents a primitive map. */
-typedef struct RTMap RTMap;
+typedef struct Map Map;
 
-/** -brief An opaque data type that represents a primitive string. */
-typedef struct RTString RTString;
+typedef struct String String;
 
-typedef struct RTNil RTNil;
+typedef struct Nil Nil;
 
-typedef struct RTBoolean RTBoolean;
+typedef struct Boolean Boolean;
 
-typedef bool RTKernel(RTInteger8Bit arity, RTStack *stack);
+typedef bool Kernel(Integer8Bit arity, Stack *stack);
 
-typedef void RTDealloc(RTValue *dealloc);
+typedef void Dealloc(Value *dealloc);
 
-typedef RTInteger64Bit RTHash(RTValue *value);
+typedef Integer64Bit Hash(Value *value);
 
-typedef void RTEnumerate(RTValue *value, void (*block)(RTValue *value));
+typedef void Enumerate(Value *value, void (*block)(Value *value));
 
 #endif
 
-#include "RTBoolean.h"
-#include "RTBuffer.h"
-#include "RTDecode.h"
-#include "RTExecute.h"
-#include "RTFile.h"
-#include "RTIdentifier.h"
-#include "RTInteger.h"
-#include "RTKernel.h"
-#include "RTLambda.h"
-#include "RTList.h"
-#include "RTLog.h"
-#include "RTMap.h"
-#include "RTMemory.h"
-#include "RTNil.h"
-#include "RTStack.h"
-#include "RTString.h"
-#include "RTValue.h"
+#include "boolean.h"
+#include "buffer.h"
+#include "decode.h"
+#include "execute.h"
+#include "file.h"
+#include "identifier.h"
+#include "integer.h"
+#include "kernel.h"
+#include "lambda.h"
+#include "list.h"
+#include "log.h"
+#include "map.h"
+#include "memory.h"
+#include "nil.h"
+#include "stack.h"
+#include "string.h"
+#include "value.h"
