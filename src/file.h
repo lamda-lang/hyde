@@ -3,8 +3,6 @@
 
 #include "api.h"
 
-Status FileRead(File file, Buffer *buffer);
-
-Status FileWrite(File file, Buffer *buffer);
+Data *FileRead(Char *path);
 
 #endif

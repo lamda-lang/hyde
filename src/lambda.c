@@ -28,7 +28,7 @@ Lambda *LambdaDecode(Byte **code) {
   }
   Byte *buffer = MemoryAlloc(codeSize);
   if (buffer == NULL) {
-    goto errorBuffer;
+    goto errorData;
   }
   lambda->base = ValueInit(TypeLambda, FlagNone);
   lambda->arity = arity;
@@ -41,7 +41,7 @@ Lambda *LambdaDecode(Byte **code) {
   *code += codeSize;
   return lambda;
 
-errorBuffer:
+errorData:
   MemoryDealloc(lambda);
 error:
   return NULL;

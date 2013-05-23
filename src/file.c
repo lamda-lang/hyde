@@ -1,33 +1,31 @@
+#include <fcntl.h>
 #include <unistd.h>
 #include "file.h"
 
-#define BUFFER_SIZE 1024
-
-Status FileRead(File file, Buffer *buffer) {
-  Byte byte[BUFFER_SIZE];
+Data *FileRead(Char *path) {
+  Data *data = DataCreate();
+  if (data == NULL) {
+    goto returnError;
+  }
+  int file = open(path, O_RDONLY);
+  if (file == -1) {
+    goto deallocData;
+  }
+  Byte buffer[512];
   ssize_t consumed = 0;
   do {
-    consumed = read(file, byte, BUFFER_SIZE);
+    consumed = read(file, buffer, sizeof(buffer));
     if (consumed == -1) {
-      goto error;
+      goto closeFile;
     }
-    BufferAppend(buffer, byte, (Size)consumed);
+    DataAppend(data, buffer, (Size)consumed);
   } while (consumed > 0);
-  return StatusSuccess;
+  return data;
 
-error:
-  return StatusFailure;
-}
-
-Status FileWrite(File file, Buffer *buffer) {
-  Size size = BufferSize(buffer);
-  Byte *bytes = BufferBytes(buffer);
-  ssize_t written = write(file, bytes, size);
-  if (written == -1 || (Size)written != size) {
-    goto error;
-  }
-  return StatusSuccess;
-
-error:
-  return StatusFailure;
+closeFile:
+  close(file);
+deallocData:
+  DataDealloc(data);
+returnError:
+  return NULL;
 }

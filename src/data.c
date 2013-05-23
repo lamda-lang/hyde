@@ -1,12 +1,12 @@
-#include "buffer.h"
+#include "data.h"
 
-struct Buffer {
+struct Data {
   Byte *bytes;
   Size size;
 };
 
-Buffer *BufferCreate(void) {
-  Buffer *buffer = MemoryAlloc(sizeof(Buffer));
+Data *DataCreate(void) {
+  Data *buffer = MemoryAlloc(sizeof(Data));
   if (buffer == NULL) {
     goto error;
   }
@@ -18,12 +18,12 @@ error:
   return NULL;
 }
 
-void BufferDealloc(Buffer *buffer) {
+void DataDealloc(Data *buffer) {
   MemoryDealloc(buffer->bytes);
   MemoryDealloc(buffer);
 }
 
-Status BufferAppend(Buffer *buffer, Byte *source, Size size) {
+Status DataAppend(Data *buffer, Byte *source, Size size) {
   Byte *bytes = MemoryRealloc(buffer->bytes, buffer->size + size);
   if (bytes == NULL) {
     goto error;
@@ -38,10 +38,10 @@ error:
   return StatusFailure;
 }
 
-Byte *BufferBytes(Buffer *buffer) {
+Byte *DataBytes(Data *buffer) {
   return buffer->bytes;
 }
 
-Size BufferSize(Buffer *buffer) {
+Size DataSize(Data *buffer) {
   return buffer->size;
 }

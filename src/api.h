@@ -7,6 +7,8 @@
 
 typedef unsigned char Byte;
 
+typedef char Char;
+
 typedef uint8_t Integer8Bit;
 
 typedef uint16_t Integer16Bit;
@@ -51,7 +53,7 @@ typedef int File;
 
 typedef struct Stack Stack;
 
-typedef struct Buffer Buffer;
+typedef struct Data Data;
 
 typedef struct Identifier Identifier;
 
@@ -78,7 +80,7 @@ typedef Integer64Bit Hash(Value *value);
 typedef void Enumerate(Value *value, void (*block)(Value *value));
 
 #include "boolean.h"
-#include "buffer.h"
+#include "data.h"
 #include "decode.h"
 #include "execute.h"
 #include "file.h"
