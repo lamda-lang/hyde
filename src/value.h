@@ -3,7 +3,7 @@
 
 #include "api.h"
 
-Value ValueInit(Type type, Flag mask);
+Value ValueInit(Type type);
 
 Type ValueType(Value *value);
 

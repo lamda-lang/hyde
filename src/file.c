@@ -2,30 +2,73 @@
 #include <unistd.h>
 #include "file.h"
 
-Data *FileRead(Char *path) {
+struct File {
+  int handle;
+  Byte buffer[256];
+};
+
+File *FileOpen(Char *path) {
+  File *file = MemoryAlloc(sizeof(File));
+  if (file == NULL) {
+    goto returnError;
+  }
+  int handle = open(path, O_RDWR);
+  if (handle == -1) {
+    goto deallocFile;
+  }
+  file->handle = handle;
+  return file;
+
+deallocFile:
+  MemoryDealloc(file);
+returnError:
+  return NULL;
+}
+
+Status FileClose(File *file) {
+  int status = close(file->handle);
+  if (status == -1) {
+    goto returnError;
+  }
+  MemoryDealloc(file);
+  return StatusSuccess;
+
+returnError:
+  return StatusFailure;
+}
+
+Data *FileRead(File *file) {
   Data *data = DataCreate();
   if (data == NULL) {
     goto returnError;
   }
-  int file = open(path, O_RDONLY);
-  if (file == -1) {
-    goto deallocData;
-  }
-  Byte buffer[512];
   ssize_t consumed = 0;
   do {
-    consumed = read(file, buffer, sizeof(buffer));
+    consumed = read(file->handle, file->buffer, sizeof(file->buffer));
     if (consumed == -1) {
-      goto closeFile;
+      goto deallocData;
     }
-    DataAppend(data, buffer, (Size)consumed);
+    if (DataAppend(data, file->buffer, (Size)consumed) == StatusFailure) {
+      goto deallocData;
+    }
   } while (consumed > 0);
   return data;
 
-closeFile:
-  close(file);
 deallocData:
   DataDealloc(data);
 returnError:
   return NULL;
+}
+
+Status FileWrite(File *file, Data *data) {
+  Byte *bytes = DataBytes(data);
+  Size size = DataSize(data);
+  ssize_t written = write(file->handle, bytes, size);
+  if (written == -1 || (Size)written != size) {
+    goto returnError;
+  }
+  return StatusSuccess;
+
+returnError:
+  return StatusFailure;
 }

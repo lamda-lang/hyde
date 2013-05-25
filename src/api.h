@@ -23,10 +23,17 @@ typedef size_t Size;
 
 typedef uint8_t Value;
 
-typedef enum {
+typedef uint8_t Exception;
+enum {
+  ExceptionOutOfMemory,
+  ExceptionInvalidType
+};
+
+typedef bool Status;
+enum {
   StatusSuccess = true,
   StatusFailure = false
-} Status;
+};
 
 typedef uint8_t Type;
 enum {
@@ -44,16 +51,16 @@ typedef uint8_t Flag;
 enum {
   FlagNone = 0,
   FlagGarbage = 1 << 4,
-  FlagMark = 1 << 5,
-  FlagAlpha = 1 << 6,
-  FlagBeta = 1 << 7
+  FlagMark = 1 << 5
 };
 
-typedef int File;
+typedef struct File File;
 
 typedef struct Stack Stack;
 
 typedef struct Data Data;
+
+typedef struct Boolean Boolean;
 
 typedef struct Identifier Identifier;
 
@@ -69,8 +76,6 @@ typedef struct String String;
 
 typedef struct Nil Nil;
 
-typedef struct Boolean Boolean;
-
 typedef bool Kernel(Integer8Bit arity, Stack *stack);
 
 typedef void Dealloc(Value *dealloc);
@@ -82,6 +87,7 @@ typedef void Enumerate(Value *value, void (*block)(Value *value));
 #include "boolean.h"
 #include "data.h"
 #include "decode.h"
+#include "exception.h"
 #include "execute.h"
 #include "file.h"
 #include "identifier.h"

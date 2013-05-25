@@ -1,9 +1,8 @@
 #include "boolean.h"
 
-#define FlagTrue FlagAlpha
-
 struct Boolean {
   Value base;
+  bool truth;
 };
 
 Value *BooleanValueBridge(Boolean *boolean) {
@@ -14,13 +13,14 @@ Boolean *BooleanCreate(bool truth) {
   Size size = sizeof(Boolean);
   Boolean *boolean = MemoryAlloc(size);
   if (boolean == NULL) {
-    goto error;
+    ExceptionRaise(ExceptionOutOfMemory);
+    goto returnError;
   }
-  Flag mask = truth ? FlagTrue : FlagNone;
-  boolean->base = ValueInit(TypeBoolean, mask);
+  boolean->base = ValueInit(TypeBoolean);
+  boolean->truth = truth;
   return boolean;
 
-error:
+returnError:
   return NULL;
 }
 
@@ -29,5 +29,6 @@ void BooleanDealloc(Value *boolean) {
 }
 
 Integer64Bit BooleanHash(Value *boolean) {
-  return ValueFlagSet(boolean, FlagTrue) ? 1 : 0;
+  Boolean *booleanBridge = ValueBooleanBridge(boolean);
+  return booleanBridge->truth ? 1 : 0;
 }

@@ -45,7 +45,7 @@ Class class[] = {
 };
 
 Value ValueInit(Type type, Flag mask) {
-  return type | mask;
+  return type;
 }
 
 Type ValueType(Value *value) {

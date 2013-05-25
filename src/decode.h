@@ -3,14 +3,14 @@
 
 #include "api.h"
 
-Integer8Bit DecodeInteger8Bit(Byte **data);
+Integer8Bit DecodeInteger8BitFLE(Byte **bytes);
 
-Integer16Bit DecodeInteger16Bit(Byte **data);
+Integer16Bit DecodeInteger16BitFLE(Byte **bytes);
 
-Integer32Bit DecodeInteger32Bit(Byte **data);
+Integer32Bit DecodeInteger32BitFLE(Byte **bytes);
 
-Integer64Bit DecodeInteger64Bit(Byte **data);
+Integer64Bit DecodeInteger64BitFLE(Byte **bytes);
 
-Integer32Bit DecodeVBRInteger32Bit(Byte **data);
+Integer32Bit DecodeInteger32BitVLE(Byte **bytes);
 
 #endif

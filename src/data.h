@@ -5,12 +5,12 @@
 
 Data *DataCreate(void);
 
-void DataDealloc(Data *buffer);
+void DataDealloc(Data *data);
 
-Status DataAppend(Data *buffer, Byte *source, Size size);
+Status DataAppendBytes(Data *data, Byte *bytes, Size size);
 
-Byte *DataBytes(Data *buffer);
+Byte *DataBytes(Data *data);
 
-Size DataSize(Data *buffer);
+Size DataSize(Data *data);
 
 #endif

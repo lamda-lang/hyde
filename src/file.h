@@ -3,6 +3,12 @@
 
 #include "api.h"
 
-Data *FileRead(Char *path);
+File *FileOpen(Char *path);
+
+Status FileClose(File *file);
+
+Data *FileRead(File *file);
+
+Status FileWrite(File *file, Data *data);
 
 #endif

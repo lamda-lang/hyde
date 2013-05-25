@@ -6,42 +6,44 @@ struct Data {
 };
 
 Data *DataCreate(void) {
-  Data *buffer = MemoryAlloc(sizeof(Data));
-  if (buffer == NULL) {
-    goto error;
+  Size size = sizeof(Data);
+  Data *data = MemoryAlloc(size);
+  if (data == NULL) {
+    ExceptionRaise(ExceptionOutOfMemory);
+    goto returnError;
   }
-  buffer->bytes = NULL;
-  buffer->size = 0;
-  return buffer;
+  data->bytes = NULL;
+  data->size = 0;
+  return data;
 
 error:
   return NULL;
 }
 
-void DataDealloc(Data *buffer) {
-  MemoryDealloc(buffer->bytes);
-  MemoryDealloc(buffer);
+void DataDealloc(Data *data) {
+  MemoryDealloc(data->bytes);
+  MemoryDealloc(data);
 }
 
-Status DataAppend(Data *buffer, Byte *source, Size size) {
-  Byte *bytes = MemoryRealloc(buffer->bytes, buffer->size + size);
-  if (bytes == NULL) {
-    goto error;
+Status DataAppendBytes(Data *data, Byte *bytes, Size size) {
+  Byte *buffer = MemoryRealloc(data->bytes, data->size + size);
+  if (buffer == NULL) {
+    ExceptionRaise(ExceptionOutOfMemory);
+    goto returnError;
   }
-  Byte *target = bytes + buffer->size;
-  buffer->bytes = bytes;
-  buffer->size += size;
-  MemoryCopy(source, target, size);
+  MemoryCopy(bytes, buffer + data->size, size);
+  data->bytes = buffer;
+  data->size += size;
   return StatusSuccess;
 
-error:
+returnError:
   return StatusFailure;
 }
 
-Byte *DataBytes(Data *buffer) {
-  return buffer->bytes;
+Byte *DataBytes(Data *data) {
+  return data->bytes;
 }
 
-Size DataSize(Data *buffer) {
-  return buffer->size;
+Size DataSize(Data *data) {
+  return data->size;
 }
