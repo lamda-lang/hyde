@@ -45,19 +45,19 @@ Value *LambdaValueBridge(Lambda *lambda) {
     return (Value *)lambda;
 }
 
-void LambdaDealloc(Value *lambda) {
-    Lambda *lambdaBridge = ValueLambdaBridge(lambda);
-    MemoryDealloc(lambdaBridge->code);
-    MemoryDealloc(lambdaBridge);
+void LambdaDealloc(Value *lambdaValue) {
+    Lambda *lambda = ValueLambdaBridge(lambdaValue);
+    MemoryDealloc(lambda->code);
+    MemoryDealloc(lambda);
 }
 
 void LambdaSetContextValueAtIndex(Lambda *lambda, Value *value, Integer32 index) {
     lambda->context[index] = value;
 }
 
-Integer64 LambdaHash(Value *lambda) {
-    Lambda *lambdaBridge = ValueLambdaBridge(lambda);
-    return lambdaBridge->registerCount;
+Integer64 LambdaHash(Value *lambdaValue) {
+    Lambda *lambda = ValueLambdaBridge(lambdaValue);
+    return lambda->registerCount;
 }
 
 Integer32 LambdaRegisterCount(Lambda *lambda) {
@@ -75,9 +75,9 @@ returnError:
     return StatusFailure;
 }
 
-void LambdaEnumerate(Value *lambda, void (*block)(Value *value)) {
-    Lambda *lambdaBridge = ValueLambdaBridge(lambda);
-    for (Integer32 index = 0; index < lambdaBridge->contextLength; index += 1) {
-        block(lambdaBridge->context[index]);
+void LambdaEnumerate(Value *lambdaValue, void (*block)(Value *value)) {
+    Lambda *lambda = ValueLambdaBridge(lambdaValue);
+    for (Integer32 index = 0; index < lambda->contextLength; index += 1) {
+        block(lambda->context[index]);
     }
 }

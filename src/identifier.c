@@ -24,8 +24,8 @@ Value *IdentifierValueBridge(Identifier *id) {
     return (Value *)id;
 }
 
-void IdentifierDealloc(Value *id) {
-    MemoryDealloc(id);
+void IdentifierDealloc(Value *idValue) {
+    MemoryDealloc(idValue);
 }
 
 Identifier *IdentifierDecode(Byte **bytes, Exception *exception) {
@@ -43,7 +43,7 @@ returnError:
     return NULL;
 }
 
-Integer64 IdentifierHash(Value *id) {
-    Identifier *idBridge = ValueIdentifierBridge(id);
-    return idBridge->length;
+Integer64 IdentifierHash(Value *idValue) {
+    Identifier *id = ValueIdentifierBridge(idValue);
+    return id->length;
 }

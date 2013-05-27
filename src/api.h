@@ -85,7 +85,7 @@ typedef struct Nil Nil;
 
 typedef bool Kernel(Integer8 arity, Stack *stack);
 
-typedef void Dealloc(Value *dealloc);
+typedef void Dealloc(Value *value);
 
 typedef Integer64 Hash(Value *value);
 

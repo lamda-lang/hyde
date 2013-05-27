@@ -75,34 +75,34 @@ Integer64 ValueHash(Value *value) {
     return class[type].hash(value);
 }
 
-Boolean *ValueBooleanBridge(Value *value) {
-    return (Boolean *)value;
+Boolean *ValueBooleanBridge(Value *booleanValue) {
+    return (Boolean *)booleanValue;
 }
 
-Identifier *ValueIdentifierBridge(Value *value) {
-    return (Identifier *)value;
+Identifier *ValueIdentifierBridge(Value *idValue) {
+    return (Identifier *)idValue;
 }
 
-Integer *ValueIntegerBridge(Value *value) {
-    return (Integer *)value;
+Integer *ValueIntegerBridge(Value *integerValue) {
+    return (Integer *)integerValue;
 }
 
-Lambda *ValueLambdaBridge(Value *value) {
-    return (Lambda *)value;
+Lambda *ValueLambdaBridge(Value *lambdaValue) {
+    return (Lambda *)lambdaValue;
 }
 
-List *ValueListBridge(Value *value) {
-    return (List *)value;
+List *ValueListBridge(Value *listValue) {
+    return (List *)listValue;
 }
 
-Map *ValueMapBridge(Value *value) {
-    return (Map *)value;
+Map *ValueMapBridge(Value *mapValue) {
+    return (Map *)mapValue;
 }
 
-Nil *ValueNilBridge(Value *value) {
-    return (Nil *)value;
+Nil *ValueNilBridge(Value *nilValue) {
+    return (Nil *)nilValue;
 }
 
-String *ValueStringBridge(Value *value) {
-    return (String *)value;
+String *ValueStringBridge(Value *stringValue) {
+    return (String *)stringValue;
 }

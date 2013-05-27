@@ -15,20 +15,20 @@ void ValueDealloc(Value *value);
 
 Integer64 ValueHash(Value *value);
 
-Boolean *ValueBooleanBridge(Value *value);
+Boolean *ValueBooleanBridge(Value *booleanValue);
 
-Identifier *ValueIdentifierBridge(Value *value);
+Identifier *ValueIdentifierBridge(Value *idValue);
 
-Integer *ValueIntegerBridge(Value *value);
+Integer *ValueIntegerBridge(Value *integerValue);
 
-Lambda *ValueLambdaBridge(Value *value);
+Lambda *ValueLambdaBridge(Value *lambdaValue);
 
-List *ValueListBridge(Value *value);
+List *ValueListBridge(Value *listValue);
 
-Map *ValueMapBridge(Value *value);
+Map *ValueMapBridge(Value *mapValue);
 
-Nil *ValueNilBridge(Value *value);
+Nil *ValueNilBridge(Value *nilValue);
 
-String *ValueStringBridge(Value *value);
+String *ValueStringBridge(Value *stringValue);
 
 #endif

@@ -7,12 +7,12 @@ Value *MapValueBridge(Map *map);
 
 Map *MapDecode(Byte **data, Exception *exception);
 
-void MapDealloc(Value *map);
+void MapDealloc(Value *mapValue);
 
 void MapSetValueForKey(Map *map, Value *value, Value *key);
 
-Integer64 MapHash(Value *map);
+Integer64 MapHash(Value *mapValue);
 
-void MapEnumerate(Value *map, void (*block)(Value *value));
+void MapEnumerate(Value *mapValue, void (*block)(Value *value));
 
 #endif

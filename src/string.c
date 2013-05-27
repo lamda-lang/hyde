@@ -24,8 +24,8 @@ Value *StringValueBridge(String *string) {
     return (Value *)string;
 }
 
-void StringDealloc(Value *string) {
-    MemoryDealloc(string);
+void StringDealloc(Value *stringValue) {
+    MemoryDealloc(stringValue);
 }
 
 String *StringDecode(Byte **bytes, Exception *exception) {
@@ -43,9 +43,9 @@ returnError:
     return NULL;
 }
 
-Integer64 StringHash(Value *string) {
-    String *stringBridge = ValueStringBridge(string);
-    return stringBridge->length;
+Integer64 StringHash(Value *stringValue) {
+    String *string = ValueStringBridge(stringValue);
+    return string->length;
 }
 
 String *StringConcatenate(String *string, String *other, Exception *exception) {

@@ -22,13 +22,13 @@ Value *IntegerValueBridge(Integer *integer) {
     return (Value *)integer;
 }
 
-void IntegerDealloc(Value *integer) {
-    MemoryDealloc(integer);
+void IntegerDealloc(Value *integerValue) {
+    MemoryDealloc(integerValue);
 }
 
-Integer64 IntegerHash(Value *integer) {
-    Integer *integerBridge = ValueIntegerBridge(integer);
-    return integerBridge->value;
+Integer64 IntegerHash(Value *integerValue) {
+    Integer *integer = ValueIntegerBridge(integerValue);
+    return integer->value;
 }
 
 Integer *IntegerSum(Integer *integer, Integer *other, Exception *exception) {

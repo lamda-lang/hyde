@@ -43,8 +43,8 @@ Map *MapDecode(Byte **bytes, Exception *exception) {
     return Create(count, exception);
 }
 
-void MapDealloc(Value *map) {
-    MemoryDealloc(map);
+void MapDealloc(Value *mapValue) {
+    MemoryDealloc(mapValue);
 }
 
 void MapSetValueForKey(Map *map, Value *value, Value *key) {
@@ -56,15 +56,15 @@ void MapSetValueForKey(Map *map, Value *value, Value *key) {
     map->element[index].value = value;
 }
 
-Integer64 MapHash(Value *map) {
-    Map *mapBridge = ValueMapBridge(map);
-    return mapBridge->length;
+Integer64 MapHash(Value *mapValue) {
+    Map *map = ValueMapBridge(mapValue);
+    return map->length;
 }
 
-void MapEnumerate(Value *map, void (*block)(Value *value)) {
-    Map *mapBridge = ValueMapBridge(map);
-    for (Integer32 index = 0; index < mapBridge->length; index += 1) {
-        block(mapBridge->element[index].key);
-        block(mapBridge->element[index].value);
+void MapEnumerate(Value *mapValue, void (*block)(Value *value)) {
+    Map *map = ValueMapBridge(mapValue);
+    for (Integer32 index = 0; index < map->length; index += 1) {
+        block(map->element[index].key);
+        block(map->element[index].value);
     }
 }

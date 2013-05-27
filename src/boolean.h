@@ -9,6 +9,6 @@ Boolean *BooleanTrueSingleton(void);
 
 Boolean *BooleanFalseSingleton(void);
 
-Integer64 BooleanHash(Value *boolean);
+Integer64 BooleanHash(Value *booleanValue);
 
 #endif

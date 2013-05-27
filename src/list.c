@@ -29,8 +29,8 @@ List *ListDecode(Byte **bytes, Exception *exception) {
     return Create(length, exception);
 }
 
-void ListDealloc(Value *list) {
-    MemoryDealloc(list);
+void ListDealloc(Value *listValue) {
+    MemoryDealloc(listValue);
 }
 
 void ListSetValueAtIndex(List *list, Value *value, Integer32 index) {
@@ -41,13 +41,13 @@ Value *ListGetValueAtIndex(List *list, Integer32 index) {
     return list->element[index];
 }
 
-Integer64 ListHash(Value *list_List) {
-    List *list = ValueListBridge(list_List);
+Integer64 ListHash(Value *listValue) {
+    List *list = ValueListBridge(listValue);
     return list->length;
 }
 
-void ListEnumerate(Value *list_List, void (*block)(Value *value)) {
-    List *list = ValueListBridge(list_List);
+void ListEnumerate(Value *listValue, void (*block)(Value *value)) {
+    List *list = ValueListBridge(listValue);
     for (Integer32 index = 0; index < list->length; index += 1) {
         block(list->element[index]);
     }

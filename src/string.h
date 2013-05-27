@@ -5,11 +5,11 @@
 
 Value *StringValueBridge(String *string);
 
-void StringDealloc(Value *string);
+void StringDealloc(Value *stringValue);
 
 String *StringDecode(Byte **bytes, Exception *exception);
 
-Integer64 StringHash(Value *string);
+Integer64 StringHash(Value *stringValue);
 
 String *StringConcatenate(String *string, String *other, Exception *exception);
 
