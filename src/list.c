@@ -1,50 +1,54 @@
 #include "list.h"
 
 struct List {
-  Value base;
-  Integer32Bit length;
-  Value *element[];
+    Value base;
+    Integer32 length;
+    Value *element[];
 };
 
-Value *ListValueBridge(List *list) {
-  return (Value *)list;
+static inline List *Create(Integer32 length, Exception *exception) {
+    Size size = sizeof(List) + sizeof(Value) * length;
+    List *list = MemoryAlloc(size, exception);
+    if (list == NULL) {
+        goto returnError;
+    }
+    list->base = TypeList;
+    list->length = length;
+    return list;
+
+returnError:
+    return NULL;
 }
 
-List *ListDecode(Byte **data) {
-  Integer32Bit length = DecodeVBRInteger32Bit(data);
-  Size size = sizeof(struct List) + sizeof(Value) * length;
-  List *list = MemoryAlloc(size);
-  if (list == NULL) {
-    goto error;
-  }
-  list->base = ValueInit(TypeList, FlagNone);
-  list->length = length;
-  return list;
+Value *ListValueBridge(List *list) {
+    return (Value *)list;
+}
 
-error:
-  return NULL;
+List *ListDecode(Byte **bytes, Exception *exception) {
+    Integer32 length = DecodeInteger32VLE(bytes);
+    return Create(length, exception);
 }
 
 void ListDealloc(Value *list) {
-  MemoryDealloc(list);
+    MemoryDealloc(list);
 }
 
-void ListSetValueAtIndex(List *list, Value *value, Integer32Bit index) {
-  list->element[index] = value;
+void ListSetValueAtIndex(List *list, Value *value, Integer32 index) {
+    list->element[index] = value;
 }
 
-Value *ListGetValueAtIndex(List *list, Integer32Bit index) {
-  return list->element[index];
+Value *ListGetValueAtIndex(List *list, Integer32 index) {
+    return list->element[index];
 }
 
-Integer64Bit ListHash(Value *list_List) {
-  List *list = ValueListBridge(list_List);
-  return list->length;
+Integer64 ListHash(Value *list_List) {
+    List *list = ValueListBridge(list_List);
+    return list->length;
 }
 
 void ListEnumerate(Value *list_List, void (*block)(Value *value)) {
-  List *list = ValueListBridge(list_List);
-  for (Integer32Bit index = 0; index < list->length; index += 1) {
-    block(list->element[index]);
-  }
+    List *list = ValueListBridge(list_List);
+    for (Integer32 index = 0; index < list->length; index += 1) {
+        block(list->element[index]);
+    }
 }

@@ -3,14 +3,14 @@
 
 #include "api.h"
 
+Integer *IntegerCreate(Integer64 value, Exception *exception);
+
 Value *IntegerValueBridge(Integer *integer);
 
-void IntegerDealloc(Value *integer_Integer);
+void IntegerDealloc(Value *integer);
 
-Integer *IntegerDecode(Byte **data);
+Integer64 IntegerHash(Value *integer);
 
-Integer64Bit IntegerHash(Value *integer_Integer);
-
-Integer *IntegerSum(Integer *integer, Integer *other);
+Integer *IntegerSum(Integer *integer, Integer *other, Exception *exception);
 
 #endif

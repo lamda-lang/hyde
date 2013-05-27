@@ -5,16 +5,16 @@
 
 Value *ListValueBridge(List *list);
 
-List *ListDecode(Byte **data);
+List *ListDecode(Byte **bytes, Exception *exception);
 
-void ListDealloc(Value *list_List);
+void ListDealloc(Value *list);
 
-void ListSetValueAtIndex(List *list, Value *value, Integer32Bit index);
+void ListSetValueAtIndex(List *list, Value *value, Integer32 index);
 
-Value *ListGetValueAtIndex(List *list, Integer32Bit index);
+Value *ListGetValueAtIndex(List *list, Integer32 index);
 
-Integer64Bit ListHash(Value *list_Value);
+Integer64 ListHash(Value *list);
 
-void ListEnumerate(Value *list_List, void (*block)(Value *value));
+void ListEnumerate(Value *list, void (*block)(Value *value));
 
 #endif

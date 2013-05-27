@@ -3,6 +3,6 @@
 
 #include "api.h"
 
-Status ExecuteCode(Byte *code, Integer32Bit count, Stack *stack);
+Status ExecuteCode(Byte *code, Integer32 count, Stack *stack, Exception *exception);
 
 #endif

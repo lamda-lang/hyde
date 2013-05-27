@@ -1,34 +1,15 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "exception.h"
 
-typedef struct {
-  Exception exception;
-  bool pending;
-} State;
-
-static State state = {
-  .pending = false
+struct Exception {
+    Error error;
 };
 
-static Char *string[] = {
-  [ExceptionOutOfMemory] = "OutOfMemory"
-};
-
-static void ExceptionAbort(Exception exception) {
-  fprintf(stderr, "Exception: %s\n", string[exception]);
-  abort();
+Exception *ExceptionCreate(void) {
+    return MemoryAlloc(sizeof(Exception), NULL);
 }
 
-void ExceptionRaise(Exception exception) {
-  if (state.pending) {
-    ExceptionAbort(exception);
-  }
-  state.exception = exception;
-  state.pending = true;
-}
-
-Exception ExceptionCatch(void) {
-  state.pending = false;
-  return state.exception;
+void ExceptionRaise(Exception *exception, Error error) {
+    if (exception != NULL) {
+        exception->error = error;
+    }
 }

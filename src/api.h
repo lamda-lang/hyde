@@ -9,13 +9,13 @@ typedef unsigned char Byte;
 
 typedef char Char;
 
-typedef uint8_t Integer8Bit;
+typedef uint8_t Integer8;
 
-typedef uint16_t Integer16Bit;
+typedef uint16_t Integer16;
 
-typedef uint32_t Integer32Bit;
+typedef uint32_t Integer32;
 
-typedef uint64_t Integer64Bit;
+typedef uint64_t Integer64;
 
 typedef uintmax_t Index;
 
@@ -23,36 +23,43 @@ typedef size_t Size;
 
 typedef uint8_t Value;
 
-typedef uint8_t Exception;
+typedef uint8_t Error;
 enum {
-  ExceptionOutOfMemory,
-  ExceptionInvalidType
+    ErrorOutOfMemory,
+    ErrorInvalidType,
+    ErrorArityMismatch,
+    ErrorFileOpen,
+    ErrorFileRead,
+    ErrorFileWrite,
+    ErrorFileClose
 };
 
 typedef bool Status;
 enum {
-  StatusSuccess = true,
-  StatusFailure = false
+    StatusSuccess = true,
+    StatusFailure = false
 };
 
 typedef uint8_t Type;
 enum {
-  TypeBoolean = 0,
-  TypeIdentifier = 1,
-  TypeInteger = 2,
-  TypeLambda = 3,
-  TypeList = 4,
-  TypeMap = 5,
-  TypeNil = 6,
-  TypeString = 7
+    TypeBoolean = 0,
+    TypeIdentifier = 1,
+    TypeInteger = 2,
+    TypeLambda = 3,
+    TypeList = 4,
+    TypeMap = 5,
+    TypeNil = 6,
+    TypeString = 7
 };
 
 typedef uint8_t Flag;
 enum {
-  FlagNone = 0,
-  FlagGarbage = 1 << 4,
-  FlagMark = 1 << 5
+    FlagNone = 0,
+    FlagGarbage = 1 << 4,
+    FlagMark = 1 << 5
 };
+
+typedef struct Exception Exception;
 
 typedef struct File File;
 
@@ -76,11 +83,11 @@ typedef struct String String;
 
 typedef struct Nil Nil;
 
-typedef bool Kernel(Integer8Bit arity, Stack *stack);
+typedef bool Kernel(Integer8 arity, Stack *stack);
 
 typedef void Dealloc(Value *dealloc);
 
-typedef Integer64Bit Hash(Value *value);
+typedef Integer64 Hash(Value *value);
 
 typedef void Enumerate(Value *value, void (*block)(Value *value));
 

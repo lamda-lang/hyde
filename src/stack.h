@@ -3,26 +3,26 @@
 
 #include "api.h"
 
-Stack *StackCreate(Integer32Bit capacity);
+Stack *StackCreate(Integer32 capacity, Exception *exception);
 
 void StackDealloc(Stack *stack);
 
-bool StackBuildNextFrame(Stack *stack, Integer32Bit count);
+Status StackBuildNextFrame(Stack *stack, Integer32 count, Exception *exception);
 
 void StackPushNextFrame(Stack *stack);
 
 Value *StackReturnFromTopFrame(Stack *stack);
 
-void StackCleanTopFrame(Stack *stack);
+void StackRemoveTopFrame(Stack *stack);
 
 void StackSetResultInTopFrame(Stack *stack, Value *result);
 
-Value *StackGetValueFromTopFrame(Stack *stack, Integer32Bit index);
+Value *StackGetValueFromTopFrame(Stack *stack, Integer32 index);
 
-void StackSetValueInTopFrame(Stack *stack, Value *value, Integer32Bit index);
+void StackSetValueInTopFrame(Stack *stack, Value *value, Integer32 index);
 
-Value *StackGetArgFromTopFrame(Stack *stack, Integer8Bit index);
+Value *StackGetArgFromTopFrame(Stack *stack, Integer8 index);
 
-void StackSetArgInNextFrame(Stack *stack, Value *value, Integer8Bit index);
+void StackSetArgInNextFrame(Stack *stack, Value *value, Integer8 index);
 
 #endif

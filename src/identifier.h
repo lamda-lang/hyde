@@ -5,10 +5,10 @@
 
 Value *IdentifierValueBridge(Identifier *id);
 
-void IdentifierDealloc(Value *id_Identifier);
+void IdentifierDealloc(Value *id);
 
-Identifier *IdentifierDecode(Byte **data);
+Identifier *IdentifierDecode(Byte **bytes, Exception *exception);
 
-Integer64Bit IdentifierHash(Value *id_Identifier);
+Integer64 IdentifierHash(Value *id);
 
 #endif

@@ -5,10 +5,10 @@
 
 Value *BooleanValueBridge(Boolean *boolean);
 
-Boolean *BooleanCreate(bool truth);
+Boolean *BooleanTrueSingleton(void);
 
-void BooleanDealloc(Value *boolean);
+Boolean *BooleanFalseSingleton(void);
 
-Integer64Bit BooleanHash(Value *boolean);
+Integer64 BooleanHash(Value *boolean);
 
 #endif

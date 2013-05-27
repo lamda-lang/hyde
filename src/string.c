@@ -1,70 +1,70 @@
 #include "string.h"
 
 struct String {
-  Value base;
-  Integer32Bit length;
-  Integer32Bit codepoint[];
+    Value base;
+    Integer32 length;
+    Integer32 codepoint[];
 };
 
-static inline String *Create(Integer32Bit length) {
-  Size size = sizeof(struct String) + sizeof(Integer32Bit) * length;
-  String *string = MemoryAlloc(size);
-  if (string == NULL) {
-    goto error;
-  }
-  string->base = ValueInit(TypeString, FlagNone);
-  string->length = length;
-  return string;
+static inline String *Create(Integer32 length, Exception *exception) {
+    Size size = sizeof(struct String) + sizeof(Integer32) * length;
+    String *string = MemoryAlloc(size, exception);
+    if (string == NULL) {
+        goto returnError;
+    }
+    string->base = TypeString;
+    string->length = length;
+    return string;
 
-error:
-  return NULL;
+returnError:
+    return NULL;
 }
 
 Value *StringValueBridge(String *string) {
-  return (Value *)string;
+    return (Value *)string;
 }
 
 void StringDealloc(Value *string) {
-  MemoryDealloc(string);
+    MemoryDealloc(string);
 }
 
-String *StringDecode(Byte **data) {
-  Integer32Bit length = DecodeVBRInteger32Bit(data);
-  String *string = Create(length);
-  if (string == NULL) {
-    goto error;
-  }
-  for (Integer32Bit index = 0; index < length; index += 1) {
-    string->codepoint[index] = DecodeVBRInteger32Bit(data);
-  }
-  return string;
+String *StringDecode(Byte **bytes, Exception *exception) {
+    Integer32 length = DecodeInteger32VLE(bytes);
+    String *string = Create(length, exception);
+    if (string == NULL) {
+        goto returnError;
+    }
+    for (Integer32 index = 0; index < length; index += 1) {
+        string->codepoint[index] = DecodeInteger32VLE(bytes);
+    }
+    return string;
 
-error:
-  return NULL;
+returnError:
+    return NULL;
 }
 
-Integer64Bit StringHash(Value *string_String) {
-  String *string = ValueStringBridge(string_String);
-  return string->length;
+Integer64 StringHash(Value *string) {
+    String *stringBridge = ValueStringBridge(string);
+    return stringBridge->length;
 }
 
-String *StringConcatenate(String *string, String *other) {
-  Integer32Bit stringLength = string->length;
-  Integer32Bit otherLength = other->length;
-  String *result = Create(stringLength + otherLength);
-  if (result == NULL) {
-    goto error;
-  }
-  MemoryCopy(string->codepoint, result->codepoint, sizeof(Integer32Bit) * stringLength);
-  MemoryCopy(other->codepoint, result->codepoint + stringLength, sizeof(Integer32Bit) * otherLength);
-  return result;
+String *StringConcatenate(String *string, String *other, Exception *exception) {
+    Integer32 stringLength = string->length;
+    Integer32 otherLength = other->length;
+    String *result = Create(stringLength + otherLength, exception);
+    if (result == NULL) {
+        goto returnError;
+    }
+    MemoryCopy(string->codepoint, result->codepoint, sizeof(Integer32) * stringLength);
+    MemoryCopy(other->codepoint, result->codepoint + stringLength, sizeof(Integer32) * otherLength);
+    return result;
 
-error:
-  return NULL;
+returnError:
+    return NULL;
 }
 
-void StringEnumerateCodepoints(String *string, void (*block)(Integer32Bit codepoint)) {
-  for (Integer32Bit index = 0; index < string->length; index += 1) {
-    block(string->codepoint[index]);
-  }
+void StringEnumerateCodepoints(String *string, void (*block)(Integer32 codepoint)) {
+    for (Integer32 index = 0; index < string->length; index += 1) {
+        block(string->codepoint[index]);
+    }
 }

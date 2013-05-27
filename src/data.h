@@ -3,11 +3,11 @@
 
 #include "api.h"
 
-Data *DataCreate(void);
+Data *DataCreate(Exception *exception);
 
 void DataDealloc(Data *data);
 
-Status DataAppendBytes(Data *data, Byte *bytes, Size size);
+Status DataAppendBytes(Data *data, Byte *bytes, Size size, Exception *exception);
 
 Byte *DataBytes(Data *data);
 

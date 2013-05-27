@@ -5,14 +5,14 @@
 
 Value *StringValueBridge(String *string);
 
-void StringDealloc(Value *string_String);
+void StringDealloc(Value *string);
 
-String *StringDecode(Byte **data);
+String *StringDecode(Byte **bytes, Exception *exception);
 
-Integer64Bit StringHash(Value *string_String);
+Integer64 StringHash(Value *string);
 
-String *StringConcatenate(String *string, String *other);
+String *StringConcatenate(String *string, String *other, Exception *exception);
 
-void StringEnumerateCodepoints(String *string, void (*block)(Integer32Bit codepoint));
+void StringEnumerateCodepoints(String *string, void (*block)(Integer32 codepoint));
 
 #endif

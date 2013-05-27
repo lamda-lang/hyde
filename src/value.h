@@ -3,15 +3,17 @@
 
 #include "api.h"
 
-Value ValueInit(Type type);
-
 Type ValueType(Value *value);
 
 void ValueSetFlag(Value *value, Flag mask, bool truth);
 
 bool ValueFlagSet(Value *value, Flag mask);
 
-bool ValueBaseFlagSet(Value value, Flag mask);
+void ValueEnumerate(Value *value, void (*block)(Value *value));
+
+void ValueDealloc(Value *value);
+
+Integer64 ValueHash(Value *value);
 
 Boolean *ValueBooleanBridge(Value *value);
 
@@ -28,11 +30,5 @@ Map *ValueMapBridge(Value *value);
 Nil *ValueNilBridge(Value *value);
 
 String *ValueStringBridge(Value *value);
-
-void ValueEnumerate(Value *value, void (*block)(Value *value));
-
-void ValueDealloc(Value *value);
-
-Integer64Bit ValueHash(Value *value);
 
 #endif

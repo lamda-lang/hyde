@@ -3,12 +3,10 @@
 
 #include "api.h"
 
-Value *NilValueBridge(Nil *nil);
+Nil *NilSingleton(void);
 
-Nil *NilCreate(void);
+Value *NilValueBridge(void);
 
-void NilDealloc(Value *nil_Nil);
-
-Integer64Bit NilHash(Value *nil_Nil);
+Integer64 NilHash(Value *nilValue);
 
 #endif

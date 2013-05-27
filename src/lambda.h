@@ -5,18 +5,18 @@
 
 Value *LambdaValueBridge(Lambda *lambda);
 
-Lambda *LambdaDecode(Byte **code);
+Lambda *LambdaDecode(Byte **bytes, Exception *exception);
 
-void LambdaDealloc(Value *lambda_Lambda);
+void LambdaDealloc(Value *lambda);
 
-void LambdaSetContextValueAtIndex(Lambda *lambda, Value *value, Integer32Bit index);
+void LambdaSetContextValueAtIndex(Lambda *lambda, Value *value, Integer32 index);
 
-Integer64Bit LambdaHash(Value *lambda_Lambda);
+Integer64 LambdaHash(Value *lambda);
 
-Integer32Bit LambdaRegisterCount(Lambda *lambda);
+Integer32 LambdaRegisterCount(Lambda *lambda);
 
-Status LambdaExecute(Lambda *lambda, Stack *stack, Integer8Bit arity);
+Status LambdaExecute(Lambda *lambda, Stack *stack, Integer8 arity, Exception *exception);
 
-void LambdaEnumerate(Value *lambda_Lambda, void (*block)(Value *value));
+void LambdaEnumerate(Value *lambda, void (*block)(Value *value));
 
 #endif

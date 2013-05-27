@@ -1,84 +1,83 @@
 #include "lambda.h"
 
 struct Lambda {
-  Value base;
-  Integer8Bit arity;
-  Integer32Bit registerCount;
-  Integer32Bit instructionCount;
-  Integer32Bit contextLength;
-  Integer32Bit codeSize;
-  Byte *code;
-  Value *context[];
+    Value base;
+    Integer8 arity;
+    Integer32 registerCount;
+    Integer32 instructionCount;
+    Integer32 contextLength;
+    Byte *code;
+    Value *context[];
 };
 
-Value *LambdaValueBridge(Lambda *lambda) {
-  return (Value *)lambda;
-}
+Lambda *LambdaDecode(Byte **bytes, Exception *exception) {
+    Integer32 registerCount = DecodeInteger32VLE(bytes);
+    Integer32 instructionCount = DecodeInteger32VLE(bytes);
+    Integer32 contextLength = DecodeInteger32VLE(bytes);
+    Integer32 codeSize = DecodeInteger32VLE(bytes);
+    Integer8 arity = DecodeInteger8FLE(bytes);
+    Size size = sizeof(Lambda) + sizeof(Value) * contextLength;
+    Lambda *lambda = MemoryAlloc(size, exception);
+    if (lambda == NULL) {
+        goto returnError;
+    }
+    Byte *code = MemoryAlloc(codeSize, exception);
+    if (code == NULL) {
+        goto deallocLambda;
+    }
+    lambda->base = TypeLambda;
+    lambda->arity = arity;
+    lambda->registerCount = registerCount;
+    lambda->instructionCount = instructionCount;
+    lambda->contextLength = contextLength;
+    lambda->code = code;
+    MemoryCopy(*bytes, lambda->code, codeSize);
+    *code += codeSize;
+    return lambda;
 
-Lambda *LambdaDecode(Byte **code) {
-  Integer32Bit registerCount = DecodeVBRInteger32Bit(code);
-  Integer32Bit instructionCount = DecodeVBRInteger32Bit(code);
-  Integer32Bit contextLength = DecodeVBRInteger32Bit(code);
-  Integer32Bit codeSize = DecodeVBRInteger32Bit(code);
-  Integer8Bit arity = DecodeInteger8Bit(code);
-  Size size = sizeof(struct Lambda) + sizeof(Value) * contextLength;
-  Lambda *lambda = MemoryAlloc(size);
-  if (lambda == NULL) {
-    goto error;
-  }
-  Byte *buffer = MemoryAlloc(codeSize);
-  if (buffer == NULL) {
-    goto errorData;
-  }
-  lambda->base = ValueInit(TypeLambda, FlagNone);
-  lambda->arity = arity;
-  lambda->registerCount = registerCount;
-  lambda->instructionCount = instructionCount;
-  lambda->contextLength = contextLength;
-  lambda->codeSize = codeSize;
-  lambda->code = buffer;
-  MemoryCopy(*code, buffer, codeSize);
-  *code += codeSize;
-  return lambda;
-
-errorData:
+deallocLambda:
   MemoryDealloc(lambda);
-error:
+returnError:
   return NULL;
 }
 
-void LambdaDealloc(Value *lambda_Lambda) {
-  Lambda *lambda = ValueLambdaBridge(lambda_Lambda);
-  MemoryDealloc(lambda->code);
-  MemoryDealloc(lambda);
+Value *LambdaValueBridge(Lambda *lambda) {
+    return (Value *)lambda;
 }
 
-void LambdaSetContextValueAtIndex(Lambda *lambda, Value *value, Integer32Bit index) {
-  lambda->context[index] = value;
+void LambdaDealloc(Value *lambda) {
+    Lambda *lambdaBridge = ValueLambdaBridge(lambda);
+    MemoryDealloc(lambdaBridge->code);
+    MemoryDealloc(lambdaBridge);
 }
 
-Integer64Bit LambdaHash(Value *lambda_Lambda) {
-  Lambda *lambda = ValueLambdaBridge(lambda_Lambda);
-  return lambda->registerCount;
+void LambdaSetContextValueAtIndex(Lambda *lambda, Value *value, Integer32 index) {
+    lambda->context[index] = value;
 }
 
-Integer32Bit LambdaRegisterCount(Lambda *lambda) {
-  return lambda->registerCount;
+Integer64 LambdaHash(Value *lambda) {
+    Lambda *lambdaBridge = ValueLambdaBridge(lambda);
+    return lambdaBridge->registerCount;
 }
 
-Status LambdaExecute(Lambda *lambda, Stack *stack, Integer8Bit arity) {
-  if (arity != lambda->arity) {
-    goto error;
-  }
-  return ExecuteCode(lambda->code, lambda->instructionCount, stack);
-
-error:
-  return StatusFailure;
+Integer32 LambdaRegisterCount(Lambda *lambda) {
+    return lambda->registerCount;
 }
 
-void LambdaEnumerate(Value *lambda_Lambda, void (*block)(Value *value)) {
-  Lambda *lambda = ValueLambdaBridge(lambda_Lambda);
-  for (Integer32Bit index = 0; index < lambda->contextLength; index += 1) {
-    block(lambda->context[index]);
-  }
+Status LambdaExecute(Lambda *lambda, Stack *stack, Integer8 arity, Exception *exception) {
+    if (arity != lambda->arity) {
+	ExceptionRaise(exception, ErrorArityMismatch);
+        goto returnError;
+    }
+    return ExecuteCode(lambda->code, lambda->instructionCount, stack, exception);
+
+returnError:
+    return StatusFailure;
+}
+
+void LambdaEnumerate(Value *lambda, void (*block)(Value *value)) {
+    Lambda *lambdaBridge = ValueLambdaBridge(lambda);
+    for (Integer32 index = 0; index < lambdaBridge->contextLength; index += 1) {
+        block(lambdaBridge->context[index]);
+    }
 }

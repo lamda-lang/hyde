@@ -1,49 +1,49 @@
 #include "identifier.h"
 
 struct Identifier {
-  Value base;
-  Integer8Bit length;
-  Integer8Bit codepoint[];
+    Value base;
+    Integer8 length;
+    Integer8 codepoint[];
 };
 
-static inline Identifier *Create(Integer8Bit length) {
-  Size size = sizeof(struct Identifier) + sizeof(Integer8Bit) * length;
-  Identifier *id = MemoryAlloc(size);
-  if (id == NULL) {
-    goto error;
-  }
-  id->base = ValueInit(TypeIdentifier, FlagNone);
-  id->length = length;
-  return id;
+static inline Identifier *Create(Integer8 length, Exception *exception) {
+    Size size = sizeof(Identifier) + sizeof(Integer8) * length;
+    Identifier *id = MemoryAlloc(size, exception);
+    if (id == NULL) {
+        goto returnError;
+    }
+    id->base = TypeIdentifier;
+    id->length = length;
+    return id;
 
-error:
-  return NULL;
+returnError:
+    return NULL;
 }
 
 Value *IdentifierValueBridge(Identifier *id) {
-  return (Value *)id;
+    return (Value *)id;
 }
 
 void IdentifierDealloc(Value *id) {
-  MemoryDealloc(id);
+    MemoryDealloc(id);
 }
 
-Identifier *IdentifierDecode(Byte **data) {
-  Integer8Bit length = DecodeInteger8Bit(data);
-  Identifier *id = Create(length);
-  if (id == NULL) {
-    goto error;
-  }
-  for (Integer8Bit index = 0; index < length; index += 1) {
-    id->codepoint[index] = DecodeInteger8Bit(data);
-  }
-  return id;
+Identifier *IdentifierDecode(Byte **bytes, Exception *exception) {
+    Integer8 length = DecodeInteger8FLE(bytes);
+    Identifier *id = Create(length, exception);
+    if (id == NULL) {
+        goto returnError;
+    }
+    for (Integer8 index = 0; index < length; index += 1) {
+        id->codepoint[index] = DecodeInteger8FLE(bytes);
+    }
+    return id;
 
-error:
-  return NULL;
+returnError:
+    return NULL;
 }
 
-Integer64Bit IdentifierHash(Value *id_Identifier) {
-  Identifier *id = ValueIdentifierBridge(id_Identifier);
-  return id->length;
+Integer64 IdentifierHash(Value *id) {
+    Identifier *idBridge = ValueIdentifierBridge(id);
+    return idBridge->length;
 }

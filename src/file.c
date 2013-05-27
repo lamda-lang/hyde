@@ -3,72 +3,75 @@
 #include "file.h"
 
 struct File {
-  int handle;
-  Byte buffer[256];
+    int handle;
+    Byte buffer[256];
 };
 
-File *FileOpen(Char *path) {
-  File *file = MemoryAlloc(sizeof(File));
-  if (file == NULL) {
-    goto returnError;
-  }
-  int handle = open(path, O_RDWR);
-  if (handle == -1) {
-    goto deallocFile;
-  }
-  file->handle = handle;
-  return file;
+File *FileOpen(Char *path, Exception *exception) {
+    File *file = MemoryAlloc(sizeof(File), exception);
+    if (file == NULL) {
+        goto returnError;
+    }
+    int handle = open(path, O_RDWR);
+    if (handle == -1) {
+	ExceptionRaise(exception, ErrorFileOpen);
+        goto deallocFile;
+    }
+    file->handle = handle;
+    return file;
 
 deallocFile:
-  MemoryDealloc(file);
+    MemoryDealloc(file);
 returnError:
-  return NULL;
+    return NULL;
 }
 
-Status FileClose(File *file) {
-  int status = close(file->handle);
-  if (status == -1) {
-    goto returnError;
-  }
-  MemoryDealloc(file);
-  return StatusSuccess;
+Status FileClose(File *file, Exception *exception) {
+    if (close(file->handle) == -1) {
+	ExceptionRaise(exception, ErrorFileClose);
+        goto returnError;
+    }
+    MemoryDealloc(file);
+    return StatusSuccess;
 
 returnError:
-  return StatusFailure;
+    return StatusFailure;
 }
 
-Data *FileRead(File *file) {
-  Data *data = DataCreate();
-  if (data == NULL) {
-    goto returnError;
-  }
-  ssize_t consumed = 0;
-  do {
-    consumed = read(file->handle, file->buffer, sizeof(file->buffer));
-    if (consumed == -1) {
-      goto deallocData;
+Data *FileRead(File *file, Exception *exception) {
+    Data *data = DataCreate(exception);
+    if (data == NULL) {
+        goto returnError;
     }
-    if (DataAppend(data, file->buffer, (Size)consumed) == StatusFailure) {
-      goto deallocData;
-    }
-  } while (consumed > 0);
-  return data;
+    ssize_t consumed = 0;
+    do {
+        consumed = read(file->handle, file->buffer, sizeof(file->buffer));
+        if (consumed == -1) {
+	    ExceptionRaise(exception, ErrorFileRead);
+            goto deallocData;
+        }
+        if (DataAppendBytes(data, file->buffer, (Size)consumed, exception) == StatusFailure) {
+            goto deallocData;
+        }
+    } while (consumed > 0);
+    return data;
 
 deallocData:
-  DataDealloc(data);
+    DataDealloc(data);
 returnError:
-  return NULL;
+    return NULL;
 }
 
-Status FileWrite(File *file, Data *data) {
-  Byte *bytes = DataBytes(data);
-  Size size = DataSize(data);
-  ssize_t written = write(file->handle, bytes, size);
-  if (written == -1 || (Size)written != size) {
-    goto returnError;
-  }
-  return StatusSuccess;
+Status FileWrite(File *file, Data *data, Exception *exception) {
+    Byte *bytes = DataBytes(data);
+    Size size = DataSize(data);
+    ssize_t written = write(file->handle, bytes, size);
+    if (written == -1 || (Size)written != size) {
+	ExceptionRaise(exception, ErrorFileWrite);
+        goto returnError;
+    }
+    return StatusSuccess;
 
 returnError:
-  return StatusFailure;
+    return StatusFailure;
 }

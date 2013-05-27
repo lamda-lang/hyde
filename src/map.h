@@ -5,14 +5,14 @@
 
 Value *MapValueBridge(Map *map);
 
-Map *MapDecode(Byte **data);
+Map *MapDecode(Byte **data, Exception *exception);
 
-void MapDealloc(Value *map_Map);
+void MapDealloc(Value *map);
 
 void MapSetValueForKey(Map *map, Value *value, Value *key);
 
-Integer64Bit MapHash(Value *map_Map);
+Integer64 MapHash(Value *map);
 
-void MapEnumerate(Value *map_Value, void (*block)(Value *value));
+void MapEnumerate(Value *map, void (*block)(Value *value));
 
 #endif

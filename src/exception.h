@@ -3,8 +3,8 @@
 
 #include "api.h"
 
-void ExceptionRaise(Exception exception);
+Exception *ExceptionCreate(void);
 
-Exception ExceptionCatch(void);
+void ExceptionRaise(Exception *exception, Error error);
 
 #endif

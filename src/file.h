@@ -3,12 +3,12 @@
 
 #include "api.h"
 
-File *FileOpen(Char *path);
+File *FileOpen(Char *path, Exception *exception);
 
-Status FileClose(File *file);
+Status FileClose(File *file, Exception *exception);
 
-Data *FileRead(File *file);
+Data *FileRead(File *file, Exception *exception);
 
-Status FileWrite(File *file, Data *data);
+Status FileWrite(File *file, Data *data, Exception *exception);
 
 #endif

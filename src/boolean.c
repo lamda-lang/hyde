@@ -1,34 +1,30 @@
 #include "boolean.h"
 
 struct Boolean {
-  Value base;
-  bool truth;
+    Value base;
+};
+
+static Boolean trueSingleton = {
+    .base = TypeBoolean
+};
+
+static Boolean falseSingleton = {
+    .base = TypeBoolean
 };
 
 Value *BooleanValueBridge(Boolean *boolean) {
-  return (Value *)boolean;
+    return (Value *)boolean;
 }
 
-Boolean *BooleanCreate(bool truth) {
-  Size size = sizeof(Boolean);
-  Boolean *boolean = MemoryAlloc(size);
-  if (boolean == NULL) {
-    ExceptionRaise(ExceptionOutOfMemory);
-    goto returnError;
-  }
-  boolean->base = ValueInit(TypeBoolean);
-  boolean->truth = truth;
-  return boolean;
-
-returnError:
-  return NULL;
+Boolean *BooleanTrueSingleton(void) {
+    return &trueSingleton;
 }
 
-void BooleanDealloc(Value *boolean) {
-  MemoryDealloc(boolean);
+Boolean *BooleanFalseSingleton(void) {
+    return &falseSingleton;
 }
 
-Integer64Bit BooleanHash(Value *boolean) {
-  Boolean *booleanBridge = ValueBooleanBridge(boolean);
-  return booleanBridge->truth ? 1 : 0;
+Integer64 BooleanHash(Value *boolean) {
+    Boolean *booleanBridge = ValueBooleanBridge(boolean);
+    return booleanBridge == &trueSingleton ? 1 : 0;
 }

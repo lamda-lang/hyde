@@ -1,65 +1,70 @@
 #include "map.h"
 
-struct Element {
-  Value *key;
-  Value *value;
-};
+typedef struct {
+    Value *key;
+    Value *value;
+} Element;
 
 struct Map {
-  Value base;
-  Integer32Bit length;
-  struct Element element[];
+    Value base;
+    Integer32 length;
+    Element element[];
 };
 
-static inline Integer32Bit MapIndex(Map *map, Value *value, Integer32Bit offset) {
-  return (ValueHash(value) + offset) % map->length;
+static inline Integer32 MapIndex(Map *map, Value *value, Integer32 offset) {
+    return (ValueHash(value) + offset) % map->length;
+}
+
+static inline Map *Create(Integer32 count, Exception *exception) {
+    Integer32 length = count * 2;
+    Size size = sizeof(Map) + sizeof(Element) * length;
+    Map *map = MemoryAlloc(size, exception);
+    if (map == NULL) {
+        goto returnError;
+    }
+    map->base = TypeMap;
+    map->length = length;
+    for (Integer32 index = 0; index < length; index += 1) {
+        map->element[index].key = NULL;
+        map->element[index].value = NULL;
+    }
+    return map;
+
+returnError:
+    return NULL;
 }
 
 Value *MapValueBridge(Map *map) {
-  return (Value *)map;
+    return (Value *)map;
 }
 
-Map *MapDecode(Byte **data) {
-  Integer32Bit length = DecodeVBRInteger32Bit(data) * 2;
-  Size size = sizeof(struct Map) + sizeof(struct Element) * length;
-  Map *map = MemoryAlloc(size);
-  if (map == NULL) {
-    goto error;
-  }
-  map->base = ValueInit(TypeMap, FlagNone);
-  map->length = length;
-  for (Integer32Bit index = 0; index < length; index += 1) {
-    map->element[index].key = NULL;
-    map->element[index].value = NULL;
-  }
-  return map;
-
-error:
-  return NULL;
+Map *MapDecode(Byte **bytes, Exception *exception) {
+    Integer32 count = DecodeInteger32VLE(bytes);
+    return Create(count, exception);
 }
 
 void MapDealloc(Value *map) {
-  MemoryDealloc(map);
+    MemoryDealloc(map);
 }
 
 void MapSetValueForKey(Map *map, Value *value, Value *key) {
-  Integer32Bit index = MapIndex(map, key, 0);
-  while (map->element[index].key != NULL) {
-    index = MapIndex(map, key, index);
-  }
-  map->element[index].key = key;
-  map->element[index].value = value;
+    Integer32 index = MapIndex(map, key, 0);
+    while (map->element[index].key != NULL) {
+        index = MapIndex(map, key, index);
+    }
+    map->element[index].key = key;
+    map->element[index].value = value;
 }
 
-Integer64Bit MapHash(Value *map_Map) {
-  Map *map = ValueMapBridge(map_Map);
-  return map->length;
+Integer64 MapHash(Value *map) {
+    Map *mapBridge = ValueMapBridge(map);
+    return mapBridge->length;
 }
 
-void MapEnumerate(Value *map_Map, void (*block)(Value *value)) {
-  Map *map = ValueMapBridge(map_Map);
-  for (Integer32Bit index = 0; index < map->length; index += 1) {
-    block(map->element[index].key);
-    block(map->element[index].value);
-  }
+void MapEnumerate(Value *map, void (*block)(Value *value)) {
+    Map *mapBridge = ValueMapBridge(map);
+    for (Integer32 index = 0; index < mapBridge->length; index += 1) {
+        block(mapBridge->element[index].key);
+        block(mapBridge->element[index].value);
+    }
 }
