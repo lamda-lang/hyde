@@ -1,7 +1,7 @@
 #include "kernel.h"
 
 Status KernelIntegerSum(Stack *stack, Exception *exception) {
-    Value *arg[] = {StackGetArgFromTopFrame(stack, 0), StackGetArgFromTopFrame(stack, 1)};
+    Value **arg = StackGetArgsFromTopFrame(stack);
     Integer *integer = ValueIntegerBridge(arg[0]);
     Integer *other = ValueIntegerBridge(arg[1]);
     Integer *new = IntegerSum(integer, other, exception);
@@ -17,7 +17,7 @@ returnError:
 }
 
 Status KernelStringConcatenate(Stack *stack, Exception *exception) {
-    Value *arg[] = {StackGetArgFromTopFrame(stack, 0), StackGetArgFromTopFrame(stack, 1)};
+    Value **arg = StackGetArgsFromTopFrame(stack);
     String *string = ValueStringBridge(arg[0]);
     String *other = ValueStringBridge(arg[1]);
     String *new = StringConcatenate(string, other, exception);

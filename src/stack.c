@@ -117,12 +117,13 @@ Value *StackGetValueFromTopFrame(Stack *stack, Integer32 index) {
     return stack->root[stack->top.index + VALUE_OFFSET + index].value;
 }
 
-void StackSetValueInTopFrame(Stack *stack, Value *value, Integer32 index) {
+void StackSetValueInTopFrame(Stack *stack, Value *value, Integer32 index, bool transient) {
+    ValueSetFlag(value, FlagGarbage, true);
     stack->root[stack->top.index + VALUE_OFFSET + index].value = value;
 }
 
-Value *StackGetArgFromTopFrame(Stack *stack, Integer8 index) {
-    return stack->root[stack->top.index + ARG_OFFSET + index].value;
+Value **StackGetArgsFromTopFrame(Stack *stack) {
+    return &stack->root[stack->top.index + ARG_OFFSET].value;
 }
 
 void StackSetArgInNextFrame(Stack *stack, Value *value, Integer8 index) {

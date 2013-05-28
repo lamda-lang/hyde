@@ -7,22 +7,22 @@ static inline Value *GetValue(Byte **code, Stack *stack) {
     return StackGetValueFromTopFrame(stack, index);
 }
 
-static inline void SetValue(Byte **code, Stack *stack, Value *value) {
+static inline void SetValue(Byte **code, Stack *stack, Value *value, bool transient) {
     Integer32 index = DecodeInteger32VLE(code);
-    StackSetValueInTopFrame(stack, value, index);
+    StackSetValueInTopFrame(stack, value, index, transient);
 }
 
 static inline Status CreateBooleanTrue(Byte **code, Stack *stack, Exception *exception) {
     Boolean *boolean = BooleanTrueSingleton();
     Value *booleanValue = BooleanValueBridge(boolean);
-    SetValue(code, stack, booleanValue);
+    SetValue(code, stack, booleanValue, false);
     return StatusSuccess;
 }
 
 static inline Status CreateBooleanFalse(Byte **code, Stack *stack, Exception *exception) {
     Boolean *boolean = BooleanFalseSingleton();
     Value *booleanValue = BooleanValueBridge(boolean);
-    SetValue(code, stack, booleanValue);
+    SetValue(code, stack, booleanValue, false);
     return StatusSuccess;
 }
 
@@ -32,7 +32,7 @@ static inline Status CreateIdentifier(Byte **code, Stack *stack, Exception *exce
         goto returnError;
     }
     Value *idValue = IdentifierValueBridge(id);
-    SetValue(code, stack, idValue);
+    SetValue(code, stack, idValue, true);
     return StatusSuccess;
 
 returnError:
@@ -46,7 +46,7 @@ static inline Status CreateInteger(Byte **code, Stack *stack, Exception *excepti
         goto returnError;
     }
     Value *integerValue = IntegerValueBridge(integer);
-    SetValue(code, stack, integerValue);
+    SetValue(code, stack, integerValue, true);
     return StatusSuccess;
 
 returnError:
@@ -59,7 +59,7 @@ static inline Status CreateLambda(Byte **code, Stack *stack, Exception *exceptio
         goto returnError;
     }
     Value *lambdaValue = LambdaValueBridge(lambda);
-    SetValue(code, stack, lambdaValue);
+    SetValue(code, stack, lambdaValue, true);
     return StatusSuccess;
 
 returnError:
@@ -72,7 +72,7 @@ static inline Status CreateList(Byte **code, Stack *stack, Exception *exception)
         goto returnError;
     }
     Value *listValue = ListValueBridge(list);
-    SetValue(code, stack, listValue);
+    SetValue(code, stack, listValue, true);
     return StatusSuccess;
 
 returnError:
@@ -85,7 +85,7 @@ static inline Status CreateMap(Byte **code, Stack *stack, Exception *exception) 
         goto returnError;
     }
     Value *mapValue = MapValueBridge(map);
-    SetValue(code, stack, mapValue);
+    SetValue(code, stack, mapValue, true);
     return StatusSuccess;
 
 returnError:
@@ -94,7 +94,7 @@ returnError:
 
 static inline Status CreateNil(Byte **code, Stack *stack, Exception *exception) {
     Value *nilValue = NilValueBridge();
-    SetValue(code, stack, nilValue);
+    SetValue(code, stack, nilValue, false);
     return StatusSuccess;
 }
 
@@ -104,7 +104,7 @@ static inline Status CreateString(Byte **code, Stack *stack, Exception *exceptio
         goto returnError;
     }
     Value *stringValue = StringValueBridge(string);
-    SetValue(code, stack, stringValue);
+    SetValue(code, stack, stringValue, true);
     return StatusSuccess;
 
 returnError:
@@ -132,7 +132,7 @@ static inline Status ApplyArg(Byte **code, Stack *stack, Exception *exception) {
         goto cleanupStack;
     }
     Value *result = StackReturnFromTopFrame(stack);
-    SetValue(code, stack, result);
+    SetValue(code, stack, result, false);
     return StatusSuccess;
 
 cleanupStack:

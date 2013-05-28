@@ -19,9 +19,9 @@ void StackSetResultInTopFrame(Stack *stack, Value *result);
 
 Value *StackGetValueFromTopFrame(Stack *stack, Integer32 index);
 
-void StackSetValueInTopFrame(Stack *stack, Value *value, Integer32 index);
+void StackSetValueInTopFrame(Stack *stack, Value *value, Integer32 index, bool transient);
 
-Value *StackGetArgFromTopFrame(Stack *stack, Integer8 index);
+Value **StackGetArgsFromTopFrame(Stack *stack);
 
 void StackSetArgInNextFrame(Stack *stack, Value *value, Integer8 index);
 
