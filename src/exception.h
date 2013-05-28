@@ -5,6 +5,12 @@
 
 Exception *ExceptionCreate(void);
 
+Status ExceptionStatus(Exception *exception);
+
+Char *ExceptionDescription(Exception *exception);
+
+void ExceptionDealloc(Exception *exception);
+
 void ExceptionRaise(Exception *exception, Error error);
 
 #endif

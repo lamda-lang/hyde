@@ -11,8 +11,10 @@ String *StringDecode(Byte **bytes, Exception *exception);
 
 Integer64 StringHash(Value *stringValue);
 
-String *StringConcatenate(String *string, String *other, Exception *exception);
+Integer32 StringLength(String *string);
 
-void StringEnumerateCodepoints(String *string, void (*block)(Integer32 codepoint));
+Integer32 *StringCodepoints(String *string);
+
+String *StringConcatenate(String *string, String *other, Exception *exception);
 
 #endif

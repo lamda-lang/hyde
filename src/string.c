@@ -63,8 +63,10 @@ returnError:
     return NULL;
 }
 
-void StringEnumerateCodepoints(String *string, void (*block)(Integer32 codepoint)) {
-    for (Integer32 index = 0; index < string->length; index += 1) {
-        block(string->codepoint[index]);
-    }
+Integer32 StringLength(String *string) {
+    return string->length;
+}
+
+Integer32 *StringCodepoints(String *string) {
+    return string->codepoint;
 }
