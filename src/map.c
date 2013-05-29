@@ -15,10 +15,10 @@ static inline Integer32 MapIndex(Map *map, Value *value, Integer32 offset) {
     return (ValueHash(value) + offset) % map->length;
 }
 
-static inline Map *Create(Integer32 count, Exception *exception) {
+static inline Map *Create(Integer32 count, Error *error) {
     Integer32 length = count * 2;
     Size size = sizeof(Map) + sizeof(Element) * length;
-    Map *map = MemoryAlloc(size, exception);
+    Map *map = MemoryAlloc(size, error);
     if (map == NULL) {
         goto returnError;
     }
@@ -38,9 +38,9 @@ Value *MapValueBridge(Map *map) {
     return (Value *)map;
 }
 
-Map *MapDecode(Byte **bytes, Exception *exception) {
+Map *MapDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32VLE(bytes);
-    return Create(count, exception);
+    return Create(count, error);
 }
 
 void MapDealloc(Value *mapValue) {

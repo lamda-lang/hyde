@@ -59,8 +59,6 @@ enum {
     FlagMark = 1 << 5
 };
 
-typedef struct Exception Exception;
-
 typedef struct File File;
 
 typedef struct Stack Stack;
@@ -94,7 +92,6 @@ typedef void Enumerate(Value *value, void (*block)(Value *value));
 #include "boolean.h"
 #include "data.h"
 #include "decode.h"
-#include "exception.h"
 #include "execute.h"
 #include "file.h"
 #include "identifier.h"

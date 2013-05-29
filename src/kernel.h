@@ -3,8 +3,8 @@
 
 #include "api.h"
 
-Status KernelIntegerSum(Stack *stack, Exception *exception);
+Status KernelIntegerSum(Stack *stack, Error *error);
 
-Status KernelStringConcatenate(Stack *stack, Exception *exception);
+Status KernelStringConcatenate(Stack *stack, Error *error);
 
 #endif

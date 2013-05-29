@@ -6,9 +6,9 @@ struct List {
     Value *element[];
 };
 
-static inline List *Create(Integer32 length, Exception *exception) {
+static inline List *Create(Integer32 length, Error *error) {
     Size size = sizeof(List) + sizeof(Value) * length;
-    List *list = MemoryAlloc(size, exception);
+    List *list = MemoryAlloc(size, error);
     if (list == NULL) {
         goto returnError;
     }
@@ -24,9 +24,9 @@ Value *ListValueBridge(List *list) {
     return (Value *)list;
 }
 
-List *ListDecode(Byte **bytes, Exception *exception) {
+List *ListDecode(Byte **bytes, Error *error) {
     Integer32 length = DecodeInteger32VLE(bytes);
-    return Create(length, exception);
+    return Create(length, error);
 }
 
 void ListDealloc(Value *listValue) {

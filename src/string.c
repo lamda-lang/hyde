@@ -6,9 +6,9 @@ struct String {
     Integer32 codepoint[];
 };
 
-static inline String *Create(Integer32 length, Exception *exception) {
+static inline String *Create(Integer32 length, Error *error) {
     Size size = sizeof(struct String) + sizeof(Integer32) * length;
-    String *string = MemoryAlloc(size, exception);
+    String *string = MemoryAlloc(size, error);
     if (string == NULL) {
         goto returnError;
     }
@@ -28,9 +28,9 @@ void StringDealloc(Value *stringValue) {
     MemoryDealloc(stringValue);
 }
 
-String *StringDecode(Byte **bytes, Exception *exception) {
+String *StringDecode(Byte **bytes, Error *error) {
     Integer32 length = DecodeInteger32VLE(bytes);
-    String *string = Create(length, exception);
+    String *string = Create(length, error);
     if (string == NULL) {
         goto returnError;
     }
@@ -48,10 +48,10 @@ Integer64 StringHash(Value *stringValue) {
     return string->length;
 }
 
-String *StringConcatenate(String *string, String *other, Exception *exception) {
+String *StringConcatenate(String *string, String *other, Error *error) {
     Integer32 stringLength = string->length;
     Integer32 otherLength = other->length;
-    String *result = Create(stringLength + otherLength, exception);
+    String *result = Create(stringLength + otherLength, error);
     if (result == NULL) {
         goto returnError;
     }

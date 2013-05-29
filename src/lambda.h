@@ -5,7 +5,7 @@
 
 Value *LambdaValueBridge(Lambda *lambda);
 
-Lambda *LambdaDecode(Byte **bytes, Exception *exception);
+Lambda *LambdaDecode(Byte **bytes, Error *error);
 
 void LambdaDealloc(Value *lambdaValue);
 
@@ -15,7 +15,7 @@ Integer64 LambdaHash(Value *lambdaValue);
 
 Integer32 LambdaRegisterCount(Lambda *lambda);
 
-Status LambdaExecute(Lambda *lambda, Stack *stack, Integer8 arity, Exception *exception);
+Status LambdaExecute(Lambda *lambda, Stack *stack, Integer8 arity, Error *error);
 
 void LambdaEnumerate(Value *lambdaValue, void (*block)(Value *value));
 

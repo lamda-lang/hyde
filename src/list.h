@@ -5,7 +5,7 @@
 
 Value *ListValueBridge(List *list);
 
-List *ListDecode(Byte **bytes, Exception *exception);
+List *ListDecode(Byte **bytes, Error *error);
 
 void ListDealloc(Value *listValue);
 

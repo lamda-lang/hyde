@@ -3,11 +3,11 @@
 
 #include "api.h"
 
-Stack *StackCreate(Integer32 capacity, Exception *exception);
+Stack *StackCreate(Integer32 capacity, Error *error);
 
 void StackDealloc(Stack *stack);
 
-Status StackBuildNextFrame(Stack *stack, Integer32 count, Exception *exception);
+Status StackBuildNextFrame(Stack *stack, Integer32 count, Error *error);
 
 void StackPushNextFrame(Stack *stack);
 

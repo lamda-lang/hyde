@@ -5,7 +5,7 @@
 
 Value *MapValueBridge(Map *map);
 
-Map *MapDecode(Byte **data, Exception *exception);
+Map *MapDecode(Byte **data, Error *error);
 
 void MapDealloc(Value *mapValue);
 

@@ -37,12 +37,12 @@ static inline void RemoveMarkFlagWithRoot(Value *root) {
     }
 }
 
-Stack *StackCreate(Integer32 capacity, Exception *exception) {
-    Stack *stack = MemoryAlloc(sizeof(Stack), exception);
+Stack *StackCreate(Integer32 capacity, Error *error) {
+    Stack *stack = MemoryAlloc(sizeof(Stack), error);
     if (stack == NULL) {
         goto returnError;
     }
-    Element *root = MemoryAlloc(sizeof(Element) * capacity, exception);
+    Element *root = MemoryAlloc(sizeof(Element) * capacity, error);
     if (root == NULL) {
         goto deallocStack;
     }
@@ -65,12 +65,12 @@ void StackDealloc(Stack *stack) {
     MemoryDealloc(stack);
 }
 
-Status StackBuildNextFrame(Stack *stack, Integer32 count, Exception *exception) {
+Status StackBuildNextFrame(Stack *stack, Integer32 count, Error *error) {
     Frame top = stack->top;
     Integer32 length = HEADER_LENGTH + count;
     if (top.index + top.length + length > stack->capacity) { 
         Integer32 capacity = stack->capacity * 2;
-        Element *root = MemoryRealloc(stack->root, capacity, exception);
+        Element *root = MemoryRealloc(stack->root, capacity, error);
         if (root == NULL) {
             goto returnError;
         }

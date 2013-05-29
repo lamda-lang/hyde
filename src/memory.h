@@ -3,9 +3,9 @@
 
 #include "api.h"
 
-void *MemoryAlloc(Size size, Exception *exception);
+void *MemoryAlloc(Size size, Error *error);
 
-void *MemoryRealloc(void *buffer, Size size, Exception *exception);
+void *MemoryRealloc(void *buffer, Size size, Error *error);
 
 void MemoryDealloc(void *buffer);
 

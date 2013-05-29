@@ -5,9 +5,9 @@ struct Data {
     Size size;
 };
 
-Data *DataCreate(Exception *exception) {
+Data *DataCreate(Error *error) {
     Size size = sizeof(Data);
-    Data *data = MemoryAlloc(size, exception);
+    Data *data = MemoryAlloc(size, error);
     if (data == NULL) {
         goto returnError;
     }
@@ -24,8 +24,8 @@ void DataDealloc(Data *data) {
     MemoryDealloc(data);
 }
 
-Status DataAppendBytes(Data *data, Byte *bytes, Size size, Exception *exception) {
-    Byte *buffer = MemoryRealloc(data->bytes, data->size + size, exception);
+Status DataAppendBytes(Data *data, Byte *bytes, Size size, Error *error) {
+    Byte *buffer = MemoryRealloc(data->bytes, data->size + size, error);
     if (buffer == NULL) {
         goto returnError;
     }

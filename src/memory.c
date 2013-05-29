@@ -2,10 +2,10 @@
 #include <string.h>
 #include "memory.h"
 
-void *MemoryAlloc(Size size, Exception *exception) {
+void *MemoryAlloc(Size size, Error *error) {
     void *buffer = malloc(size);
     if (buffer == NULL) {
-	ExceptionRaise(exception, ErrorOutOfMemory);
+	*error = ErrorOutOfMemory;
 	goto returnError;
     }
     return buffer;
@@ -14,10 +14,10 @@ returnError:
     return NULL;
 }
 
-void *MemoryRealloc(void *buffer, Size size, Exception *exception) {
+void *MemoryRealloc(void *buffer, Size size, Error *error) {
     void *new = realloc(buffer, size);
     if (new == NULL) {
-	ExceptionRaise(exception, ErrorOutOfMemory);
+	*error = ErrorOutOfMemory;
 	goto returnError;
     }
     return new;

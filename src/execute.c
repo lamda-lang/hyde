@@ -1,6 +1,6 @@
 #include "execute.h"
 
-typedef Status Instruction(Byte **code, Stack *stack, Exception *exception);
+typedef Status Instruction(Byte **code, Stack *stack, Error *error);
 
 static inline Value *GetValue(Byte **code, Stack *stack) {
     Integer32 index = DecodeInteger32VLE(code);
@@ -12,22 +12,22 @@ static inline void SetValue(Byte **code, Stack *stack, Value *value, bool transi
     StackSetValueInTopFrame(stack, value, index, transient);
 }
 
-static inline Status CreateBooleanTrue(Byte **code, Stack *stack, Exception *exception) {
+static inline Status CreateBooleanTrue(Byte **code, Stack *stack, Error *error) {
     Boolean *boolean = BooleanTrueSingleton();
     Value *booleanValue = BooleanValueBridge(boolean);
     SetValue(code, stack, booleanValue, false);
     return StatusSuccess;
 }
 
-static inline Status CreateBooleanFalse(Byte **code, Stack *stack, Exception *exception) {
+static inline Status CreateBooleanFalse(Byte **code, Stack *stack, Error *error) {
     Boolean *boolean = BooleanFalseSingleton();
     Value *booleanValue = BooleanValueBridge(boolean);
     SetValue(code, stack, booleanValue, false);
     return StatusSuccess;
 }
 
-static inline Status CreateIdentifier(Byte **code, Stack *stack, Exception *exception) {
-    Identifier *id = IdentifierDecode(code, exception);
+static inline Status CreateIdentifier(Byte **code, Stack *stack, Error *error) {
+    Identifier *id = IdentifierDecode(code, error);
     if (id == NULL) {
         goto returnError;
     }
@@ -39,9 +39,9 @@ returnError:
     return StatusFailure;
 }
 
-static inline Status CreateInteger(Byte **code, Stack *stack, Exception *exception) {
+static inline Status CreateInteger(Byte **code, Stack *stack, Error *error) {
     Integer64 value = DecodeInteger64FLE(code);
-    Integer *integer = IntegerCreate(value, exception);
+    Integer *integer = IntegerCreate(value, error);
     if (integer == NULL) {
         goto returnError;
     }
@@ -53,8 +53,8 @@ returnError:
     return StatusFailure;
 }
 
-static inline Status CreateLambda(Byte **code, Stack *stack, Exception *exception) {
-    Lambda *lambda = LambdaDecode(code, exception);
+static inline Status CreateLambda(Byte **code, Stack *stack, Error *error) {
+    Lambda *lambda = LambdaDecode(code, error);
     if (lambda == NULL) {
         goto returnError;
     }
@@ -66,8 +66,8 @@ returnError:
     return StatusFailure;
 }
 
-static inline Status CreateList(Byte **code, Stack *stack, Exception *exception) {
-    List *list = ListDecode(code, exception);
+static inline Status CreateList(Byte **code, Stack *stack, Error *error) {
+    List *list = ListDecode(code, error);
     if (list == NULL) {
         goto returnError;
     }
@@ -79,8 +79,8 @@ returnError:
     return StatusFailure;
 }
 
-static inline Status CreateMap(Byte **code, Stack *stack, Exception *exception) {
-    Map *map = MapDecode(code, exception);
+static inline Status CreateMap(Byte **code, Stack *stack, Error *error) {
+    Map *map = MapDecode(code, error);
     if (map == NULL) {
         goto returnError;
     }
@@ -92,14 +92,14 @@ returnError:
     return StatusFailure;
 }
 
-static inline Status CreateNil(Byte **code, Stack *stack, Exception *exception) {
+static inline Status CreateNil(Byte **code, Stack *stack, Error *error) {
     Value *nilValue = NilValueBridge();
     SetValue(code, stack, nilValue, false);
     return StatusSuccess;
 }
 
-static inline Status CreateString(Byte **code, Stack *stack, Exception *exception) {
-    String *string = StringDecode(code, exception);
+static inline Status CreateString(Byte **code, Stack *stack, Error *error) {
+    String *string = StringDecode(code, error);
     if (string == NULL) {
         goto returnError;
     }
@@ -111,15 +111,15 @@ returnError:
     return StatusFailure;
 }
 
-static inline Status ApplyArg(Byte **code, Stack *stack, Exception *exception) {
+static inline Status ApplyArg(Byte **code, Stack *stack, Error *error) {
     Value *target = GetValue(code, stack);
     if (ValueType(target) != TypeLambda) {
-        ExceptionRaise(exception, ErrorInvalidType);
+	*error = ErrorInvalidType;
         goto returnError;
     }
     Lambda *lambda = ValueLambdaBridge(target);
     Integer32 frameLength = LambdaRegisterCount(lambda);
-    if (StackBuildNextFrame(stack, frameLength, exception) == StatusFailure) {
+    if (StackBuildNextFrame(stack, frameLength, error) == StatusFailure) {
         goto returnError;
     }
     Integer8 argCount = DecodeInteger8FLE(code);
@@ -128,7 +128,7 @@ static inline Status ApplyArg(Byte **code, Stack *stack, Exception *exception) {
         StackSetArgInNextFrame(stack, arg, index);
     }
     StackPushNextFrame(stack);
-    if (LambdaExecute(lambda, stack, argCount, exception) == StatusFailure) {
+    if (LambdaExecute(lambda, stack, argCount, error) == StatusFailure) {
         goto cleanupStack;
     }
     Value *result = StackReturnFromTopFrame(stack);
@@ -141,7 +141,7 @@ returnError:
     return StatusFailure;
 }
 
-static inline Status FetchLambda(Byte **code, Stack *stack, Exception *exception) {
+static inline Status FetchLambda(Byte **code, Stack *stack, Error *error) {
     Value *target = GetValue(code, stack);
     Lambda *lambda = ValueLambdaBridge(target);
     Integer32 count = DecodeInteger32VLE(code);
@@ -152,7 +152,7 @@ static inline Status FetchLambda(Byte **code, Stack *stack, Exception *exception
     return StatusSuccess;
 }
 
-static inline Status FetchList(Byte **code, Stack *stack, Exception *exception) {
+static inline Status FetchList(Byte **code, Stack *stack, Error *error) {
     Value *target = GetValue(code, stack);
     List *list = ValueListBridge(target);
     Integer32 count = DecodeInteger32VLE(code);
@@ -163,7 +163,7 @@ static inline Status FetchList(Byte **code, Stack *stack, Exception *exception) 
     return StatusSuccess;
 }
 
-static inline Status FetchMap(Byte **code, Stack *stack, Exception *exception) {
+static inline Status FetchMap(Byte **code, Stack *stack, Error *error) {
     Value *target = GetValue(code, stack);
     Map *map = ValueMapBridge(target);
     Integer32 count = DecodeInteger32VLE(code);
@@ -191,10 +191,10 @@ static Instruction *instruction[] = {
     [12] = FetchMap
 };
 
-Status ExecuteCode(Byte *code, Integer32 count, Stack *stack, Exception *exception) {
+Status ExecuteCode(Byte *code, Integer32 count, Stack *stack, Error *error) {
     while (count > 0) {
         Integer8 opcode = DecodeInteger8FLE(&code);
-        if (instruction[opcode](&code, stack, exception) == StatusFailure) {
+        if (instruction[opcode](&code, stack, error) == StatusFailure) {
             goto returnError;
         }
         count -= 1;

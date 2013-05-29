@@ -3,7 +3,7 @@
 
 #include "api.h"
 
-Integer *IntegerCreate(Integer64 value, Exception *exception);
+Integer *IntegerCreate(Integer64 value, Error *error);
 
 Value *IntegerValueBridge(Integer *integer);
 
@@ -11,6 +11,6 @@ void IntegerDealloc(Value *integerValue);
 
 Integer64 IntegerHash(Value *integerValue);
 
-Integer *IntegerSum(Integer *integer, Integer *other, Exception *exception);
+Integer *IntegerSum(Integer *integer, Integer *other, Error *error);
 
 #endif

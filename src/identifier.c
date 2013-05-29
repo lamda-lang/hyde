@@ -6,9 +6,9 @@ struct Identifier {
     Integer8 codepoint[];
 };
 
-static inline Identifier *Create(Integer8 length, Exception *exception) {
+static inline Identifier *Create(Integer8 length, Error *error) {
     Size size = sizeof(Identifier) + sizeof(Integer8) * length;
-    Identifier *id = MemoryAlloc(size, exception);
+    Identifier *id = MemoryAlloc(size, error);
     if (id == NULL) {
         goto returnError;
     }
@@ -28,9 +28,9 @@ void IdentifierDealloc(Value *idValue) {
     MemoryDealloc(idValue);
 }
 
-Identifier *IdentifierDecode(Byte **bytes, Exception *exception) {
+Identifier *IdentifierDecode(Byte **bytes, Error *error) {
     Integer8 length = DecodeInteger8FLE(bytes);
-    Identifier *id = Create(length, exception);
+    Identifier *id = Create(length, error);
     if (id == NULL) {
         goto returnError;
     }

@@ -10,18 +10,18 @@ struct Lambda {
     Value *context[];
 };
 
-Lambda *LambdaDecode(Byte **bytes, Exception *exception) {
+Lambda *LambdaDecode(Byte **bytes, Error *error) {
     Integer32 registerCount = DecodeInteger32VLE(bytes);
     Integer32 instructionCount = DecodeInteger32VLE(bytes);
     Integer32 contextLength = DecodeInteger32VLE(bytes);
     Integer32 codeSize = DecodeInteger32VLE(bytes);
     Integer8 arity = DecodeInteger8FLE(bytes);
     Size size = sizeof(Lambda) + sizeof(Value) * contextLength;
-    Lambda *lambda = MemoryAlloc(size, exception);
+    Lambda *lambda = MemoryAlloc(size, error);
     if (lambda == NULL) {
         goto returnError;
     }
-    Byte *code = MemoryAlloc(codeSize, exception);
+    Byte *code = MemoryAlloc(codeSize, error);
     if (code == NULL) {
         goto deallocLambda;
     }
@@ -32,7 +32,7 @@ Lambda *LambdaDecode(Byte **bytes, Exception *exception) {
     lambda->contextLength = contextLength;
     lambda->code = code;
     MemoryCopy(*bytes, lambda->code, codeSize);
-    *code += codeSize;
+    *bytes += codeSize;
     return lambda;
 
 deallocLambda:
@@ -64,12 +64,12 @@ Integer32 LambdaRegisterCount(Lambda *lambda) {
     return lambda->registerCount;
 }
 
-Status LambdaExecute(Lambda *lambda, Stack *stack, Integer8 arity, Exception *exception) {
+Status LambdaExecute(Lambda *lambda, Stack *stack, Integer8 arity, Error *error) {
     if (arity != lambda->arity) {
-	ExceptionRaise(exception, ErrorArityMismatch);
+	*error = ErrorArityMismatch;
         goto returnError;
     }
-    return ExecuteCode(lambda->code, lambda->instructionCount, stack, exception);
+    return ExecuteCode(lambda->code, lambda->instructionCount, stack, error);
 
 returnError:
     return StatusFailure;

@@ -5,8 +5,8 @@ struct Integer {
     Integer64 value;
 };
 
-Integer *IntegerCreate(Integer64 value, Exception *exception) {
-    Integer *integer = MemoryAlloc(sizeof(Integer), exception);
+Integer *IntegerCreate(Integer64 value, Error *error) {
+    Integer *integer = MemoryAlloc(sizeof(Integer), error);
     if (integer == NULL) {
         goto returnError;
     }
@@ -31,7 +31,7 @@ Integer64 IntegerHash(Value *integerValue) {
     return integer->value;
 }
 
-Integer *IntegerSum(Integer *integer, Integer *other, Exception *exception) {
+Integer *IntegerSum(Integer *integer, Integer *other, Error *error) {
   Integer64 sum = integer->value + other->value;
-  return IntegerCreate(sum, exception);
+  return IntegerCreate(sum, error);
 }

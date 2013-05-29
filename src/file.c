@@ -7,14 +7,14 @@ struct File {
     Byte buffer[256];
 };
 
-File *FileOpen(Char *path, Exception *exception) {
-    File *file = MemoryAlloc(sizeof(File), exception);
+File *FileOpen(Char *path, Error *error) {
+    File *file = MemoryAlloc(sizeof(File), error);
     if (file == NULL) {
         goto returnError;
     }
     int handle = open(path, O_RDWR);
     if (handle == -1) {
-	ExceptionRaise(exception, ErrorFileOpen);
+	*error = ErrorFileOpen;
         goto deallocFile;
     }
     file->handle = handle;
@@ -26,9 +26,9 @@ returnError:
     return NULL;
 }
 
-Status FileClose(File *file, Exception *exception) {
+Status FileClose(File *file, Error *error) {
     if (close(file->handle) == -1) {
-	ExceptionRaise(exception, ErrorFileClose);
+	*error = ErrorFileClose;
         goto returnError;
     }
     MemoryDealloc(file);
@@ -38,8 +38,8 @@ returnError:
     return StatusFailure;
 }
 
-Data *FileRead(File *file, Exception *exception) {
-    Data *data = DataCreate(exception);
+Data *FileRead(File *file, Error *error) {
+    Data *data = DataCreate(error);
     if (data == NULL) {
         goto returnError;
     }
@@ -47,10 +47,10 @@ Data *FileRead(File *file, Exception *exception) {
     do {
         consumed = read(file->handle, file->buffer, sizeof(file->buffer));
         if (consumed == -1) {
-	    ExceptionRaise(exception, ErrorFileRead);
+	    *error = ErrorFileRead;
             goto deallocData;
         }
-        if (DataAppendBytes(data, file->buffer, (Size)consumed, exception) == StatusFailure) {
+        if (DataAppendBytes(data, file->buffer, (Size)consumed, error) == StatusFailure) {
             goto deallocData;
         }
     } while (consumed > 0);
@@ -62,12 +62,12 @@ returnError:
     return NULL;
 }
 
-Status FileWrite(File *file, Data *data, Exception *exception) {
+Status FileWrite(File *file, Data *data, Error *error) {
     Byte *bytes = DataBytes(data);
     Size size = DataSize(data);
     ssize_t written = write(file->handle, bytes, size);
     if (written == -1 || (Size)written != size) {
-	ExceptionRaise(exception, ErrorFileWrite);
+	*error = ErrorFileWrite;
         goto returnError;
     }
     return StatusSuccess;

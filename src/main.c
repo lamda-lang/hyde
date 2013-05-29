@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include "api.h"
 
-static inline Data *DataFromPath(Char *path, Exception *exception) {
-    File *file = FileOpen(path, exception);
+static inline Data *DataFromPath(Char *path, Error *error) {
+    File *file = FileOpen(path, error);
     if (file == NULL) {
 	goto returnError;
     }
-    Data *code = FileRead(file, exception);
+    Data *code = FileRead(file, error);
     if (code == NULL) {
 	goto closeFile;
     }
@@ -20,18 +20,18 @@ returnError:
     return NULL;
 }
 
-static inline Value *ExecuteBytecode(Data *data, Exception *exception) {
+static inline Value *ExecuteBytecode(Data *data, Error *error) {
     Byte *code = DataBytes(data);
     Integer32 registerCount = DecodeInteger32VLE(&code);
     Integer32 instructionCount = DecodeInteger32VLE(&code);
-    Stack *stack = StackCreate(256, exception);
+    Stack *stack = StackCreate(256, error);
     if (stack == NULL) {
 	goto returnError;
     }
-    if (StackBuildNextFrame(stack, registerCount, exception) == StatusFailure) {
+    if (StackBuildNextFrame(stack, registerCount, error) == StatusFailure) {
 	goto deallocStack;
     }
-    if (ExecuteCode(code, instructionCount, stack, exception) == StatusFailure) {
+    if (ExecuteCode(code, instructionCount, stack, error) == StatusFailure) {
 	goto deallocStack;
     }
     Value *result = StackReturnFromTopFrame(stack);
@@ -57,31 +57,22 @@ static inline void PrintValue(Value *value) {
     putchar('\n');
 }
 
-static inline void PrintException(Exception *exception) {
-  fprintf(stderr, "Exception: %s\n", ExceptionDescription(exception));
-}
-
 int main(int argc, char **argv) {
-    Exception *exception = ExceptionCreate();
-    if (ExceptionStatus(exception) == StatusFailure) {
-	goto raiseException;
-    }
-    Data *data = DataFromPath(argv[1], exception);
+    Error error = 0;
+    Data *data = DataFromPath(argv[1], &error);
     if (data == NULL) {
-	goto raiseException;
+	goto returnError;
     }
-    Value *result = ExecuteBytecode(data, exception);
+    Value *result = ExecuteBytecode(data, &error);
     if (result == NULL) {
 	goto deallocData;
     }
     PrintValue(result);
     DataDealloc(data);
-    ExceptionDealloc(exception);
     return EXIT_SUCCESS;
 
 deallocData:
     DataDealloc(data);
-raiseException:
-    PrintException(exception);
+returnError:
     return EXIT_FAILURE;
 }
