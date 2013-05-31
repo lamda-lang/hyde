@@ -43,13 +43,14 @@ enum {
 typedef uint8_t Type;
 enum {
     TypeBoolean = 0,
-    TypeIdentifier = 1,
-    TypeInteger = 2,
-    TypeLambda = 3,
-    TypeList = 4,
-    TypeMap = 5,
-    TypeNil = 6,
-    TypeString = 7
+    TypeDo = 1,
+    TypeIdentifier = 2,
+    TypeInteger = 3,
+    TypeLambda = 4,
+    TypeList = 5,
+    TypeMap = 6,
+    TypeNil = 7,
+    TypeString = 8
 };
 
 typedef uint8_t Flag;
@@ -66,6 +67,8 @@ typedef struct Stack Stack;
 typedef struct Data Data;
 
 typedef struct Boolean Boolean;
+
+typedef struct Do Do;
 
 typedef struct Identifier Identifier;
 
@@ -92,6 +95,7 @@ typedef void Enumerate(Value *value, void (*block)(Value *value));
 #include "boolean.h"
 #include "data.h"
 #include "decode.h"
+#include "do.h"
 #include "execute.h"
 #include "file.h"
 #include "identifier.h"

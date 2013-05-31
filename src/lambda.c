@@ -3,9 +3,9 @@
 struct Lambda {
     Value base;
     Integer8 arity;
+    Integer8 contextLength;
     Integer32 registerCount;
     Integer32 instructionCount;
-    Integer32 contextLength;
     Byte *code;
     Value *context[];
 };
@@ -13,7 +13,7 @@ struct Lambda {
 Lambda *LambdaDecode(Byte **bytes, Error *error) {
     Integer32 registerCount = DecodeInteger32VLE(bytes);
     Integer32 instructionCount = DecodeInteger32VLE(bytes);
-    Integer32 contextLength = DecodeInteger32VLE(bytes);
+    Integer8 contextLength = DecodeInteger8FLE(bytes);
     Integer32 codeSize = DecodeInteger32VLE(bytes);
     Integer8 arity = DecodeInteger8FLE(bytes);
     Size size = sizeof(Lambda) + sizeof(Value) * contextLength;
@@ -25,14 +25,14 @@ Lambda *LambdaDecode(Byte **bytes, Error *error) {
     if (code == NULL) {
         goto deallocLambda;
     }
+    MemoryCopy(*bytes, code, codeSize);
+    *bytes += codeSize;
     lambda->base = TypeLambda;
     lambda->arity = arity;
     lambda->registerCount = registerCount;
     lambda->instructionCount = instructionCount;
     lambda->contextLength = contextLength;
     lambda->code = code;
-    MemoryCopy(*bytes, lambda->code, codeSize);
-    *bytes += codeSize;
     return lambda;
 
 deallocLambda:
