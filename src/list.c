@@ -19,7 +19,6 @@ static inline List *Create(Integer32 length, Error *error) {
 returnError:
     return NULL;
 }
-
 Value *ListValueBridge(List *list) {
     return (Value *)list;
 }
@@ -29,12 +28,15 @@ List *ListDecode(Byte **bytes, Error *error) {
     return Create(length, error);
 }
 
-void ListDealloc(Value *listValue) {
-    MemoryDealloc(listValue);
+void ListFetch(List *list, Value **values, Byte **bytes) {
+    for (Integer32 index = 0; index < list->length; index += 1) {
+	Integer32 elementIndex = DecodeInteger32VLE(bytes);
+	list->element[index] = values[elementIndex];
+    }
 }
 
-void ListSetValueAtIndex(List *list, Value *value, Integer32 index) {
-    list->element[index] = value;
+void ListDealloc(Value *listValue) {
+    MemoryDealloc(listValue);
 }
 
 Value *ListGetValueAtIndex(List *list, Integer32 index) {

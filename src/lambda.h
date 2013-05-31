@@ -9,7 +9,7 @@ Lambda *LambdaDecode(Byte **bytes, Error *error);
 
 void LambdaDealloc(Value *lambdaValue);
 
-void LambdaSetContextValueAtIndex(Lambda *lambda, Value *value, Integer32 index);
+void LambdaFetch(Lambda *lambda, Value **values, Byte **bytes);
 
 Integer64 LambdaHash(Value *lambdaValue);
 

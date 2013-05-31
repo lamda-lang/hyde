@@ -7,9 +7,9 @@ Value *MapValueBridge(Map *map);
 
 Map *MapDecode(Byte **data, Error *error);
 
-void MapDealloc(Value *mapValue);
+void MapFetch(Map *map, Value **values, Byte **bytes);
 
-void MapSetValueForKey(Map *map, Value *value, Value *key);
+void MapDealloc(Value *mapValue);
 
 Integer64 MapHash(Value *mapValue);
 

@@ -11,12 +11,21 @@ struct Map {
     Element element[];
 };
 
-static inline Integer32 MapIndex(Map *map, Value *value, Integer32 offset) {
+static inline Integer32 IndexForValue(Map *map, Value *value, Integer32 offset) {
     return (ValueHash(value) + offset) % map->length;
 }
 
+static inline void SetValueForKey(Map *map, Value *value, Value *key) {
+    Integer32 index = IndexForValue(map, key, 0);
+    while (map->element[index].key != NULL) {
+        index = IndexForValue(map, key, index);
+    }
+    map->element[index].key = key;
+    map->element[index].value = value;
+}
+
 static inline Map *Create(Integer32 count, Error *error) {
-    Integer32 length = count * 2;
+    Integer32 length = count << 1;
     Size size = sizeof(Map) + sizeof(Element) * length;
     Map *map = MemoryAlloc(size, error);
     if (map == NULL) {
@@ -43,17 +52,19 @@ Map *MapDecode(Byte **bytes, Error *error) {
     return Create(count, error);
 }
 
-void MapDealloc(Value *mapValue) {
-    MemoryDealloc(mapValue);
+void MapFetch(Map *map, Value **values, Byte **bytes) {
+    Integer32 count = map->length >> 1;
+    for (Integer32 index = 0; index < count; index += 1) {
+	Integer32 keyIndex = DecodeInteger32VLE(bytes);
+	Integer32 valueIndex = DecodeInteger32VLE(bytes);
+	Value *key = values[keyIndex];
+	Value *value = values[valueIndex];
+	SetValueForKey(map, value, key);
+    }
 }
 
-void MapSetValueForKey(Map *map, Value *value, Value *key) {
-    Integer32 index = MapIndex(map, key, 0);
-    while (map->element[index].key != NULL) {
-        index = MapIndex(map, key, index);
-    }
-    map->element[index].key = key;
-    map->element[index].value = value;
+void MapDealloc(Value *mapValue) {
+    MemoryDealloc(mapValue);
 }
 
 Integer64 MapHash(Value *mapValue) {

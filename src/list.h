@@ -7,9 +7,9 @@ Value *ListValueBridge(List *list);
 
 List *ListDecode(Byte **bytes, Error *error);
 
-void ListDealloc(Value *listValue);
+void ListFetch(List *list, Value **values, Byte **bytes);
 
-void ListSetValueAtIndex(List *list, Value *value, Integer32 index);
+void ListDealloc(Value *listValue);
 
 Value *ListGetValueAtIndex(List *list, Integer32 index);
 

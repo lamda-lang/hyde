@@ -34,6 +34,8 @@ static inline Status CreateDo(Byte **code, Stack *stack, Error *error) {
     }
     Value **values = StackValuesFromTopFrame(stack);
     DoFetchContext(block, values, code);
+    Value *doValue = DoValueBridge(block);
+    SetValue(code, stack, doValue, true);
     return StatusSuccess;
 
 returnError:
@@ -72,11 +74,8 @@ static inline Status CreateLambda(Byte **code, Stack *stack, Error *error) {
     if (lambda == NULL) {
         goto returnError;
     }
-    Integer8 count = DecodeInteger8FLE(code);
-    for (Integer8 index = 0; index < count; index += 1) {
-        Value *value = GetValue(code, stack);
-        LambdaSetContextValueAtIndex(lambda, value, index);
-    }
+    Value **values = StackValuesFromTopFrame(stack);
+    LambdaFetch(lambda, values, code);
     Value *lambdaValue = LambdaValueBridge(lambda);
     SetValue(code, stack, lambdaValue, true);
     return StatusSuccess;
@@ -164,23 +163,16 @@ returnError:
 static inline Status FetchList(Byte **code, Stack *stack, Error *error) {
     Value *target = GetValue(code, stack);
     List *list = ValueListBridge(target);
-    Integer32 count = DecodeInteger32VLE(code);
-    for (Integer32 index = 0; index < count; index += 1) {
-        Value *value = GetValue(code, stack);
-        ListSetValueAtIndex(list, value, index);
-    }
+    Value **values = StackValuesFromTopFrame(stack);
+    ListFetch(list, values, code);
     return StatusSuccess;
 }
 
 static inline Status FetchMap(Byte **code, Stack *stack, Error *error) {
     Value *target = GetValue(code, stack);
     Map *map = ValueMapBridge(target);
-    Integer32 count = DecodeInteger32VLE(code);
-    for (Integer32 index = 0; index < count; index += 1) {
-        Value *key = GetValue(code, stack);
-        Value *value = GetValue(code, stack);
-        MapSetValueForKey(map, value, key);
-    }
+    Value **values = StackValuesFromTopFrame(stack);
+    MapFetch(map, values, code);
     return StatusSuccess;
 }
 

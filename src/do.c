@@ -42,10 +42,10 @@ returnError:
     return NULL;
 }
 
-void DoFetchContext(Do *block, Value **value, Byte **bytes) {
+void DoFetchContext(Do *block, Value **values, Byte **bytes) {
     for (Integer8 index = 0; index < block->contextLength; index += 1) {
-	Integer8 contextIndex = DecodeInteger8FLE(bytes);
-        block->context[index] = value[contextIndex];
+	Integer32 contextIndex = DecodeInteger32VLE(bytes);
+        block->context[index] = values[contextIndex];
     }
 }
 
