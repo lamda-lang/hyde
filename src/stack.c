@@ -90,11 +90,11 @@ void StackPushNextFrame(Stack *stack) {
     stack->top = stack->next;
 }
 
-Value *StackReturnFromTopFrame(Stack *stack) {
+void StackPullTopFrame(Stack *stack) {
     Frame top = stack->top;
-    Value *result = stack->root[top.index + VALUE_OFFSET].value;
-    RemoveGarbageFlagWithRoot(result);
-    RemoveMarkFlagWithRoot(result);
+    Value *root = stack->root[top.index + VALUE_OFFSET].value;
+    RemoveGarbageFlagWithRoot(root);
+    RemoveMarkFlagWithRoot(root);
     for (Integer32 index = VALUE_OFFSET; index < top.length; index += 1) {
         Value *value = stack->root[top.index + index].value;
         if (ValueFlagSet(value, FlagGarbage)) {
@@ -102,30 +102,20 @@ Value *StackReturnFromTopFrame(Stack *stack) {
         }
     }
     stack->top = stack->root[top.index].frame;
-    return result;
 }
 
-void StackSetResultInTopFrame(Stack *stack, Value *result) {
-    stack->root[stack->top.index + RESULT_OFFSET].value = result;
+Value **StackValuesFromTopFrame(Stack *stack) {
+    return &stack->root[stack->top.index + VALUE_OFFSET].value;
 }
 
-void StackRemoveTopFrame(Stack *stack) {
-
-}
-
-Value *StackGetValueFromTopFrame(Stack *stack, Integer32 index) {
-    return stack->root[stack->top.index + VALUE_OFFSET + index].value;
-}
-
-void StackSetValueInTopFrame(Stack *stack, Value *value, Integer32 index, bool transient) {
-    ValueSetFlag(value, FlagGarbage, true);
-    stack->root[stack->top.index + VALUE_OFFSET + index].value = value;
-}
-
-Value **StackGetArgsFromTopFrame(Stack *stack) {
+Value **StackArgsFromTopFrame(Stack *stack) {
     return &stack->root[stack->top.index + ARG_OFFSET].value;
 }
 
-void StackSetArgInNextFrame(Stack *stack, Value *value, Integer8 index) {
-    stack->root[stack->next.index + ARG_OFFSET + index].value = value;
+Value **StackArgsFromNextFrame(Stack *stack) {
+    return &stack->root[stack->next.index + ARG_OFFSET].value;
+}
+
+Value **StackResultFromTopFrame(Stack *stack) {
+    return &stack->root[stack->top.index + RESULT_OFFSET].value;
 }

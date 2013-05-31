@@ -42,6 +42,13 @@ returnError:
     return NULL;
 }
 
+void DoFetchContext(Do *block, Value **value, Byte **bytes) {
+    for (Integer8 index = 0; index < block->contextLength; index += 1) {
+	Integer8 contextIndex = DecodeInteger8FLE(bytes);
+        block->context[index] = value[contextIndex];
+    }
+}
+
 void DoDealloc(Do *block) {
     MemoryDealloc(block->code);
     MemoryDealloc(block);

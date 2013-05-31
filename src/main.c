@@ -34,7 +34,7 @@ static inline Value *ExecuteBytecode(Data *data, Error *error) {
     if (ExecuteCode(code, instructionCount, stack, error) == StatusFailure) {
 	goto deallocStack;
     }
-    Value *result = StackReturnFromTopFrame(stack);
+    Value *result = *StackResultFromTopFrame(stack);
     StackDealloc(stack);
     return result;
 

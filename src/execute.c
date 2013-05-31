@@ -4,12 +4,13 @@ typedef Status Instruction(Byte **code, Stack *stack, Error *error);
 
 static inline Value *GetValue(Byte **code, Stack *stack) {
     Integer32 index = DecodeInteger32VLE(code);
-    return StackGetValueFromTopFrame(stack, index);
+    return StackValuesFromTopFrame(stack)[index];
 }
 
 static inline void SetValue(Byte **code, Stack *stack, Value *value, bool transient) {
     Integer32 index = DecodeInteger32VLE(code);
-    StackSetValueInTopFrame(stack, value, index, transient);
+    ValueSetFlag(value, FlagGarbage, transient);
+    StackValuesFromTopFrame(stack)[index] = value;
 }
 
 static inline Status CreateBooleanTrue(Byte **code, Stack *stack, Error *error) {
@@ -24,6 +25,19 @@ static inline Status CreateBooleanFalse(Byte **code, Stack *stack, Error *error)
     Value *booleanValue = BooleanValueBridge(boolean);
     SetValue(code, stack, booleanValue, false);
     return StatusSuccess;
+}
+
+static inline Status CreateDo(Byte **code, Stack *stack, Error *error) {
+    Do *block = DoDecode(code, error);
+    if (block == NULL) {
+	goto returnError;
+    }
+    Value **values = StackValuesFromTopFrame(stack);
+    DoFetchContext(block, values, code);
+    return StatusSuccess;
+
+returnError:
+    return StatusFailure;
 }
 
 static inline Status CreateIdentifier(Byte **code, Stack *stack, Error *error) {
@@ -57,6 +71,11 @@ static inline Status CreateLambda(Byte **code, Stack *stack, Error *error) {
     Lambda *lambda = LambdaDecode(code, error);
     if (lambda == NULL) {
         goto returnError;
+    }
+    Integer8 count = DecodeInteger8FLE(code);
+    for (Integer8 index = 0; index < count; index += 1) {
+        Value *value = GetValue(code, stack);
+        LambdaSetContextValueAtIndex(lambda, value, index);
     }
     Value *lambdaValue = LambdaValueBridge(lambda);
     SetValue(code, stack, lambdaValue, true);
@@ -125,31 +144,21 @@ static inline Status ApplyArg(Byte **code, Stack *stack, Error *error) {
     Integer8 argCount = DecodeInteger8FLE(code);
     for (Integer8 index = 0; index < argCount; index += 1) {
         Value *arg = GetValue(code, stack);
-        StackSetArgInNextFrame(stack, arg, index);
+	StackArgsFromNextFrame(stack)[index] = arg;
     }
     StackPushNextFrame(stack);
     if (LambdaExecute(lambda, stack, argCount, error) == StatusFailure) {
         goto cleanupStack;
     }
-    Value *result = StackReturnFromTopFrame(stack);
+    Value *result = *StackResultFromTopFrame(stack);
+    StackPullTopFrame(stack);
     SetValue(code, stack, result, false);
     return StatusSuccess;
 
 cleanupStack:
-    StackRemoveTopFrame(stack);
+    StackPullTopFrame(stack);
 returnError:
     return StatusFailure;
-}
-
-static inline Status FetchLambda(Byte **code, Stack *stack, Error *error) {
-    Value *target = GetValue(code, stack);
-    Lambda *lambda = ValueLambdaBridge(target);
-    Integer32 count = DecodeInteger32VLE(code);
-    for (Integer32 index = 0; index < count; index += 1) {
-        Value *value = GetValue(code, stack);
-        LambdaSetContextValueAtIndex(lambda, value, index);
-    }
-    return StatusSuccess;
 }
 
 static inline Status FetchList(Byte **code, Stack *stack, Error *error) {
@@ -178,15 +187,15 @@ static inline Status FetchMap(Byte **code, Stack *stack, Error *error) {
 static Instruction *instruction[] = {
     [0] = CreateBooleanTrue,
     [1] = CreateBooleanFalse,
-    [2] = CreateIdentifier,
-    [3] = CreateInteger,
-    [4] = CreateLambda,
-    [5] = CreateList,
-    [6] = CreateMap,
-    [7] = CreateNil,
-    [8] = CreateString,
-    [9] = ApplyArg,
-    [10] = FetchLambda,
+    [2] = CreateDo,
+    [3] = CreateIdentifier,
+    [4] = CreateInteger,
+    [5] = CreateLambda,
+    [6] = CreateList,
+    [7] = CreateMap,
+    [8] = CreateNil,
+    [9] = CreateString,
+    [10] = ApplyArg,
     [11] = FetchList,
     [12] = FetchMap
 };

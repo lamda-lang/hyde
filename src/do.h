@@ -7,6 +7,8 @@ Value *DoValueBridge(Do *block);
 
 Do *DoDecode(Byte **bytes, Error *error);
 
+void DoFetchContext(Do *block, Value **value, Byte **bytes);
+
 void DoDealloc(Do *block);
 
 Integer64 DoHash(Do *block);
