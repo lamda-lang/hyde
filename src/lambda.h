@@ -15,7 +15,7 @@ Integer64 LambdaHash(Value *lambdaValue);
 
 Integer32 LambdaRegisterCount(Lambda *lambda);
 
-Status LambdaExecute(Lambda *lambda, Stack *stack, Integer8 arity, Error *error);
+Status LambdaExecute(Lambda *lambda, Byte **bytes, Stack *stack, Error *error);
 
 void LambdaEnumerate(Value *lambdaValue, void (*block)(Value *value));
 

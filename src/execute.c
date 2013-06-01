@@ -56,8 +56,7 @@ returnError:
 }
 
 static inline Status CreateInteger(Byte **code, Stack *stack, Error *error) {
-    Integer64 value = DecodeInteger64FLE(code);
-    Integer *integer = IntegerCreate(value, error);
+    Integer *integer = IntegerDecode(code, error);
     if (integer == NULL) {
         goto returnError;
     }
@@ -136,26 +135,13 @@ static inline Status ApplyArg(Byte **code, Stack *stack, Error *error) {
         goto returnError;
     }
     Lambda *lambda = ValueLambdaBridge(target);
-    Integer32 frameLength = LambdaRegisterCount(lambda);
-    if (StackBuildNextFrame(stack, frameLength, error) == StatusFailure) {
+    if (LambdaExecute(lambda, code, stack, error) == StatusFailure) {
         goto returnError;
     }
-    Integer8 argCount = DecodeInteger8FLE(code);
-    for (Integer8 index = 0; index < argCount; index += 1) {
-        Value *arg = GetValue(code, stack);
-	StackArgsFromNextFrame(stack)[index] = arg;
-    }
-    StackPushNextFrame(stack);
-    if (LambdaExecute(lambda, stack, argCount, error) == StatusFailure) {
-        goto cleanupStack;
-    }
     Value *result = *StackResultFromTopFrame(stack);
-    StackPullTopFrame(stack);
     SetValue(code, stack, result, false);
     return StatusSuccess;
 
-cleanupStack:
-    StackPullTopFrame(stack);
 returnError:
     return StatusFailure;
 }

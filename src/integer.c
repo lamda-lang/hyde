@@ -5,7 +5,7 @@ struct Integer {
     Integer64 value;
 };
 
-Integer *IntegerCreate(Integer64 value, Error *error) {
+static inline Integer *Create(Integer64 value, Error *error) {
     Integer *integer = MemoryAlloc(sizeof(Integer), error);
     if (integer == NULL) {
         goto returnError;
@@ -16,6 +16,11 @@ Integer *IntegerCreate(Integer64 value, Error *error) {
 
 returnError:
     return NULL;
+}
+
+Integer *IntegerDecode(Byte **bytes, Error *error) {
+    Integer64 value = DecodeInteger64FLE(bytes);
+    return Create(value, error);
 }
 
 Value *IntegerValueBridge(Integer *integer) {
@@ -33,5 +38,5 @@ Integer64 IntegerHash(Value *integerValue) {
 
 Integer *IntegerSum(Integer *integer, Integer *other, Error *error) {
   Integer64 sum = integer->value + other->value;
-  return IntegerCreate(sum, error);
+  return Create(sum, error);
 }

@@ -67,12 +67,23 @@ Integer32 LambdaRegisterCount(Lambda *lambda) {
     return lambda->registerCount;
 }
 
-Status LambdaExecute(Lambda *lambda, Stack *stack, Integer8 arity, Error *error) {
-    if (arity != lambda->arity) {
+Status LambdaExecute(Lambda *lambda, Byte **bytes, Stack *stack, Error *error) {
+    if (StackBuildNextFrame(stack, lambda->registerCount, error) == StatusFailure) {
+        goto returnError;
+    }
+    Integer8 argCount = DecodeInteger8FLE(bytes);
+    if (argCount != lambda->arity) {
 	*error = ErrorArityMismatch;
         goto returnError;
     }
-    return ExecuteCode(lambda->code, lambda->instructionCount, stack, error);
+    for (Integer8 index = 0; index < argCount; index += 1) {
+	Integer32 argIndex = DecodeInteger32VLE(bytes);
+	StackArgsFromNextFrame(stack)[index] = StackValuesFromTopFrame(stack)[argIndex];
+    }
+    StackPushNextFrame(stack);
+    Status status = ExecuteCode(lambda->code, lambda->instructionCount, stack, error);
+    StackPullTopFrame(stack);
+    return status;
 
 returnError:
     return StatusFailure;
