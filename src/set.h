@@ -5,7 +5,9 @@
 
 Set *SetDecode(Byte **bytes, Error *error);
 
-void SetFetch(Set *set, Value **values, Byte **bytes);
+Integer32 SetCount(Set *set);
+
+void SetAddValue(Set *set, Value *value);
 
 Value *SetValueBridge(Set *set);
 

@@ -11,11 +11,11 @@ struct Map {
     Element element[];
 };
 
-static inline Integer32 IndexForValue(Map *map, Value *value, Integer32 offset) {
+static Integer32 IndexForValue(Map *map, Value *value, Integer32 offset) {
     return (ValueHash(value) + offset) % map->length;
 }
 
-static inline Map *Create(Integer32 count, Error *error) {
+static Map *Create(Integer32 count, Error *error) {
     Integer32 length = count << 1;
     Size size = sizeof(Map) + sizeof(Element) * length;
     Map *map = MemoryAlloc(size, error);

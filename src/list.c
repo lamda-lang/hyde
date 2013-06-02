@@ -6,7 +6,7 @@ struct List {
     Value *element[];
 };
 
-static inline List *Create(Integer32 length, Error *error) {
+static List *Create(Integer32 length, Error *error) {
     Size size = sizeof(List) + sizeof(Value) * length;
     List *list = MemoryAlloc(size, error);
     if (list == NULL) {

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "api.h"
 
-static inline Data *DataFromPath(Char *path, Error *error) {
+static Data *DataFromPath(Char *path, Error *error) {
     File *file = FileOpen(path, error);
     if (file == NULL) {
 	goto returnError;
@@ -20,7 +20,7 @@ returnError:
     return NULL;
 }
 
-static inline Value *ExecuteBytecode(Data *data, Error *error) {
+static Value *ExecuteBytecode(Data *data, Error *error) {
     Byte *code = DataBytes(data);
     Integer32 registerCount = DecodeInteger32VLE(&code);
     Integer32 instructionCount = DecodeInteger32VLE(&code);
@@ -44,7 +44,7 @@ returnError:
     return NULL;
 }
 
-static inline void PrintValue(Value *value) {
+static void PrintValue(Value *value) {
     String *string = ValueStringBridge(value);
     Integer32 length = StringLength(string);
     Integer32 *codepoints = StringCodepoints(string);

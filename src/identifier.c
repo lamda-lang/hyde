@@ -6,7 +6,7 @@ struct Identifier {
     Integer8 codepoint[];
 };
 
-static inline Identifier *Create(Integer8 length, Error *error) {
+static Identifier *Create(Integer8 length, Error *error) {
     Size size = sizeof(Identifier) + sizeof(Integer8) * length;
     Identifier *id = MemoryAlloc(size, error);
     if (id == NULL) {

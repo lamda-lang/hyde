@@ -5,7 +5,7 @@ struct Integer {
     Integer64 value;
 };
 
-static inline Integer *Create(Integer64 value, Error *error) {
+static Integer *Create(Integer64 value, Error *error) {
     Integer *integer = MemoryAlloc(sizeof(Integer), error);
     if (integer == NULL) {
         goto returnError;

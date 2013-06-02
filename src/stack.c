@@ -22,7 +22,7 @@ struct Stack {
     Integer32 capacity;
 };
 
-static inline void RemoveGarbageFlagWithRoot(Value *root) {
+static void RemoveGarbageFlagWithRoot(Value *root) {
     if (!ValueFlagSet(root, FlagMark)) {
         ValueSetFlag(root, FlagMark, true);
         ValueSetFlag(root, FlagGarbage, false);
@@ -30,7 +30,7 @@ static inline void RemoveGarbageFlagWithRoot(Value *root) {
     }
 }
 
-static inline void RemoveMarkFlagWithRoot(Value *root) {
+static void RemoveMarkFlagWithRoot(Value *root) {
     if (ValueFlagSet(root, FlagMark)) {
         ValueSetFlag(root, FlagMark, false);
         ValueEnumerate(root, RemoveMarkFlagWithRoot);

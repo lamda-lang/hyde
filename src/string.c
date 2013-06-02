@@ -6,7 +6,7 @@ struct String {
     Integer32 codepoint[];
 };
 
-static inline String *Create(Integer32 length, Error *error) {
+static String *Create(Integer32 length, Error *error) {
     Size size = sizeof(struct String) + sizeof(Integer32) * length;
     String *string = MemoryAlloc(size, error);
     if (string == NULL) {

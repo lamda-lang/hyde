@@ -6,19 +6,11 @@ struct Set {
     Value *element[];
 };
 
-static inline Integer32 IndexForValue(Set *set, Value *value, Integer32 offset) {
+static Integer32 IndexForValue(Set *set, Value *value, Integer32 offset) {
     return (ValueHash(value) + offset) % set->length;
 }
 
-static inline void AddValue(Set *set, Value *value) {
-    Integer32 index = IndexForValue(set, value, 0);
-    while (set->element[index] != NULL) {
-        index = IndexForValue(set, value, index);
-    }
-    set->element[index] = value;
-}
-
-static inline Set *Create(Integer32 count, Error *error) {
+static Set *Create(Integer32 count, Error *error) {
     Integer32 length = count << 1;
     Size size = sizeof(Set) + sizeof(Value *) * length;
     Set *set = MemoryAlloc(size, error);
@@ -41,13 +33,16 @@ Set *SetDecode(Byte **bytes, Error *error) {
     return Create(count, error);
 }
 
-void SetFetch(Set *set, Value **values, Byte **bytes) {
-    Integer32 count = set->length >> 1;
-    for (Integer32 index = 0; index < count; index += 1) {
-	Integer32 valueIndex = DecodeInteger32VLE(bytes);
-	Value *value = values[valueIndex];
-	AddValue(set, value);
+Integer32 SetCount(Set *set) {
+    return set->length;
+}
+
+void SetAddValue(Set *set, Value *value) {
+    Integer32 index = IndexForValue(set, value, 0);
+    while (set->element[index] != NULL) {
+        index = IndexForValue(set, value, index);
     }
+    set->element[index] = value;
 }
 
 Value *SetValueBridge(Set *set) {

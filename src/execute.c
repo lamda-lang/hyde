@@ -2,28 +2,28 @@
 
 typedef Status Instruction(Byte **code, Stack *stack, Error *error);
 
-static inline Value **DecodeFrameValue(Byte **code, Stack *stack) {
+static Value **DecodeFrameValue(Byte **code, Stack *stack) {
     return StackValuesFromTopFrame(stack) + DecodeInteger32VLE(code);
 }
 
-static inline Status CreateNil(Byte **code, Stack *stack, Error *error) {
+static Status CreateNil(Byte **code, Stack *stack, Error *error) {
     *DecodeFrameValue(code, stack) = NilValueBridge();
     return StatusSuccess;
 }
 
-static inline Status CreateBooleanTrue(Byte **code, Stack *stack, Error *error) {
+static Status CreateBooleanTrue(Byte **code, Stack *stack, Error *error) {
     Boolean *boolean = BooleanTrueSingleton();
     *DecodeFrameValue(code, stack) = BooleanValueBridge(boolean);
     return StatusSuccess;
 }
 
-static inline Status CreateBooleanFalse(Byte **code, Stack *stack, Error *error) {
+static Status CreateBooleanFalse(Byte **code, Stack *stack, Error *error) {
     Boolean *boolean = BooleanFalseSingleton();
     *DecodeFrameValue(code, stack) = BooleanValueBridge(boolean);
     return StatusSuccess;
 }
 
-static inline Status CreateInteger(Byte **code, Stack *stack, Error *error) {
+static Status CreateInteger(Byte **code, Stack *stack, Error *error) {
     Integer *integer = IntegerDecode(code, error);
     if (integer == NULL) {
         goto returnError;
@@ -35,7 +35,7 @@ returnError:
     return StatusFailure;
 }
 
-static inline Status CreateFloat(Byte **code, Stack *stack, Error *error) {
+static Status CreateFloat(Byte **code, Stack *stack, Error *error) {
     Float *fpv = FloatDecode(code, error);
     if (fpv == NULL) {
 	goto returnError;
@@ -47,7 +47,7 @@ returnError:
     return StatusFailure;
 }
 
-static inline Status CreateIdentifier(Byte **code, Stack *stack, Error *error) {
+static Status CreateIdentifier(Byte **code, Stack *stack, Error *error) {
     Identifier *id = IdentifierDecode(code, error);
     if (id == NULL) {
         goto returnError;
@@ -59,7 +59,7 @@ returnError:
     return StatusFailure;
 }
 
-static inline Status CreateString(Byte **code, Stack *stack, Error *error) {
+static Status CreateString(Byte **code, Stack *stack, Error *error) {
     String *string = StringDecode(code, error);
     if (string == NULL) {
         goto returnError;
@@ -71,7 +71,7 @@ returnError:
     return StatusFailure;
 }
 
-static inline Status CreateRange(Byte **code, Stack *stack, Error *error) {
+static Status CreateRange(Byte **code, Stack *stack, Error *error) {
     Range *range = RangeCreate(error);
     if (range == NULL) {
 	goto returnError;
@@ -83,7 +83,7 @@ returnError:
     return StatusFailure;
 }
 
-static inline Status CreateSet(Byte **code, Stack *stack, Error *error) {
+static Status CreateSet(Byte **code, Stack *stack, Error *error) {
     Set *set = SetDecode(code, error);
     if (set == NULL) {
 	goto returnError;
@@ -94,7 +94,7 @@ static inline Status CreateSet(Byte **code, Stack *stack, Error *error) {
 returnError:
     return StatusFailure;
 }
-static inline Status CreateList(Byte **code, Stack *stack, Error *error) {
+static Status CreateList(Byte **code, Stack *stack, Error *error) {
     List *list = ListDecode(code, error);
     if (list == NULL) {
         goto returnError;
@@ -106,7 +106,7 @@ returnError:
     return StatusFailure;
 }
 
-static inline Status CreateMap(Byte **code, Stack *stack, Error *error) {
+static Status CreateMap(Byte **code, Stack *stack, Error *error) {
     Map *map = MapDecode(code, error);
     if (map == NULL) {
         goto returnError;
@@ -118,7 +118,7 @@ returnError:
     return StatusFailure;
 }
 
-static inline Status CreateLambda(Byte **code, Stack *stack, Error *error) {
+static Status CreateLambda(Byte **code, Stack *stack, Error *error) {
     Lambda *lambda = LambdaDecode(code, error);
     if (lambda == NULL) {
         goto returnError;
@@ -135,7 +135,7 @@ returnError:
     return StatusFailure;
 }
 
-static inline Status CreateDo(Byte **code, Stack *stack, Error *error) {
+static Status CreateDo(Byte **code, Stack *stack, Error *error) {
     Do *block = DoDecode(code, error);
     if (block == NULL) {
 	goto returnError;
@@ -152,12 +152,34 @@ returnError:
     return StatusFailure;
 }
 
-static inline Status ApplyArgs(Byte **code, Stack *stack, Error *error) {
-    /* missing */
-    return StatusFailure;
+static Status FetchRangeLower(Byte **code, Stack *stack, Error *error) {
+    Value *rangeValue = *DecodeFrameValue(code, stack);
+    Range *range = ValueRangeBridge(rangeValue);
+    Value *lower = *DecodeFrameValue(code, stack);
+    RangeSetBounds(range, lower, NULL);
+    return StatusSuccess;
 }
 
-static inline Status FetchList(Byte **code, Stack *stack, Error *error) {
+static Status FetchRangeUpper(Byte **code, Stack *stack, Error *error) {
+    Value *rangeValue = *DecodeFrameValue(code, stack);
+    Range *range = ValueRangeBridge(rangeValue);
+    Value *upper = *DecodeFrameValue(code, stack);
+    RangeSetBounds(range, NULL, upper);
+    return StatusSuccess;
+}
+
+static Status FetchSet(Byte **code, Stack *stack, Error *error) {
+    Value *setValue = *DecodeFrameValue(code, stack);
+    Set *set = ValueSetBridge(setValue);
+    Integer32 count = SetCount(set);
+    for (Integer32 index = 0; index < count; index += 1) {
+	Value *value = *DecodeFrameValue(code, stack);
+	SetAddValue(set, value);
+    }
+    return StatusSuccess;
+}
+
+static Status FetchList(Byte **code, Stack *stack, Error *error) {
     Value *listValue = *DecodeFrameValue(code, stack);
     List *list = ValueListBridge(listValue);
     Integer32 length = ListLength(list);
@@ -168,7 +190,7 @@ static inline Status FetchList(Byte **code, Stack *stack, Error *error) {
     return StatusSuccess;
 }
 
-static inline Status FetchMap(Byte **code, Stack *stack, Error *error) {
+static Status FetchMap(Byte **code, Stack *stack, Error *error) {
     Value *mapValue = *DecodeFrameValue(code, stack);
     Map *map = ValueMapBridge(mapValue);
     Integer32 count = MapCount(map);
@@ -180,31 +202,12 @@ static inline Status FetchMap(Byte **code, Stack *stack, Error *error) {
     return StatusSuccess;
 }
 
-static inline Status FetchRangeLower(Byte **code, Stack *stack, Error *error) {
-    Value *rangeValue = *DecodeFrameValue(code, stack);
-    Range *range = ValueRangeBridge(rangeValue);
-    Value *lower = *DecodeFrameValue(code, stack);
-    RangeSetBounds(range, lower, NULL);
-    return StatusSuccess;
+static Status ApplyArgs(Byte **code, Stack *stack, Error *error) {
+    /* missing */
+    return StatusFailure;
 }
 
-static inline Status FetchRangeUpper(Byte **code, Stack *stack, Error *error) {
-    Value *rangeValue = *DecodeFrameValue(code, stack);
-    Range *range = ValueRangeBridge(rangeValue);
-    Value *upper = *DecodeFrameValue(code, stack);
-    RangeSetBounds(range, NULL, upper);
-    return StatusSuccess;
-}
-
-static inline Status FetchSet(Byte **code, Stack *stack, Error *error) {
-    Value *setValue = *DecodeFrameValue(code, stack);
-    Set *set = ValueSetBridge(setValue);
-    Value **values = StackValuesFromTopFrame(stack);
-    SetFetch(set, values, code);
-    return StatusSuccess;
-}
-
-static inline Status ExecuteDo(Byte **code, Stack *stack, Error *error) {
+static Status ExecuteDo(Byte **code, Stack *stack, Error *error) {
     return StatusSuccess;
 }
 
