@@ -49,3 +49,11 @@ Integer32 DecodeInteger32VLE(Byte **bytes) {
     }
     return result;
 }
+
+Float64 DecodeFloat64FLE(Byte **bytes) {
+    union {
+	Float64 IEEE754;
+	Integer64 binary;
+    } punner = {.binary = DecodeInteger64FLE(bytes)};
+    return punner.IEEE754;;
+}
