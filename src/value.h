@@ -33,6 +33,8 @@ Map *ValueMapBridge(Value *mapValue);
 
 Nil *ValueNilBridge(Value *nilValue);
 
+Range *ValueRangeBridge(Value *rangeValue);
+
 Set *ValueSetBridge(Value *setValue);
 
 String *ValueStringBridge(Value *stringValue);

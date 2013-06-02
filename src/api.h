@@ -53,8 +53,9 @@ enum {
     TypeList = 6,
     TypeMap = 7,
     TypeNil = 8,
-    TypeSet = 9,
-    TypeString = 10
+    TypeRange = 9,
+    TypeSet = 10,
+    TypeString = 11
 };
 
 typedef uint8_t Flag;
@@ -88,6 +89,8 @@ typedef struct Map Map;
 
 typedef struct Nil Nil;
 
+typedef struct Range Range;
+
 typedef struct Set Set;
 
 typedef struct String String;
@@ -115,6 +118,7 @@ typedef void Enumerate(Value *value, void (*block)(Value *value));
 #include "map.h"
 #include "memory.h"
 #include "nil.h"
+#include "range.h"
 #include "set.h"
 #include "stack.h"
 #include "string.h"

@@ -45,6 +45,11 @@ Class class[] = {
     [TypeNil] = {
         .hash = NilHash
     },
+    [TypeRange] = {
+	.dealloc = RangeDealloc,
+	.hash = RangeHash,
+	.enumerate = RangeEnumerate
+    },
     [TypeSet] = {
 	.dealloc = SetDealloc,
 	.hash = SetHash,
@@ -125,9 +130,14 @@ Nil *ValueNilBridge(Value *nilValue) {
     return (Nil *)nilValue;
 }
 
+Range *ValueRangeBridge(Value *rangeValue) {
+    return (Range *)rangeValue;
+}
+
 Set *ValueSetBridge(Value *setValue) {
     return (Set *)setValue;
 }
+
 String *ValueStringBridge(Value *stringValue) {
     return (String *)stringValue;
 }
