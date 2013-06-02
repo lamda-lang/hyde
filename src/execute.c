@@ -207,10 +207,6 @@ static Status ApplyArgs(Byte **code, Stack *stack, Error *error) {
     return StatusFailure;
 }
 
-static Status ExecuteDo(Byte **code, Stack *stack, Error *error) {
-    return StatusSuccess;
-}
-
 static Instruction *instruction[] = {
     [0] = CreateNil,
     [1] = CreateBooleanTrue,
@@ -230,8 +226,7 @@ static Instruction *instruction[] = {
     [15] = FetchSet,
     [16] = FetchList,
     [17] = FetchMap,
-    [18] = ApplyArgs,
-    [19] = ExecuteDo
+    [18] = ApplyArgs
 };
 
 Status ExecuteCode(Byte *code, Integer32 count, Stack *stack, Error *error) {
