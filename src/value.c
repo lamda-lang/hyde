@@ -10,6 +10,15 @@ Class class[] = {
     [TypeBoolean] = {
         .hash = BooleanHash
     },
+    [TypeDo] = {
+	.dealloc = DoDealloc,
+	.hash = DoHash,
+	.enumerate = DoEnumerate
+    },
+    [TypeFloat] = {
+	.dealloc = FloatDealloc,
+	.hash = FloatHash
+    },
     [TypeIdentifier] = {
         .dealloc = IdentifierDealloc,
         .hash = IdentifierHash
@@ -35,6 +44,11 @@ Class class[] = {
     },
     [TypeNil] = {
         .hash = NilHash
+    },
+    [TypeSet] = {
+	.dealloc = SetDealloc,
+	.hash = SetHash,
+	.enumerate = SetEnumerate
     },
     [TypeString] = {
         .dealloc = StringDealloc,
@@ -79,6 +93,14 @@ Boolean *ValueBooleanBridge(Value *booleanValue) {
     return (Boolean *)booleanValue;
 }
 
+Do *ValueDoBridge(Value *doValue) {
+    return (Do *)doValue;
+}
+
+Float *ValueFloatBridge(Value *floatValue) {
+    return (Float *)floatValue;
+}
+
 Identifier *ValueIdentifierBridge(Value *idValue) {
     return (Identifier *)idValue;
 }
@@ -103,6 +125,9 @@ Nil *ValueNilBridge(Value *nilValue) {
     return (Nil *)nilValue;
 }
 
+Set *ValueSetBridge(Value *setValue) {
+    return (Set *)setValue;
+}
 String *ValueStringBridge(Value *stringValue) {
     return (String *)stringValue;
 }

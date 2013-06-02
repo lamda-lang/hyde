@@ -51,11 +51,12 @@ void LambdaDealloc(Value *lambdaValue) {
     MemoryDealloc(lambda);
 }
 
-void LambdaFetch(Lambda *lambda, Value **values, Byte **bytes) {
-    for (Integer8 index = 0; index < lambda->contextLength; index += 1) {
-	Integer32 contextIndex = DecodeInteger32VLE(bytes);
-	lambda->context[index] = values[contextIndex];
-    }
+void LambdaSetContextValueAtIndex(Lambda *lambda, Value *value, Integer8 index) {
+    lambda->context[index] = value;
+}
+
+Integer8 LambdaContextLength(Lambda *lambda) {
+    return lambda->contextLength;
 }
 
 Integer64 LambdaHash(Value *lambdaValue) {

@@ -42,18 +42,22 @@ returnError:
     return NULL;
 }
 
-void DoFetchContext(Do *block, Value **values, Byte **bytes) {
-    for (Integer8 index = 0; index < block->contextLength; index += 1) {
-	Integer32 contextIndex = DecodeInteger32VLE(bytes);
-        block->context[index] = values[contextIndex];
-    }
-}
-
-void DoDealloc(Do *block) {
-    MemoryDealloc(block->code);
-    MemoryDealloc(block);
-}
-
-Integer64 DoHash(Do *block) {
+Integer8 DoContextCount(Do *block) {
     return block->contextLength;
+}
+
+void DoSetContextValueAtIndex(Do *block, Value *value, Integer8 index) {
+    block->context[index] = value;
+}
+
+void DoDealloc(Value *doValue) {
+
+}
+
+Integer64 DoHash(Value *doValue) {
+    return 0;
+}
+
+void DoEnumerate(Value *doValue, void (*block)(Value *value)) {
+
 }

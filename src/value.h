@@ -17,6 +17,10 @@ Integer64 ValueHash(Value *value);
 
 Boolean *ValueBooleanBridge(Value *booleanValue);
 
+Do *ValueDoBridge(Value *doValue);
+
+Float *ValueFloatBridge(Value *floatValue);
+
 Identifier *ValueIdentifierBridge(Value *idValue);
 
 Integer *ValueIntegerBridge(Value *integerValue);
@@ -28,6 +32,8 @@ List *ValueListBridge(Value *listValue);
 Map *ValueMapBridge(Value *mapValue);
 
 Nil *ValueNilBridge(Value *nilValue);
+
+Set *ValueSetBridge(Value *setValue);
 
 String *ValueStringBridge(Value *stringValue);
 

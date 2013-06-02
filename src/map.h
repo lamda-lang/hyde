@@ -7,7 +7,9 @@ Value *MapValueBridge(Map *map);
 
 Map *MapDecode(Byte **data, Error *error);
 
-void MapFetch(Map *map, Value **values, Byte **bytes);
+Integer32 MapCount(Map *map);
+
+void MapSetValueForKey(Map *map, Value *value, Value *key);
 
 void MapDealloc(Value *mapValue);
 

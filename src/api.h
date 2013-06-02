@@ -23,6 +23,8 @@ typedef size_t Size;
 
 typedef uint8_t Value;
 
+typedef double Float64;
+
 typedef uint8_t Error;
 enum {
     ErrorOutOfMemory,
@@ -44,13 +46,15 @@ typedef uint8_t Type;
 enum {
     TypeBoolean = 0,
     TypeDo = 1,
-    TypeIdentifier = 2,
-    TypeInteger = 3,
-    TypeLambda = 4,
-    TypeList = 5,
-    TypeMap = 6,
-    TypeNil = 7,
-    TypeString = 8
+    TypeFloat = 2,
+    TypeIdentifier = 3,
+    TypeInteger = 4,
+    TypeLambda = 5,
+    TypeList = 6,
+    TypeMap = 7,
+    TypeNil = 8,
+    TypeSet = 9,
+    TypeString = 10
 };
 
 typedef uint8_t Flag;
@@ -70,6 +74,8 @@ typedef struct Boolean Boolean;
 
 typedef struct Do Do;
 
+typedef struct Float Float;
+
 typedef struct Identifier Identifier;
 
 typedef struct Integer Integer;
@@ -80,9 +86,11 @@ typedef struct List List;
 
 typedef struct Map Map;
 
-typedef struct String String;
-
 typedef struct Nil Nil;
+
+typedef struct Set Set;
+
+typedef struct String String;
 
 typedef bool Kernel(Integer8 arity, Stack *stack);
 
@@ -98,6 +106,7 @@ typedef void Enumerate(Value *value, void (*block)(Value *value));
 #include "do.h"
 #include "execute.h"
 #include "file.h"
+#include "float.h"
 #include "identifier.h"
 #include "integer.h"
 #include "kernel.h"
@@ -106,6 +115,7 @@ typedef void Enumerate(Value *value, void (*block)(Value *value));
 #include "map.h"
 #include "memory.h"
 #include "nil.h"
+#include "set.h"
 #include "stack.h"
 #include "string.h"
 #include "value.h"

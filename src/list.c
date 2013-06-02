@@ -28,15 +28,16 @@ List *ListDecode(Byte **bytes, Error *error) {
     return Create(length, error);
 }
 
-void ListFetch(List *list, Value **values, Byte **bytes) {
-    for (Integer32 index = 0; index < list->length; index += 1) {
-	Integer32 elementIndex = DecodeInteger32VLE(bytes);
-	list->element[index] = values[elementIndex];
-    }
+Integer32 ListLength(List *list) {
+    return list->length;
 }
 
 void ListDealloc(Value *listValue) {
     MemoryDealloc(listValue);
+}
+
+void ListSetValueAtIndex(List *list, Value *value, Integer32 index) {
+    list->element[index] = value;
 }
 
 Value *ListGetValueAtIndex(List *list, Integer32 index) {

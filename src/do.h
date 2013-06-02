@@ -7,10 +7,14 @@ Value *DoValueBridge(Do *block);
 
 Do *DoDecode(Byte **bytes, Error *error);
 
-void DoFetchContext(Do *block, Value **values, Byte **bytes);
+Integer8 DoContextCount(Do *block);
 
-void DoDealloc(Do *block);
+void DoSetContextValueAtIndex(Do *block, Value *value, Integer8 index);
 
-Integer64 DoHash(Do *block);
+void DoDealloc(Value *doValue);
+
+Integer64 DoHash(Value *doValue);
+
+void DoEnumerate(Value *doValue, void (*block)(Value *value));
 
 #endif
