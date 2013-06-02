@@ -35,6 +35,18 @@ returnError:
     return StatusFailure;
 }
 
+static inline Status CreateFloat(Byte **code, Stack *stack, Error *error) {
+    Float *fpv = FloatDecode(code, error);
+    if (fpv == NULL) {
+	goto returnError;
+    }
+    *DecodeFrameValue(code, stack) = FloatValueBridge(fpv);
+    return StatusSuccess;
+
+returnError:
+    return StatusFailure;
+}
+
 static inline Status CreateIdentifier(Byte **code, Stack *stack, Error *error) {
     Identifier *id = IdentifierDecode(code, error);
     if (id == NULL) {
@@ -105,6 +117,18 @@ static inline Status CreateNil(Byte **code, Stack *stack, Error *error) {
     return StatusSuccess;
 }
 
+static inline Status CreateRange(Byte **code, Stack *stack, Error *error) {
+    Range *range = RangeCreate(error);
+    if (range == NULL) {
+	goto returnError;
+    }
+    *DecodeFrameValue(code, stack) = RangeValueBridge(range);
+    return StatusSuccess;
+
+returnError:
+    return StatusFailure;
+}
+
 static inline Status CreateSet(Byte **code, Stack *stack, Error *error) {
     Set *set = SetDecode(code, error);
     if (set == NULL) {
@@ -135,8 +159,8 @@ static inline Status ApplyArg(Byte **code, Stack *stack, Error *error) {
 }
 
 static inline Status FetchList(Byte **code, Stack *stack, Error *error) {
-    Value *target = *DecodeFrameValue(code, stack);
-    List *list = ValueListBridge(target);
+    Value *listValue = *DecodeFrameValue(code, stack);
+    List *list = ValueListBridge(listValue);
     Integer32 length = ListLength(list);
     for (Integer32 index = 0; index < length; index += 1) {
 	Value *value = *DecodeFrameValue(code, stack);
@@ -146,8 +170,8 @@ static inline Status FetchList(Byte **code, Stack *stack, Error *error) {
 }
 
 static inline Status FetchMap(Byte **code, Stack *stack, Error *error) {
-    Value *target = *DecodeFrameValue(code, stack);
-    Map *map = ValueMapBridge(target);
+    Value *mapValue = *DecodeFrameValue(code, stack);
+    Map *map = ValueMapBridge(mapValue);
     Integer32 count = MapCount(map);
     for (Integer32 index = 0; index < count; index += 1) {
 	Value *key = *DecodeFrameValue(code, stack);
@@ -157,9 +181,34 @@ static inline Status FetchMap(Byte **code, Stack *stack, Error *error) {
     return StatusSuccess;
 }
 
+static inline Status FetchRange(Byte **code, Stack *stack, Error *error) {
+    Value *rangeValue = *DecodeFrameValue(code, stack);
+    Range *range = ValueRangeBridge(rangeValue);
+    Value *lower = *DecodeFrameValue(code, stack);
+    Value *upper = *DecodeFrameValue(code, stack);
+    RangeSetBounds(range, lower, upper);
+    return StatusSuccess;
+}
+
+static inline Status FetchRangeLower(Byte **code, Stack *stack, Error *error) {
+    Value *rangeValue = *DecodeFrameValue(code, stack);
+    Range *range = ValueRangeBridge(rangeValue);
+    Value *lower = *DecodeFrameValue(code, stack);
+    RangeSetBounds(range, lower, NULL);
+    return StatusSuccess;
+}
+
+static inline Status FetchRangeUpper(Byte **code, Stack *stack, Error *error) {
+    Value *rangeValue = *DecodeFrameValue(code, stack);
+    Range *range = ValueRangeBridge(rangeValue);
+    Value *upper = *DecodeFrameValue(code, stack);
+    RangeSetBounds(range, NULL, upper);
+    return StatusSuccess;
+}
+
 static inline Status FetchSet(Byte **code, Stack *stack, Error *error) {
-    Value *target = *DecodeFrameValue(code, stack);
-    Set *set = ValueSetBridge(target);
+    Value *setValue = *DecodeFrameValue(code, stack);
+    Set *set = ValueSetBridge(setValue);
     Value **values = StackValuesFromTopFrame(stack);
     SetFetch(set, values, code);
     return StatusSuccess;
@@ -169,18 +218,23 @@ static Instruction *instruction[] = {
     [0] = CreateBooleanTrue,
     [1] = CreateBooleanFalse,
     [2] = CreateDo,
-    [3] = CreateIdentifier,
-    [4] = CreateInteger,
-    [5] = CreateLambda,
-    [6] = CreateList,
-    [7] = CreateMap,
-    [8] = CreateNil,
-    [9] = CreateSet,
-    [10] = CreateString,
-    [11] = ApplyArg,
-    [12] = FetchList,
-    [13] = FetchMap,
-    [14] = FetchSet
+    [3] = CreateFloat,
+    [4] = CreateIdentifier,
+    [5] = CreateInteger,
+    [6] = CreateLambda,
+    [7] = CreateList,
+    [8] = CreateMap,
+    [9] = CreateNil,
+    [10] = CreateRange,
+    [11] = CreateSet,
+    [12] = CreateString,
+    [13] = ApplyArg,
+    [14] = FetchList,
+    [15] = FetchMap,
+    [16] = FetchRange,
+    [17] = FetchRangeLower,
+    [18] = FetchRangeUpper,
+    [19] = FetchSet
 };
 
 Status ExecuteCode(Byte *code, Integer32 count, Stack *stack, Error *error) {
