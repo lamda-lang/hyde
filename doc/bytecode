@@ -1,35 +1,95 @@
-# Bytecode Format
+CREATE_NIL:
+  I8FLE: 0
+  I32VLE: nil_index
 
+CREATE_TRUE:
+  I8FLE: 1
+  I32VLE: true_index
 
-## Types
+CREATE_FALSE:
+  I8FLE: 2
+  I32VLE: false_index
 
-.Fixed width types
-----
-8I: 8-bit integer
-16I: 16-bit integer
-32I: 32-bit integer
-64I: 64-bit integer
-----
+CREATE_INTEGER:
+  I8FLE: 3
+  I64FLE: value
+  I32VLE: integer_index
 
-.Variable width types
-----
-32VBRI: 32-bit integer
-----
+CREATE_FLOAT:
+  I8FLE: 4
+  F64FLE: value
+  I32VLE: float_index
 
+CREATE_IDETIFIER:
+  I8FLE: 5
+  I8FLE: length
+  I8FLE.length: codepoint
+  I32VLE: identifier_index
 
-## Header
+CREATE_STRING:
+  I8FLE: 6
+  I32VLE: length
+  I32VLE.length: codepoint
+  I32VLE: string_index
 
-----
-32VBRI:registerCount
-32VBRI:instructionCount
-----
+CREATE_RANGE:
+  I8FLE: 7
+  I32VLE: range_index
 
+CREATE_SET:
+  I8FLE: 8
+  I32VLE: count
+  I32VLE: set_index
 
-## Opcodes
+CREATE_LIST:
+  I8FLE: 9
+  I32VLE: count
+  I32VLE: list_index
 
-----
-CREATE_IDENTIFIER: 8I:0 8I:length [8I:character].length
-CREATE_LIST: 8I:1 32VBRI:length [32VBRI:elementIndex].length
-CREATE_MODULE: 8I:2 32VBR:capacity [32VBRI:keyIndex 32VBRI:valueIndex].capacity
-CREATE_STRING: 8I:3 8I:length [8I.character].length
-----
+CREATE_MAP:
+  I8FLE: 10
+  I32VLE: count
+  I32VLE: map_index
+
+CREATE_LAMBDA:
+  I8FLE: 11
+  I32VLE: register_count
+  I32VLE: instruction_count
+  I8FLE: context_length
+  I32VLE: code_size
+  I8FLE: arity
+  I8FLE.code_size: code
+  I32VLE.context_length: context_index
+  I32VLE: lambda_index
+
+CREATE_DO:
+  I8FLE:12
+  I32VLE: register_count
+  I32VLE: instruction_count
+  I8FLE: context_length
+  I32VLE: code_size
+  I8FLE.code_size: code
+  I32VLE.context_length: context_index
+  I32VLE: do_index
+
+FetchRangeLower
+I8FLE:13
+
+FetchRangeUpper
+I8FLE:14
+
+FetchSet
+I8FLE:15
+
+FetchList
+I8FLE:16
+
+FetchMap
+I8FLE:17
+
+ApplyArgs
+I8FLE:18
+
+ExecuteDo
+I8FLE:19
+
