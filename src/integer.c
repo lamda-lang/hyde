@@ -32,7 +32,7 @@ void IntegerDealloc(Value *integerValue) {
 }
 
 Integer64 IntegerHash(Value *integerValue) {
-    Integer *integer = ValueIntegerBridge(integerValue);
+    Integer *integer = ValueIntegerBridge(integerValue, NULL);
     return integer->value;
 }
 

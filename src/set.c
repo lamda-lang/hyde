@@ -54,11 +54,11 @@ void SetDealloc(Value *setValue) {
 }
 
 Integer64 SetHash(Value *setValue) {
-    return  ValueSetBridge(setValue)->length;
+    return  ValueSetBridge(setValue, NULL)->length;
 }
 
 void SetEnumerate(Value *setValue, void (*block)(Value *value)) {
-    Set *set = ValueSetBridge(setValue);
+    Set *set = ValueSetBridge(setValue, NULL);
     for (Integer32 index = 0; index < set->length; index += 1) {
         block(set->element[index]);
     }

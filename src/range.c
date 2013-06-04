@@ -36,12 +36,12 @@ void RangeSetBounds(Range *range, Value *lower, Value *upper) {
 }
 
 Integer64 RangeHash(Value *rangeValue) {
-    Range *range = ValueRangeBridge(rangeValue);
+    Range *range = ValueRangeBridge(rangeValue, NULL);
     return HashValue(range->lower) + HashValue(range->upper);
 }
 
 void RangeEnumerate(Value *rangeValue, void (*block)(Value *value)) {
-    Range *range = ValueRangeBridge(rangeValue);
+    Range *range = ValueRangeBridge(rangeValue, NULL);
     block(range->lower);
     block(range->upper);
 }

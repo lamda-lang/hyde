@@ -61,7 +61,7 @@ Class class[] = {
     }
 };
 
-Type ValueType(Value *value) {
+static Type GetType(Value *value) {
     return *value & 0XF;
 }
 
@@ -74,7 +74,7 @@ bool ValueFlagSet(Value *value, Flag mask) {
 }
 
 void ValueEnumerate(Value *value, void (*block)(Value *value)) {
-    Type type = ValueType(value);
+    Type type = GetType(value);
     Enumerate *enumerate = class[type].enumerate;
     if (enumerate != NULL) {
         enumerate(value, block);
@@ -82,7 +82,7 @@ void ValueEnumerate(Value *value, void (*block)(Value *value)) {
 }
 
 void ValueDealloc(Value *value) {
-    Type type = ValueType(value);
+    Type type = GetType(value);
     Dealloc *dealloc = class[type].dealloc;
     if (dealloc != NULL) {
         dealloc(value);
@@ -90,54 +90,138 @@ void ValueDealloc(Value *value) {
 }
 
 Integer64 ValueHash(Value *value) {
-    Type type = ValueType(value);
+    Type type = GetType(value);
     return class[type].hash(value);
 }
 
-Boolean *ValueBooleanBridge(Value *booleanValue) {
-    return (Boolean *)booleanValue;
+Boolean *ValueBooleanBridge(Value *value, Error *error) {
+    if (error != NULL && GetType(value) != TypeBoolean) {
+	*error = ErrorInvalidType;
+	goto returnError;
+    }
+    return (Boolean *)value;
+
+returnError:
+    return NULL;
 }
 
-Do *ValueDoBridge(Value *doValue) {
-    return (Do *)doValue;
+Do *ValueDoBridge(Value *value, Error *error) {
+    if (error != NULL && GetType(value) != TypeDo) {
+	*error = ErrorInvalidType;
+	goto returnError;
+    }
+    return (Do *)value;
+
+returnError:
+    return NULL;
 }
 
-Float *ValueFloatBridge(Value *floatValue) {
-    return (Float *)floatValue;
+Float *ValueFloatBridge(Value *value, Error *error) {
+    if (error != NULL && GetType(value) != TypeFloat) {
+	*error = ErrorInvalidType;
+	goto returnError;
+    }
+    return (Float *)value;
+
+returnError:
+    return NULL;
 }
 
-Identifier *ValueIdentifierBridge(Value *idValue) {
-    return (Identifier *)idValue;
+Identifier *ValueIdentifierBridge(Value *value, Error *error) {
+    if (error != NULL && GetType(value) != TypeIdentifier) {
+	*error = ErrorInvalidType;
+	goto returnError;
+    }
+    return (Identifier *)value;
+
+returnError:
+    return NULL;
 }
 
-Integer *ValueIntegerBridge(Value *integerValue) {
-    return (Integer *)integerValue;
+Integer *ValueIntegerBridge(Value *value, Error *error) {
+    if (error != NULL && GetType(value) != TypeInteger) {
+	*error = ErrorInvalidType;
+	goto returnError;
+    }
+    return (Integer *)value;
+
+returnError:
+    return NULL;
 }
 
-Lambda *ValueLambdaBridge(Value *lambdaValue) {
-    return (Lambda *)lambdaValue;
+Lambda *ValueLambdaBridge(Value *value, Error *error) {
+    if (error != NULL && GetType(value) != TypeLambda) {
+	*error = ErrorInvalidType;
+	goto returnError;
+    }
+    return (Lambda *)value;
+
+returnError:
+    return NULL;
 }
 
-List *ValueListBridge(Value *listValue) {
-    return (List *)listValue;
+List *ValueListBridge(Value *value, Error *error) {
+    if (error != NULL && GetType(value) != TypeList) {
+	*error = ErrorInvalidType;
+	goto returnError;
+    }
+    return (List *)value;
+
+returnError:
+    return NULL;
 }
 
-Map *ValueMapBridge(Value *mapValue) {
-    return (Map *)mapValue;
+Map *ValueMapBridge(Value *value, Error *error) {
+    if (error != NULL && GetType(value) != TypeMap) {
+	*error = ErrorInvalidType;
+	goto returnError;
+    }
+    return (Map *)value;
+
+returnError:
+    return NULL;
 }
 
-Nil *ValueNilBridge(Value *nilValue) {
-    return (Nil *)nilValue;
+Nil *ValueNilBridge(Value *value, Error *error) {
+    if (error != NULL && GetType(value) != TypeNil) {
+	*error = ErrorInvalidType;
+	goto returnError;
+    }
+    return (Nil *)value;
+
+returnError:
+    return NULL;
 }
 
-Range *ValueRangeBridge(Value *rangeValue) {
-    return (Range *)rangeValue;
+Range *ValueRangeBridge(Value *value, Error *error) {
+    if (error != NULL && GetType(value) != TypeRange) {
+	*error = ErrorInvalidType;
+	goto returnError;
+    }
+    return (Range *)value;
+
+returnError:
+    return NULL;
 }
 
-Set *ValueSetBridge(Value *setValue) {
-    return (Set *)setValue;
+Set *ValueSetBridge(Value *value, Error *error) {
+    if (error != NULL && GetType(value) != TypeSet) {
+	*error = ErrorInvalidType;
+	goto returnError;
+    }
+    return (Set *)value;
+
+returnError:
+    return NULL;
 }
 
-String *ValueStringBridge(Value *stringValue) {
-    return (String *)stringValue;
+String *ValueStringBridge(Value *value, Error *error) {
+    if (error != NULL && GetType(value) != TypeString) {
+	*error = ErrorInvalidType;
+	goto returnError;
+    }
+    return (String *)value;
+
+returnError:
+    return NULL;
 }

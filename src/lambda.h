@@ -13,14 +13,16 @@ void LambdaSetContextValueAtIndex(Lambda *lambda, Value *value, Integer8 index);
 
 Integer8 LambdaContextLength(Lambda *lambda);
 
-Integer8 LambdaArity(Lambda *lambda);
-
 Integer64 LambdaHash(Value *lambdaValue);
 
-Integer32 LambdaRegisterCount(Lambda *lambda);
-
-Status LambdaExecute(Lambda *lambda, Byte **bytes, Stack *stack, Error *error);
+Value *LambdaExecute(Lambda *lambda, Args *args, Stack *stack, Error *error);
 
 void LambdaEnumerate(Value *lambdaValue, void (*block)(Value *value));
+
+Args *ArgsDecode(Byte **bytes, Error *error);
+
+Integer8 ArgsCount(Args *args);
+
+Value **ArgsValues(Args *args);
 
 #endif

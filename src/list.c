@@ -45,12 +45,12 @@ Value *ListGetValueAtIndex(List *list, Integer32 index) {
 }
 
 Integer64 ListHash(Value *listValue) {
-    List *list = ValueListBridge(listValue);
+    List *list = ValueListBridge(listValue, NULL);
     return list->length;
 }
 
 void ListEnumerate(Value *listValue, void (*block)(Value *value)) {
-    List *list = ValueListBridge(listValue);
+    List *list = ValueListBridge(listValue, NULL);
     for (Integer32 index = 0; index < list->length; index += 1) {
         block(list->element[index]);
     }

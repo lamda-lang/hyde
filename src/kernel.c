@@ -1,31 +1,17 @@
 #include "kernel.h"
 
-Status KernelIntegerSum(Stack *stack, Error *error) {
-    Value **arg = StackArgsFromTopFrame(stack);
-    Integer *integer = ValueIntegerBridge(arg[0]);
-    Integer *other = ValueIntegerBridge(arg[1]);
-    Integer *new = IntegerSum(integer, other, error);
-    if (new == NULL) {
-        goto returnError;
-    }
-    *StackResultFromTopFrame(stack) = IntegerValueBridge(new);
-    return StatusSuccess;
-
-returnError:
-  return StatusFailure;
+Value *KernelIntegerSum(Args *args, Error *error) {
+    Value **arg = ArgsValues(args);
+    Integer *integer = ValueIntegerBridge(arg[0], NULL);
+    Integer *other = ValueIntegerBridge(arg[1], NULL);
+    Integer *result = IntegerSum(integer, other, error);
+    return IntegerValueBridge(result);
 }
 
-Status KernelStringConcatenate(Stack *stack, Error *error) {
-    Value **arg = StackArgsFromTopFrame(stack);
-    String *string = ValueStringBridge(arg[0]);
-    String *other = ValueStringBridge(arg[1]);
-    String *new = StringConcatenate(string, other, error);
-    if (new == NULL) {
-        goto returnError;
-    }
-    *StackResultFromTopFrame(stack) = StringValueBridge(new);
-    return StatusSuccess;
-
-returnError:
-    return StatusFailure;
+Value *KernelStringConcatenate(Args *args, Error *error) {
+    Value **arg = ArgsValues(args);
+    String *string = ValueStringBridge(arg[0], NULL);
+    String *other = ValueStringBridge(arg[1], NULL);
+    String *result = StringConcatenate(string, other, error);
+    return StringValueBridge(result);
 }

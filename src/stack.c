@@ -18,7 +18,6 @@ typedef union {
 struct Stack {
     Element *root;
     Frame top;
-    Frame next;
     Integer32 capacity;
 };
 
@@ -50,8 +49,6 @@ Stack *StackCreate(Integer32 capacity, Error *error) {
     stack->root = root;
     stack->top.index = 0;
     stack->top.length = 0;
-    stack->next.index = 0;
-    stack->next.length = 0;
     return stack;
 
 deallocStack:
@@ -65,10 +62,12 @@ void StackDealloc(Stack *stack) {
     MemoryDealloc(stack);
 }
 
-Status StackBuildNextFrame(Stack *stack, Integer32 count, Error *error) {
-    Frame top = stack->top;
-    Integer32 length = HEADER_LENGTH + count;
-    if (top.index + top.length + length > stack->capacity) { 
+Status StackPushFrame(Stack *stack, Integer32 count, Error *error) {
+    Frame next = {
+        .index = stack->top.index + stack->top.length,
+	.length = HEADER_LENGTH + count
+    };
+    if (next.index + next.length > stack->capacity) { 
         Integer32 capacity = stack->capacity * 2;
         Element *root = MemoryRealloc(stack->root, capacity, error);
         if (root == NULL) {
@@ -77,20 +76,14 @@ Status StackBuildNextFrame(Stack *stack, Integer32 count, Error *error) {
         stack->capacity = capacity;
         stack->root = root;
     }
-    stack->next.index = top.index + top.length;
-    stack->next.length = length;
+    stack->top = next;
     return StatusSuccess;
 
 returnError:
     return StatusFailure;
 }
 
-void StackPushNextFrame(Stack *stack) {
-    stack->root[stack->next.index].frame = stack->top;
-    stack->top = stack->next;
-}
-
-void StackPullTopFrame(Stack *stack) {
+void StackPullFrame(Stack *stack) {
     Frame top = stack->top;
     Value *root = stack->root[top.index + VALUE_OFFSET].value;
     RemoveGarbageFlagWithRoot(root);
@@ -104,18 +97,14 @@ void StackPullTopFrame(Stack *stack) {
     stack->top = stack->root[top.index].frame;
 }
 
-Value **StackValuesFromTopFrame(Stack *stack) {
+Value **StackFrameValues(Stack *stack) {
     return &stack->root[stack->top.index + VALUE_OFFSET].value;
 }
 
-Value **StackArgsFromTopFrame(Stack *stack) {
+Value **StackFrameArgs(Stack *stack) {
     return &stack->root[stack->top.index + ARG_OFFSET].value;
 }
 
-Value **StackArgsFromNextFrame(Stack *stack) {
-    return &stack->root[stack->next.index + ARG_OFFSET].value;
-}
-
-Value **StackResultFromTopFrame(Stack *stack) {
+Value **StackFrameResult(Stack *stack) {
     return &stack->root[stack->top.index + RESULT_OFFSET].value;
 }

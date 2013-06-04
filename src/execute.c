@@ -3,7 +3,7 @@
 typedef Status Instruction(Byte **code, Stack *stack, Error *error);
 
 static Value **DecodeFrameValue(Byte **code, Stack *stack) {
-    return StackValuesFromTopFrame(stack) + DecodeInteger32VLE(code);
+    return StackFrameValues(stack) + DecodeInteger32VLE(code);
 }
 
 static Status CreateNil(Byte **code, Stack *stack, Error *error) {
@@ -153,79 +153,28 @@ returnError:
 }
 
 static Status CreateResult(Byte **code, Stack *stack, Error *error) {
-    Result *result = ResultDecode(code, error);
-    Value *lambdaValue = *DecodeFrameValue(code, stack);
-    if (ValueType(lambdaValue) != TypeLambda) {
-	*error = ErrorInvalidType;
-	goto deallocResult;
+    Value *value = *DecodeFrameValue(code, stack);
+    Lambda *lambda = ValueLambdaBridge(value, error);
+    if (lambda == NULL) {
+	goto returnError;
     }
-    Lambda *lambda = ValueLambdaBridge(lambdaValue);
-    Integer8 arity = ResultArity(result);
-    if (arity != LambdaArity(lambda)) {
-        *error = ErrorArityMismatch;
-	goto deallocResult;
+    Args *args = ArgsDecode(code, error);
+    if (args == NULL) {
+	goto returnError;
     }
-    ResultSetLambda(result, lambda);
-    for (Integer8 index = 0; index < arity; index += 1) {
-	Value *arg = *DecodeFrameValue(code, stack);
-	ResultSetArgAtIndex(result, arg, index);
+    Integer8 argCount = ArgsCount(args);
+    for (Integer8 index = 0; index < argCount; index += 1) {
+	ArgsValues(args)[index] = *DecodeFrameValue(code, stack);
     }
-    *DecodeFrameValue(code, stack) = ResultValueBridge(result);
+    Value *result = LambdaExecute(lambda, args, stack, error);
+    if (result == NULL) {
+	goto returnError;
+    }
+    *DecodeFrameValue(code, stack) = result;
     return StatusSuccess;
 
-deallocResult:
-    ResultDealloc(result);
+returnError:
     return StatusFailure;
-}
-
-static Status FetchRangeLower(Byte **code, Stack *stack, Error *error) {
-    Value *rangeValue = *DecodeFrameValue(code, stack);
-    Range *range = ValueRangeBridge(rangeValue);
-    Value *lower = *DecodeFrameValue(code, stack);
-    RangeSetBounds(range, lower, NULL);
-    return StatusSuccess;
-}
-
-static Status FetchRangeUpper(Byte **code, Stack *stack, Error *error) {
-    Value *rangeValue = *DecodeFrameValue(code, stack);
-    Range *range = ValueRangeBridge(rangeValue);
-    Value *upper = *DecodeFrameValue(code, stack);
-    RangeSetBounds(range, NULL, upper);
-    return StatusSuccess;
-}
-
-static Status FetchSet(Byte **code, Stack *stack, Error *error) {
-    Value *setValue = *DecodeFrameValue(code, stack);
-    Set *set = ValueSetBridge(setValue);
-    Integer32 count = SetCount(set);
-    for (Integer32 index = 0; index < count; index += 1) {
-	Value *value = *DecodeFrameValue(code, stack);
-	SetAddValue(set, value);
-    }
-    return StatusSuccess;
-}
-
-static Status FetchList(Byte **code, Stack *stack, Error *error) {
-    Value *listValue = *DecodeFrameValue(code, stack);
-    List *list = ValueListBridge(listValue);
-    Integer32 length = ListLength(list);
-    for (Integer32 index = 0; index < length; index += 1) {
-	Value *value = *DecodeFrameValue(code, stack);
-        ListSetValueAtIndex(list, value, index);	
-    }
-    return StatusSuccess;
-}
-
-static Status FetchMap(Byte **code, Stack *stack, Error *error) {
-    Value *mapValue = *DecodeFrameValue(code, stack);
-    Map *map = ValueMapBridge(mapValue);
-    Integer32 count = MapCount(map);
-    for (Integer32 index = 0; index < count; index += 1) {
-	Value *key = *DecodeFrameValue(code, stack);
-	Value *value = *DecodeFrameValue(code, stack);
-	MapSetValueForKey(map, value, key);
-    }
-    return StatusSuccess;
 }
 
 static Instruction *instruction[] = {
@@ -242,12 +191,7 @@ static Instruction *instruction[] = {
     [10] = CreateMap,
     [11] = CreateLambda,
     [12] = CreateDo,
-    [13] = CreateResult,
-    [14] = FetchRangeLower,
-    [15] = FetchRangeUpper,
-    [16] = FetchSet,
-    [17] = FetchList,
-    [18] = FetchMap
+    [13] = CreateResult
 };
 
 Status ExecuteCode(Byte *code, Integer32 count, Stack *stack, Error *error) {

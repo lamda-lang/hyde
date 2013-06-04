@@ -61,11 +61,11 @@ void MapDealloc(Value *mapValue) {
 }
 
 Integer64 MapHash(Value *mapValue) {
-    return ValueMapBridge(mapValue)->length;
+    return ValueMapBridge(mapValue, NULL)->length;
 }
 
 void MapEnumerate(Value *mapValue, void (*block)(Value *value)) {
-    Map *map = ValueMapBridge(mapValue);
+    Map *map = ValueMapBridge(mapValue, NULL);
     for (Integer32 index = 0; index < map->length; index += 1) {
         block(map->element[index].key);
         block(map->element[index].value);

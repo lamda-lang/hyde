@@ -7,18 +7,14 @@ Stack *StackCreate(Integer32 capacity, Error *error);
 
 void StackDealloc(Stack *stack);
 
-Status StackBuildNextFrame(Stack *stack, Integer32 count, Error *error);
+Status StackPushFrame(Stack *stack, Integer32 count, Error *error);
 
-void StackPushNextFrame(Stack *stack);
+void StackPullFrame(Stack *stack);
 
-void StackPullTopFrame(Stack *stack);
+Value **StackFrameValues(Stack *stack);
 
-Value **StackValuesFromTopFrame(Stack *stack);
+Value **StackFrameArgs(Stack *stack);
 
-Value **StackArgsFromTopFrame(Stack *stack);
-
-Value **StackArgsFromNextFrame(Stack *stack);
-
-Value **StackResultFromTopFrame(Stack *stack);
+Value **StackFrameResult(Stack *stack);
 
 #endif

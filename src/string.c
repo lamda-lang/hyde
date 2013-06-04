@@ -44,7 +44,7 @@ returnError:
 }
 
 Integer64 StringHash(Value *stringValue) {
-    String *string = ValueStringBridge(stringValue);
+    String *string = ValueStringBridge(stringValue, NULL);
     return string->length;
 }
 

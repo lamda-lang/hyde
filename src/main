@@ -1,0 +1,6 @@
+file = module:"file"
+
+main(args) = do
+  
+end
+

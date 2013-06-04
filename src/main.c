@@ -28,13 +28,13 @@ static Value *ExecuteBytecode(Data *data, Error *error) {
     if (stack == NULL) {
 	goto returnError;
     }
-    if (StackBuildNextFrame(stack, registerCount, error) == StatusFailure) {
+    if (StackPushFrame(stack, registerCount, error) == StatusFailure) {
 	goto deallocStack;
     }
     if (ExecuteCode(code, instructionCount, stack, error) == StatusFailure) {
 	goto deallocStack;
     }
-    Value *result = *StackResultFromTopFrame(stack);
+    Value *result = *StackFrameResult(stack);
     StackDealloc(stack);
     return result;
 
@@ -45,7 +45,7 @@ returnError:
 }
 
 static void PrintValue(Value *value) {
-    String *string = ValueStringBridge(value);
+    String *string = ValueStringBridge(value, NULL);
     Integer32 length = StringLength(string);
     Integer32 *codepoints = StringCodepoints(string);
     for (Integer32 index = 0; index < length; index += 1) {

@@ -32,7 +32,7 @@ void FloatDealloc(Value *floatValue) {
 }
 
 Integer64 FloatHash(Value *floatValue) {
-    Float *fpv = ValueFloatBridge(floatValue);
+    Float *fpv = ValueFloatBridge(floatValue, NULL);
     return (Integer64)fpv->value;
 }
 

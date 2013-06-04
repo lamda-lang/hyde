@@ -25,6 +25,6 @@ Boolean *BooleanFalseSingleton(void) {
 }
 
 Integer64 BooleanHash(Value *booleanValue) {
-    Boolean *boolean = ValueBooleanBridge(booleanValue);
+    Boolean *boolean = ValueBooleanBridge(booleanValue, NULL);
     return boolean == &trueSingleton ? 1 : 0;
 }
