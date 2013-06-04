@@ -72,6 +72,13 @@ CREATE_DO
   [I32VLE : context_index].context_length
   I32VLE : do_index
 
+CREATE_RESULT
+  I8FLE : 13
+  I32VLE : lambda_index
+  I8FLE: arg_count
+  [I32VLE : arg_index].arg_count
+  I32VLE : result_index
+
 FETCH_RANGE_LOWER
   I8FLE : 13
   I32VLE : range_index
@@ -96,10 +103,3 @@ FETCH_MAP
   I8FLE : 17
   I32VLE : map_index
   [I32VLE : keyIndex I32VLE: valueIndex].map_count
-
-APPLY_ARGS
-  I8FLE : 18
-  I32VLE : lambda_index
-  I8FLE: arg_count
-  [I32VLE : arg_index].arg_count
-  I32VLE : result_index

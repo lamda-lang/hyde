@@ -59,6 +59,10 @@ Integer8 LambdaContextLength(Lambda *lambda) {
     return lambda->contextLength;
 }
 
+Integer8 LambdaArity(Lambda *lambda) {
+    return lambda->arity;
+}
+
 Integer64 LambdaHash(Value *lambdaValue) {
     Lambda *lambda = ValueLambdaBridge(lambdaValue);
     return lambda->registerCount;

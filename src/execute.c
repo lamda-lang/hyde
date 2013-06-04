@@ -152,6 +152,32 @@ returnError:
     return StatusFailure;
 }
 
+static Status CreateResult(Byte **code, Stack *stack, Error *error) {
+    Result *result = ResultDecode(code, error);
+    Value *lambdaValue = *DecodeFrameValue(code, stack);
+    if (ValueType(lambdaValue) != TypeLambda) {
+	*error = ErrorInvalidType;
+	goto deallocResult;
+    }
+    Lambda *lambda = ValueLambdaBridge(lambdaValue);
+    Integer8 arity = ResultArity(result);
+    if (arity != LambdaArity(lambda)) {
+        *error = ErrorArityMismatch;
+	goto deallocResult;
+    }
+    ResultSetLambda(result, lambda);
+    for (Integer8 index = 0; index < arity; index += 1) {
+	Value *arg = *DecodeFrameValue(code, stack);
+	ResultSetArgAtIndex(result, arg, index);
+    }
+    *DecodeFrameValue(code, stack) = ResultValueBridge(result);
+    return StatusSuccess;
+
+deallocResult:
+    ResultDealloc(result);
+    return StatusFailure;
+}
+
 static Status FetchRangeLower(Byte **code, Stack *stack, Error *error) {
     Value *rangeValue = *DecodeFrameValue(code, stack);
     Range *range = ValueRangeBridge(rangeValue);
@@ -202,11 +228,6 @@ static Status FetchMap(Byte **code, Stack *stack, Error *error) {
     return StatusSuccess;
 }
 
-static Status ApplyArgs(Byte **code, Stack *stack, Error *error) {
-    /* missing */
-    return StatusFailure;
-}
-
 static Instruction *instruction[] = {
     [0] = CreateNil,
     [1] = CreateBooleanTrue,
@@ -221,12 +242,12 @@ static Instruction *instruction[] = {
     [10] = CreateMap,
     [11] = CreateLambda,
     [12] = CreateDo,
-    [13] = FetchRangeLower,
-    [14] = FetchRangeUpper,
-    [15] = FetchSet,
-    [16] = FetchList,
-    [17] = FetchMap,
-    [18] = ApplyArgs
+    [13] = CreateResult,
+    [14] = FetchRangeLower,
+    [15] = FetchRangeUpper,
+    [16] = FetchSet,
+    [17] = FetchList,
+    [18] = FetchMap
 };
 
 Status ExecuteCode(Byte *code, Integer32 count, Stack *stack, Error *error) {

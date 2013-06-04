@@ -13,6 +13,8 @@ void LambdaSetContextValueAtIndex(Lambda *lambda, Value *value, Integer8 index);
 
 Integer8 LambdaContextLength(Lambda *lambda);
 
+Integer8 LambdaArity(Lambda *lambda);
+
 Integer64 LambdaHash(Value *lambdaValue);
 
 Integer32 LambdaRegisterCount(Lambda *lambda);
