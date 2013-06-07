@@ -33,6 +33,8 @@ Nil *ValueNilBridge(Value *value, Error *error);
 
 Range *ValueRangeBridge(Value *value, Error *error);
 
+Result *ValueResultBridge(Value *value, Error *error);
+
 Set *ValueSetBridge(Value *value, Error *error);
 
 String *ValueStringBridge(Value *value, Error *error);

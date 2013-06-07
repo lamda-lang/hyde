@@ -1,21 +1,25 @@
 #include "range.h"
 
-struct Range {
-    Value base;
-    Value *lower;
-    Value *upper;
+enum {
+    FlagUpper = FlagAlpha,
+    FlagLower = FlagBeta
 };
 
-static inline Integer64 HashValue(Value *value) {
-    return value != NULL ? ValueHash(value) : 0;
-}
+struct Range {
+    Value base;
+    Element upper;
+    Element lower;
+};
 
-Range *RangeCreate(Error *error) {
-    Range *range = MemoryAlloc(sizeof(Range), error);
+static Range *Create(Flag mask, Integer32 upperIndex, Integer32 lowerIndex, Error *error) {
+    Size size = sizeof(Range);
+    Range *range = MemoryAlloc(size, error);
     if (range == NULL) {
 	goto returnError;
     }
-    range->base = TypeRange;
+    range->base = TypeRange | mask;
+    range->upper.index = upperIndex;
+    range->lower.index = lowerIndex;
     return range;
 
 returnError:
@@ -30,18 +34,48 @@ void RangeDealloc(Value *rangeValue) {
     MemoryDealloc(rangeValue);
 }
 
-void RangeSetBounds(Range *range, Value *lower, Value *upper) {
-    range->lower = lower;
-    range->upper = upper;
-}
-
 Integer64 RangeHash(Value *rangeValue) {
     Range *range = ValueRangeBridge(rangeValue, NULL);
-    return HashValue(range->lower) + HashValue(range->upper);
+    Integer64 upperHash = ValueFlagSet(rangeValue, FlagUpper) ? ValueHash(range->upper.value) : 0;
+    Integer64 lowerHash = ValueFlagSet(rangeValue, FlagLower) ? ValueHash(range->lower.value) : 0;
+    return upperHash + lowerHash;
 }
 
-void RangeEnumerate(Value *rangeValue, void (*block)(Value *value)) {
+void RangeEnumerate(Value *rangeValue, void (*callback)(Value *value)) {
     Range *range = ValueRangeBridge(rangeValue, NULL);
-    block(range->lower);
-    block(range->upper);
+    if (ValueFlagSet(rangeValue, FlagUpper)) {
+	callback(range->upper.value);
+    }
+    if (ValueFlagSet(rangeValue, FlagLower)) {
+	callback(range->lower.value);
+    }
+}
+
+Value *RangeDecode(Byte **bytes, Error *error) {
+    Integer32 lowerIndex = DecodeInteger32VLE(bytes);
+    Integer32 upperIndex = DecodeInteger32VLE(bytes);
+    Range *range = Create(FlagUpper | FlagLower, lowerIndex, upperIndex, error);
+    return RangeValueBridge(range);
+}
+
+void RangeFetch(Value *rangeValue, Value **values) {
+    Range *range = ValueRangeBridge(rangeValue, NULL);
+    if (ValueFlagSet(rangeValue, FlagUpper)) {
+	range->upper.value = values[range->upper.index];
+    }
+    if (ValueFlagSet(rangeValue, FlagLower)) {
+	range->lower.value = values[range->lower.index];
+    }
+}
+
+Value *RangeDecodeUpper(Byte **bytes, Error *error) {
+    Integer32 upperIndex = DecodeInteger32VLE(bytes);
+    Range *range = Create(FlagUpper, upperIndex, 0, error);
+    return RangeValueBridge(range);
+}
+
+Value *RangeDecodeLower(Byte **bytes, Error *error) {
+    Integer32 lowerIndex = DecodeInteger32VLE(bytes);
+    Range *range = Create(FlagLower, 0, lowerIndex, error);
+    return RangeValueBridge(range);
 }

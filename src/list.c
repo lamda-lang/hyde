@@ -2,18 +2,18 @@
 
 struct List {
     Value base;
-    Integer32 length;
-    Value *element[];
+    Integer32 count;
+    Element element[];
 };
 
-static List *Create(Integer32 length, Error *error) {
-    Size size = sizeof(List) + sizeof(Value) * length;
+static List *Create(Integer32 count, Error *error) {
+    Size size = sizeof(List) + sizeof(Element) * count;
     List *list = MemoryAlloc(size, error);
     if (list == NULL) {
         goto returnError;
     }
     list->base = TypeList;
-    list->length = length;
+    list->count = count;
     return list;
 
 returnError:
@@ -23,35 +23,47 @@ Value *ListValueBridge(List *list) {
     return (Value *)list;
 }
 
-List *ListDecode(Byte **bytes, Error *error) {
-    Integer32 length = DecodeInteger32VLE(bytes);
-    return Create(length, error);
+Value *ListDecode(Byte **bytes, Error *error) {
+    Integer32 count = DecodeInteger32VLE(bytes);
+    List *list = Create(count, error);
+    if (list == NULL) {
+	goto returnError;
+    }
+    for (Integer32 index = 0; index < count; index += 1) {
+	list->element[index].index = DecodeInteger32VLE(bytes);
+    }
+    return ListValueBridge(list);
+
+returnError:
+    return NULL;
 }
 
-Integer32 ListLength(List *list) {
-    return list->length;
+void ListFetch(Value *listValue, Value **values) {
+    List *list = ValueListBridge(listValue, NULL);
+    Element element[list->count];
+    Size size = sizeof(element);
+    MemoryCopy(list->element, element, size);
+    for (Integer32 index = 0; index < list->count; index += 1) {
+	Integer32 elementIndex = element[index].index;
+	list->element[index].value = values[elementIndex];
+    }
 }
 
 void ListDealloc(Value *listValue) {
     MemoryDealloc(listValue);
 }
 
-void ListSetValueAtIndex(List *list, Value *value, Integer32 index) {
-    list->element[index] = value;
-}
-
 Value *ListGetValueAtIndex(List *list, Integer32 index) {
-    return list->element[index];
+    return list->element[index].value;
 }
 
 Integer64 ListHash(Value *listValue) {
-    List *list = ValueListBridge(listValue, NULL);
-    return list->length;
+    return ValueListBridge(listValue, NULL)->count;
 }
 
-void ListEnumerate(Value *listValue, void (*block)(Value *value)) {
+void ListEnumerate(Value *listValue, void (*callback)(Value *value)) {
     List *list = ValueListBridge(listValue, NULL);
-    for (Integer32 index = 0; index < list->length; index += 1) {
-        block(list->element[index]);
+    for (Integer32 index = 0; index < list->count; index += 1) {
+        callback(list->element[index].value);
     }
 }

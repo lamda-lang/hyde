@@ -44,19 +44,6 @@ returnError:
     return NULL;
 }
 
-static void PrintValue(Value *value) {
-    String *string = ValueStringBridge(value, NULL);
-    Integer32 length = StringLength(string);
-    Integer32 *codepoints = StringCodepoints(string);
-    for (Integer32 index = 0; index < length; index += 1) {
-	Integer32 codepoint = codepoints[index];
-	if (codepoint >= 32 && codepoint <= 126) {
-	    putchar(codepoint & 0XFF);
-	}
-    }
-    putchar('\n');
-}
-
 int main(int argc, char **argv) {
     Error error = 0;
     Data *data = DataFromPath(argv[1], &error);
@@ -67,7 +54,6 @@ int main(int argc, char **argv) {
     if (result == NULL) {
 	goto deallocData;
     }
-    PrintValue(result);
     DataDealloc(data);
     return EXIT_SUCCESS;
 

@@ -2,62 +2,63 @@
 
 struct Do {
   Value base;
-  Integer8 contextLength;
-  Integer32 registerCount;
-  Integer32 instructionCount;
-  Byte *code;
-  Value *context[];
+  Integer32 count;
+  Element element[];
 };
 
 Value *DoValueBridge(Do *block) {
     return (Value *)block;
 }
 
-Do *DoDecode(Byte **bytes, Error *error) {
-    Integer32 registerCount = DecodeInteger32VLE(bytes);
-    Integer32 instructionCount = DecodeInteger32VLE(bytes);
-    Integer8 contextLength = DecodeInteger8FLE(bytes);
-    Integer32 codeSize = DecodeInteger32VLE(bytes);
-    Size size = sizeof(Do) *sizeof(Value *) * contextLength;
+static Do *Create(Integer32 count, Error *error) {
+    Size size = sizeof(Do) * sizeof(Element) * count;
     Do *block = MemoryAlloc(size, error);
     if (block == NULL) {
 	goto returnError;
     }
-    Byte *code = MemoryAlloc(codeSize, error);
-    if (code == NULL) {
-	goto deallocBlock;
-    }
-    MemoryCopy(*bytes, code, codeSize);
-    *bytes += codeSize;
     block->base = TypeDo;
-    block->contextLength = contextLength;
-    block->registerCount = registerCount;
-    block->instructionCount = instructionCount;
-    block->code = code;
+    block->count = count;
     return block;
 
-deallocBlock:
-    MemoryDealloc(block);
 returnError:
     return NULL;
 }
 
-Integer8 DoContextCount(Do *block) {
-    return block->contextLength;
+Value *DoDecode(Byte **bytes, Error *error) {
+    Integer32 count = DecodeInteger32VLE(bytes);
+    Do *block = Create(count, error);
+    if (block == NULL) {
+	goto returnError;
+    }
+    for (Integer32 index = 0; index < count; index += 1) {
+	block->element[index].index = DecodeInteger32VLE(bytes);
+    }
+    return DoValueBridge(block);
+
+returnError:
+    return NULL;
 }
 
-void DoSetContextValueAtIndex(Do *block, Value *value, Integer8 index) {
-    block->context[index] = value;
+void DoFetch(Value *doValue, Value **values) {
+    Do *block = ValueDoBridge(doValue, NULL);
+    for (Integer32 index = 0; index < block->count; index += 1) {
+        Integer32 elementIndex = block->element[index].index;
+	block->element[index].value = values[elementIndex];
+    }
 }
 
 void DoDealloc(Value *doValue) {
-
+    MemoryDealloc(doValue);
 }
 
 Integer64 DoHash(Value *doValue) {
-    return 0;
+    return ValueDoBridge(doValue, NULL)->count;
 }
 
-void DoEnumerate(Value *doValue, void (*block)(Value *value)) {
-
+void DoEnumerate(Value *doValue, void (*callback)(Value *value)) {
+    Do *block = ValueDoBridge(doValue, NULL);
+    for (Integer32 index = 0; index < block->count; index += 1) {
+	Value *value = block->element[index].value;
+        callback(value);
+    }
 }

@@ -12,94 +12,79 @@ CREATE_FALSE
 
 CREATE_INTEGER
   I8FLE : 3
-  I64FLE : value
   I32VLE : integer_index
+  I64FLE : value
 
 CREATE_FLOAT
   I8FLE : 4
-  F64FLE : value
   I32VLE : float_index
+  F64FLE : value
 
-CREATE_IDETIFIER
+CREATE_IDENTIFIER
   I8FLE : 5
+  I32VLE : identifier_index
   I8FLE : length
   [I8FLE : codepoint].length
-  I32VLE : identifier_index
 
 CREATE_STRING
   I8FLE : 6
+  I32VLE : string_index
   I32VLE : length
   [I32VLE : codepoint].length
-  I32VLE : string_index
 
 CREATE_RANGE
   I8FLE : 7
   I32VLE : range_index
-
-CREATE_SET
-  I8FLE : 8
-  I32VLE : count
-  I32VLE : set_index
-
-CREATE_LIST
-  I8FLE : 9
-  I32VLE : count
-  I32VLE : list_index
-
-CREATE_MAP
-  I8FLE : 10
-  I32VLE : count
-  I32VLE : map_index
-
-CREATE_LAMBDA
-  I8FLE : 11
-  I32VLE : register_count
-  I32VLE : instruction_count
-  I8FLE : context_length
-  I32VLE : code_size
-  I8FLE : arity
-  [I8FLE : code].code_size
-  [I32VLE : context_index].context_length
-  I32VLE : lambda_index
-
-CREATE_DO
-  I8FLE : 12
-  I32VLE : register_count
-  I32VLE : instruction_count
-  I8FLE : context_length
-  I32VLE : code_size
-  [I8FLE : code].code_size
-  [I32VLE : context_index].context_length
-  I32VLE : do_index
-
-CREATE_RESULT
-  I8FLE : 13
-  I32VLE : lambda_index
-  I8FLE: arg_count
-  [I32VLE : arg_index].arg_count
-  I32VLE : result_index
-
-FETCH_RANGE_LOWER
-  I8FLE : 13
-  I32VLE : range_index
   I32VLE : lower_index
+  I32VLE : upper_index
 
-FETCH_RANGE_UPPER
-  I8FLE : 14
+CREATE_RANGE_UPPER
+  I8FLE : 8
   I32VLE : range_index
   I32VLE : upper_index
 
-FETCH_SET
-  I8FLE : 15
+CREATE_RANGE_LOWER
+  I8FLE : 9
+  I32VLE : range_index
+  I32VLE : lower_index
+
+CREATE_SET
+  I8FLE : 10
   I32VLE : set_index
-  [I32VLE : element_index].set_count
+  I32VLE : count
+  [I32VLE : element_index].count
 
-FETCH_LIST
-  I8FLE : 16
+CREATE_LIST
+  I8FLE : 11
   I32VLE : list_index
-  [I32VLE : element_index].list_count
+  I32VLE : count
+  [I32VLE : element_index].count
 
-FETCH_MAP
-  I8FLE : 17
+CREATE_MAP
+  I8FLE : 12
   I32VLE : map_index
-  [I32VLE : keyIndex I32VLE: valueIndex].map_count
+  I32VLE : count
+  [I32VLE : keyIndex I32VLE: valueIndex].count
+
+CREATE_DO
+  I8FLE : 13
+  I32VLE : do_index
+  I32VLE : count
+  [I32VLE : element_index].count
+
+CREATE_RESULT
+  I8FLE : 14
+  I32VLE : result_index
+  I32VLE : lambda_index
+  I8FLE : arg_count
+  [I32VLE : arg_index].arg_count
+
+CREATE_LAMBDA
+  I8FLE : 15
+  I32VLE : lambda_index
+  I8FLE : arity
+  I8FLE : context_length
+  I32VLE : register_count
+  I32VLE : code_size
+  [I32VLE : context_index].context_length
+  [I8FLE : code].code_size

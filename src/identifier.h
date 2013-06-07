@@ -7,7 +7,7 @@ Value *IdentifierValueBridge(Identifier *id);
 
 void IdentifierDealloc(Value *idValue);
 
-Identifier *IdentifierDecode(Byte **bytes, Error *error);
+Value *IdentifierDecode(Byte **bytes, Error *error);
 
 Integer64 IdentifierHash(Value *idValue);
 

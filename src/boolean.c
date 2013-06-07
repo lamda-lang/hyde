@@ -2,29 +2,39 @@
 
 struct Boolean {
     Value base;
-};
+    Integer64 hash;
+}; 
 
 static Boolean trueSingleton = {
-    .base = TypeBoolean
+    .base = TypeBoolean,
+    .hash = 1234
 };
 
 static Boolean falseSingleton = {
-    .base = TypeBoolean
+    .base = TypeBoolean,
+    .hash = 4321
 };
 
-Value *BooleanValueBridge(Boolean *boolean) {
+static Value *ValueBridge(Boolean *boolean) {
     return (Value *)boolean;
 }
 
-Boolean *BooleanTrueSingleton(void) {
-    return &trueSingleton;
+Value *BooleanTrueSingleton(void) {
+    return ValueBridge(&trueSingleton);
 }
 
-Boolean *BooleanFalseSingleton(void) {
-    return &falseSingleton;
+Value *BooleanFalseSingleton(void) {
+    return ValueBridge(&falseSingleton);
 }
 
 Integer64 BooleanHash(Value *booleanValue) {
-    Boolean *boolean = ValueBooleanBridge(booleanValue, NULL);
-    return boolean == &trueSingleton ? 1 : 0;
+    return ValueBooleanBridge(booleanValue, NULL)->hash;
+}
+
+Value *BooleanDecodeTrue(Byte **bytes, Error *error) {
+    return BooleanTrueSingleton();
+}
+
+Value *BooleanDecodeFalse(Byte **bytes, Error *error) {
+    return BooleanFalseSingleton();
 }

@@ -3,12 +3,14 @@
 
 #include "api.h"
 
-Value *BooleanValueBridge(Boolean *boolean);
+Value *BooleanTrueSingleton(void);
 
-Boolean *BooleanTrueSingleton(void);
-
-Boolean *BooleanFalseSingleton(void);
+Value *BooleanFalseSingleton(void);
 
 Integer64 BooleanHash(Value *booleanValue);
+
+Value *BooleanDecodeTrue(Byte **bytes, Error *error);
+
+Value *BooleanDecodeFalse(Byte **bytes, Error *error);
 
 #endif

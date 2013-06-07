@@ -6,7 +6,8 @@ struct Float {
 };
 
 static inline Float *Create(Float64 value, Error *error) {
-    Float *fpv = MemoryAlloc(sizeof(Float), error);
+    Size size = sizeof(Float);
+    Float *fpv = MemoryAlloc(size, error);
     if (fpv == NULL) {
 	goto returnError;
     }
@@ -18,9 +19,10 @@ returnError:
     return NULL;
 }
 
-Float *FloatDecode(Byte **bytes, Error *error) {
+Value *FloatDecode(Byte **bytes, Error *error) {
     Float64 value = DecodeFloat64FLE(bytes);
-    return Create(value, error);
+    Float *fpv = Create(value, error);
+    return FloatValueBridge(fpv);
 }
 
 Value *FloatValueBridge(Float *fpv) {
@@ -32,8 +34,7 @@ void FloatDealloc(Value *floatValue) {
 }
 
 Integer64 FloatHash(Value *floatValue) {
-    Float *fpv = ValueFloatBridge(floatValue, NULL);
-    return (Integer64)fpv->value;
+    return (Integer64)ValueFloatBridge(floatValue, NULL)->value;
 }
 
 Float *FloatSum(Float *fpv, Float *other, Error *error) {

@@ -3,7 +3,7 @@
 
 #include "api.h"
 
-Integer *IntegerDecode(Byte **bytes, Error *error);
+Value *IntegerDecode(Byte **bytes, Error *error);
 
 Value *IntegerValueBridge(Integer *integer);
 

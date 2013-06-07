@@ -204,6 +204,17 @@ returnError:
     return NULL;
 }
 
+Result *ValueResultBridge(Value *value, Error *error) {
+    if (error != NULL && GetType(value) != TypeResult) {
+	*error = ErrorInvalidType;
+	goto returnError;
+    }
+    return (Result *)value;
+
+returnError:
+    return NULL;
+}
+
 Set *ValueSetBridge(Value *value, Error *error) {
     if (error != NULL && GetType(value) != TypeSet) {
 	*error = ErrorInvalidType;

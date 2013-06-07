@@ -3,7 +3,7 @@
 
 #include "api.h"
 
-Float *FloatDecode(Byte **bytes, Error *error);
+Value *FloatDecode(Byte **bytes, Error *error);
 
 Value *FloatValueBridge(Float *fpv);
 

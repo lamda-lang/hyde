@@ -2,20 +2,26 @@
 
 struct Nil {
     Value base;
+    Integer64 hash;
 };
 
-static Nil singleton = {
-  .base = TypeNil
+static Nil nilSingleton = {
+    .base = TypeNil,
+    .hash = 1827
 };
 
-Nil *NilSingleton(void) {
-    return &singleton;
+static Value *ValueBridge(Nil *nil) {
+    return (Value *)nil;
 }
 
-Value *NilValueBridge(void) {
-    return (Value *)&singleton;
+Value *NilSingleton(void) {
+    return ValueBridge(&nilSingleton);
 }
 
 Integer64 NilHash(Value *nilValue) {
-    return 0;
+    return ValueNilBridge(nilValue, NULL)->hash;
+}
+
+Value *NilDecode(Byte **bytes, Error *error) {
+    return NilSingleton();
 }

@@ -3,11 +3,9 @@
 
 #include "api.h"
 
-Set *SetDecode(Byte **bytes, Error *error);
+Value *SetDecode(Byte **bytes, Error *error);
 
-Integer32 SetCount(Set *set);
-
-void SetAddValue(Set *set, Value *value);
+void SetFetch(Value *setValue, Byte **values);
 
 Value *SetValueBridge(Set *set);
 
@@ -15,6 +13,6 @@ void SetDealloc(Value *setValue);
 
 Integer64 SetHash(Value *setValue);
 
-void SetEnumerate(Value *setValue, void (*block)(Value *value));
+void SetEnumerate(Value *setValue, void (*callback)(Value *value));
 
 #endif

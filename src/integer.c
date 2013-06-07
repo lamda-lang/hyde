@@ -6,7 +6,8 @@ struct Integer {
 };
 
 static Integer *Create(Integer64 value, Error *error) {
-    Integer *integer = MemoryAlloc(sizeof(Integer), error);
+    Size size = sizeof(Integer);
+    Integer *integer = MemoryAlloc(size, error);
     if (integer == NULL) {
         goto returnError;
     }
@@ -18,9 +19,10 @@ returnError:
     return NULL;
 }
 
-Integer *IntegerDecode(Byte **bytes, Error *error) {
+Value *IntegerDecode(Byte **bytes, Error *error) {
     Integer64 value = DecodeInteger64FLE(bytes);
-    return Create(value, error);
+    Integer *integer = Create(value, error);
+    return IntegerValueBridge(integer);
 }
 
 Value *IntegerValueBridge(Integer *integer) {
@@ -32,8 +34,7 @@ void IntegerDealloc(Value *integerValue) {
 }
 
 Integer64 IntegerHash(Value *integerValue) {
-    Integer *integer = ValueIntegerBridge(integerValue, NULL);
-    return integer->value;
+    return ValueIntegerBridge(integerValue, NULL)->value;
 }
 
 Integer *IntegerSum(Integer *integer, Integer *other, Error *error) {

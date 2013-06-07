@@ -7,7 +7,7 @@ struct String {
 };
 
 static String *Create(Integer32 length, Error *error) {
-    Size size = sizeof(struct String) + sizeof(Integer32) * length;
+    Size size = sizeof(String) + sizeof(Integer32) * length;
     String *string = MemoryAlloc(size, error);
     if (string == NULL) {
         goto returnError;
@@ -28,7 +28,7 @@ void StringDealloc(Value *stringValue) {
     MemoryDealloc(stringValue);
 }
 
-String *StringDecode(Byte **bytes, Error *error) {
+Value *StringDecode(Byte **bytes, Error *error) {
     Integer32 length = DecodeInteger32VLE(bytes);
     String *string = Create(length, error);
     if (string == NULL) {
@@ -37,15 +37,14 @@ String *StringDecode(Byte **bytes, Error *error) {
     for (Integer32 index = 0; index < length; index += 1) {
         string->codepoint[index] = DecodeInteger32VLE(bytes);
     }
-    return string;
+    return StringValueBridge(string);
 
 returnError:
     return NULL;
 }
 
 Integer64 StringHash(Value *stringValue) {
-    String *string = ValueStringBridge(stringValue, NULL);
-    return string->length;
+    return ValueStringBridge(stringValue, NULL)->length;
 }
 
 String *StringConcatenate(String *string, String *other, Error *error) {
@@ -55,18 +54,12 @@ String *StringConcatenate(String *string, String *other, Error *error) {
     if (result == NULL) {
         goto returnError;
     }
-    MemoryCopy(string->codepoint, result->codepoint, sizeof(Integer32) * stringLength);
-    MemoryCopy(other->codepoint, result->codepoint + stringLength, sizeof(Integer32) * otherLength);
+    Size stringSize = sizeof(Integer32) * stringLength;
+    Size otherSize = sizeof(Integer32) * otherLength;
+    MemoryCopy(string->codepoint, result->codepoint, stringSize);
+    MemoryCopy(other->codepoint, result->codepoint + stringLength, otherSize);
     return result;
 
 returnError:
     return NULL;
-}
-
-Integer32 StringLength(String *string) {
-    return string->length;
-}
-
-Integer32 *StringCodepoints(String *string) {
-    return string->codepoint;
 }

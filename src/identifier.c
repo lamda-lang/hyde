@@ -28,7 +28,7 @@ void IdentifierDealloc(Value *idValue) {
     MemoryDealloc(idValue);
 }
 
-Identifier *IdentifierDecode(Byte **bytes, Error *error) {
+Value *IdentifierDecode(Byte **bytes, Error *error) {
     Integer8 length = DecodeInteger8FLE(bytes);
     Identifier *id = Create(length, error);
     if (id == NULL) {
@@ -37,13 +37,12 @@ Identifier *IdentifierDecode(Byte **bytes, Error *error) {
     for (Integer8 index = 0; index < length; index += 1) {
         id->codepoint[index] = DecodeInteger8FLE(bytes);
     }
-    return id;
+    return IdentifierValueBridge(id);
 
 returnError:
     return NULL;
 }
 
 Integer64 IdentifierHash(Value *idValue) {
-    Identifier *id = ValueIdentifierBridge(idValue, NULL);
-    return id->length;
+    return ValueIdentifierBridge(idValue, NULL)->length;
 }

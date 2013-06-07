@@ -54,16 +54,24 @@ enum {
     TypeMap = 7,
     TypeNil = 8,
     TypeRange = 9,
-    TypeSet = 10,
-    TypeString = 11
+    TypeResult = 10,
+    TypeSet = 11,
+    TypeString = 12
 };
 
 typedef uint8_t Flag;
 enum {
     FlagNone = 0,
     FlagGarbage = 1 << 4,
-    FlagMark = 1 << 5
+    FlagMark = 1 << 5,
+    FlagAlpha = 1 << 6,
+    FlagBeta = 1 << 7
 };
+
+typedef union {
+    Value *value;
+    Integer32 index;
+} Element;
 
 typedef struct Args Args;
 
@@ -93,9 +101,13 @@ typedef struct Nil Nil;
 
 typedef struct Range Range;
 
+typedef struct Result Result;
+
 typedef struct Set Set;
 
 typedef struct String String;
+
+typedef Value *Instruction(Byte **code, Error *error);
 
 typedef bool Kernel(Integer8 arity, Stack *stack);
 
@@ -121,6 +133,7 @@ typedef void Enumerate(Value *value, void (*block)(Value *value));
 #include "memory.h"
 #include "nil.h"
 #include "range.h"
+#include "result.h"
 #include "set.h"
 #include "stack.h"
 #include "string.h"

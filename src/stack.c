@@ -13,10 +13,10 @@ typedef struct {
 typedef union {
     Value *value;
     Frame frame;
-} Element;
+} Register;
 
 struct Stack {
-    Element *root;
+    Register *root;
     Frame top;
     Integer32 capacity;
 };
@@ -41,7 +41,7 @@ Stack *StackCreate(Integer32 capacity, Error *error) {
     if (stack == NULL) {
         goto returnError;
     }
-    Element *root = MemoryAlloc(sizeof(Element) * capacity, error);
+    Register *root = MemoryAlloc(sizeof(Register) * capacity, error);
     if (root == NULL) {
         goto deallocStack;
     }
@@ -69,7 +69,7 @@ Status StackPushFrame(Stack *stack, Integer32 count, Error *error) {
     };
     if (next.index + next.length > stack->capacity) { 
         Integer32 capacity = stack->capacity * 2;
-        Element *root = MemoryRealloc(stack->root, capacity, error);
+        Register *root = MemoryRealloc(stack->root, capacity, error);
         if (root == NULL) {
             goto returnError;
         }
