@@ -4,12 +4,12 @@ struct Lambda {
     Value base;
     Integer8 arity;
     Integer8 contextLength;
-    Integer32 registerCount;
+    Integer32 valueCount;
     Byte *code;
     Element context[];
 };
 
-static Lambda *Create(Integer8 arity, Integer8 contextLength, Integer32 registerCount, Integer32 codeSize, Error *error) {
+static Lambda *Create(Integer8 arity, Integer8 contextLength, Integer32 valueCount, Integer32 codeSize, Error *error) {
     Size size = sizeof(Lambda) + sizeof(Element) * contextLength;
     Lambda *lambda = MemoryAlloc(size, error);
     if (lambda == NULL) {
@@ -22,7 +22,7 @@ static Lambda *Create(Integer8 arity, Integer8 contextLength, Integer32 register
     lambda->base = TypeLambda;
     lambda->arity = arity;
     lambda->contextLength = contextLength;
-    lambda->registerCount = registerCount;
+    lambda->valueCount = valueCount;
     lambda->code = code;
     return lambda;
 
@@ -35,9 +35,9 @@ returnError:
 Value *LambdaDecode(Byte **bytes, Error *error) {
     Integer8 arity = DecodeInteger8FLE(bytes);
     Integer8 contextLength = DecodeInteger8FLE(bytes);
-    Integer32 registerCount = DecodeInteger32VLE(bytes);
+    Integer32 valueCount = DecodeInteger32VLE(bytes);
     Integer32 codeSize = DecodeInteger32VLE(bytes);
-    Lambda *lambda = Create(arity, contextLength, registerCount, codeSize, error);
+    Lambda *lambda = Create(arity, contextLength, valueCount, codeSize, error);
     for (Integer8 index = 0; index < contextLength; index += 1) {
 	lambda->context[index].index = DecodeInteger32VLE(bytes);
     }
@@ -63,7 +63,7 @@ void LambdaDealloc(Value *lambdaValue) {
 }
 
 Integer64 LambdaHash(Value *lambdaValue) {
-    return ValueLambdaBridge(lambdaValue, NULL)->registerCount;
+    return ValueLambdaBridge(lambdaValue, NULL)->valueCount;
 }
 
 void LambdaEnumerate(Value *lambdaValue, void (*callback)(Value *value)) {

@@ -22,16 +22,15 @@ returnError:
 
 static Value *ExecuteBytecode(Data *data, Error *error) {
     Byte *code = DataBytes(data);
-    Integer32 registerCount = DecodeInteger32VLE(&code);
-    Integer32 instructionCount = DecodeInteger32VLE(&code);
+    Integer32 valueCount = DecodeInteger32VLE(&code);
     Stack *stack = StackCreate(256, error);
     if (stack == NULL) {
 	goto returnError;
     }
-    if (StackPushFrame(stack, registerCount, error) == StatusFailure) {
+    if (StackPushFrame(stack, valueCount, error) == StatusFailure) {
 	goto deallocStack;
     }
-    if (ExecuteCode(code, instructionCount, stack, error) == StatusFailure) {
+    if (ExecuteCode(code, valueCount, stack, error) == StatusFailure) {
 	goto deallocStack;
     }
     Value *result = *StackFrameResult(stack);
@@ -45,7 +44,7 @@ returnError:
 }
 
 int main(int argc, char **argv) {
-    Error error = 0;
+    Error error;
     Data *data = DataFromPath(argv[1], &error);
     if (data == NULL) {
 	goto returnError;

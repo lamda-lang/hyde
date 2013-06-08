@@ -45,18 +45,21 @@ enum {
 typedef uint8_t Type;
 enum {
     TypeBoolean = 0,
-    TypeDo = 1,
-    TypeFloat = 2,
-    TypeIdentifier = 3,
-    TypeInteger = 4,
-    TypeLambda = 5,
-    TypeList = 6,
-    TypeMap = 7,
-    TypeNil = 8,
-    TypeRange = 9,
-    TypeResult = 10,
-    TypeSet = 11,
-    TypeString = 12
+    TypeCase = 1,
+    TypeDo = 2,
+    TypeFloat = 3,
+    TypeIdentifier = 4,
+    TypeInteger = 5,
+    TypeLambda = 6,
+    TypeList = 7,
+    TypeMap = 8,
+    TypeModule = 9,
+    TypeNil = 10,
+    TypeRange = 11,
+    TypeResult = 12,
+    TypeSet = 13,
+    TypeString = 14,
+    TypeWhen = 15
 };
 
 typedef uint8_t Flag;
@@ -83,6 +86,8 @@ typedef struct Data Data;
 
 typedef struct Boolean Boolean;
 
+typedef struct Case Case;
+
 typedef struct Do Do;
 
 typedef struct Float Float;
@@ -97,6 +102,8 @@ typedef struct List List;
 
 typedef struct Map Map;
 
+typedef struct Module Module;
+
 typedef struct Nil Nil;
 
 typedef struct Range Range;
@@ -106,6 +113,8 @@ typedef struct Result Result;
 typedef struct Set Set;
 
 typedef struct String String;
+
+typedef struct When When;
 
 typedef Value *Instruction(Byte **code, Error *error);
 
@@ -118,6 +127,7 @@ typedef Integer64 Hash(Value *value);
 typedef void Enumerate(Value *value, void (*block)(Value *value));
 
 #include "boolean.h"
+#include "case.h"
 #include "data.h"
 #include "decode.h"
 #include "do.h"
@@ -131,6 +141,7 @@ typedef void Enumerate(Value *value, void (*block)(Value *value));
 #include "list.h"
 #include "map.h"
 #include "memory.h"
+#include "module.h"
 #include "nil.h"
 #include "range.h"
 #include "result.h"
@@ -138,5 +149,6 @@ typedef void Enumerate(Value *value, void (*block)(Value *value));
 #include "stack.h"
 #include "string.h"
 #include "value.h"
+#include "when.h"
 
 #endif
