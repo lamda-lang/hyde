@@ -68,7 +68,7 @@ MAP
 
 MODULE
   I8FLE : 13
-  I32VLE : module:index
+  I32VLE : module_index
   I32VLE : count
   I32VLE : identifierIndex I32VLE : valueIndex].count
 
@@ -82,18 +82,18 @@ CASE
   I8FLE : count
   [I32VLE : matchIndex I32VLE : valueIndex].count
 
-DO
-  I8FLE : 16
-  I32VLE : do_index
-  I32VLE : count
-  [I32VLE : element_index].count
-
 RESULT
-  I8FLE : 17
+  I8FLE : 16
   I32VLE : result_index
   I32VLE : lambda_index
   I8FLE : arg_count
   [I32VLE : arg_index].arg_count
+
+DO
+  I8FLE : 17
+  I32VLE : do_index
+  I32VLE : count
+  [I32VLE : element_index].count
 
 LAMBDA
   I8FLE : 18
