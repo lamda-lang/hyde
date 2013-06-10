@@ -9,12 +9,17 @@ static Instruction *instruction[] = {
     [5] = IdentifierDecode,
     [6] = StringDecode,
     [7] = RangeDecode,
-    [8] = SetDecode,
-    [9] = ListDecode,
-    [10] = MapDecode,
-    [11] = LambdaDecode,
-    [12] = DoDecode,
-    [13] = ResultDecode
+    [8] = RangeDecodeUpper,
+    [9] = RangeDecodeLower,
+    [10] = SetDecode,
+    [11] = ListDecode,
+    [12] = MapDecode,
+    [13] = ModuleDecode,
+    [14] = WhenDecode,
+    [15] = CaseDecode,
+    [16] = ResultDecode,
+    [17] = DoDecode,
+    [18] = LambdaDecode
 };
 
 Status ExecuteCode(Byte *code, Integer32 count, Stack *stack, Error *error) {

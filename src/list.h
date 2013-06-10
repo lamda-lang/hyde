@@ -17,4 +17,6 @@ Integer64 ListHash(Value *listValue);
 
 void ListEnumerate(Value *listValue, void (*callback)(Value *value));
 
+Value *ListEval(Value *listValue, Error *error);
+
 #endif

@@ -44,7 +44,7 @@ returnError:
 }
 
 Integer64 StringHash(Value *stringValue) {
-    return ValueStringBridge(stringValue, NULL)->length;
+    return ValueStringBridge(stringValue)->length;
 }
 
 String *StringConcatenate(String *string, String *other, Error *error) {
@@ -62,4 +62,8 @@ String *StringConcatenate(String *string, String *other, Error *error) {
 
 returnError:
     return NULL;
+}
+
+Value *StringEval(Value *stringValue, Error *error) {
+    return stringValue;
 }

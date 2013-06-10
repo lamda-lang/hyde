@@ -2,33 +2,38 @@
 
 struct Set {
     Value base;
-    Integer32 capacity;
-    Element element[];
+    Integer32 length;
+    Element *element;
 };
 
-static Integer32 IndexForValue(Set *set, Value *value, Integer32 offset) {
-    return (ValueHash(value) + offset) % set->capacity;
+static Integer32 IndexForValue(Integer32 length, Value *value, Integer32 offset) {
+    return (ValueHash(value) + offset) % length;
 }
 
-static void AddValue(Set *set, Value *value) {
-    Integer32 index = IndexForValue(set, value, 0);
-    while (set->element[index].value != NULL) {
-	index = IndexForValue(set, value, index);
+static void AddValue(Element *element, Integer32 length, Value *value) {
+    Integer32 index = IndexForValue(length, value, 0);
+    while (element[index].value != NULL) {
+	index = IndexForValue(length, value, index);
     }
-    set->element[index].value = value;
+    element[index].value = value;
 }
 
-static Set *Create(Integer32 count, Error *error) {
-    Integer32 capacity = count << 1;
-    Size size = sizeof(Set) + sizeof(Element) * capacity;
-    Set *set = MemoryAlloc(size, error);
+static Set *Create(Integer32 length, Error *error) {
+    Set *set = MemoryAlloc(sizeof(Set), error);
     if (set == NULL) {
         goto returnError;
     }
+    Element *element = MemoryAlloc(sizeof(Element) * length, error);
+    if (element == NULL) {
+	goto deallocSet;
+    }
     set->base = TypeSet;
-    set->capacity = capacity;
+    set->length = length;
+    set->element = element;
     return set;
 
+deallocSet:
+    MemoryDealloc(set);
 returnError:
     return NULL;
 }
@@ -49,14 +54,10 @@ returnError:
 }
 
 void SetFetch(Value *setValue, Byte **values) {
-    Set *set = ValueSetBridge(setValue, NULL);
-    Integer32 count = set->capacity >> 1;
-    Element element[count];
-    Size size = sizeof(element);
-    MemoryCopy(set->element, element, size);
-    for (Integer32 index = 0; index < count; index += 1) {
-	Integer32 elementIndex = element[index].index;
-	AddValue(set, values[elementIndex]);
+    Set *set = ValueSetBridge(setValue);
+    for (Integer32 index = 0; index < set->length; index += 1) {
+	Integer32 elementIndex = set->element[index].index;
+	set->element[index].value = values[elementIndex];
     }
 }
 
@@ -65,19 +66,50 @@ Value *SetValueBridge(Set *set) {
 }
 
 void SetDealloc(Value *setValue) {
-    MemoryDealloc(setValue);
+    Set *set = ValueSetBridge(setValue);
+    MemoryDealloc(set->element);
+    MemoryDealloc(set);
 }
 
 Integer64 SetHash(Value *setValue) {
-    return ValueSetBridge(setValue, NULL)->capacity;
+    return ValueSetBridge(setValue)->length;
 }
 
 void SetEnumerate(Value *setValue, void (*callback)(Value *value)) {
-    Set *set = ValueSetBridge(setValue, NULL);
-    for (Integer32 index = 0; index < set->capacity; index += 1) {
+    Set *set = ValueSetBridge(setValue);
+    for (Integer32 index = 0; index < set->length; index += 1) {
 	Value *value = set->element[index].value;
 	if (value != NULL) {
 	    callback(value);
 	}
     }
+}
+
+Value *SetEval(Value *setValue, Error *error) {
+    Set *set = ValueSetBridge(setValue);
+    Integer32 length = set->length << 1;
+    Element *element = MemoryAlloc(sizeof(Element) * length, error);
+    if (element == NULL) {
+        goto returnError;
+    }
+    for (Integer32 index = 0; index < length; index += 1) {
+	element[index].value = NULL;
+    }
+    for (Integer32 index = 0; index < set->length; index += 1) {
+	Value *before = set->element[index].value;
+	Value *after = ValueEval(before, error);
+	if (after == NULL) {
+	    goto deallocElement;
+	}
+	AddValue(element, length, after);
+    }
+    MemoryDealloc(set->element);
+    set->length = length;
+    set->element = element;
+    return setValue;
+
+deallocElement:
+    MemoryDealloc(element);
+returnError:
+    return NULL;
 }

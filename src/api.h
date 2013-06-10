@@ -53,13 +53,12 @@ enum {
     TypeLambda = 6,
     TypeList = 7,
     TypeMap = 8,
-    TypeModule = 9,
-    TypeNil = 10,
-    TypeRange = 11,
-    TypeResult = 12,
-    TypeSet = 13,
-    TypeString = 14,
-    TypeWhen = 15
+    TypeNil = 9,
+    TypeRange = 10,
+    TypeResult = 11,
+    TypeSet = 12,
+    TypeString = 13,
+    TypeWhen = 14
 };
 
 typedef uint8_t Flag;
@@ -102,8 +101,6 @@ typedef struct List List;
 
 typedef struct Map Map;
 
-typedef struct Module Module;
-
 typedef struct Nil Nil;
 
 typedef struct Range Range;
@@ -117,6 +114,8 @@ typedef struct String String;
 typedef struct When When;
 
 typedef Value *Instruction(Byte **code, Error *error);
+
+typedef Value *Eval(Value *value, Error *error);
 
 typedef bool Kernel(Integer8 arity, Stack *stack);
 

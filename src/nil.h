@@ -9,4 +9,6 @@ Integer64 NilHash(Value *nilValue);
 
 Value *NilDecode(Byte **bytes, Error *error);
 
+Value *NilEval(Value *nilValue, Error *error);
+
 #endif

@@ -7,34 +7,39 @@ typedef struct {
 
 struct Map {
     Value base;
-    Integer32 capacity;
-    Pair pair[];
+    Integer32 length;
+    Pair *pair;
 };
 
-static Integer32 IndexForValue(Map *map, Value *value, Integer32 offset) {
-    return (ValueHash(value) + offset) % map->capacity;
+static Integer32 IndexForValue(Integer32 length, Value *value, Integer32 offset) {
+    return (ValueHash(value) + offset) % length;
 }
 
-static void SetValueForKey(Map *map, Value *value, Value *key) {
-    Integer32 index = IndexForValue(map, key, 0);
-    while (map->pair[index].key.value != NULL) {
-        index = IndexForValue(map, key, index);
+static void SetValueForKey(Pair *pair, Integer32 length, Value *value, Value *key) {
+    Integer32 index = IndexForValue(length, key, 0);
+    while (pair[index].key.value != NULL) {
+        index = IndexForValue(length, key, index);
     }
-    map->pair[index].key.value = key;
-    map->pair[index].value.value = value;
+    pair[index].key.value = key;
+    pair[index].value.value = value;
 }
 
-static Map *Create(Integer32 count, Error *error) {
-    Integer32 capacity = count << 1;
-    Size size = sizeof(Map) + sizeof(Element) * capacity;
-    Map *map = MemoryAlloc(size, error);
+static Map *Create(Integer32 length, Error *error) {
+    Map *map = MemoryAlloc(sizeof(Map), error);
     if (map == NULL) {
         goto returnError;
     }
+    Pair *pair = MemoryAlloc(sizeof(Pair) * length, error);
+    if (pair == NULL) {
+	goto deallocMap;
+    }
     map->base = TypeMap;
-    map->capacity = capacity;
+    map->length = length;
+    map->pair = pair;
     return map;
 
+deallocMap:
+    MemoryDealloc(map);
 returnError:
     return NULL;
 }
@@ -60,34 +65,66 @@ returnError:
 }
 
 void MapFetch(Value *mapValue, Value **values) {
-    Map *map = ValueMapBridge(mapValue, NULL);
-    Integer32 count = map->capacity >> 1;
-    Pair pair[count];
-    Size size = sizeof(pair);
-    MemoryCopy(map->pair, pair, size);
-    for (Integer32 index = 0; index < map->capacity; index += 1) {
-	map->pair[index].key.value = NULL;
-	map->pair[index].value.value = NULL;
-    }
-    for (Integer32 index = 0; index < count; index += 1) {
-        Integer32 keyIndex = pair[index].key.index;
-	Integer32 valueIndex = pair[index].value.index;
-        SetValueForKey(map, values[valueIndex], values[keyIndex]);
+    Map *map = ValueMapBridge(mapValue);
+    for (Integer32 index = 0; index < map->length; index += 1) {
+	Integer32 keyIndex = map->pair[index].key.index;
+	Integer32 valueIndex = map->pair[index].value.index;
+	map->pair[index].key.value = values[keyIndex];
+	map->pair[index].value.value = values[valueIndex];
     }
 }
 
 void MapDealloc(Value *mapValue) {
-    MemoryDealloc(mapValue);
+    Map *map = ValueMapBridge(mapValue);
+    MemoryDealloc(map->pair);
+    MemoryDealloc(map);
 }
 
 Integer64 MapHash(Value *mapValue) {
-    return ValueMapBridge(mapValue, NULL)->capacity;
+    return ValueMapBridge(mapValue)->length;
 }
 
 void MapEnumerate(Value *mapValue, void (*callback)(Value *value)) {
-    Map *map = ValueMapBridge(mapValue, NULL);
-    for (Integer32 index = 0; index < map->capacity; index += 1) {
+    Map *map = ValueMapBridge(mapValue);
+    for (Integer32 index = 0; index < map->length; index += 1) {
         callback(map->pair[index].key.value);
         callback(map->pair[index].value.value);
     }
+}
+
+Value *MapGetValueForKey(Map *map, Value *key) {
+    return NULL;
+}
+
+Value *MapEval(Value *mapValue, Error *error) {
+    Map *map = ValueMapBridge(mapValue);
+    Integer32 length = map->length << 1;
+    Pair *pair = MemoryAlloc(sizeof(Pair) * length, error);
+    if (pair == NULL) {
+	goto returnError;
+    }
+    for (Integer32 index = 0; index < length; index += 1) {
+	pair[index].key.value = NULL;
+	pair[index].value.value = NULL;
+    }
+    for (Integer32 index = 0; index < map->length; index += 1) {
+	Value *key = ValueEval(map->pair[index].key.value, error);
+	if (key == NULL) {
+	    goto deallocPair;
+	};
+	Value *value = ValueEval(map->pair[index].value.value, error);
+	if (value == NULL) {
+	    goto deallocPair;
+	};
+        SetValueForKey(pair, length, value, key);
+    }
+    MemoryDealloc(map->pair);
+    map->length = length;
+    map->pair = pair;
+    return mapValue;
+
+deallocPair:
+    MemoryDealloc(pair);
+returnError:
+    return NULL;
 }

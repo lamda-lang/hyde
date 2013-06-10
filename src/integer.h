@@ -13,4 +13,6 @@ Integer64 IntegerHash(Value *integerValue);
 
 Integer *IntegerSum(Integer *integer, Integer *other, Error *error);
 
+Value *IntegerEval(Value *integerValue, Error *error);
+
 #endif

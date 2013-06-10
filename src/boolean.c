@@ -28,7 +28,7 @@ Value *BooleanFalseSingleton(void) {
 }
 
 Integer64 BooleanHash(Value *booleanValue) {
-    return ValueBooleanBridge(booleanValue, NULL)->hash;
+    return ValueBooleanBridge(booleanValue)->hash;
 }
 
 Value *BooleanDecodeTrue(Byte **bytes, Error *error) {
@@ -37,4 +37,8 @@ Value *BooleanDecodeTrue(Byte **bytes, Error *error) {
 
 Value *BooleanDecodeFalse(Byte **bytes, Error *error) {
     return BooleanFalseSingleton();
+}
+
+Value *BooleanEval(Value *booleanValue, Error *error) {
+    return booleanValue;
 }

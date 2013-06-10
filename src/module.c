@@ -1,5 +1,5 @@
 #include "module.h"
 
-struct Module {
-    Value base;
-};
+Value *ModuleDecode(Byte **bytes, Error *error) {
+    return NULL;
+}

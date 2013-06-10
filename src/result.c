@@ -15,6 +15,7 @@ static Result *Create(Integer32 lambdaIndex, Integer8 count, Error *error) {
     }
     result->base = TypeResult;
     result->count = count;
+    result->lambda.index = lambdaIndex;
     return result;
 
 returnError:
@@ -33,7 +34,7 @@ Value *ResultDecode(Byte **bytes, Error *error) {
 	goto returnError;
     }
     for (Integer8 index = 0; index < argCount; index += 1) {
-	result->arg[index].index = DecodeInteger8FLE(bytes);
+	result->arg[index].index = DecodeInteger32VLE(bytes);
     }
     return ResultValueBridge(result);
 
@@ -42,9 +43,38 @@ returnError:
 }
 
 void ResultFetch(Value *resultValue, Value **values) {
-    Result *result = ValueResultBridge(resultValue, NULL);
+    Result *result = ValueResultBridge(resultValue);
+    result->lambda.value = values[result->lambda.index];
     for (Integer8 index = 0; index < result->count; index += 1) {
 	Integer32 argIndex = result->arg[index].index;
 	result->arg[index].value = values[argIndex];
     }
+}
+
+void ResultDealloc(Value *resultValue) {
+    MemoryDealloc(resultValue);
+}
+
+Value *ResultEval(Value *resultValue, Error *error) {
+    Result *result = ValueResultBridge(resultValue);
+    Value *lambdaValue = ValueEval(result->lambda.value, error);
+    if (lambdaValue == NULL) {
+	goto returnError;
+    }
+    if (ValueType(lambdaValue) != TypeLambda) {
+	*error = ErrorInvalidType;
+	goto returnError;
+    }
+    Lambda *lambda = ValueLambdaBridge(lambdaValue);
+    for (Integer8 index = 0; index < result->count; index += 1) {
+	Value *arg = ValueEval(result->arg[index].value, error);
+	if (arg == NULL) {
+	    goto returnError;
+	}
+	result->arg[index].value = arg;
+    }
+    return LambdaResult(lambda, &result->arg[0].value, result->count, error);
+
+returnError:
+    return NULL;
 }

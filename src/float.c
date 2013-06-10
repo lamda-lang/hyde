@@ -34,10 +34,14 @@ void FloatDealloc(Value *floatValue) {
 }
 
 Integer64 FloatHash(Value *floatValue) {
-    return (Integer64)ValueFloatBridge(floatValue, NULL)->value;
+    return (Integer64)ValueFloatBridge(floatValue)->value;
 }
 
 Float *FloatSum(Float *fpv, Float *other, Error *error) {
     Float64 sum = fpv->value + other->value;
     return Create(sum, error);
+}
+
+Value *FloatEval(Value *floatValue, Error *error) {
+    return floatValue;
 }

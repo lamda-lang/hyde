@@ -39,12 +39,9 @@ returnError:
 }
 
 void ListFetch(Value *listValue, Value **values) {
-    List *list = ValueListBridge(listValue, NULL);
-    Element element[list->count];
-    Size size = sizeof(element);
-    MemoryCopy(list->element, element, size);
+    List *list = ValueListBridge(listValue);
     for (Integer32 index = 0; index < list->count; index += 1) {
-	Integer32 elementIndex = element[index].index;
+	Integer32 elementIndex = list->element[index].index;
 	list->element[index].value = values[elementIndex];
     }
 }
@@ -58,12 +55,28 @@ Value *ListGetValueAtIndex(List *list, Integer32 index) {
 }
 
 Integer64 ListHash(Value *listValue) {
-    return ValueListBridge(listValue, NULL)->count;
+    return ValueListBridge(listValue)->count;
 }
 
 void ListEnumerate(Value *listValue, void (*callback)(Value *value)) {
-    List *list = ValueListBridge(listValue, NULL);
+    List *list = ValueListBridge(listValue);
     for (Integer32 index = 0; index < list->count; index += 1) {
         callback(list->element[index].value);
     }
+}
+
+Value *ListEval(Value *listValue, Error *error) {
+    List *list = ValueListBridge(listValue);
+    for (Integer32 index = 0; index < list->count; index += 1) {
+	Value *before = list->element[index].value;
+        Value *after = ValueEval(before, error);
+	if (after == NULL) {
+	    goto returnError;
+	}
+	list->element[index].value = after;
+    }
+    return listValue;
+
+returnError:
+    return NULL;
 }

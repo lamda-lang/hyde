@@ -13,4 +13,6 @@ Integer64 FloatHash(Value *floatValue);
 
 Float *FloatSum(Float *fpv, Float *other, Error *error);
 
+Value *FloatEval(Value *floatValue, Error *error);
+
 #endif

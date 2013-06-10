@@ -13,4 +13,6 @@ Integer64 StringHash(Value *stringValue);
 
 String *StringConcatenate(String *string, String *other, Error *error);
 
+Value *StringEval(Value *stringValue, Error *error);
+
 #endif

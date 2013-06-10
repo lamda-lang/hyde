@@ -19,9 +19,13 @@ Value *NilSingleton(void) {
 }
 
 Integer64 NilHash(Value *nilValue) {
-    return ValueNilBridge(nilValue, NULL)->hash;
+    return ValueNilBridge(nilValue)->hash;
 }
 
 Value *NilDecode(Byte **bytes, Error *error) {
     return NilSingleton();
+}
+
+Value *NilEval(Value *nilValue, Error *error) {
+    return nilValue;
 }

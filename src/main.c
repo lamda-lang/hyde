@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "api.h"
-
+/*
 static Data *DataFromPath(Char *path, Error *error) {
     File *file = FileOpen(path, error);
     if (file == NULL) {
@@ -20,7 +20,7 @@ returnError:
     return NULL;
 }
 
-static Value *ExecuteBytecode(Data *data, Error *error) {
+static Map *ExecuteBytecode(Data *data, Error *error) {
     Byte *code = DataBytes(data);
     Integer32 valueCount = DecodeInteger32VLE(&code);
     Stack *stack = StackCreate(256, error);
@@ -35,12 +35,19 @@ static Value *ExecuteBytecode(Data *data, Error *error) {
     }
     Value *result = *StackFrameResult(stack);
     StackDealloc(stack);
-    return result;
+    return ValueMapBridge(result);
 
 deallocStack:
     StackDealloc(stack);
 returnError:
     return NULL;
+}
+
+static Value *MainFromMap(Map *map, Integer8 argCount, Value **args, Error *error) {
+    return NULL;
+}
+
+static void ExecuteTree(Value *root) {
 }
 
 int main(int argc, char **argv) {
@@ -49,10 +56,17 @@ int main(int argc, char **argv) {
     if (data == NULL) {
 	goto returnError;
     }
-    Value *result = ExecuteBytecode(data, &error);
-    if (result == NULL) {
+    Map *map = ExecuteBytecode(data, &error);
+    if (map == NULL) {
 	goto deallocData;
     }
+    Integer8 argCount = argc;
+    Value *arg[argCount];
+    Value *main = MainFromMap(map, argCount, arg, error);
+    if (main == NULL) {
+	goto deallocData;
+    }
+    ExecuteTree(main);
     DataDealloc(data);
     return EXIT_SUCCESS;
 
@@ -61,3 +75,4 @@ deallocData:
 returnError:
     return EXIT_FAILURE;
 }
+*/

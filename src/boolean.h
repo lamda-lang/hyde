@@ -13,4 +13,6 @@ Value *BooleanDecodeTrue(Byte **bytes, Error *error);
 
 Value *BooleanDecodeFalse(Byte **bytes, Error *error);
 
+Value *BooleanEval(Value *booleanValue, Error *error);
+
 #endif

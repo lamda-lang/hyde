@@ -15,4 +15,6 @@ Integer64 DoHash(Value *doValue);
 
 void DoEnumerate(Value *doValue, void (*callback)(Value *value));
 
+Value *DoEval(Value *doValue, Error *error);
+
 #endif

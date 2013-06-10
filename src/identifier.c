@@ -44,5 +44,9 @@ returnError:
 }
 
 Integer64 IdentifierHash(Value *idValue) {
-    return ValueIdentifierBridge(idValue, NULL)->length;
+    return ValueIdentifierBridge(idValue)->length;
+}
+
+Value *IdentifierEval(Value *idValue, Error *error) {
+    return idValue;
 }

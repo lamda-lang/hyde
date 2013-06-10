@@ -3,6 +3,8 @@
 
 #include "api.h"
 
+Type ValueType(Value *value);
+
 void ValueSetFlag(Value *value, Flag mask, bool truth);
 
 bool ValueFlagSet(Value *value, Flag mask);
@@ -13,30 +15,34 @@ void ValueDealloc(Value *value);
 
 Integer64 ValueHash(Value *value);
 
-Boolean *ValueBooleanBridge(Value *value, Error *error);
+Value *ValueEval(Value *value, Error *error);
 
-Do *ValueDoBridge(Value *value, Error *error);
+Boolean *ValueBooleanBridge(Value *value);
 
-Float *ValueFloatBridge(Value *value, Error *error);
+Do *ValueDoBridge(Value *value);
 
-Identifier *ValueIdentifierBridge(Value *value, Error *error);
+Float *ValueFloatBridge(Value *value);
 
-Integer *ValueIntegerBridge(Value *value, Error *error);
+Identifier *ValueIdentifierBridge(Value *value);
 
-Lambda *ValueLambdaBridge(Value *value, Error *error);
+Integer *ValueIntegerBridge(Value *value);
 
-List *ValueListBridge(Value *value, Error *error);
+Lambda *ValueLambdaBridge(Value *value);
 
-Map *ValueMapBridge(Value *value, Error *error);
+List *ValueListBridge(Value *value);
 
-Nil *ValueNilBridge(Value *value, Error *error);
+Map *ValueMapBridge(Value *value);
 
-Range *ValueRangeBridge(Value *value, Error *error);
+Nil *ValueNilBridge(Value *value);
 
-Result *ValueResultBridge(Value *value, Error *error);
+Range *ValueRangeBridge(Value *value);
 
-Set *ValueSetBridge(Value *value, Error *error);
+Result *ValueResultBridge(Value *value);
 
-String *ValueStringBridge(Value *value, Error *error);
+Set *ValueSetBridge(Value *value);
+
+String *ValueStringBridge(Value *value);
+
+When *ValueWhenBridge(Value *value);
 
 #endif

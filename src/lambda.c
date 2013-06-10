@@ -45,7 +45,7 @@ Value *LambdaDecode(Byte **bytes, Error *error) {
 }
 
 void LambdaFetch(Value *lambdaValue, Value **values) {
-    Lambda *lambda = ValueLambdaBridge(lambdaValue, NULL);
+    Lambda *lambda = ValueLambdaBridge(lambdaValue);
     for (Integer8 index = 0; index < lambda->contextLength; index += 1) {
         Integer32 valueIndex = lambda->context[index].index;
 	lambda->context[index].value = values[valueIndex];
@@ -57,19 +57,38 @@ Value *LambdaValueBridge(Lambda *lambda) {
 }
 
 void LambdaDealloc(Value *lambdaValue) {
-    Lambda *lambda = ValueLambdaBridge(lambdaValue, NULL);
+    Lambda *lambda = ValueLambdaBridge(lambdaValue);
     MemoryDealloc(lambda->code);
     MemoryDealloc(lambda);
 }
 
 Integer64 LambdaHash(Value *lambdaValue) {
-    return ValueLambdaBridge(lambdaValue, NULL)->valueCount;
+    return ValueLambdaBridge(lambdaValue)->valueCount;
 }
 
 void LambdaEnumerate(Value *lambdaValue, void (*callback)(Value *value)) {
-    Lambda *lambda = ValueLambdaBridge(lambdaValue, NULL);
+    Lambda *lambda = ValueLambdaBridge(lambdaValue);
     for (Integer8 index = 0; index < lambda->contextLength; index += 1) {
 	Value *value = lambda->context[index].value;
         callback(value);
     }
+}
+
+Value *LambdaEval(Value *lambdaValue, Error *error) {
+    Lambda *lambda = ValueLambdaBridge(lambdaValue);
+    for (Integer8 index = 0; index < lambda->contextLength; index += 1) {
+	Value *value = ValueEval(lambda->context[index].value, error);
+	if (value == NULL) {
+	    goto returnError;
+	}
+	lambda->context[index].value = value;
+    }
+    return lambdaValue;
+
+returnError:
+    return NULL;
+}
+
+Value *LambdaResult(Lambda *lambda, Value **args, Integer8 argCount, Error *error) {
+    return NULL;
 }

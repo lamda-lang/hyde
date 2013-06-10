@@ -15,4 +15,6 @@ Integer64 SetHash(Value *setValue);
 
 void SetEnumerate(Value *setValue, void (*callback)(Value *value));
 
+Value *SetEval(Value *setValue, Error *error);
+
 #endif

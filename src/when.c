@@ -46,7 +46,7 @@ returnError:
 }
 
 void WhenFetch(Value *whenValue, Value **values) {
-    When *block = ValueWhenBridge(whenValue, NULL);
+    When *block = ValueWhenBridge(whenValue);
     for (Integer8 index = 0; index < block->count; index += 1) {
 	Integer32 conditionIndex = block->clause[index].condition.index;
 	Integer32 valueIndex = block->clause[index].value.index;
@@ -55,19 +55,23 @@ void WhenFetch(Value *whenValue, Value **values) {
     }
 }
 
-Value *WhenValue(When *block) {
-}
-
 void WhenDealloc(Value *whenValue) {
     MemoryDealloc(whenValue);
 }
 
-void WhenEnumerate(Value *whenValue, void (*callback)(Value *value)) {
-    When *block = ValueWhenBridge(whenValue, NULL);
+Value *WhenEval(Value *whenValue, Error *error) {
+    When *block = ValueWhenBridge(whenValue);
     for (Integer8 index = 0; index < block->count; index += 1) {
-	Value *condition = block->clause[index].condition.value;
-	Value *value = block->clause[index].value.value;
-	callback(condition);
-	callback(value);
+	Value *condition = ValueEval(block->clause[index].condition.value, error);
+	if (condition == NULL) {
+	    goto returnError;
+	}
+	if (condition == BooleanTrueSingleton()) {
+	    return ValueEval(block->clause[index].value.value, error);
+	}
     }
+    return NilSingleton();
+
+returnError:
+    return NULL;
 }

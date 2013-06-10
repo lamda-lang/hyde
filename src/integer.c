@@ -34,10 +34,14 @@ void IntegerDealloc(Value *integerValue) {
 }
 
 Integer64 IntegerHash(Value *integerValue) {
-    return ValueIntegerBridge(integerValue, NULL)->value;
+    return ValueIntegerBridge(integerValue)->value;
 }
 
 Integer *IntegerSum(Integer *integer, Integer *other, Error *error) {
   Integer64 sum = integer->value + other->value;
   return Create(sum, error);
+}
+
+Value *IntegerEval(Value *integerValue, Error *error) {
+    return integerValue;
 }
