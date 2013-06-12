@@ -115,7 +115,7 @@ typedef struct When When;
 
 typedef Value *Instruction(Byte **code, Error *error);
 
-typedef Value *Eval(Value *value, Error *error);
+typedef Value *Eval(Value *value, bool pure, Error *error);
 
 typedef bool Kernel(Integer8 arity, Stack *stack);
 

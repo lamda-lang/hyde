@@ -10,8 +10,7 @@ struct Lambda {
 };
 
 static Lambda *Create(Integer8 arity, Integer8 contextLength, Integer32 valueCount, Integer32 codeSize, Error *error) {
-    Size size = sizeof(Lambda) + sizeof(Element) * contextLength;
-    Lambda *lambda = MemoryAlloc(size, error);
+    Lambda *lambda = MemoryAlloc(sizeof(Lambda) + sizeof(Element) * contextLength, error);
     if (lambda == NULL) {
         goto returnError;
     }
@@ -57,9 +56,11 @@ Value *LambdaValueBridge(Lambda *lambda) {
 }
 
 void LambdaDealloc(Value *lambdaValue) {
-    Lambda *lambda = ValueLambdaBridge(lambdaValue);
-    MemoryDealloc(lambda->code);
-    MemoryDealloc(lambda);
+    if (lambdaValue != NULL) {
+	Lambda *lambda = ValueLambdaBridge(lambdaValue);
+	MemoryDealloc(lambda->code);
+	MemoryDealloc(lambda);
+    }
 }
 
 Integer64 LambdaHash(Value *lambdaValue) {
@@ -74,10 +75,10 @@ void LambdaEnumerate(Value *lambdaValue, void (*callback)(Value *value)) {
     }
 }
 
-Value *LambdaEval(Value *lambdaValue, Error *error) {
+Value *LambdaEval(Value *lambdaValue, bool pure, Error *error) {
     Lambda *lambda = ValueLambdaBridge(lambdaValue);
     for (Integer8 index = 0; index < lambda->contextLength; index += 1) {
-	Value *value = ValueEval(lambda->context[index].value, error);
+	Value *value = ValueEval(lambda->context[index].value, true, error);
 	if (value == NULL) {
 	    goto returnError;
 	}

@@ -12,8 +12,7 @@ struct When {
 };
 
 static When *Create(Integer8 count, Error *error) {
-    Size size = sizeof(When) * sizeof(Clause) * count;
-    When *block = MemoryAlloc(size, error);
+    When *block = MemoryAlloc(sizeof(When) * sizeof(Clause) * count, error);
     if (block == NULL) {
 	goto returnError;
     }
@@ -59,15 +58,15 @@ void WhenDealloc(Value *whenValue) {
     MemoryDealloc(whenValue);
 }
 
-Value *WhenEval(Value *whenValue, Error *error) {
+Value *WhenEval(Value *whenValue, bool pure, Error *error) {
     When *block = ValueWhenBridge(whenValue);
     for (Integer8 index = 0; index < block->count; index += 1) {
-	Value *condition = ValueEval(block->clause[index].condition.value, error);
+	Value *condition = ValueEval(block->clause[index].condition.value, true, error);
 	if (condition == NULL) {
 	    goto returnError;
 	}
 	if (condition == BooleanTrueSingleton()) {
-	    return ValueEval(block->clause[index].value.value, error);
+	    return ValueEval(block->clause[index].value.value, pure, error);
 	}
     }
     return NilSingleton();

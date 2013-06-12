@@ -58,8 +58,10 @@ returnError:
 }
 
 void StackDealloc(Stack *stack) {
-    MemoryDealloc(stack->root);
-    MemoryDealloc(stack);
+    if (stack != NULL) {
+	MemoryDealloc(stack->root);
+	MemoryDealloc(stack);
+    }
 }
 
 Status StackPushFrame(Stack *stack, Integer32 count, Error *error) {

@@ -11,6 +11,6 @@ Value *IdentifierDecode(Byte **bytes, Error *error);
 
 Integer64 IdentifierHash(Value *idValue);
 
-Value *IdentifierEval(Value *idValue, Error *error);
+Value *IdentifierEval(Value *idValue, bool pure, Error *error);
 
 #endif

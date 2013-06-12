@@ -6,8 +6,7 @@ struct Integer {
 };
 
 static Integer *Create(Integer64 value, Error *error) {
-    Size size = sizeof(Integer);
-    Integer *integer = MemoryAlloc(size, error);
+    Integer *integer = MemoryAlloc(sizeof(Integer), error);
     if (integer == NULL) {
         goto returnError;
     }
@@ -42,6 +41,6 @@ Integer *IntegerSum(Integer *integer, Integer *other, Error *error) {
   return Create(sum, error);
 }
 
-Value *IntegerEval(Value *integerValue, Error *error) {
+Value *IntegerEval(Value *integerValue, bool pure, Error *error) {
     return integerValue;
 }

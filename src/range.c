@@ -7,8 +7,7 @@ struct Range {
 };
 
 static Range *Create(Integer32 upperIndex, Integer32 lowerIndex, Error *error) {
-    Size size = sizeof(Range);
-    Range *range = MemoryAlloc(size, error);
+    Range *range = MemoryAlloc(sizeof(Range), error);
     if (range == NULL) {
 	goto returnError;
     }
@@ -53,13 +52,13 @@ void RangeFetch(Value *rangeValue, Value **values) {
     range->lower.value = values[range->lower.index];
 }
 
-Value *RangeEval(Value *rangeValue, Error *error) {
+Value *RangeEval(Value *rangeValue, bool pure, Error *error) {
     Range *range = ValueRangeBridge(rangeValue);
-    Value *lower = ValueEval(range->lower.value, error);
+    Value *lower = ValueEval(range->lower.value, true, error);
     if (lower == NULL) {
 	goto returnError;
     }
-    Value *upper = ValueEval(range->upper.value, error);
+    Value *upper = ValueEval(range->upper.value, true, error);
     if (upper == NULL) {
 	goto returnError;
     }

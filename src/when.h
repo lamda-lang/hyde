@@ -9,7 +9,7 @@ Value *WhenDecode(Byte **bytes, Error *error);
 
 void WhenFetch(Value *whenValue, Value **values);
 
-Value *WhenEval(Value *whenValue, Error *error);
+Value *WhenEval(Value *whenValue, bool pure, Error *error);
 
 void WhenDealloc(Value *whenValue);
 

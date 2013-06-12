@@ -7,8 +7,7 @@ struct Identifier {
 };
 
 static Identifier *Create(Integer8 length, Error *error) {
-    Size size = sizeof(Identifier) + sizeof(Integer8) * length;
-    Identifier *id = MemoryAlloc(size, error);
+    Identifier *id = MemoryAlloc(sizeof(Identifier) + sizeof(Integer8) * length, error);
     if (id == NULL) {
         goto returnError;
     }
@@ -47,6 +46,6 @@ Integer64 IdentifierHash(Value *idValue) {
     return ValueIdentifierBridge(idValue)->length;
 }
 
-Value *IdentifierEval(Value *idValue, Error *error) {
+Value *IdentifierEval(Value *idValue, bool pure, Error *error) {
     return idValue;
 }

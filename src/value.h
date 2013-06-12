@@ -15,7 +15,7 @@ void ValueDealloc(Value *value);
 
 Integer64 ValueHash(Value *value);
 
-Value *ValueEval(Value *value, Error *error);
+Value *ValueEval(Value *value, bool pure, Error *error);
 
 Boolean *ValueBooleanBridge(Value *value);
 

@@ -19,6 +19,6 @@ Value *RangeDecodeLower(Byte **bytes, Error *error);
 
 Value *RangeDecodeUpper(Byte **bytes, Error *error);
 
-Value *RangeEval(Value *rangeValue, Error *error);
+Value *RangeEval(Value *rangeValue, bool pure, Error *error);
 
 #endif

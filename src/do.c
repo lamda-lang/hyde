@@ -11,8 +11,7 @@ Value *DoValueBridge(Do *block) {
 }
 
 static Do *Create(Integer32 count, Error *error) {
-    Size size = sizeof(Do) * sizeof(Element) * count;
-    Do *block = MemoryAlloc(size, error);
+    Do *block = MemoryAlloc(sizeof(Do) * sizeof(Element) * count, error);
     if (block == NULL) {
 	goto returnError;
     }
@@ -63,17 +62,19 @@ void DoEnumerate(Value *doValue, void (*callback)(Value *value)) {
     }
 }
 
-Value *DoEval(Value *doValue, Error *error) {
+Value *DoEval(Value *doValue, bool pure, Error *error) {
+    if (pure) {
+	return doValue;
+    }
     Do *block = ValueDoBridge(doValue);
     for (Integer32 index = 0; index < block->count; index += 1) {
-	Value *value = ValueEval(block->element[index].value, error);
+	Value *value = ValueEval(block->element[index].value, false, error);
 	if (value == NULL) {
 	    goto returnError;
 	}
-	block->element[index].value = value;;
+	block->element[index].value = value;
     }
-    Integer32 last =block->count - 1;
-    return block->element[last].value;
+    return block->element[block->count - 1].value;
 
 returnError:
     return NULL;

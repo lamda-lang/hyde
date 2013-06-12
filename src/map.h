@@ -17,6 +17,6 @@ void MapEnumerate(Value *mapValue, void (*callback)(Value *value));
 
 Value *MapGetValueForKey(Map *map, Value *key);
 
-Value *MapEval(Value *mapValue, Error *error);
+Value *MapEval(Value *mapValue, bool pure, Error *error);
 
 #endif

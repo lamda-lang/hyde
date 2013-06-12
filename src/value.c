@@ -119,9 +119,9 @@ Integer64 ValueHash(Value *value) {
     return class[type].hash(value);
 }
 
-Value *ValueEval(Value *value, Error *error) {
+Value *ValueEval(Value *value, bool pure, Error *error) {
     Type type = ValueType(value);
-    return class[type].eval(value, error);
+    return class[type].eval(value, pure, error);
 }
 
 Boolean *ValueBooleanBridge(Value *value) {

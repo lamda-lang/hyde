@@ -39,6 +39,6 @@ Value *BooleanDecodeFalse(Byte **bytes, Error *error) {
     return BooleanFalseSingleton();
 }
 
-Value *BooleanEval(Value *booleanValue, Error *error) {
+Value *BooleanEval(Value *booleanValue, bool pure, Error *error) {
     return booleanValue;
 }

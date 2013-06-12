@@ -8,8 +8,7 @@ struct Result {
 };
 
 static Result *Create(Integer32 lambdaIndex, Integer8 count, Error *error) {
-    Size size = sizeof(Result) + sizeof(Element) * count;
-    Result *result = MemoryAlloc(size, error);
+    Result *result = MemoryAlloc(sizeof(Result) + sizeof(Element) * count, error);
     if (result == NULL) {
 	goto returnError;
     }
@@ -55,9 +54,9 @@ void ResultDealloc(Value *resultValue) {
     MemoryDealloc(resultValue);
 }
 
-Value *ResultEval(Value *resultValue, Error *error) {
+Value *ResultEval(Value *resultValue, bool pure, Error *error) {
     Result *result = ValueResultBridge(resultValue);
-    Value *lambdaValue = ValueEval(result->lambda.value, error);
+    Value *lambdaValue = ValueEval(result->lambda.value, true, error);
     if (lambdaValue == NULL) {
 	goto returnError;
     }
@@ -67,13 +66,17 @@ Value *ResultEval(Value *resultValue, Error *error) {
     }
     Lambda *lambda = ValueLambdaBridge(lambdaValue);
     for (Integer8 index = 0; index < result->count; index += 1) {
-	Value *arg = ValueEval(result->arg[index].value, error);
+	Value *arg = ValueEval(result->arg[index].value, true, error);
 	if (arg == NULL) {
 	    goto returnError;
 	}
 	result->arg[index].value = arg;
     }
-    return LambdaResult(lambda, &result->arg[0].value, result->count, error);
+    Value *value = LambdaResult(lambda, &result->arg[0].value, result->count, error);
+    if (value == NULL) {
+	goto returnError;
+    }
+    return ValueEval(value, pure, error);
 
 returnError:
     return NULL;

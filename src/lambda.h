@@ -15,7 +15,7 @@ Integer64 LambdaHash(Value *lambdaValue);
 
 void LambdaEnumerate(Value *lambdaValue, void (*callback)(Value *value));
 
-Value *LambdaEval(Value *lambdaValue, Error *error);
+Value *LambdaEval(Value *lambdaValue, bool pure, Error *error);
 
 Value *LambdaResult(Lambda *lambda, Value **args, Integer8 argCount, Error *error);
 

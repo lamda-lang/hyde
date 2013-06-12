@@ -54,23 +54,23 @@ MAP
   I8FLE : 10
   I32VLE : map_index
   I32VLE : count
-  I32VLE : keyIndex I32VLE : valueIndex].count
+  I32VLE : key_index I32VLE : value_index].count
 
 MODULE
   I8FLE : 11
   I32VLE : module_index
   I32VLE : count
-  I32VLE : identifierIndex I32VLE : valueIndex].count
+  I32VLE : identifier_index I32VLE : value_index].count
 
 WHEN
   I8FLE : 12
   I8FLE : count
-  [I32VLE : conditionIndex I32VLE : valueIndex].count
+  [I32VLE : condition_index I32VLE : value_index].count
 
 CASE
   I8FLE : 13
   I8FLE : count
-  [I32VLE : matchIndex I32VLE : valueIndex].count
+  [I32VLE : match_index I32VLE : value_index].count
 
 RESULT
   I8FLE : 14
@@ -90,7 +90,7 @@ LAMBDA
   I32VLE : lambda_index
   I8FLE : arity
   I8FLE : context_length
-  I32VLE : valueCount
+  I32VLE : value_count
   I32VLE : code_size
   [I32VLE : context_index].context_length
   [I8FLE : code].code_size

@@ -6,8 +6,7 @@ struct Float {
 };
 
 static inline Float *Create(Float64 value, Error *error) {
-    Size size = sizeof(Float);
-    Float *fpv = MemoryAlloc(size, error);
+    Float *fpv = MemoryAlloc(sizeof(Float), error);
     if (fpv == NULL) {
 	goto returnError;
     }
@@ -42,6 +41,6 @@ Float *FloatSum(Float *fpv, Float *other, Error *error) {
     return Create(sum, error);
 }
 
-Value *FloatEval(Value *floatValue, Error *error) {
+Value *FloatEval(Value *floatValue, bool pure, Error *error) {
     return floatValue;
 }

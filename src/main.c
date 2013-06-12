@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "api.h"
-/*
+
 static Data *DataFromPath(Char *path, Error *error) {
     File *file = FileOpen(path, error);
     if (file == NULL) {
@@ -52,6 +52,8 @@ static void ExecuteTree(Value *root) {
 
 int main(int argc, char **argv) {
     Error error;
+    Integer8 argCount = argc & 0XF;
+    Value *arg[argCount];
     Data *data = DataFromPath(argv[1], &error);
     if (data == NULL) {
 	goto returnError;
@@ -60,9 +62,7 @@ int main(int argc, char **argv) {
     if (map == NULL) {
 	goto deallocData;
     }
-    Integer8 argCount = argc;
-    Value *arg[argCount];
-    Value *main = MainFromMap(map, argCount, arg, error);
+    Value *main = MainFromMap(map, argCount, arg, &error);
     if (main == NULL) {
 	goto deallocData;
     }
@@ -75,4 +75,3 @@ deallocData:
 returnError:
     return EXIT_FAILURE;
 }
-*/

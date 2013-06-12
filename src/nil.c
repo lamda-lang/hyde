@@ -26,6 +26,6 @@ Value *NilDecode(Byte **bytes, Error *error) {
     return NilSingleton();
 }
 
-Value *NilEval(Value *nilValue, Error *error) {
+Value *NilEval(Value *nilValue, bool pure, Error *error) {
     return nilValue;
 }

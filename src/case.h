@@ -11,6 +11,6 @@ Integer64 CaseHash(Value *caseValue);
 
 void CaseEnumerate(Value *caseValue, void (*callback)(Value *value));
 
-Value *CaseEval(Value *caseValue, Error *error);
+Value *CaseEval(Value *caseValue, bool pure, Error *error);
 
 #endif

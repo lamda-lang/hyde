@@ -7,8 +7,7 @@ struct String {
 };
 
 static String *Create(Integer32 length, Error *error) {
-    Size size = sizeof(String) + sizeof(Integer32) * length;
-    String *string = MemoryAlloc(size, error);
+    String *string = MemoryAlloc(sizeof(String) + sizeof(Integer32) * length, error);
     if (string == NULL) {
         goto returnError;
     }
@@ -54,16 +53,14 @@ String *StringConcatenate(String *string, String *other, Error *error) {
     if (result == NULL) {
         goto returnError;
     }
-    Size stringSize = sizeof(Integer32) * stringLength;
-    Size otherSize = sizeof(Integer32) * otherLength;
-    MemoryCopy(string->codepoint, result->codepoint, stringSize);
-    MemoryCopy(other->codepoint, result->codepoint + stringLength, otherSize);
+    MemoryCopy(string->codepoint, result->codepoint, sizeof(Integer32) * stringLength);
+    MemoryCopy(other->codepoint, result->codepoint + stringLength, sizeof(Integer32) * otherLength);
     return result;
 
 returnError:
     return NULL;
 }
 
-Value *StringEval(Value *stringValue, Error *error) {
+Value *StringEval(Value *stringValue, bool pure, Error *error) {
     return stringValue;
 }

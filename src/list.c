@@ -7,8 +7,7 @@ struct List {
 };
 
 static List *Create(Integer32 count, Error *error) {
-    Size size = sizeof(List) + sizeof(Element) * count;
-    List *list = MemoryAlloc(size, error);
+    List *list = MemoryAlloc(sizeof(List) + sizeof(Element) * count, error);
     if (list == NULL) {
         goto returnError;
     }
@@ -65,11 +64,11 @@ void ListEnumerate(Value *listValue, void (*callback)(Value *value)) {
     }
 }
 
-Value *ListEval(Value *listValue, Error *error) {
+Value *ListEval(Value *listValue, bool pure, Error *error) {
     List *list = ValueListBridge(listValue);
     for (Integer32 index = 0; index < list->count; index += 1) {
 	Value *before = list->element[index].value;
-        Value *after = ValueEval(before, error);
+        Value *after = ValueEval(before, true, error);
 	if (after == NULL) {
 	    goto returnError;
 	}

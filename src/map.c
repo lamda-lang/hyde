@@ -75,9 +75,11 @@ void MapFetch(Value *mapValue, Value **values) {
 }
 
 void MapDealloc(Value *mapValue) {
-    Map *map = ValueMapBridge(mapValue);
-    MemoryDealloc(map->pair);
-    MemoryDealloc(map);
+    if (mapValue != NULL) {
+	Map *map = ValueMapBridge(mapValue);
+	MemoryDealloc(map->pair);
+	MemoryDealloc(map);
+    }
 }
 
 Integer64 MapHash(Value *mapValue) {
@@ -96,7 +98,7 @@ Value *MapGetValueForKey(Map *map, Value *key) {
     return NULL;
 }
 
-Value *MapEval(Value *mapValue, Error *error) {
+Value *MapEval(Value *mapValue, bool pure, Error *error) {
     Map *map = ValueMapBridge(mapValue);
     Integer32 length = map->length << 1;
     Pair *pair = MemoryAlloc(sizeof(Pair) * length, error);
@@ -108,11 +110,11 @@ Value *MapEval(Value *mapValue, Error *error) {
 	pair[index].value.value = NULL;
     }
     for (Integer32 index = 0; index < map->length; index += 1) {
-	Value *key = ValueEval(map->pair[index].key.value, error);
+	Value *key = ValueEval(map->pair[index].key.value, true, error);
 	if (key == NULL) {
 	    goto deallocPair;
 	};
-	Value *value = ValueEval(map->pair[index].value.value, error);
+	Value *value = ValueEval(map->pair[index].value.value, true, error);
 	if (value == NULL) {
 	    goto deallocPair;
 	};
@@ -124,6 +126,10 @@ Value *MapEval(Value *mapValue, Error *error) {
     return mapValue;
 
 deallocPair:
+    for (Integer32 index = 0; index < length; index += 1) {
+	ValueDealloc(pair[index].key.value);
+	ValueDealloc(pair[index].value.value);
+    }
     MemoryDealloc(pair);
 returnError:
     return NULL;

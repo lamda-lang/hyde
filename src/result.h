@@ -7,7 +7,7 @@ Value *ResultValueBridge(Result *result);
 
 void ResultDealloc(Value *resultValue);
 
-Value *ResultEval(Value *resultValue, Error *error);
+Value *ResultEval(Value *resultValue, bool pure, Error *error);
 
 Value *ResultDecode(Byte **bytes, Error *error);
 

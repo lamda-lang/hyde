@@ -66,9 +66,11 @@ Value *SetValueBridge(Set *set) {
 }
 
 void SetDealloc(Value *setValue) {
-    Set *set = ValueSetBridge(setValue);
-    MemoryDealloc(set->element);
-    MemoryDealloc(set);
+    if (setValue != NULL) {
+	Set *set = ValueSetBridge(setValue);
+	MemoryDealloc(set->element);
+	MemoryDealloc(set);
+    }
 }
 
 Integer64 SetHash(Value *setValue) {
@@ -85,7 +87,7 @@ void SetEnumerate(Value *setValue, void (*callback)(Value *value)) {
     }
 }
 
-Value *SetEval(Value *setValue, Error *error) {
+Value *SetEval(Value *setValue, bool pure, Error *error) {
     Set *set = ValueSetBridge(setValue);
     Integer32 length = set->length << 1;
     Element *element = MemoryAlloc(sizeof(Element) * length, error);
@@ -97,7 +99,7 @@ Value *SetEval(Value *setValue, Error *error) {
     }
     for (Integer32 index = 0; index < set->length; index += 1) {
 	Value *before = set->element[index].value;
-	Value *after = ValueEval(before, error);
+	Value *after = ValueEval(before, true, error);
 	if (after == NULL) {
 	    goto deallocElement;
 	}
@@ -109,6 +111,9 @@ Value *SetEval(Value *setValue, Error *error) {
     return setValue;
 
 deallocElement:
+    for (Integer32 index = 0; index < length; index += 1) {
+	ValueDealloc(element[index].value);
+    }
     MemoryDealloc(element);
 returnError:
     return NULL;
