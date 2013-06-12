@@ -19,6 +19,8 @@ Value *ValueEval(Value *value, bool pure, Error *error);
 
 Boolean *ValueBooleanBridge(Value *value);
 
+Case *ValueCaseBridge(Value *value);
+
 Do *ValueDoBridge(Value *value);
 
 Float *ValueFloatBridge(Value *value);

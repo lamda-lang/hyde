@@ -3,7 +3,11 @@
 
 #include "api.h"
 
+Value *CaseValueBridge(Case *block);
+
 Value *CaseDecode(Byte **bytes, Error *error);
+
+void CaseFetch(Value *caseValue, Value **values);
 
 void CaseDealloc(Value *caseValue);
 

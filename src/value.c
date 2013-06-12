@@ -128,6 +128,10 @@ Boolean *ValueBooleanBridge(Value *value) {
     return (Boolean *)value;
 }
 
+Case *ValueCaseBridge(Value *value) {
+    return (Case *)value;
+}
+
 Do *ValueDoBridge(Value *value) {
     return (Do *)value;
 }
