@@ -55,6 +55,10 @@ Class class[] = {
         .enumerate = MapEnumerate,
 	.eval = MapEval
     },
+    [TypeModule] = {
+	.dealloc = ModuleDealloc,
+	.eval = ModuleEval
+    },
     [TypeNil] = {
         .hash = NilHash,
 	.eval = NilEval
@@ -124,62 +128,66 @@ Value *ValueEval(Value *value, bool pure, Error *error) {
     return class[type].eval(value, pure, error);
 }
 
-Boolean *ValueBooleanBridge(Value *value) {
-    return (Boolean *)value;
+Boolean *ValueBooleanBridge(Value *boolValue) {
+    return (Boolean *)boolValue;
 }
 
-Case *ValueCaseBridge(Value *value) {
-    return (Case *)value;
+Case *ValueCaseBridge(Value *caseValue) {
+    return (Case *)caseValue;
 }
 
-Do *ValueDoBridge(Value *value) {
-    return (Do *)value;
+Do *ValueDoBridge(Value *doValue) {
+    return (Do *)doValue;
 }
 
-Float *ValueFloatBridge(Value *value) {
-    return (Float *)value;
+Float *ValueFloatBridge(Value *floatValue) {
+    return (Float *)floatValue;
 }
 
-Identifier *ValueIdentifierBridge(Value *value) {
-    return (Identifier *)value;
+Identifier *ValueIdentifierBridge(Value *idValue) {
+    return (Identifier *)idValue;
 }
 
-Integer *ValueIntegerBridge(Value *value) {
-    return (Integer *)value;
+Integer *ValueIntegerBridge(Value *integerValue) {
+    return (Integer *)integerValue;
 }
 
-Lambda *ValueLambdaBridge(Value *value) {
-    return (Lambda *)value;
+Lambda *ValueLambdaBridge(Value *lambdaValue) {
+    return (Lambda *)lambdaValue;
 }
 
-List *ValueListBridge(Value *value) {
-    return (List *)value;
+List *ValueListBridge(Value *listValue) {
+    return (List *)listValue;
 }
 
-Map *ValueMapBridge(Value *value) {
-    return (Map *)value;
+Map *ValueMapBridge(Value *mapValue) {
+    return (Map *)mapValue;
 }
 
-Nil *ValueNilBridge(Value *value) {
-    return (Nil *)value;
+Nil *ValueNilBridge(Value *nilValue) {
+    return (Nil *)nilValue;
 }
 
-Range *ValueRangeBridge(Value *value) {
-    return (Range *)value;
+Range *ValueRangeBridge(Value *rangeValue) {
+    return (Range *)rangeValue;
 }
 
-Result *ValueResultBridge(Value *value) {
-    return (Result *)value;
+Result *ValueResultBridge(Value *resultValue) {
+    return (Result *)resultValue;
 }
 
-Set *ValueSetBridge(Value *value) {
-    return (Set *)value;
+Set *ValueSetBridge(Value *setValue) {
+    return (Set *)setValue;
 }
 
-String *ValueStringBridge(Value *value) {
-    return (String *)value;
+String *ValueStringBridge(Value *stringValue) {
+    return (String *)stringValue;
 }
 
-When *ValueWhenBridge(Value *value) {
-    return (When *)value;
+Module *ValueModuleBridge(Value *moduleValue) {
+    return (Module *)moduleValue;
+}
+
+When *ValueWhenBridge(Value *whenValue) {
+    return (When *)whenValue;
 }

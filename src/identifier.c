@@ -1,3 +1,4 @@
+#include <string.h>
 #include "identifier.h"
 
 struct Identifier {
@@ -13,6 +14,19 @@ static Identifier *Create(Integer8 length, Error *error) {
     }
     id->base = TypeIdentifier;
     id->length = length;
+    return id;
+
+returnError:
+    return NULL;
+}
+
+Identifier *IdentifierCreateWithCharacters(Char *string, Error *error) {
+    Integer8 length = strnlen(string, 0XF) & 0XF;
+    Identifier *id = Create(length, error);
+    if (id == NULL) {
+	goto returnError;
+    }
+    MemoryCopy(string, id->codepoint, length);
     return id;
 
 returnError:

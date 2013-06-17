@@ -91,5 +91,21 @@ returnError:
 }
 
 Value *LambdaResult(Lambda *lambda, Value **args, Integer8 argCount, Error *error) {
+    Value **values = MemoryAlloc(sizeof(Value *) * lambda->valueCount, error);
+    if (values == NULL) {
+	goto returnError;
+    }
+    MemoryCopy(args, values + 1, sizeof(Value *) * argCount);
+    MemoryCopy(lambda->context, values + 1 + argCount, sizeof(Value *) * lambda->contextLength);
+    if (ExecuteCode(lambda->code, values, lambda->valueCount, error) == StatusFailure) {
+	goto deallocValues;
+    }
+    Value *result = values[0];
+    MemoryDealloc(values);
+    return result;
+
+deallocValues:
+    MemoryDealloc(values);
+returnError:
     return NULL;
 }

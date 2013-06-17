@@ -17,34 +17,36 @@ Integer64 ValueHash(Value *value);
 
 Value *ValueEval(Value *value, bool pure, Error *error);
 
-Boolean *ValueBooleanBridge(Value *value);
+Boolean *ValueBooleanBridge(Value *booleanValue);
 
-Case *ValueCaseBridge(Value *value);
+Case *ValueCaseBridge(Value *caseValue);
 
-Do *ValueDoBridge(Value *value);
+Do *ValueDoBridge(Value *doValue);
 
-Float *ValueFloatBridge(Value *value);
+Float *ValueFloatBridge(Value *floatValue);
 
-Identifier *ValueIdentifierBridge(Value *value);
+Identifier *ValueIdentifierBridge(Value *idValue);
 
-Integer *ValueIntegerBridge(Value *value);
+Integer *ValueIntegerBridge(Value *integerValue);
 
-Lambda *ValueLambdaBridge(Value *value);
+Lambda *ValueLambdaBridge(Value *lambdaValue);
 
-List *ValueListBridge(Value *value);
+List *ValueListBridge(Value *listValue);
 
-Map *ValueMapBridge(Value *value);
+Map *ValueMapBridge(Value *mapValue);
 
-Nil *ValueNilBridge(Value *value);
+Nil *ValueNilBridge(Value *nilValue);
 
-Range *ValueRangeBridge(Value *value);
+Range *ValueRangeBridge(Value *rangeValue);
 
-Result *ValueResultBridge(Value *value);
+Result *ValueResultBridge(Value *resultValue);
 
-Set *ValueSetBridge(Value *value);
+Set *ValueSetBridge(Value *setValue);
 
-String *ValueStringBridge(Value *value);
+String *ValueStringBridge(Value *stringValue);
 
-When *ValueWhenBridge(Value *value);
+Module *ValueModuleBridge(Value *moduleValue);
+
+When *ValueWhenBridge(Value *whenValue);
 
 #endif

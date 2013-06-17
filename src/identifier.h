@@ -3,6 +3,8 @@
 
 #include "api.h"
 
+Identifier *IdentifierCreateWithCharacters(Char *string, Error *error);
+
 Value *IdentifierValueBridge(Identifier *id);
 
 void IdentifierDealloc(Value *idValue);

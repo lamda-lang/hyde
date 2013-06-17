@@ -53,12 +53,13 @@ enum {
     TypeLambda = 6,
     TypeList = 7,
     TypeMap = 8,
-    TypeNil = 9,
-    TypeRange = 10,
-    TypeResult = 11,
-    TypeSet = 12,
-    TypeString = 13,
-    TypeWhen = 14
+    TypeModule = 9,
+    TypeNil = 10,
+    TypeRange = 11,
+    TypeResult = 12,
+    TypeSet = 13,
+    TypeString = 14,
+    TypeWhen = 15
 };
 
 typedef uint8_t Flag;
@@ -74,8 +75,6 @@ typedef union {
     Value *value;
     Integer32 index;
 } Element;
-
-typedef struct Args Args;
 
 typedef struct File File;
 
@@ -101,6 +100,8 @@ typedef struct List List;
 
 typedef struct Map Map;
 
+typedef struct Module Module;
+
 typedef struct Nil Nil;
 
 typedef struct Range Range;
@@ -125,6 +126,7 @@ typedef Integer64 Hash(Value *value);
 
 typedef void Enumerate(Value *value, void (*block)(Value *value));
 
+#include "arg.h"
 #include "boolean.h"
 #include "case.h"
 #include "data.h"
@@ -142,8 +144,10 @@ typedef void Enumerate(Value *value, void (*block)(Value *value));
 #include "memory.h"
 #include "module.h"
 #include "nil.h"
+#include "process.h"
 #include "range.h"
 #include "result.h"
+#include "runtime.h"
 #include "set.h"
 #include "stack.h"
 #include "string.h"

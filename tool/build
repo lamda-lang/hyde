@@ -1,4 +1,4 @@
 #! /bin/bash
 
 mkdir -p build
-clang -std=c99 -g -o build/hyde src/*.c
+clang -std=c99 -g -o build/lamda src/*.c

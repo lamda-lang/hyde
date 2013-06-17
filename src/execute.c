@@ -20,15 +20,15 @@ static Instruction *instruction[] = {
     [16] = LambdaDecode
 };
 
-Status ExecuteCode(Byte *code, Integer32 count, Stack *stack, Error *error) {
-    for (Integer32 index = 0; index < count; index += 1) {
-        Integer8 opcode = DecodeInteger8FLE(&code);
-	Integer32 valueIndex = DecodeInteger32VLE(&code);
-	Value *value = instruction[opcode](&code, error);
+Status ExecuteCode(Byte *bytes, Value **values, Integer32 valueCount, Error *error) {
+    for (Integer32 index = 0; index < valueCount; index += 1) {
+        Integer8 opcode = DecodeInteger8FLE(&bytes);
+	Integer32 valueIndex = DecodeInteger32VLE(&bytes);
+	Value *value = instruction[opcode](&bytes, error);
 	if (value == NULL) {
 	    goto returnError;
-        }
-	StackFrameValues(stack)[valueIndex] = value;
+	}
+	values[valueIndex] = value;
     }
     return StatusSuccess;
 
