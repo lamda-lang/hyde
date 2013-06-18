@@ -1,3 +1,4 @@
+#include <string.h>
 #include "string.h"
 
 struct String {
@@ -13,6 +14,21 @@ static String *Create(Integer32 length, Error *error) {
     }
     string->base = TypeString;
     string->length = length;
+    return string;
+
+returnError:
+    return NULL;
+}
+
+String *StringCreateWithCharacters(Char *chars, Error *error) {
+    Integer32 length = strnlen(chars, 0XFFFF) & 0XFFFF;
+    String *string = Create(length, error);
+    if (string == NULL) {
+	goto returnError;
+    }
+    for (Integer32 index = 0; index < length; index += 1) {
+	string->codepoint[index] = chars[index] & 0XF;
+    }
     return string;
 
 returnError:

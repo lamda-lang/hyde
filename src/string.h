@@ -3,6 +3,8 @@
 
 #include "api.h"
 
+String *StringCreateWithCharacters(Char *chars, Error *error);
+
 Value *StringValueBridge(String *string);
 
 void StringDealloc(Value *stringValue);

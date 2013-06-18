@@ -9,8 +9,8 @@ Char *ArgRoot(void);
 
 Char *ArgFile(void);
 
-Char *ArgAtIndex(Integer8 index);
+Char **ArgArgs(void);
 
-Integer8 ArgCount(void);
+Integer8 ArgArgsCount(void);
 
 #endif

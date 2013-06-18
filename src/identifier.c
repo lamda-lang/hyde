@@ -20,13 +20,13 @@ returnError:
     return NULL;
 }
 
-Identifier *IdentifierCreateWithCharacters(Char *string, Error *error) {
-    Integer8 length = strnlen(string, 0XF) & 0XF;
+Identifier *IdentifierCreateWithCharacters(Char *chars, Error *error) {
+    Integer8 length = strnlen(chars, 0XF) & 0XF;
     Identifier *id = Create(length, error);
     if (id == NULL) {
 	goto returnError;
     }
-    MemoryCopy(string, id->codepoint, length);
+    MemoryCopy(chars, id->codepoint, length);
     return id;
 
 returnError:

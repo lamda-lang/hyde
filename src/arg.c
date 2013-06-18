@@ -75,10 +75,10 @@ Char *ArgFile(void) {
     return argSingleton.file;
 }
 
-Char *ArgAtIndex(Integer8 index) {
-    return argSingleton.args[index];
+Char **ArgArgs(void) {
+    return argSingleton.args;
 }
 
-Integer8 ArgCount(void) {
+Integer8 ArgArgsCount(void) {
     return argSingleton.count;
 }

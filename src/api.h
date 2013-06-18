@@ -78,8 +78,6 @@ typedef union {
 
 typedef struct File File;
 
-typedef struct Stack Stack;
-
 typedef struct Data Data;
 
 typedef struct Boolean Boolean;
@@ -118,13 +116,15 @@ typedef Value *Instruction(Byte **code, Error *error);
 
 typedef Value *Eval(Value *value, bool pure, Error *error);
 
-typedef bool Kernel(Integer8 arity, Stack *stack);
+typedef Value *Kernel(Value **values, Integer8 count, Error *error);
 
 typedef void Dealloc(Value *value);
 
 typedef Integer64 Hash(Value *value);
 
 typedef void Enumerate(Value *value, void (*block)(Value *value));
+
+typedef void Fetch(Value *value, Value **values);
 
 #include "arg.h"
 #include "boolean.h"

@@ -13,6 +13,8 @@ void ValueEnumerate(Value *value, void (*block)(Value *value));
 
 void ValueDealloc(Value *value);
 
+void ValueFetch(Value *value, Value **values);
+
 Integer64 ValueHash(Value *value);
 
 Value *ValueEval(Value *value, bool pure, Error *error);

@@ -3,6 +3,6 @@
 
 #include "api.h"
 
-Status ExecuteCode(Byte *bytes, Value **values, Integer32 valueCount, Error *error);
+Value *ExecuteCode(Byte *bytes, void (*callback)(Value **values), Error *error);
 
 #endif

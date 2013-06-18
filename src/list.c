@@ -6,7 +6,7 @@ struct List {
     Element element[];
 };
 
-static List *Create(Integer32 count, Error *error) {
+List *ListCreate(Integer32 count, Error *error) {
     List *list = MemoryAlloc(sizeof(List) + sizeof(Element) * count, error);
     if (list == NULL) {
         goto returnError;
@@ -24,7 +24,7 @@ Value *ListValueBridge(List *list) {
 
 Value *ListDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32VLE(bytes);
-    List *list = Create(count, error);
+    List *list = ListCreate(count, error);
     if (list == NULL) {
 	goto returnError;
     }
@@ -47,6 +47,10 @@ void ListFetch(Value *listValue, Value **values) {
 
 void ListDealloc(Value *listValue) {
     MemoryDealloc(listValue);
+}
+
+void ListSetValueAtIndex(List *list, Value *value, Integer32 index) {
+    list->element[index].value = value;
 }
 
 Value *ListGetValueAtIndex(List *list, Integer32 index) {

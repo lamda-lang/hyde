@@ -3,6 +3,6 @@
 
 #include "api.h"
 
-void RuntimeMain(int argc, char **argv);
+Status RuntimeMain(Char *path, Char **args, Integer8 count, Char *root, Error *error);
 
 #endif

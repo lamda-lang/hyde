@@ -20,18 +20,33 @@ static Instruction *instruction[] = {
     [16] = LambdaDecode
 };
 
-Status ExecuteCode(Byte *bytes, Value **values, Integer32 valueCount, Error *error) {
+Value *ExecuteCode(Byte *bytes, void (*callback)(Value **values), Error *error) {
+    Integer32 valueCount = DecodeInteger32VLE(&bytes);
+    if (StackPushFrame(valueCount, error) == StatusFailure) {
+	goto returnError;
+    }
+    Value **values = StackFrameValues();
+    if (callback != NULL) {
+	callback(values);
+    }
     for (Integer32 index = 0; index < valueCount; index += 1) {
         Integer8 opcode = DecodeInteger8FLE(&bytes);
 	Integer32 valueIndex = DecodeInteger32VLE(&bytes);
 	Value *value = instruction[opcode](&bytes, error);
 	if (value == NULL) {
-	    goto returnError;
+	    goto pullFrame;
 	}
 	values[valueIndex] = value;
     }
-    return StatusSuccess;
+    for (Integer32 index = 0; index < valueCount; index += 1) {
+	ValueFetch(values[index], values);
+    }
+    Value *result = values[0];
+    StackPullFrame(valueCount);
+    return result;
 
+pullFrame:
+    StackPullFrame(valueCount);
 returnError:
-    return StatusFailure;
+    return NULL;
 }

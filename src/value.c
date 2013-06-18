@@ -4,6 +4,7 @@ typedef struct {
     Dealloc *dealloc;
     Hash *hash;
     Enumerate *enumerate;
+    Fetch *fetch;
     Eval *eval;
 } Class;
 
@@ -14,12 +15,14 @@ Class class[] = {
     },
     [TypeCase] = {
         .dealloc = CaseDealloc,
+	.fetch = CaseFetch,
 	.eval = CaseEval
     },
     [TypeDo] = {
 	.dealloc = DoDealloc,
 	.hash = DoHash,
 	.enumerate = DoEnumerate,
+	.fetch = DoFetch,
 	.eval = DoEval
     },
     [TypeFloat] = {
@@ -41,22 +44,26 @@ Class class[] = {
         .dealloc = LambdaDealloc,
         .hash = LambdaHash,
         .enumerate = LambdaEnumerate,
+	.fetch = LambdaFetch,
 	.eval = LambdaEval
     },
     [TypeList] = {
         .dealloc = ListDealloc,
         .hash = ListHash,
         .enumerate = ListEnumerate,
+	.fetch = ListFetch,
 	.eval = ListEval
     },
     [TypeMap] = {
         .dealloc = MapDealloc,
         .hash = MapHash,
         .enumerate = MapEnumerate,
+	.fetch = MapFetch,
 	.eval = MapEval
     },
     [TypeModule] = {
 	.dealloc = ModuleDealloc,
+	.fetch = ModuleFetch,
 	.eval = ModuleEval
     },
     [TypeNil] = {
@@ -67,16 +74,19 @@ Class class[] = {
 	.dealloc = RangeDealloc,
 	.hash = RangeHash,
 	.enumerate = RangeEnumerate,
+	.fetch = RangeFetch,
 	.eval = RangeEval
     },
     [TypeResult] = {
 	.dealloc = ResultDealloc,
+	.fetch = ResultFetch,
 	.eval = ResultEval
     },
     [TypeSet] = {
 	.dealloc = SetDealloc,
 	.hash = SetHash,
 	.enumerate = SetEnumerate,
+	.fetch = SetFetch,
 	.eval = SetEval
     },
     [TypeString] = {
@@ -86,6 +96,7 @@ Class class[] = {
     },
     [TypeWhen] = {
 	.dealloc = WhenDealloc,
+	.fetch = WhenFetch,
 	.eval = WhenEval
     }
 };
@@ -115,6 +126,14 @@ void ValueDealloc(Value *value) {
     Dealloc *dealloc = class[type].dealloc;
     if (dealloc != NULL) {
         dealloc(value);
+    }
+}
+
+void ValueFetch(Value *value, Value **values) {
+    Type type = ValueType(value);
+    Fetch *fetch = class[type].fetch;
+    if (fetch != NULL) {
+	fetch(value, values);
     }
 }
 

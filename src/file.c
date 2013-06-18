@@ -38,28 +38,22 @@ returnError:
     return StatusFailure;
 }
 
-Data *FileRead(File *file, Error *error) {
-    Data *data = DataCreate(error);
-    if (data == NULL) {
-        goto returnError;
-    }
+Status FileRead(File *file, Data *data, Error *error) {
     ssize_t consumed = 0;
     do {
         consumed = read(file->handle, file->buffer, sizeof(file->buffer));
         if (consumed == -1) {
 	    *error = ErrorFileRead;
-            goto deallocData;
+            goto returnError;
         }
         if (DataAppendBytes(data, file->buffer, (Size)consumed, error) == StatusFailure) {
-            goto deallocData;
+            goto returnError;
         }
     } while (consumed > 0);
-    return data;
+    return StatusSuccess;
 
-deallocData:
-    DataDealloc(data);
 returnError:
-    return NULL;
+    return StatusFailure;
 }
 
 Status FileWrite(File *file, Data *data, Error *error) {

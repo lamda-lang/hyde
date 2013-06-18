@@ -3,7 +3,7 @@
 
 #include "api.h"
 
-Identifier *IdentifierCreateWithCharacters(Char *string, Error *error);
+Identifier *IdentifierCreateWithCharacters(Char *chars, Error *error);
 
 Value *IdentifierValueBridge(Identifier *id);
 
