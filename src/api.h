@@ -33,7 +33,8 @@ enum {
     ErrorFileOpen,
     ErrorFileRead,
     ErrorFileWrite,
-    ErrorFileClose
+    ErrorFileClose,
+    ErrorMainNotFound
 };
 
 typedef bool Status;
@@ -50,7 +51,7 @@ enum {
     TypeFloat = 3,
     TypeIdentifier = 4,
     TypeInteger = 5,
-    TypeLambda = 6,
+    TypeLamda = 6,
     TypeList = 7,
     TypeMap = 8,
     TypeModule = 9,
@@ -92,7 +93,7 @@ typedef struct Identifier Identifier;
 
 typedef struct Integer Integer;
 
-typedef struct Lambda Lambda;
+typedef struct Lamda Lamda;
 
 typedef struct List List;
 
@@ -138,7 +139,7 @@ typedef void Fetch(Value *value, Value **values);
 #include "identifier.h"
 #include "integer.h"
 #include "kernel.h"
-#include "lambda.h"
+#include "lamda.h"
 #include "list.h"
 #include "map.h"
 #include "memory.h"

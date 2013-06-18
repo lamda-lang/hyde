@@ -3,22 +3,22 @@
 #include "arg.h"
 
 typedef struct {
-    Char *root;
+    Char *main;
     Char *file;
     Char **args;
     Integer8 count;
 } Arg;
 
 static Arg argSingleton = {
-    .root = "main",
+    .main = "main",
     .file = NULL,
     .args = NULL
 };
 
-static Char *usage = "usage: lamda [-v] [-h] [-r root] file [arg ...]";
+static Char *usage = "usage: lamda [-v] [-h] [-m main] file [arg ...]";
 
-static void SetRoot(void) {
-    argSingleton.root = optarg;
+static void SetMain(void) {
+    argSingleton.main = optarg;
 }
 
 static void ShowVersion(void) {
@@ -47,7 +47,7 @@ static void MissingFile(void) {
 }
 
 static void (*branch[])(void) = {
-    ['r'] = SetRoot,
+    ['m'] = SetMain,
     ['v'] = ShowVersion,
     ['h'] = ShowHelp,
     ['?'] = InvalidOption,
@@ -67,8 +67,8 @@ void ArgInit(Char **args, Integer8 count) {
     argSingleton.count = count - (Integer8)optind - 1;
 }
 
-Char *ArgRoot(void) {
-    return argSingleton.root;
+Char *ArgMain(void) {
+    return argSingleton.main;
 }
 
 Char *ArgFile(void) {

@@ -5,7 +5,7 @@
 
 void ArgInit(Char **args, Integer8 count);
 
-Char *ArgRoot(void);
+Char *ArgMain(void);
 
 Char *ArgFile(void);
 

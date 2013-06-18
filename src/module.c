@@ -37,12 +37,15 @@ void ModuleFetch(Value *moduleValue, Value **values) {
     module->name.value = values[module->name.index];
 }
 
+Value *ModuleGetValueForIdentifier(Module *module, Identifier *id) {
+}
+
 Value *ModuleEval(Value *moduleValue, bool pure, Error *error) {
     return NULL;
 }
 
-Module *ModuleWithID(String *id) {
+Module *ModuleWithID(Char *path) {
 }
 
-Status ModuleLoad(String *path, Error *error) {
+Status ModuleLoad(Char *path, Error *error) {
 }

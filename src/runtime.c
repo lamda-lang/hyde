@@ -9,18 +9,31 @@ static void DeallocArgs(Value *listValue, Integer8 count) {
     ListDealloc(listValue);
 }
 
-static Value *CreateRoot(Char *root, Error *error) {
-    Identifier *id = IdentifierCreateWithCharacters(root, error);
+static Lamda *MainFromModule(Module *module, Char *rootName, Error *error) {
+    Identifier *id = IdentifierCreateWithCharacters(rootName, error);
+    Value *idValue = IdentifierValueBridge(id);
     if (id == NULL) {
 	goto returnError;
     }
-    return IdentifierValueBridge(id);
+    Value *main = ModuleGetValueForIdentifier(module, id);
+    if (main == NULL) {
+	*error = ErrorMainNotFound;
+	goto deallocID;
+    }
+    if (ValueType(main) != TypeLamda) {
+	*error = ErrorInvalidType;
+	goto deallocID;
+    }
+    IdentifierDealloc(idValue);
+    return ValueLamdaBridge(main);
 
+deallocID:
+    IdentifierDealloc(idValue);
 returnError:
     return NULL;
 }
 
-static Value *CreateArgs(Char **args, Integer8 count, Error *error) {
+static Status EvalProgram(Lamda *main, Char **args, Integer8 count, Error *error) {
     List *list = ListCreate(count, error);
     Value *listValue = ListValueBridge(list);
     if (list == NULL) {
@@ -30,69 +43,40 @@ static Value *CreateArgs(Char **args, Integer8 count, Error *error) {
     for (Integer8 index = 0; index < count; index += 1) {
 	String *string = StringCreateWithCharacters(args[index], error);
 	if (string == NULL) {
-	    goto deallocList;
+	    goto deallocArgs;
 	}
 	Value *stringValue = StringValueBridge(string);
 	ListSetValueAtIndex(list, stringValue, index);
 	stringCount += 1;
     }
-    return listValue;
-
-deallocList:
-    DeallocArgs(listValue, stringCount);
-returnError:
-    return NULL;
-}
-
-static Data *CreateData(Char *path, Error *error) {
-    Data *data = DataCreate(error);
-    if (data == NULL) {
-	goto returnError;
-    }
-    File *file = FileOpen(path, error);
-    if (file == NULL) {
-	goto deallocData;
-    }
-    if (FileRead(file, data, error) == StatusFailure) {
-	goto closeFile;
-    }
-    if (FileClose(file, error) == StatusFailure) {
-	goto deallocData;
-    }
-    return data;
-
-closeFile:
-    FileClose(file, NULL);
-deallocData:
-    DataDealloc(data);
-returnError:
-    return NULL;
-}
-
-Status RuntimeMain(Char *path, Char **args, Integer8 count, Char *root, Error *error) {
-    Data *data = CreateData(path, error);
-    if (data == NULL) {
-	goto returnError;
-    }
-    Value *listArgs = CreateArgs(args, count, error);
-    if (listArgs == NULL) {
-	goto deallocData;
-    }
-    Value *idRoot= CreateRoot(root, error);
-    if (idRoot == NULL) {
+    Value *result = LamdaResult(main, &listValue, 1, error);
+    if (result == NULL) {
 	goto deallocArgs;
     }
-    Byte *code = DataBytes(data);
-    ExecuteCode(code, NULL, error);
-    
-    DeallocArgs(listArgs, count);
-    DataDealloc(data);
+    Value *eval = ValueEval(result, false, error);
+    if (eval == NULL) {
+	goto deallocArgs;
+    }
+    DeallocArgs(listValue, stringCount);
     return StatusSuccess;
 
 deallocArgs:
-    DeallocArgs(listArgs, count);
-deallocData:
-    DataDealloc(data);
+    DeallocArgs(listValue, stringCount);
+returnError:
+    return StatusFailure;
+}
+
+Status RuntimeMain(Char *path, Char *main, Char **args, Integer8 count, Error *error) {
+    if (ModuleLoad(path, error) == StatusFailure) {
+	goto returnError;
+    }
+    Module *module = ModuleWithID(path);
+    Lamda *lamda = MainFromModule(module, main, error);
+    if (lamda == NULL) {
+	goto returnError;
+    }
+    return EvalProgram(lamda, args, count, error);
+
 returnError:
     return StatusFailure;
 }

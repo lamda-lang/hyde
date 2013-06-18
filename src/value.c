@@ -40,12 +40,12 @@ Class class[] = {
         .hash = IntegerHash,
 	.eval = IntegerEval
     },
-    [TypeLambda] = {
-        .dealloc = LambdaDealloc,
-        .hash = LambdaHash,
-        .enumerate = LambdaEnumerate,
-	.fetch = LambdaFetch,
-	.eval = LambdaEval
+    [TypeLamda] = {
+        .dealloc = LamdaDealloc,
+        .hash = LamdaHash,
+        .enumerate = LamdaEnumerate,
+	.fetch = LamdaFetch,
+	.eval = LamdaEval
     },
     [TypeList] = {
         .dealloc = ListDealloc,
@@ -171,8 +171,8 @@ Integer *ValueIntegerBridge(Value *integerValue) {
     return (Integer *)integerValue;
 }
 
-Lambda *ValueLambdaBridge(Value *lambdaValue) {
-    return (Lambda *)lambdaValue;
+Lamda *ValueLamdaBridge(Value *lamdaValue) {
+    return (Lamda *)lamdaValue;
 }
 
 List *ValueListBridge(Value *listValue) {

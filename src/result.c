@@ -3,18 +3,18 @@
 struct Result {
     Value base;
     Integer8 count;
-    Element lambda;
+    Element lamda;
     Element arg[];
 };
 
-static Result *Create(Integer32 lambdaIndex, Integer8 count, Error *error) {
+static Result *Create(Integer32 lamdaIndex, Integer8 count, Error *error) {
     Result *result = MemoryAlloc(sizeof(Result) + sizeof(Element) * count, error);
     if (result == NULL) {
 	goto returnError;
     }
     result->base = TypeResult;
     result->count = count;
-    result->lambda.index = lambdaIndex;
+    result->lamda.index = lamdaIndex;
     return result;
 
 returnError:
@@ -26,9 +26,9 @@ Value *ResultValueBridge(Result *result) {
 }
 
 Value *ResultDecode(Byte **bytes, Error *error) {
-    Integer32 lambdaIndex = DecodeInteger32VLE(bytes);
+    Integer32 lamdaIndex = DecodeInteger32VLE(bytes);
     Integer8 argCount = DecodeInteger8FLE(bytes);
-    Result *result = Create(lambdaIndex, argCount, error);
+    Result *result = Create(lamdaIndex, argCount, error);
     if (result == NULL) {
 	goto returnError;
     }
@@ -43,7 +43,7 @@ returnError:
 
 void ResultFetch(Value *resultValue, Value **values) {
     Result *result = ValueResultBridge(resultValue);
-    result->lambda.value = values[result->lambda.index];
+    result->lamda.value = values[result->lamda.index];
     for (Integer8 index = 0; index < result->count; index += 1) {
 	Integer32 argIndex = result->arg[index].index;
 	result->arg[index].value = values[argIndex];
@@ -56,15 +56,15 @@ void ResultDealloc(Value *resultValue) {
 
 Value *ResultEval(Value *resultValue, bool pure, Error *error) {
     Result *result = ValueResultBridge(resultValue);
-    Value *lambdaValue = ValueEval(result->lambda.value, true, error);
-    if (lambdaValue == NULL) {
+    Value *lamdaValue = ValueEval(result->lamda.value, true, error);
+    if (lamdaValue == NULL) {
 	goto returnError;
     }
-    if (ValueType(lambdaValue) != TypeLambda) {
+    if (ValueType(lamdaValue) != TypeLamda) {
 	*error = ErrorInvalidType;
 	goto returnError;
     }
-    Lambda *lambda = ValueLambdaBridge(lambdaValue);
+    Lamda *lamda = ValueLamdaBridge(lamdaValue);
     for (Integer8 index = 0; index < result->count; index += 1) {
 	Value *arg = ValueEval(result->arg[index].value, true, error);
 	if (arg == NULL) {
@@ -72,7 +72,7 @@ Value *ResultEval(Value *resultValue, bool pure, Error *error) {
 	}
 	result->arg[index].value = arg;
     }
-    Value *value = LambdaResult(lambda, &result->arg[0].value, result->count, error);
+    Value *value = LamdaResult(lamda, &result->arg[0].value, result->count, error);
     if (value == NULL) {
 	goto returnError;
     }

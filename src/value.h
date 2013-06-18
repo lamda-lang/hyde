@@ -31,7 +31,7 @@ Identifier *ValueIdentifierBridge(Value *idValue);
 
 Integer *ValueIntegerBridge(Value *integerValue);
 
-Lambda *ValueLambdaBridge(Value *lambdaValue);
+Lamda *ValueLamdaBridge(Value *lamdaValue);
 
 List *ValueListBridge(Value *listValue);
 

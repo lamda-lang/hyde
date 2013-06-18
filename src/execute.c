@@ -17,18 +17,19 @@ static Instruction *instruction[] = {
     [13] = CaseDecode,
     [14] = ResultDecode,
     [15] = DoDecode,
-    [16] = LambdaDecode
+    [16] = LamdaDecode
 };
 
-Value *ExecuteCode(Byte *bytes, void (*callback)(Value **values), Error *error) {
+Value *ExecuteCode(Byte *bytes, Value **args, Integer8 argCount, Value **context, Integer8 contextLength, Error *error) {
     Integer32 valueCount = DecodeInteger32VLE(&bytes);
     if (StackPushFrame(valueCount, error) == StatusFailure) {
 	goto returnError;
     }
     Value **values = StackFrameValues();
-    if (callback != NULL) {
-	callback(values);
-    }
+    Value **argHead = values + 1;
+    Value **contextHead = argHead + argCount; 
+    MemoryCopy(args, argHead, sizeof(Value *) * argCount);
+    MemoryCopy(context, contextHead, sizeof(Value *) * contextLength);
     for (Integer32 index = 0; index < valueCount; index += 1) {
         Integer8 opcode = DecodeInteger8FLE(&bytes);
 	Integer32 valueIndex = DecodeInteger32VLE(&bytes);

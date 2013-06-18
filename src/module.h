@@ -11,10 +11,12 @@ void ModuleDealloc(Value *moduleValue);
 
 void ModuleFetch(Value *moduleValue, Value **values);
 
+Value *ModuleGetValueForIdentifier(Module *module, Identifier *id);
+
 Value *ModuleEval(Value *moduleValue, bool pure, Error *error);
 
-Module *ModuleWithID(String *id);
+Module *ModuleWithID(Char *path);
 
-Status ModuleLoad(String *path, Error *error);
+Status ModuleLoad(Char *path, Error *error);
 
 #endif
