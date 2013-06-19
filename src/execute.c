@@ -43,11 +43,11 @@ Value *ExecuteCode(Byte *bytes, Value **args, Integer8 argCount, Value **context
 	ValueFetch(values[index], values);
     }
     Value *result = values[0];
-    StackPullFrame(valueCount);
+    StackPullFrame();
     return result;
 
 pullFrame:
-    StackPullFrame(valueCount);
+    StackPullFrame();
 returnError:
     return NULL;
 }

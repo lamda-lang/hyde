@@ -5,7 +5,7 @@
 
 Status StackPushFrame(Integer32 count, Error *error);
 
-void StackPullFrame(Integer32 count);
+void StackPullFrame(void);
 
 Value **StackFrameValues(void);
 
