@@ -133,6 +133,7 @@ typedef void Fetch(Value *value, Value **values);
 #include "data.h"
 #include "decode.h"
 #include "do.h"
+#include "error.h"
 #include "execute.h"
 #include "file.h"
 #include "float.h"

@@ -8,7 +8,11 @@ int main(int argc, char **argv) {
     Integer8 count = ArgArgsCount();
     Error error = 0;
     if (RuntimeMain(path, main, args, count, &error) == StatusFailure) {
-	ProcessExitFailure();
+	goto printError;
     }
     ProcessExitSuccess();
+
+printError:
+    ErrorPrint(error);
+    ProcessExitFailure();
 }
