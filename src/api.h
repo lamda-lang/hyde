@@ -123,12 +123,13 @@ typedef void Dealloc(Value *value);
 
 typedef Integer64 Hash(Value *value);
 
-typedef void Enumerate(Value *value, void (*block)(Value *value));
+typedef void Enumerate(Value *value, void (*callback)(Value *value));
 
 typedef void Fetch(Value *value, Value **values);
 
 #include "arg.h"
 #include "boolean.h"
+#include "bridge.h"
 #include "case.h"
 #include "data.h"
 #include "decode.h"

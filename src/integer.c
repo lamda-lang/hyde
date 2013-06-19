@@ -21,11 +21,7 @@ returnError:
 Value *IntegerDecode(Byte **bytes, Error *error) {
     Integer64 value = DecodeInteger64FLE(bytes);
     Integer *integer = Create(value, error);
-    return IntegerValueBridge(integer);
-}
-
-Value *IntegerValueBridge(Integer *integer) {
-    return (Value *)integer;
+    return BridgeFromInteger(integer);
 }
 
 void IntegerDealloc(Value *integerValue) {
@@ -33,12 +29,13 @@ void IntegerDealloc(Value *integerValue) {
 }
 
 Integer64 IntegerHash(Value *integerValue) {
-    return ValueIntegerBridge(integerValue)->value;
+    return BridgeToInteger(integerValue)->value;
 }
 
-Integer *IntegerSum(Integer *integer, Integer *other, Error *error) {
-  Integer64 sum = integer->value + other->value;
-  return Create(sum, error);
+Value *IntegerSum(Value *integerValue, Value *otherValue, Error *error) {
+  Integer64 sum = BridgeToInteger(integerValue)->value + BridgeToInteger(otherValue)->value;
+  Integer *integer = Create(sum, error);
+  return BridgeFromInteger(integer);
 }
 
 Value *IntegerEval(Value *integerValue, bool pure, Error *error) {

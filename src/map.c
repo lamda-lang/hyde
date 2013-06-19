@@ -44,10 +44,6 @@ returnError:
     return NULL;
 }
 
-Value *MapValueBridge(Map *map) {
-    return (Value *)map;
-}
-
 Value *MapDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32VLE(bytes);
     Map *map = Create(count, error);
@@ -58,14 +54,14 @@ Value *MapDecode(Byte **bytes, Error *error) {
 	map->pair[index].key.index = DecodeInteger32VLE(bytes);
 	map->pair[index].value.index = DecodeInteger32VLE(bytes);
     }
-    return MapValueBridge(map);
+    return BridgeFromMap(map);
 
 returnError:
     return NULL;
 }
 
 void MapFetch(Value *mapValue, Value **values) {
-    Map *map = ValueMapBridge(mapValue);
+    Map *map = BridgeToMap(mapValue);
     for (Integer32 index = 0; index < map->length; index += 1) {
 	Integer32 keyIndex = map->pair[index].key.index;
 	Integer32 valueIndex = map->pair[index].value.index;
@@ -76,30 +72,30 @@ void MapFetch(Value *mapValue, Value **values) {
 
 void MapDealloc(Value *mapValue) {
     if (mapValue != NULL) {
-	Map *map = ValueMapBridge(mapValue);
+	Map *map = BridgeToMap(mapValue);
 	MemoryDealloc(map->pair);
 	MemoryDealloc(map);
     }
 }
 
 Integer64 MapHash(Value *mapValue) {
-    return ValueMapBridge(mapValue)->length;
+    return BridgeToMap(mapValue)->length;
 }
 
 void MapEnumerate(Value *mapValue, void (*callback)(Value *value)) {
-    Map *map = ValueMapBridge(mapValue);
+    Map *map = BridgeToMap(mapValue);
     for (Integer32 index = 0; index < map->length; index += 1) {
         callback(map->pair[index].key.value);
         callback(map->pair[index].value.value);
     }
 }
 
-Value *MapGetValueForKey(Map *map, Value *key) {
+Value *MapGetValueForKey(Value *mapValue, Value *key) {
     return NULL;
 }
 
 Value *MapEval(Value *mapValue, bool pure, Error *error) {
-    Map *map = ValueMapBridge(mapValue);
+    Map *map = BridgeToMap(mapValue);
     Integer32 length = map->length << 1;
     Pair *pair = MemoryAlloc(sizeof(Pair) * length, error);
     if (pair == NULL) {

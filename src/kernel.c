@@ -23,10 +23,7 @@ Value *KernelIntegerSum(Value **args, Integer8 count, Error *error) {
     if (!Valid(args, types, count, 2, error)) {
 	goto returnError;
     }
-    Integer *integer = ValueIntegerBridge(args[0]);
-    Integer *other = ValueIntegerBridge(args[1]);
-    Integer *result = IntegerSum(integer, other, error);
-    return IntegerValueBridge(result);
+    return IntegerSum(args[0], args[1], error);
 
 returnError:
     return NULL;
@@ -37,10 +34,7 @@ Value *KernelStringConcatenate(Value **args, Integer8 count, Error *error) {
     if (!Valid(args, types, count, 2, error)) {
 	goto returnError;
     }
-    String *string = ValueStringBridge(args[0]);
-    String *other = ValueStringBridge(args[1]);
-    String *result = StringConcatenate(string, other, error);
-    return StringValueBridge(result);
+    return StringConcatenate(args[0], args[1], error);
 
 returnError:
     return NULL;

@@ -20,21 +20,17 @@ returnError:
     return NULL;
 }
 
-Identifier *IdentifierCreateWithCharacters(Char *chars, Error *error) {
+Value *IdentifierCreateWithCharacters(Char *chars, Error *error) {
     Integer8 length = strnlen(chars, 0XF) & 0XF;
     Identifier *id = Create(length, error);
     if (id == NULL) {
 	goto returnError;
     }
     MemoryCopy(chars, id->codepoint, length);
-    return id;
+    return BridgeFromIdentifier(id);
 
 returnError:
     return NULL;
-}
-
-Value *IdentifierValueBridge(Identifier *id) {
-    return (Value *)id;
 }
 
 void IdentifierDealloc(Value *idValue) {
@@ -50,14 +46,14 @@ Value *IdentifierDecode(Byte **bytes, Error *error) {
     for (Integer8 index = 0; index < length; index += 1) {
         id->codepoint[index] = DecodeInteger8FLE(bytes);
     }
-    return IdentifierValueBridge(id);
+    return BridgeFromIdentifier(id);
 
 returnError:
     return NULL;
 }
 
 Integer64 IdentifierHash(Value *idValue) {
-    return ValueIdentifierBridge(idValue)->length;
+    return BridgeToIdenfier(idValue)->length;
 }
 
 Value *IdentifierEval(Value *idValue, bool pure, Error *error) {

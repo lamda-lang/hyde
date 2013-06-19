@@ -15,20 +15,16 @@ static Boolean falseSingleton = {
     .hash = 4321
 };
 
-static Value *ValueBridge(Boolean *boolean) {
-    return (Value *)boolean;
-}
-
 Value *BooleanTrueSingleton(void) {
-    return ValueBridge(&trueSingleton);
+    return BridgeFromBoolean(&trueSingleton);
 }
 
 Value *BooleanFalseSingleton(void) {
-    return ValueBridge(&falseSingleton);
+    return BridgeFromBoolean(&falseSingleton);
 }
 
 Integer64 BooleanHash(Value *booleanValue) {
-    return ValueBooleanBridge(booleanValue)->hash;
+    return BridgeToBoolean(booleanValue)->hash;
 }
 
 Value *BooleanDecodeTrue(Byte **bytes, Error *error) {

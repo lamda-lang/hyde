@@ -2,7 +2,7 @@
 
 struct Module {
     Value base;
-    Element name;
+    Element value;
 };
 
 static Module *Create(Integer32 nameIndex, Error *error) {
@@ -11,21 +11,17 @@ static Module *Create(Integer32 nameIndex, Error *error) {
 	goto returnError;
     }
     module->base = TypeModule;
-    module->name.index = nameIndex;
+    module->value.index = nameIndex;
     return module;
 
 returnError:
     return NULL;
 }
 
-Value *ModuleValueBridge(Module *module) {
-    return (Value *)module;
-}
-
 Value *ModuleDecode(Byte **bytes, Error *error) {
     Integer32 nameIndex = DecodeInteger32VLE(bytes);
     Module *module = Create(nameIndex, error);
-    return ModuleValueBridge(module);
+    return BridgeFromModule(module);
 }
 
 void ModuleDealloc(Value *moduleValue) {
@@ -33,19 +29,22 @@ void ModuleDealloc(Value *moduleValue) {
 }
 
 void ModuleFetch(Value *moduleValue, Value **values) {
-    Module *module = ValueModuleBridge(moduleValue);
-    module->name.value = values[module->name.index];
+    Module *module = BridgeToModule(moduleValue);
+    module->value.value = values[module->value.index];
 }
 
-Value *ModuleGetValueForIdentifier(Module *module, Identifier *id) {
+Value *ModuleGetValueForIdentifier(Value *moduleValue, Value *idValue) {
+    return NULL;
 }
 
 Value *ModuleEval(Value *moduleValue, bool pure, Error *error) {
     return NULL;
 }
 
-Module *ModuleWithID(Char *path) {
+Value *ModuleWithID(Char *path) {
+    return NULL;
 }
 
 Status ModuleLoad(Char *path, Error *error) {
+    return NULL;
 }

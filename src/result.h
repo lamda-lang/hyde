@@ -3,8 +3,6 @@
 
 #include "api.h"
 
-Value *ResultValueBridge(Result *result);
-
 void ResultDealloc(Value *resultValue);
 
 Value *ResultEval(Value *resultValue, bool pure, Error *error);

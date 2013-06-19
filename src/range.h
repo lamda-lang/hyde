@@ -3,8 +3,6 @@
 
 #include "api.h"
 
-Value *RangeValueBridge(Range *range);
-
 void RangeDealloc(Value *rangeValue);
 
 void RangeFetch(Value *rangeValue, Value **values);

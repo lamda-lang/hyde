@@ -21,11 +21,7 @@ returnError:
 Value *FloatDecode(Byte **bytes, Error *error) {
     Float64 value = DecodeFloat64FLE(bytes);
     Float *fpv = Create(value, error);
-    return FloatValueBridge(fpv);
-}
-
-Value *FloatValueBridge(Float *fpv) {
-    return (Value *)fpv;
+    return BridgeFromFloat(fpv);
 }
 
 void FloatDealloc(Value *floatValue) {
@@ -33,12 +29,13 @@ void FloatDealloc(Value *floatValue) {
 }
 
 Integer64 FloatHash(Value *floatValue) {
-    return (Integer64)ValueFloatBridge(floatValue)->value;
+    return (Integer64)BridgeToFloat(floatValue)->value;
 }
 
-Float *FloatSum(Float *fpv, Float *other, Error *error) {
-    Float64 sum = fpv->value + other->value;
-    return Create(sum, error);
+Value *FloatSum(Value *floatValue, Value *otherValue, Error *error) {
+    Float64 sum = BridgeToFloat(floatValue)->value + BridgeToFloat(otherValue)->value;
+    Float *fpv = Create(sum, error);
+    return BridgeFromFloat(fpv);
 }
 
 Value *FloatEval(Value *floatValue, bool pure, Error *error) {

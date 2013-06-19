@@ -1,21 +1,19 @@
 #include "runtime.h"
 
 static void DeallocArgs(Value *listValue, Integer8 count) {
-    List *list = ValueListBridge(listValue);
     for (Integer8 index = 0; index < count; index += 1) {
-	Value *value = ListGetValueAtIndex(list, index);
+	Value *value = ListGetValueAtIndex(listValue, index);
 	ValueDealloc(value);
     }
     ListDealloc(listValue);
 }
 
-static Lamda *MainFromModule(Module *module, Char *rootName, Error *error) {
-    Identifier *id = IdentifierCreateWithCharacters(rootName, error);
-    Value *idValue = IdentifierValueBridge(id);
-    if (id == NULL) {
+static Value *MainFromModule(Value *moduleValue, Char *rootName, Error *error) {
+    Value *idValue = IdentifierCreateWithCharacters(rootName, error);
+    if (idValue == NULL) {
 	goto returnError;
     }
-    Value *main = ModuleGetValueForIdentifier(module, id);
+    Value *main = ModuleGetValueForIdentifier(moduleValue, idValue);
     if (main == NULL) {
 	*error = ErrorMainNotFound;
 	goto deallocID;
@@ -25,7 +23,7 @@ static Lamda *MainFromModule(Module *module, Char *rootName, Error *error) {
 	goto deallocID;
     }
     IdentifierDealloc(idValue);
-    return ValueLamdaBridge(main);
+    return main;
 
 deallocID:
     IdentifierDealloc(idValue);
@@ -33,23 +31,21 @@ returnError:
     return NULL;
 }
 
-static Status EvalProgram(Lamda *main, Char **args, Integer8 count, Error *error) {
-    List *list = ListCreate(count, error);
-    Value *listValue = ListValueBridge(list);
-    if (list == NULL) {
+static Status EvalProgram(Value *lamdaValue, Char **args, Integer8 count, Error *error) {
+    Value *listValue = ListCreate(count, error);
+    if (listValue == NULL) {
 	goto returnError;
     }
     Integer8 stringCount = 0;
     for (Integer8 index = 0; index < count; index += 1) {
-	String *string = StringCreateWithCharacters(args[index], error);
-	if (string == NULL) {
+	Value *stringValue = StringCreateWithCharacters(args[index], error);
+	if (stringValue == NULL) {
 	    goto deallocArgs;
 	}
-	Value *stringValue = StringValueBridge(string);
-	ListSetValueAtIndex(list, stringValue, index);
+	ListSetValueAtIndex(listValue, stringValue, index);
 	stringCount += 1;
     }
-    Value *result = LamdaResult(main, &listValue, 1, error);
+    Value *result = LamdaResult(lamdaValue, &listValue, 1, error);
     if (result == NULL) {
 	goto deallocArgs;
     }
@@ -70,12 +66,12 @@ Status RuntimeMain(Char *path, Char *main, Char **args, Integer8 count, Error *e
     if (ModuleLoad(path, error) == StatusFailure) {
 	goto returnError;
     }
-    Module *module = ModuleWithID(path);
-    Lamda *lamda = MainFromModule(module, main, error);
-    if (lamda == NULL) {
+    Value *moduleValue = ModuleWithID(path);
+    Value *lamdaValue = MainFromModule(moduleValue, main, error);
+    if (lamdaValue == NULL) {
 	goto returnError;
     }
-    return EvalProgram(lamda, args, count, error);
+    return EvalProgram(lamdaValue, args, count, error);
 
 returnError:
     return StatusFailure;

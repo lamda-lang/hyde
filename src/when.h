@@ -3,8 +3,6 @@
 
 #include "api.h"
 
-Value *WhenValueBridge(When *block);
-
 Value *WhenDecode(Byte **bytes, Error *error);
 
 void WhenFetch(Value *whenValue, Value **values);

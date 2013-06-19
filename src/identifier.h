@@ -3,9 +3,7 @@
 
 #include "api.h"
 
-Identifier *IdentifierCreateWithCharacters(Char *chars, Error *error);
-
-Value *IdentifierValueBridge(Identifier *id);
+Value *IdentifierCreateWithCharacters(Char *chars, Error *error);
 
 void IdentifierDealloc(Value *idValue);
 

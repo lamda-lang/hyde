@@ -12,7 +12,7 @@ typedef union {
     Frame frame;
 } Register;
 
-typedef struct{
+typedef struct {
     Register *root;
     Frame top;
     Integer32 capacity;

@@ -5,13 +5,11 @@
 
 Value *IntegerDecode(Byte **bytes, Error *error);
 
-Value *IntegerValueBridge(Integer *integer);
-
 void IntegerDealloc(Value *integerValue);
 
 Integer64 IntegerHash(Value *integerValue);
 
-Integer *IntegerSum(Integer *integer, Integer *other, Error *error);
+Value *IntegerSum(Value *integerValue, Value *otherValue, Error *error);
 
 Value *IntegerEval(Value *integerValue, bool pure, Error *error);
 

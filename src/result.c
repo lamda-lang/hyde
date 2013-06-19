@@ -21,10 +21,6 @@ returnError:
     return NULL;
 }
 
-Value *ResultValueBridge(Result *result) {
-    return (Value *)result;
-}
-
 Value *ResultDecode(Byte **bytes, Error *error) {
     Integer32 lamdaIndex = DecodeInteger32VLE(bytes);
     Integer8 argCount = DecodeInteger8FLE(bytes);
@@ -35,14 +31,14 @@ Value *ResultDecode(Byte **bytes, Error *error) {
     for (Integer8 index = 0; index < argCount; index += 1) {
 	result->arg[index].index = DecodeInteger32VLE(bytes);
     }
-    return ResultValueBridge(result);
+    return BridgeFromResult(result);
 
 returnError:
     return NULL;
 }
 
 void ResultFetch(Value *resultValue, Value **values) {
-    Result *result = ValueResultBridge(resultValue);
+    Result *result = BridgeToResult(resultValue);
     result->lamda.value = values[result->lamda.index];
     for (Integer8 index = 0; index < result->count; index += 1) {
 	Integer32 argIndex = result->arg[index].index;
@@ -55,7 +51,7 @@ void ResultDealloc(Value *resultValue) {
 }
 
 Value *ResultEval(Value *resultValue, bool pure, Error *error) {
-    Result *result = ValueResultBridge(resultValue);
+    Result *result = BridgeToResult(resultValue);
     Value *lamdaValue = ValueEval(result->lamda.value, true, error);
     if (lamdaValue == NULL) {
 	goto returnError;
@@ -64,7 +60,6 @@ Value *ResultEval(Value *resultValue, bool pure, Error *error) {
 	*error = ErrorInvalidType;
 	goto returnError;
     }
-    Lamda *lamda = ValueLamdaBridge(lamdaValue);
     for (Integer8 index = 0; index < result->count; index += 1) {
 	Value *arg = ValueEval(result->arg[index].value, true, error);
 	if (arg == NULL) {
@@ -72,7 +67,7 @@ Value *ResultEval(Value *resultValue, bool pure, Error *error) {
 	}
 	result->arg[index].value = arg;
     }
-    Value *value = LamdaResult(lamda, &result->arg[0].value, result->count, error);
+    Value *value = LamdaResult(lamdaValue, &result->arg[0].value, result->count, error);
     if (value == NULL) {
 	goto returnError;
     }

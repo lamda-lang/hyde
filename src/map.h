@@ -3,8 +3,6 @@
 
 #include "api.h"
 
-Value *MapValueBridge(Map *map);
-
 Value *MapDecode(Byte **data, Error *error);
 
 void MapFetch(Value *mapValue, Value **values);
@@ -15,7 +13,7 @@ Integer64 MapHash(Value *mapValue);
 
 void MapEnumerate(Value *mapValue, void (*callback)(Value *value));
 
-Value *MapGetValueForKey(Map *map, Value *key);
+Value *MapGetValueForKey(Value *mapValue, Value *key);
 
 Value *MapEval(Value *mapValue, bool pure, Error *error);
 

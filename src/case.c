@@ -25,10 +25,6 @@ returnError:
     return NULL;
 }
 
-Value *CaseValueBridge(Case *block) {
-    return (Value *)block;
-}
-
 Value *CaseDecode(Byte **bytes, Error *error) {
     Integer8 count = DecodeInteger8FLE(bytes);
     Case *block = Create(count, error);
@@ -41,14 +37,14 @@ Value *CaseDecode(Byte **bytes, Error *error) {
 	clause->guard.index = DecodeInteger32VLE(bytes);
 	clause->value.index = DecodeInteger32VLE(bytes);
     }
-    return CaseValueBridge(block);
+    return BridgeFromCase(block);
 
 returnError:
     return NULL;
 }
 
 void CaseFetch(Value *caseValue, Value **values) {
-    Case *block = ValueCaseBridge(caseValue);
+    Case *block = BridgeToCase(caseValue);
     for (Integer8 index = 0; index < block->length; index += 1) {
 	Clause *clause = &block->clause[index];
 	clause->match.value = values[clause->match.index];
@@ -62,11 +58,11 @@ void CaseDealloc(Value *caseValue) {
 }
 
 Integer64 CaseHash(Value *caseValue) {
-    return ValueCaseBridge(caseValue)->length;
+    return BridgeToCase(caseValue)->length;
 }
 
 void CaseEnumerate(Value *caseValue, void (*callback)(Value *value)) {
-    Case *block = ValueCaseBridge(caseValue);
+    Case *block = BridgeToCase(caseValue);
     for (Integer8 index = 0; index < block->length; index += 1) {
 	callback(block->clause[index].match.value);
 	callback(block->clause[index].guard.value);
@@ -75,7 +71,7 @@ void CaseEnumerate(Value *caseValue, void (*callback)(Value *value)) {
 }
 
 Value *CaseEval(Value *caseValue, bool pure, Error *error) {
-    Case *block = ValueCaseBridge(caseValue);
+    Case *block = BridgeToCase(caseValue);
     for (Integer8 index = 0; index < block->length; index += 1) {
 	Clause *clause = &block->clause[index];
 	Value *match = ValueEval(clause->match.value, true, error);

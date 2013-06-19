@@ -5,13 +5,11 @@
 
 Value *FloatDecode(Byte **bytes, Error *error);
 
-Value *FloatValueBridge(Float *fpv);
-
 void FloatDealloc(Value *floatValue);
 
 Integer64 FloatHash(Value *floatValue);
 
-Float *FloatSum(Float *fpv, Float *other, Error *error);
+Value *FloatSum(Value *floatValue, Value *otherValue, Error *error);
 
 Value *FloatEval(Value *floatValue, bool pure, Error *error);
 

@@ -3,8 +3,6 @@
 
 #include "api.h"
 
-Value *LamdaValueBridge(Lamda *lamda);
-
 Value *LamdaDecode(Byte **bytes, Error *error);
 
 void LamdaFetch(Value *lamdaValue, Value **values);
@@ -17,6 +15,6 @@ void LamdaEnumerate(Value *lamdaValue, void (*callback)(Value *value));
 
 Value *LamdaEval(Value *lamdaValue, bool pure, Error *error);
 
-Value *LamdaResult(Lamda *lamda, Value **args, Integer8 argCount, Error *error);
+Value *LamdaResult(Value *lamdaValue, Value **args, Integer8 argCount, Error *error);
 
 #endif

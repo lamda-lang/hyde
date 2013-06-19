@@ -7,8 +7,6 @@ Value *SetDecode(Byte **bytes, Error *error);
 
 void SetFetch(Value *setValue, Byte **values);
 
-Value *SetValueBridge(Set *set);
-
 void SetDealloc(Value *setValue);
 
 Integer64 SetHash(Value *setValue);

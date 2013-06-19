@@ -24,10 +24,6 @@ returnError:
     return NULL;
 }
 
-Value *WhenValueBridge(When *block) {
-    return (Value *)block;
-}
-
 Value *WhenDecode(Byte **bytes, Error *error) {
     Integer8 count = DecodeInteger8FLE(bytes);
     When *block = Create(count, error);
@@ -38,14 +34,14 @@ Value *WhenDecode(Byte **bytes, Error *error) {
 	block->clause[index].condition.index = DecodeInteger32VLE(bytes);
 	block->clause[index].value.index = DecodeInteger32VLE(bytes);
     }
-    return WhenValueBridge(block);
+    return BridgeFromWhen(block);
 
 returnError:
     return NULL;
 }
 
 void WhenFetch(Value *whenValue, Value **values) {
-    When *block = ValueWhenBridge(whenValue);
+    When *block = BridgeToWhen(whenValue);
     for (Integer8 index = 0; index < block->count; index += 1) {
 	Integer32 conditionIndex = block->clause[index].condition.index;
 	Integer32 valueIndex = block->clause[index].value.index;
@@ -59,7 +55,7 @@ void WhenDealloc(Value *whenValue) {
 }
 
 Value *WhenEval(Value *whenValue, bool pure, Error *error) {
-    When *block = ValueWhenBridge(whenValue);
+    When *block = BridgeToWhen(whenValue);
     for (Integer8 index = 0; index < block->count; index += 1) {
 	Value *condition = ValueEval(block->clause[index].condition.value, true, error);
 	if (condition == NULL) {

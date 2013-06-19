@@ -19,36 +19,4 @@ Integer64 ValueHash(Value *value);
 
 Value *ValueEval(Value *value, bool pure, Error *error);
 
-Boolean *ValueBooleanBridge(Value *booleanValue);
-
-Case *ValueCaseBridge(Value *caseValue);
-
-Do *ValueDoBridge(Value *doValue);
-
-Float *ValueFloatBridge(Value *floatValue);
-
-Identifier *ValueIdentifierBridge(Value *idValue);
-
-Integer *ValueIntegerBridge(Value *integerValue);
-
-Lamda *ValueLamdaBridge(Value *lamdaValue);
-
-List *ValueListBridge(Value *listValue);
-
-Map *ValueMapBridge(Value *mapValue);
-
-Nil *ValueNilBridge(Value *nilValue);
-
-Range *ValueRangeBridge(Value *rangeValue);
-
-Result *ValueResultBridge(Value *resultValue);
-
-Set *ValueSetBridge(Value *setValue);
-
-String *ValueStringBridge(Value *stringValue);
-
-Module *ValueModuleBridge(Value *moduleValue);
-
-When *ValueWhenBridge(Value *whenValue);
-
 #endif

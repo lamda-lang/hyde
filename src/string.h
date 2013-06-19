@@ -3,9 +3,7 @@
 
 #include "api.h"
 
-String *StringCreateWithCharacters(Char *chars, Error *error);
-
-Value *StringValueBridge(String *string);
+Value *StringCreateWithCharacters(Char *chars, Error *error);
 
 void StringDealloc(Value *stringValue);
 
@@ -13,7 +11,7 @@ Value *StringDecode(Byte **bytes, Error *error);
 
 Integer64 StringHash(Value *stringValue);
 
-String *StringConcatenate(String *string, String *other, Error *error);
+Value *StringConcatenate(Value *stringValue, Value *otherValue, Error *error);
 
 Value *StringEval(Value *stringValue, bool pure, Error *error);
 

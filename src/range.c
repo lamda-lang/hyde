@@ -20,21 +20,17 @@ returnError:
     return NULL;
 }
 
-Value *RangeValueBridge(Range *range) {
-    return (Value *)range;
-}
-
 void RangeDealloc(Value *rangeValue) {
     MemoryDealloc(rangeValue);
 }
 
 Integer64 RangeHash(Value *rangeValue) {
-    Range *range = ValueRangeBridge(rangeValue);
+    Range *range = BridgeToRange(rangeValue);
     return ValueHash(range->lower.value) + ValueHash(range->upper.value);
 }
 
 void RangeEnumerate(Value *rangeValue, void (*callback)(Value *value)) {
-    Range *range = ValueRangeBridge(rangeValue);
+    Range *range = BridgeToRange(rangeValue);
     callback(range->upper.value);
     callback(range->lower.value);
 }
@@ -43,17 +39,17 @@ Value *RangeDecode(Byte **bytes, Error *error) {
     Integer32 lowerIndex = DecodeInteger32VLE(bytes);
     Integer32 upperIndex = DecodeInteger32VLE(bytes);
     Range *range = Create(lowerIndex, upperIndex, error);
-    return RangeValueBridge(range);
+    return BridgeFromRange(range);
 }
 
 void RangeFetch(Value *rangeValue, Value **values) {
-    Range *range = ValueRangeBridge(rangeValue);
+    Range *range = BridgeToRange(rangeValue);
     range->upper.value = values[range->upper.index];
     range->lower.value = values[range->lower.index];
 }
 
 Value *RangeEval(Value *rangeValue, bool pure, Error *error) {
-    Range *range = ValueRangeBridge(rangeValue);
+    Range *range = BridgeToRange(rangeValue);
     Value *lower = ValueEval(range->lower.value, true, error);
     if (lower == NULL) {
 	goto returnError;

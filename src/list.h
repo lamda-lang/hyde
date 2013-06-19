@@ -3,9 +3,7 @@
 
 #include "api.h"
 
-List *ListCreate(Integer32 count, Error *error);
-
-Value *ListValueBridge(List *list);
+Value *ListCreate(Integer32 count, Error *error);
 
 Value *ListDecode(Byte **bytes, Error *error);
 
@@ -13,9 +11,9 @@ void ListFetch(Value *listValue, Value **values);
 
 void ListDealloc(Value *listValue);
 
-void ListSetValueAtIndex(List *list, Value *value, Integer32 index);
+void ListSetValueAtIndex(Value *listValue, Value *value, Integer32 index);
 
-Value *ListGetValueAtIndex(List *list, Integer32 index);
+Value *ListGetValueAtIndex(Value *listValue, Integer32 index);
 
 Integer64 ListHash(Value *listValue);
 

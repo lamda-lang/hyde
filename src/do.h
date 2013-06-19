@@ -3,8 +3,6 @@
 
 #include "api.h"
 
-Value *DoValueBridge(Do *block);
-
 Value *DoDecode(Byte **bytes, Error *error);
 
 void DoFetch(Value *doValue, Value **values);

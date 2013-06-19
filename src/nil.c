@@ -10,16 +10,12 @@ static Nil nilSingleton = {
     .hash = 1827
 };
 
-static Value *ValueBridge(Nil *nil) {
-    return (Value *)nil;
-}
-
 Value *NilSingleton(void) {
-    return ValueBridge(&nilSingleton);
+    return BridgeFromNil(&nilSingleton);
 }
 
 Integer64 NilHash(Value *nilValue) {
-    return ValueNilBridge(nilValue)->hash;
+    return BridgeToNil(nilValue)->hash;
 }
 
 Value *NilDecode(Byte **bytes, Error *error) {

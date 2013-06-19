@@ -37,35 +37,31 @@ Value *LamdaDecode(Byte **bytes, Error *error) {
     for (Integer8 index = 0; index < contextLength; index += 1) {
 	lamda->context[index].index = DecodeInteger32VLE(bytes);
     }
-    return LamdaValueBridge(lamda);
+    return BridgeFromLamda(lamda);
 }
 
 void LamdaFetch(Value *lamdaValue, Value **values) {
-    Lamda *lamda = ValueLamdaBridge(lamdaValue);
+    Lamda *lamda = BridgeToLamda(lamdaValue);
     for (Integer8 index = 0; index < lamda->contextLength; index += 1) {
         Integer32 valueIndex = lamda->context[index].index;
 	lamda->context[index].value = values[valueIndex];
     }
 }
 
-Value *LamdaValueBridge(Lamda *lamda) {
-    return (Value *)lamda;
-}
-
 void LamdaDealloc(Value *lamdaValue) {
     if (lamdaValue != NULL) {
-	Lamda *lamda = ValueLamdaBridge(lamdaValue);
+	Lamda *lamda = BridgeToLamda(lamdaValue);
 	MemoryDealloc(lamda->code);
 	MemoryDealloc(lamda);
     }
 }
 
 Integer64 LamdaHash(Value *lamdaValue) {
-    return ValueLamdaBridge(lamdaValue)->arity;
+    return BridgeToLamda(lamdaValue)->arity;
 }
 
 void LamdaEnumerate(Value *lamdaValue, void (*callback)(Value *value)) {
-    Lamda *lamda = ValueLamdaBridge(lamdaValue);
+    Lamda *lamda = BridgeToLamda(lamdaValue);
     for (Integer8 index = 0; index < lamda->contextLength; index += 1) {
 	Value *value = lamda->context[index].value;
         callback(value);
@@ -73,7 +69,7 @@ void LamdaEnumerate(Value *lamdaValue, void (*callback)(Value *value)) {
 }
 
 Value *LamdaEval(Value *lamdaValue, bool pure, Error *error) {
-    Lamda *lamda = ValueLamdaBridge(lamdaValue);
+    Lamda *lamda = BridgeToLamda(lamdaValue);
     for (Integer8 index = 0; index < lamda->contextLength; index += 1) {
 	Value *value = ValueEval(lamda->context[index].value, true, error);
 	if (value == NULL) {
@@ -87,6 +83,7 @@ returnError:
     return NULL;
 }
 
-Value *LamdaResult(Lamda *lamda, Value **args, Integer8 argCount, Error *error) {
+Value *LamdaResult(Value *lamdaValue, Value **args, Integer8 argCount, Error *error) {
+    Lamda *lamda = BridgeToLamda(lamdaValue);
     return ExecuteCode(lamda->code, args, argCount, &lamda->context[0].value, lamda->contextLength, error);
 }
