@@ -63,10 +63,10 @@ returnError:
 }
 
 Status RuntimeMain(Char *path, Char *main, Char **args, Integer8 count, Error *error) {
-    if (ModuleLoad(path, error) == StatusFailure) {
+    Value *moduleValue = ModuleWithID(path, error);
+    if (moduleValue == NULL) {
 	goto returnError;
     }
-    Value *moduleValue = ModuleWithID(path);
     Value *lamdaValue = MainFromModule(moduleValue, main, error);
     if (lamdaValue == NULL) {
 	goto returnError;

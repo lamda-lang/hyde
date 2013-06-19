@@ -41,10 +41,6 @@ Value *ModuleEval(Value *moduleValue, bool pure, Error *error) {
     return NULL;
 }
 
-Value *ModuleWithID(Char *path) {
-    return NULL;
-}
-
-Status ModuleLoad(Char *path, Error *error) {
+Value *ModuleWithID(Char *path, Error *error) {
     return NULL;
 }

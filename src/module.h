@@ -13,8 +13,6 @@ Value *ModuleGetValueForIdentifier(Value *moduleValue, Value *idValue);
 
 Value *ModuleEval(Value *moduleValue, bool pure, Error *error);
 
-Value *ModuleWithID(Char *path);
-
-Status ModuleLoad(Char *path, Error *error);
+Value *ModuleWithID(Char *path, Error *error);
 
 #endif
