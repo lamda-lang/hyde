@@ -6,26 +6,46 @@
 #include <stdint.h>
 
 typedef unsigned char Byte;
-
 typedef char Char;
-
 typedef uint8_t Integer8;
-
 typedef uint16_t Integer16;
-
 typedef uint32_t Integer32;
-
 typedef uint64_t Integer64;
-
 typedef uintmax_t Index;
-
 typedef size_t Size;
-
 typedef uint8_t Value;
-
-typedef double Float64;
-
 typedef uint8_t Error;
+typedef double Float64;
+typedef bool Status;
+typedef uint8_t Type;
+typedef uint8_t Flag;
+typedef struct File File;
+typedef struct Stack Stack;
+typedef struct Data Data;
+typedef struct Boolean Boolean;
+typedef struct Case Case;
+typedef struct Do Do;
+typedef struct Float Float;
+typedef struct Identifier Identifier;
+typedef struct Integer Integer;
+typedef struct Lamda Lamda;
+typedef struct List List;
+typedef struct Map Map;
+typedef struct Module Module;
+typedef struct Nil Nil;
+typedef struct Range Range;
+typedef struct Result Result;
+typedef struct Set Set;
+typedef struct String String;
+typedef struct When When;
+typedef Value *Instruction(Byte **code, Error *error);
+typedef Value *Eval(Value *value, bool pure, Error *error);
+typedef Value *Kernel(Value **values, Integer8 count, Error *error);
+typedef void Dealloc(Value *value);
+typedef Integer64 Hash(Value *value);
+typedef void Enumerate(Value *value, void (*callback)(Value *value));
+typedef void Fetch(Value *value, Value **values);
+
 enum {
     ErrorOutOfMemory,
     ErrorInvalidType,
@@ -37,13 +57,11 @@ enum {
     ErrorMainNotFound
 };
 
-typedef bool Status;
 enum {
     StatusSuccess = true,
     StatusFailure = false
 };
 
-typedef uint8_t Type;
 enum {
     TypeBoolean = 0,
     TypeCase = 1,
@@ -63,7 +81,6 @@ enum {
     TypeWhen = 15
 };
 
-typedef uint8_t Flag;
 enum {
     FlagNone = 0,
     FlagGarbage = 1 << 4,
@@ -77,56 +94,6 @@ typedef union {
     Integer32 index;
 } Element;
 
-typedef struct File File;
-
-typedef struct Data Data;
-
-typedef struct Boolean Boolean;
-
-typedef struct Case Case;
-
-typedef struct Do Do;
-
-typedef struct Float Float;
-
-typedef struct Identifier Identifier;
-
-typedef struct Integer Integer;
-
-typedef struct Lamda Lamda;
-
-typedef struct List List;
-
-typedef struct Map Map;
-
-typedef struct Module Module;
-
-typedef struct Nil Nil;
-
-typedef struct Range Range;
-
-typedef struct Result Result;
-
-typedef struct Set Set;
-
-typedef struct String String;
-
-typedef struct When When;
-
-typedef Value *Instruction(Byte **code, Error *error);
-
-typedef Value *Eval(Value *value, bool pure, Error *error);
-
-typedef Value *Kernel(Value **values, Integer8 count, Error *error);
-
-typedef void Dealloc(Value *value);
-
-typedef Integer64 Hash(Value *value);
-
-typedef void Enumerate(Value *value, void (*callback)(Value *value));
-
-typedef void Fetch(Value *value, Value **values);
-
 #include "arg.h"
 #include "boolean.h"
 #include "bridge.h"
@@ -138,6 +105,7 @@ typedef void Fetch(Value *value, Value **values);
 #include "execute.h"
 #include "file.h"
 #include "float.h"
+#include "global.h"
 #include "identifier.h"
 #include "integer.h"
 #include "kernel.h"

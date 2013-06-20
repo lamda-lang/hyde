@@ -4,7 +4,6 @@
 #include "api.h"
 
 void ProcessExitSuccess(void);
-
 void ProcessExitFailure(void);
 
 #endif

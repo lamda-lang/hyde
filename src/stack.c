@@ -12,44 +12,58 @@ typedef union {
     Frame frame;
 } Register;
 
-typedef struct {
+struct Stack {
     Register *root;
     Frame top;
-    Integer32 capacity;
-} Stack;
-
-static Stack stack = {
-    .capacity = 0,
-    .root = NULL,
-    .top.index = 0,
-    .top.length = 0
+    Integer32 length;
 };
 
-Status StackPushFrame(Integer32 count, Error *error) {
+Stack *StackCreate(Integer32 length, Error *error) {
+    Stack *stack = MemoryAlloc(sizeof(Stack), error);
+    if (stack == NULL) {
+	goto returnError;
+    }
+    Register *root = MemoryAlloc(sizeof(Register) * length, error);
+    if (root == NULL) {
+	goto deallocStack;
+    }
+    stack->root = root;
+    stack->length = length;
+    stack->top.index = 0;
+    stack->top.length = 0;
+    return stack;
+
+deallocStack:
+    MemoryDealloc(stack);
+returnError:
+    return NULL;
+}
+
+Status StackPushFrame(Stack *stack, Integer32 count, Error *error) {
     Frame top = {
-        .index = stack.top.index + stack.top.length,
+        .index = stack->top.index + stack->top.length,
 	.length = HEADER_LENGTH + count
     };
-    if (top.index + top.length > stack.capacity) { 
-        Integer32 capacity = (stack.capacity + count) * 2;
-        Register *root = MemoryRealloc(stack.root, capacity, error);
+    if (top.index + top.length > stack->length) { 
+        Integer32 length = (stack->length + count) * 2;
+        Register *root = MemoryRealloc(stack->root, length, error);
         if (root == NULL) {
             goto returnError;
         }
-        stack.capacity = capacity;
-        stack.root = root;
+        stack->length = length;
+        stack->root = root;
     }
-    stack.top = top;
+    stack->top = top;
     return StatusSuccess;
 
 returnError:
     return StatusFailure;
 }
 
-void StackPullFrame(void) {
-    stack.top = stack.root[stack.top.index].frame;
+void StackPullFrame(Stack *stack) {
+    stack->top = stack->root[stack->top.index].frame;
 }
 
-Value **StackFrameValues(void) {
-    return &stack.root[stack.top.index + HEADER_LENGTH].value;
+Value **StackFrameValues(Stack *stack) {
+    return &stack->root[stack->top.index + HEADER_LENGTH].value;
 }

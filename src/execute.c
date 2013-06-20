@@ -22,10 +22,10 @@ static Instruction *instruction[] = {
 
 Value *ExecuteCode(Byte *bytes, Value **args, Integer8 argCount, Value **context, Integer8 contextLength, Error *error) {
     Integer32 valueCount = DecodeInteger32VLE(&bytes);
-    if (StackPushFrame(valueCount, error) == StatusFailure) {
+    if (StackPushFrame(GlobalStack, valueCount, error) == StatusFailure) {
 	goto returnError;
     }
-    Value **values = StackFrameValues();
+    Value **values = StackFrameValues(GlobalStack);
     Value **argHead = values + 1;
     Value **contextHead = argHead + argCount; 
     MemoryCopy(args, argHead, sizeof(Value *) * argCount);
@@ -43,11 +43,11 @@ Value *ExecuteCode(Byte *bytes, Value **args, Integer8 argCount, Value **context
 	ValueFetch(values[index], values);
     }
     Value *result = values[0];
-    StackPullFrame();
+    StackPullFrame(GlobalStack);
     return result;
 
 pullFrame:
-    StackPullFrame();
+    StackPullFrame(GlobalStack);
 returnError:
     return NULL;
 }

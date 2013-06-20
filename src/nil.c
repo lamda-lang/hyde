@@ -2,24 +2,25 @@
 
 struct Nil {
     Value base;
-    Integer64 hash;
 };
 
-static Nil nilSingleton = {
-    .base = TypeNil,
-    .hash = 1827
-};
+Value *NilCreate(Error *error) {
+    Nil *nil = MemoryAlloc(sizeof(Nil), error);
+    if (nil == NULL) {
+	goto returnError;
+    }
+    return BridgeFromNil(nil);
 
-Value *NilSingleton(void) {
-    return BridgeFromNil(&nilSingleton);
+returnError:
+    return NULL;
 }
 
 Integer64 NilHash(Value *nilValue) {
-    return BridgeToNil(nilValue)->hash;
+    return 1829;
 }
 
 Value *NilDecode(Byte **bytes, Error *error) {
-    return NilSingleton();
+    return GlobalNil;
 }
 
 Value *NilEval(Value *nilValue, bool pure, Error *error) {

@@ -40,7 +40,3 @@ Value *ModuleGetValueForIdentifier(Value *moduleValue, Value *idValue) {
 Value *ModuleEval(Value *moduleValue, bool pure, Error *error) {
     return NULL;
 }
-
-Value *ModuleWithID(Char *path, Error *error) {
-    return NULL;
-}

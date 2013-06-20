@@ -63,7 +63,7 @@ returnError:
 }
 
 Status RuntimeMain(Char *path, Char *main, Char **args, Integer8 count, Error *error) {
-    Value *moduleValue = ModuleWithID(path, error);
+    Value *moduleValue = NULL; /* missing */
     if (moduleValue == NULL) {
 	goto returnError;
     }

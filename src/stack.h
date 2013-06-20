@@ -3,10 +3,9 @@
 
 #include "api.h"
 
-Status StackPushFrame(Integer32 count, Error *error);
-
-void StackPullFrame(void);
-
-Value **StackFrameValues(void);
+Stack *StackCreate(Integer32 length, Error *error);
+Status StackPushFrame(Stack *stack, Integer32 count, Error *error);
+void StackPullFrame(Stack *stack);
+Value **StackFrameValues(Stack *stack);
 
 #endif

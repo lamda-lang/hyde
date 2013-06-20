@@ -61,11 +61,11 @@ Value *WhenEval(Value *whenValue, bool pure, Error *error) {
 	if (condition == NULL) {
 	    goto returnError;
 	}
-	if (condition == BooleanTrueSingleton()) {
+	if (condition == GlobalBooleanTrue) {
 	    return ValueEval(block->clause[index].value.value, pure, error);
 	}
     }
-    return NilSingleton();
+    return GlobalNil;
 
 returnError:
     return NULL;

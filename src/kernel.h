@@ -4,7 +4,6 @@
 #include "api.h"
 
 Value *KernelIntegerSum(Value **args, Integer8 count, Error *error);
-
 Value *KernelStringConcatenate(Value **args, Integer8 count, Error *error);
 
 #endif
