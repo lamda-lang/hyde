@@ -23,7 +23,7 @@ Boolean *BridgeToBoolean(Value *booleanValue);
 Case *BridgeToCase(Value *caseValue);
 Do *BridgeToDo(Value *doValue);
 Float *BridgeToFloat(Value *floatValue);
-Identifier *BridgeToIdenfier(Value *idValue);
+Identifier *BridgeToIdentifier(Value *idValue);
 Integer *BridgeToInteger(Value *integerValue);
 Lamda *BridgeToLamda(Value *lamdaValue);
 List *BridgeToList(Value *listValue);

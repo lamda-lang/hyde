@@ -10,6 +10,7 @@ void ValueEnumerate(Value *value, void (*block)(Value *value));
 void ValueDealloc(Value *value);
 void ValueFetch(Value *value, Value **values);
 Integer64 ValueHash(Value *value);
+bool ValueEqual(Value *value, Value *other);
 Value *ValueEval(Value *value, bool pure, Error *error);
 
 #endif

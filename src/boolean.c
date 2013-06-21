@@ -18,8 +18,16 @@ returnError:
     return NULL;
 }
 
+void BooleanDealloc(Value *booleanValue) {
+    MemoryDealloc(booleanValue);
+}
+
 Integer64 BooleanHash(Value *booleanValue) {
     return BridgeToBoolean(booleanValue)->truth;
+}
+
+bool BooleanEqual(Value *booleanValue, Value *otherValue) {
+    return BridgeToBoolean(booleanValue)->truth == BridgeToBoolean(otherValue)->truth;
 }
 
 Value *BooleanDecodeTrue(Byte **bytes, Error *error) {

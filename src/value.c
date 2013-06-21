@@ -3,6 +3,7 @@
 typedef struct {
     Dealloc *dealloc;
     Hash *hash;
+    Equal *equal;
     Enumerate *enumerate;
     Fetch *fetch;
     Eval *eval;
@@ -11,6 +12,7 @@ typedef struct {
 Class class[] = {
     [TypeBoolean] = {
         .hash = BooleanHash,
+	.equal = BooleanEqual,
 	.eval = BooleanEval
     },
     [TypeCase] = {
@@ -28,16 +30,19 @@ Class class[] = {
     [TypeFloat] = {
 	.dealloc = FloatDealloc,
 	.hash = FloatHash,
+	.equal = FloatEqual,
 	.eval = FloatEval
     },
     [TypeIdentifier] = {
         .dealloc = IdentifierDealloc,
         .hash = IdentifierHash,
+	.equal = IdentifierEqual,
 	.eval = IdentifierEval
     },
     [TypeInteger] = {
         .dealloc = IntegerDealloc,
         .hash = IntegerHash,
+	.equal = IntegerEqual,
 	.eval = IntegerEval
     },
     [TypeLamda] = {
@@ -68,6 +73,7 @@ Class class[] = {
     },
     [TypeNil] = {
         .hash = NilHash,
+	.equal = NilEqual,
 	.eval = NilEval
     },
     [TypeRange] = {
@@ -92,6 +98,7 @@ Class class[] = {
     [TypeString] = {
         .dealloc = StringDealloc,
         .hash = StringHash,
+	.equal = StringEqual,
 	.eval = StringEval
     },
     [TypeWhen] = {
@@ -140,6 +147,12 @@ void ValueFetch(Value *value, Value **values) {
 Integer64 ValueHash(Value *value) {
     Type type = ValueType(value);
     return class[type].hash(value);
+}
+
+bool ValueEqual(Value *value, Value *other) {
+    Type type = ValueType(value);
+    if (type != ValueType(other)) return false;
+    return class[type].equal(value, other);
 }
 
 Value *ValueEval(Value *value, bool pure, Error *error) {

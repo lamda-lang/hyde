@@ -53,7 +53,14 @@ returnError:
 }
 
 Integer64 IdentifierHash(Value *idValue) {
-    return BridgeToIdenfier(idValue)->length;
+    return BridgeToIdentifier(idValue)->length;
+}
+
+bool IdentifierEqual(Value *idValue, Value *otherValue) {
+    Identifier *id = BridgeToIdentifier(idValue);
+    Identifier *other = BridgeToIdentifier(otherValue);
+    return id->length == other->length &&
+           MemoryEqual(id->codepoint, other->codepoint, sizeof(Integer8) * id->length);
 }
 
 Value *IdentifierEval(Value *idValue, bool pure, Error *error) {

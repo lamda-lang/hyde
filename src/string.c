@@ -58,6 +58,13 @@ Integer64 StringHash(Value *stringValue) {
     return BridgeToString(stringValue)->length;
 }
 
+bool StringEqual(Value *stringValue, Value *otherValue) {
+    String *string = BridgeToString(stringValue);
+    String *other = BridgeToString(otherValue);
+    return string->length == other->length &&
+           MemoryEqual(string->codepoint, other->codepoint, sizeof(Integer32) * string->length);
+}
+
 Value *StringConcatenate(Value *stringValue, Value *otherValue, Error *error) {
     String *string = BridgeToString(stringValue);
     String *other = BridgeToString(otherValue);

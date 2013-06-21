@@ -32,6 +32,10 @@ Integer64 FloatHash(Value *floatValue) {
     return (Integer64)BridgeToFloat(floatValue)->value;
 }
 
+bool FloatEqual(Value *floatValue, Value *otherValue) {
+    return BridgeToFloat(floatValue)->value == BridgeToFloat(otherValue)->value;
+}
+
 Value *FloatSum(Value *floatValue, Value *otherValue, Error *error) {
     Float64 sum = BridgeToFloat(floatValue)->value + BridgeToFloat(otherValue)->value;
     Float *fpv = Create(sum, error);

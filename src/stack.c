@@ -39,6 +39,11 @@ returnError:
     return NULL;
 }
 
+void StackDealloc(Stack *stack) {
+    MemoryDealloc(stack->root);
+    MemoryDealloc(stack);
+}
+
 Status StackPushFrame(Stack *stack, Integer32 count, Error *error) {
     Frame top = {
         .index = stack->top.index + stack->top.length,

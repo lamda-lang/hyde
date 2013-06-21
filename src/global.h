@@ -9,5 +9,6 @@ extern Value *GlobalBooleanFalse;
 extern Stack *GlobalStack;
 
 Status GlobalInit(Error *error);
+void GlobalDealloc(void);
 
 #endif

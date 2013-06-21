@@ -80,7 +80,7 @@ Float *BridgeToFloat(Value *floatValue) {
     return (Float *)floatValue;
 }
 
-Identifier *BridgeToIdenfier(Value *idValue) {
+Identifier *BridgeToIdentifier(Value *idValue) {
     return (Identifier *)idValue;
 }
 

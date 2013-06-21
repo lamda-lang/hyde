@@ -11,14 +11,14 @@ struct Map {
     Pair *pair;
 };
 
-static Integer32 IndexForValue(Integer32 length, Value *value, Integer32 offset) {
+static Integer32 IndexForKey(Integer32 length, Value *value, Integer32 offset) {
     return (ValueHash(value) + offset) % length;
 }
 
 static void SetValueForKey(Pair *pair, Integer32 length, Value *value, Value *key) {
-    Integer32 index = IndexForValue(length, key, 0);
+    Integer32 index = IndexForKey(length, key, 0);
     while (pair[index].key.value != NULL) {
-        index = IndexForValue(length, key, index);
+        index = IndexForKey(length, key, index);
     }
     pair[index].key.value = key;
     pair[index].value.value = value;
@@ -91,7 +91,12 @@ void MapEnumerate(Value *mapValue, void (*callback)(Value *value)) {
 }
 
 Value *MapGetValueForKey(Value *mapValue, Value *key) {
-    return NULL;
+    Map *map = BridgeToMap(mapValue);
+    Integer32 index = IndexForKey(map->length, key, 0);
+    while (map->pair[index].key.value != NULL && !ValueEqual(key, map->pair[index].key.value)) {
+        index = IndexForKey(map->length, key, index);
+    }
+    return map->pair[index].value.value;
 }
 
 Value *MapEval(Value *mapValue, bool pure, Error *error) {

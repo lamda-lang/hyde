@@ -15,8 +15,16 @@ returnError:
     return NULL;
 }
 
+void NilDealloc(Value *nilValue) {
+    MemoryDealloc(nilValue);
+}
+
 Integer64 NilHash(Value *nilValue) {
     return 1829;
+}
+
+bool NilEqual(Value *nilValue, Value *otherValue) {
+    return true;
 }
 
 Value *NilDecode(Byte **bytes, Error *error) {

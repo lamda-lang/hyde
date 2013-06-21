@@ -32,6 +32,10 @@ Integer64 IntegerHash(Value *integerValue) {
     return BridgeToInteger(integerValue)->value;
 }
 
+bool IntegerEqual(Value *integerValue, Value *otherValue) {
+    return BridgeToInteger(integerValue)->value == BridgeToInteger(otherValue)->value;
+}
+
 Value *IntegerSum(Value *integerValue, Value *otherValue, Error *error) {
   Integer64 sum = BridgeToInteger(integerValue)->value + BridgeToInteger(otherValue)->value;
   Integer *integer = Create(sum, error);

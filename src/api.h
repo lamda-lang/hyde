@@ -43,6 +43,7 @@ typedef Value *Eval(Value *value, bool pure, Error *error);
 typedef Value *Kernel(Value **values, Integer8 count, Error *error);
 typedef void Dealloc(Value *value);
 typedef Integer64 Hash(Value *value);
+typedef bool Equal(Value *value, Value *other);
 typedef void Enumerate(Value *value, void (*callback)(Value *value));
 typedef void Fetch(Value *value, Value **values);
 
