@@ -18,6 +18,18 @@ returnError:
     return NULL;
 }
 
+void *BooleanDecodeTrue(Byte **bytes, Error *error) {
+    return GlobalBooleanTrue;
+}
+
+void *BooleanDecodeFalse(Byte **bytes, Error *error) {
+    return GlobalBooleanFalse;
+}
+
+Value *BooleanEval(void *data, Code *code, bool pure, Error *error) {
+    return data;
+}
+
 void BooleanDealloc(Value *booleanValue) {
     MemoryDealloc(booleanValue);
 }
@@ -28,16 +40,4 @@ Integer64 BooleanHash(Value *booleanValue) {
 
 bool BooleanEqual(Value *booleanValue, Value *otherValue) {
     return BridgeToBoolean(booleanValue)->truth == BridgeToBoolean(otherValue)->truth;
-}
-
-Value *BooleanDecodeTrue(Byte **bytes, Error *error) {
-    return GlobalBooleanTrue;
-}
-
-Value *BooleanDecodeFalse(Byte **bytes, Error *error) {
-    return GlobalBooleanFalse;
-}
-
-Value *BooleanEval(Value *booleanValue, bool pure, Error *error) {
-    return booleanValue;
 }

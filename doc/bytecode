@@ -1,64 +1,52 @@
 NIL
   I8FLE:0
-  I32VLE:nil_index
 
 TRUE
   I8FLE:1
-  I32VLE:true_index
 
 FALSE
   I8FLE:2
-  I32VLE:false_index
 
 INTEGER
   I8FLE:3
-  I32VLE:integer_index
   I64FLE:value
 
 FLOAT
   I8FLE:4
-  I32VLE:float_index
   F64FLE:value
 
 IDENTIFIER
   I8FLE:5
-  I32VLE:identifier_index
   I8FLE:length
   [I8FLE:codepoint].length
 
 STRING
   I8FLE:6
-  I32VLE:string_index
   I32VLE:length
   [I32VLE:codepoint].length
 
 RANGE
   I8FLE:7
-  I32VLE:range_index
   I32VLE:lower_index
   I32VLE:upper_index
 
 SET
   I8FLE:8
-  I32VLE:set_index
   I32VLE:count
   [I32VLE:element_index].count
 
 LIST
   I8FLE:9
-  I32VLE:list_index
   I32VLE:count
   [I32VLE:element_index].count
 
 MAP
   I8FLE:10
-  I32VLE:map_index
   I32VLE:count
   I32VLE:key_index I32VLE:value_index].count
 
 MODULE
   I8FLE:11
-  I32VLE:module_index
   I32VLE:count
   I32VLE:identifier_index I32VLE:value_index].count
 
@@ -74,23 +62,20 @@ CASE
 
 RESULT
   I8FLE:14
-  I32VLE:result_index
   I32VLE:lambda_index
   I8FLE:arg_count
   [I32VLE:arg_index].arg_count
 
 DO
   I8FLE:15
-  I32VLE:do_index
   I32VLE:count
   [I32VLE:element_index].count
 
 LAMBDA
   I8FLE:16
-  I32VLE:lambda_index
   I8FLE:arity
   I8FLE:context_length
-  I32VLE:value_count
+  I32VLE:instruction_count
   I32VLE:code_size
   [I32VLE:context_index].context_length
   [I8FLE:code].code_size

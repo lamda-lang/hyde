@@ -49,10 +49,6 @@ static Status EvalProgram(Value *lamdaValue, Char **args, Integer8 count, Error 
     if (result == NULL) {
 	goto deallocArgs;
     }
-    Value *eval = ValueEval(result, false, error);
-    if (eval == NULL) {
-	goto deallocArgs;
-    }
     DeallocArgs(listValue, stringCount);
     return StatusSuccess;
 

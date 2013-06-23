@@ -5,6 +5,10 @@ struct Integer {
     Integer64 value;
 };
 
+typedef struct {
+    Integer64 value;
+} Model;
+
 static Integer *Create(Integer64 value, Error *error) {
     Integer *integer = MemoryAlloc(sizeof(Integer), error);
     if (integer == NULL) {
@@ -18,9 +22,21 @@ returnError:
     return NULL;
 }
 
-Value *IntegerDecode(Byte **bytes, Error *error) {
-    Integer64 value = DecodeInteger64FLE(bytes);
-    Integer *integer = Create(value, error);
+void *IntegerDecode(Byte **bytes, Error *error) {
+    Model *model = MemoryAlloc(sizeof(Model), error);
+    if (model == NULL) {
+	goto returnError;
+    }
+    model->value = DecodeInteger64FLE(bytes);
+    return model;
+
+returnError:
+    return NULL;
+}
+
+Value *IntegerEval(void *data, Code *code, bool pure, Error *error) {
+    Model *model = data;
+    Integer *integer = Create(model->value, error);
     return BridgeFromInteger(integer);
 }
 
@@ -40,8 +56,4 @@ Value *IntegerSum(Value *integerValue, Value *otherValue, Error *error) {
   Integer64 sum = BridgeToInteger(integerValue)->value + BridgeToInteger(otherValue)->value;
   Integer *integer = Create(sum, error);
   return BridgeFromInteger(integer);
-}
-
-Value *IntegerEval(Value *integerValue, bool pure, Error *error) {
-    return integerValue;
 }

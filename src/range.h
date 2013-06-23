@@ -3,13 +3,10 @@
 
 #include "api.h"
 
+void *RangeDecode(Byte **bytes, Error *error);
+Value *RangeEval(void *data, Code *code, bool pure, Error *error);
 void RangeDealloc(Value *rangeValue);
-void RangeFetch(Value *rangeValue, Value **values);
 Integer64 RangeHash(Value *rangeValue);
 void RangeEnumerate(Value *rangeValue, void (*callback)(Value *value));
-Value *RangeDecode(Byte **bytes, Error *error);
-Value *RangeDecodeLower(Byte **bytes, Error *error);
-Value *RangeDecodeUpper(Byte **bytes, Error *error);
-Value *RangeEval(Value *rangeValue, bool pure, Error *error);
 
 #endif

@@ -4,10 +4,6 @@ Value *BridgeFromBoolean(Boolean *boolean) {
     return (Value *)boolean;
 }
 
-Value *BridgeFromCase(Case *block) {
-    return (Value *)block;
-}
-
 Value *BridgeFromDo(Do *block) {
     return (Value *)block;
 }
@@ -48,10 +44,6 @@ Value *BridgeFromRange(Range *range) {
     return (Value *)range;
 }
 
-Value *BridgeFromResult(Result *result) {
-    return (Value *)result;
-}
-
 Value *BridgeFromSet(Set *set) {
     return (Value *)set;
 }
@@ -60,16 +52,8 @@ Value *BridgeFromString(String *string) {
     return (Value *)string;
 }
 
-Value *BridgeFromWhen(When *block) {
-    return (Value *)block;
-}
-
 Boolean *BridgeToBoolean(Value *booleanValue) {
     return (Boolean *)booleanValue;
-}
-
-Case *BridgeToCase(Value *caseValue) {
-    return (Case *)caseValue;
 }
 
 Do *BridgeToDo(Value *doValue) {
@@ -112,18 +96,10 @@ Range *BridgeToRange(Value *rangeValue) {
     return (Range *)rangeValue;
 }
 
-Result *BridgeToResult(Value *resultValue) {
-    return (Result *)resultValue;
-}
-
 Set *BridgeToSet(Value *setValue) {
     return (Set *)setValue;
 }
 
 String *BridgeToString(Value *stringValue) {
     return (String *)stringValue;
-}
-
-When *BridgeToWhen(Value *whenValue) {
-    return (When *)whenValue;
 }

@@ -5,6 +5,10 @@ struct Float {
     Float64 value;
 };
 
+typedef struct {
+    Float64 value;
+} Model;
+
 static inline Float *Create(Float64 value, Error *error) {
     Float *fpv = MemoryAlloc(sizeof(Float), error);
     if (fpv == NULL) {
@@ -18,9 +22,21 @@ returnError:
     return NULL;
 }
 
-Value *FloatDecode(Byte **bytes, Error *error) {
-    Float64 value = DecodeFloat64FLE(bytes);
-    Float *fpv = Create(value, error);
+void *FloatDecode(Byte **bytes, Error *error) {
+    Model *model = MemoryAlloc(sizeof(Model), error);
+    if (model == NULL) {
+	goto returnError;
+    }
+    model->value = DecodeFloat64FLE(bytes);
+    return model;
+
+returnError:
+    return NULL;
+}
+
+Value *FloatEval(void *data, Code *code, bool pure, Error *error) {
+    Model *model = data;
+    Float *fpv = Create(model->value, error);
     return BridgeFromFloat(fpv);
 }
 
@@ -40,8 +56,4 @@ Value *FloatSum(Value *floatValue, Value *otherValue, Error *error) {
     Float64 sum = BridgeToFloat(floatValue)->value + BridgeToFloat(otherValue)->value;
     Float *fpv = Create(sum, error);
     return BridgeFromFloat(fpv);
-}
-
-Value *FloatEval(Value *floatValue, bool pure, Error *error) {
-    return floatValue;
 }

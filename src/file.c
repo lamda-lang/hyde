@@ -7,21 +7,40 @@ struct File {
     Byte buffer[256];
 };
 
-File *FileOpen(Char *path, Error *error) {
+static File *Create(int handle, Error *error) {
     File *file = MemoryAlloc(sizeof(File), error);
     if (file == NULL) {
         goto returnError;
     }
-    int handle = open(path, O_RDWR);
-    if (handle == -1) {
-	*error = ErrorFileOpen;
-        goto deallocFile;
-    }
     file->handle = handle;
     return file;
 
-deallocFile:
+returnError:
+    return NULL;
+}
+
+File *FileCreateStandardInput(Error *error) {
+    return Create(STDIN_FILENO, error);
+}
+
+void FileDealloc(File *file) {
     MemoryDealloc(file);
+}
+
+File *FileOpen(Char *path, Error *error) {
+    int handle = open(path, O_RDWR);
+    if (handle == -1) {
+	*error = ErrorFileOpen;
+        goto returnError;
+    }
+    File *file = Create(handle, error);
+    if (file == NULL) {
+	goto closeFile;
+    }
+    return file;
+    
+closeFile:
+    close(handle);    
 returnError:
     return NULL;
 }
@@ -31,7 +50,7 @@ Status FileClose(File *file, Error *error) {
 	*error = ErrorFileClose;
         goto returnError;
     }
-    MemoryDealloc(file);
+    FileDealloc(file);
     return StatusSuccess;
 
 returnError:

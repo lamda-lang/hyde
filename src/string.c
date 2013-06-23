@@ -7,6 +7,11 @@ struct String {
     Integer32 codepoint[];
 };
 
+typedef struct {
+    Integer32 length;
+    Integer32 codepoint[];
+} Model;
+
 static String *Create(Integer32 length, Error *error) {
     String *string = MemoryAlloc(sizeof(String) + sizeof(Integer32) * length, error);
     if (string == NULL) {
@@ -15,6 +20,31 @@ static String *Create(Integer32 length, Error *error) {
     string->base = TypeString;
     string->length = length;
     return string;
+
+returnError:
+    return NULL;
+}
+
+void *StringDecode(Byte **bytes, Error *error) {
+    Integer32 length = DecodeInteger32VLE(bytes);
+    Model *model = MemoryAlloc(sizeof(Model) + sizeof(Integer32) * length, error);
+    if (model == NULL) {
+	goto returnError;
+    }
+    return model;
+
+returnError:
+    return NULL;
+}
+
+Value *StringEval(void *data, Code *code, bool pure, Error *error) {
+    Model *model = data;
+    String *string = Create(model->length, error);
+    if (string == NULL) {
+	goto returnError;
+    }
+    MemoryCopy(model->codepoint, string->codepoint, sizeof(Integer32) * model->length);
+    return BridgeFromString(string);
 
 returnError:
     return NULL;
@@ -37,21 +67,6 @@ returnError:
 
 void StringDealloc(Value *stringValue) {
     MemoryDealloc(stringValue);
-}
-
-Value *StringDecode(Byte **bytes, Error *error) {
-    Integer32 length = DecodeInteger32VLE(bytes);
-    String *string = Create(length, error);
-    if (string == NULL) {
-        goto returnError;
-    }
-    for (Integer32 index = 0; index < length; index += 1) {
-        string->codepoint[index] = DecodeInteger32VLE(bytes);
-    }
-    return BridgeFromString(string);
-
-returnError:
-    return NULL;
 }
 
 Integer64 StringHash(Value *stringValue) {
@@ -80,6 +95,22 @@ returnError:
     return NULL;
 }
 
-Value *StringEval(Value *stringValue, bool pure, Error *error) {
-    return stringValue;
+Data *StringCreateDataWithASCIIEncoding(Value *stringValue, Error *error) {
+    String *string = BridgeToString(stringValue);
+    Data *data = DataCreate(error);
+    if (data == NULL) {
+	goto returnError;
+    }
+    for (Integer32 index = 0; index < string->length; index += 1) {
+	Byte character[] = {string->codepoint[index] & 0XF};
+	if (DataAppendBytes(data, character, sizeof(character), error) == StatusFailure) {
+	    goto deallocData;
+	}
+    }
+    return data;
+
+deallocData:
+    DataDealloc(data);
+returnError:
+    return NULL;
 }

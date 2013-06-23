@@ -3,12 +3,13 @@
 
 #include "api.h"
 
+void *StringDecode(Byte **bytes, Error *error);
+Value *StringEval(void *data, Code *code, bool pure, Error *error);
 Value *StringCreateWithCharacters(Char *chars, Error *error);
 void StringDealloc(Value *stringValue);
-Value *StringDecode(Byte **bytes, Error *error);
 Integer64 StringHash(Value *stringValue);
 bool StringEqual(Value *stringValue, Value *otherValue);
 Value *StringConcatenate(Value *stringValue, Value *otherValue, Error *error);
-Value *StringEval(Value *stringValue, bool pure, Error *error);
+Data *StringCreateDataWithASCIIEncoding(Value *stringValue, Error *error);
 
 #endif

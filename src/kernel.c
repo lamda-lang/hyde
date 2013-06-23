@@ -39,3 +39,28 @@ Value *KernelStringConcatenate(Value **args, Integer8 count, Error *error) {
 returnError:
     return NULL;
 }
+
+Value *KernelIOPrint(Value **args, Integer8 count, Error *error) {
+    Type types[] = {TypeString};
+    if (!Valid(args, types, count, 1, error)) {
+	goto returnError;
+    }
+    Data *data = StringCreateDataWithASCIIEncoding(args[0], error);
+    if (data == NULL) {
+	goto returnError;
+    }
+    Byte newLine[] = {'\n'};
+    if (DataAppendBytes(data, newLine, sizeof(newLine), error) == StatusFailure) {
+	goto deallocData;
+    }
+    if (FileWrite(GlobalFileStandardInput, data, error) == StatusFailure) {
+	goto deallocData;
+    }
+    DataDealloc(data);
+    return GlobalNil;
+
+deallocData:
+    DataDealloc(data);
+returnError:
+    return NULL;
+}

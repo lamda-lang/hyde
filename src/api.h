@@ -5,13 +5,13 @@
 #include <stddef.h>
 #include <stdint.h>
 
+/* scalar types */
 typedef unsigned char Byte;
 typedef char Char;
 typedef uint8_t Integer8;
 typedef uint16_t Integer16;
 typedef uint32_t Integer32;
 typedef uint64_t Integer64;
-typedef uintmax_t Index;
 typedef size_t Size;
 typedef uint8_t Value;
 typedef uint8_t Error;
@@ -19,11 +19,13 @@ typedef double Float64;
 typedef bool Status;
 typedef uint8_t Type;
 typedef uint8_t Flag;
+
+/* opaque types */
+typedef struct Code Code;
 typedef struct File File;
 typedef struct Stack Stack;
 typedef struct Data Data;
 typedef struct Boolean Boolean;
-typedef struct Case Case;
 typedef struct Do Do;
 typedef struct Float Float;
 typedef struct Identifier Identifier;
@@ -34,12 +36,12 @@ typedef struct Map Map;
 typedef struct Module Module;
 typedef struct Nil Nil;
 typedef struct Range Range;
-typedef struct Result Result;
 typedef struct Set Set;
 typedef struct String String;
-typedef struct When When;
-typedef Value *Instruction(Byte **code, Error *error);
-typedef Value *Eval(Value *value, bool pure, Error *error);
+
+/* function types */
+typedef void *Decode(Byte **code, Error *error);
+typedef Value *Eval(void *data, Code *code, bool pure, Error *error);
 typedef Value *Kernel(Value **values, Integer8 count, Error *error);
 typedef void Dealloc(Value *value);
 typedef Integer64 Hash(Value *value);
@@ -47,6 +49,12 @@ typedef bool Equal(Value *value, Value *other);
 typedef void Enumerate(Value *value, void (*callback)(Value *value));
 typedef void Fetch(Value *value, Value **values);
 
+typedef union {
+    Value *value;
+    Integer32 index;
+} Element;
+
+/* enumerations */
 enum {
     ErrorOutOfMemory,
     ErrorInvalidType,
@@ -64,22 +72,19 @@ enum {
 };
 
 enum {
-    TypeBoolean = 0,
-    TypeCase = 1,
-    TypeDo = 2,
+    TypeNil = 0,
+    TypeBoolean = 1,
+    TypeInteger = 2,
     TypeFloat = 3,
     TypeIdentifier = 4,
-    TypeInteger = 5,
-    TypeLamda = 6,
+    TypeString = 5,
+    TypeSet = 6,
     TypeList = 7,
     TypeMap = 8,
-    TypeModule = 9,
-    TypeNil = 10,
-    TypeRange = 11,
-    TypeResult = 12,
-    TypeSet = 13,
-    TypeString = 14,
-    TypeWhen = 15
+    TypeRange = 9,
+    TypeModule = 10,
+    TypeDo = 11,
+    TypeLamda = 12,
 };
 
 enum {
@@ -90,20 +95,14 @@ enum {
     FlagBeta = 1 << 7
 };
 
-typedef union {
-    Value *value;
-    Integer32 index;
-} Element;
-
 #include "arg.h"
 #include "boolean.h"
 #include "bridge.h"
-#include "case.h"
+#include "code.h"
 #include "data.h"
 #include "decode.h"
 #include "do.h"
 #include "error.h"
-#include "execute.h"
 #include "file.h"
 #include "float.h"
 #include "global.h"
@@ -118,7 +117,6 @@ typedef union {
 #include "nil.h"
 #include "process.h"
 #include "range.h"
-#include "result.h"
 #include "runtime.h"
 #include "set.h"
 #include "stack.h"

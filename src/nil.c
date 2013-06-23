@@ -15,6 +15,14 @@ returnError:
     return NULL;
 }
 
+void *NilDecode(Byte **bytes, Error *error) {
+    return GlobalNil;
+}
+
+Value *NilEval(void *data, Code *code, bool pure, Error *error) {
+    return data;
+}
+
 void NilDealloc(Value *nilValue) {
     MemoryDealloc(nilValue);
 }
@@ -25,12 +33,4 @@ Integer64 NilHash(Value *nilValue) {
 
 bool NilEqual(Value *nilValue, Value *otherValue) {
     return true;
-}
-
-Value *NilDecode(Byte **bytes, Error *error) {
-    return GlobalNil;
-}
-
-Value *NilEval(Value *nilValue, bool pure, Error *error) {
-    return nilValue;
 }

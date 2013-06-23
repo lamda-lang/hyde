@@ -19,29 +19,6 @@ returnError:
     return NULL;
 }
 
-Value *DoDecode(Byte **bytes, Error *error) {
-    Integer32 count = DecodeInteger32VLE(bytes);
-    Do *block = Create(count, error);
-    if (block == NULL) {
-	goto returnError;
-    }
-    for (Integer32 index = 0; index < count; index += 1) {
-	block->element[index].index = DecodeInteger32VLE(bytes);
-    }
-    return BridgeFromDo(block);
-
-returnError:
-    return NULL;
-}
-
-void DoFetch(Value *doValue, Value **values) {
-    Do *block = BridgeToDo(doValue);
-    for (Integer32 index = 0; index < block->count; index += 1) {
-        Integer32 elementIndex = block->element[index].index;
-	block->element[index].value = values[elementIndex];
-    }
-}
-
 void DoDealloc(Value *doValue) {
     MemoryDealloc(doValue);
 }
@@ -56,22 +33,4 @@ void DoEnumerate(Value *doValue, void (*callback)(Value *value)) {
 	Value *value = block->element[index].value;
         callback(value);
     }
-}
-
-Value *DoEval(Value *doValue, bool pure, Error *error) {
-    if (pure) {
-	return doValue;
-    }
-    Do *block = BridgeToDo(doValue);
-    for (Integer32 index = 0; index < block->count; index += 1) {
-	Value *value = ValueEval(block->element[index].value, false, error);
-	if (value == NULL) {
-	    goto returnError;
-	}
-	block->element[index].value = value;
-    }
-    return block->element[block->count - 1].value;
-
-returnError:
-    return NULL;
 }

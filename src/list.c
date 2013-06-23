@@ -3,11 +3,16 @@
 struct List {
     Value base;
     Integer32 count;
-    Element element[];
+    Value *element[];
 };
 
+typedef struct {
+    Integer32 count;
+    Integer32 index[];
+} Model;
+
 static List *Create(Integer32 count, Error *error) {
-    List *list = MemoryAlloc(sizeof(List) + sizeof(Element) * count, error);
+    List *list = MemoryAlloc(sizeof(List) + sizeof(Value *) * count, error);
     if (list == NULL) {
         goto returnError;
     }
@@ -24,27 +29,42 @@ Value *ListCreate(Integer32 count, Error *error) {
     return BridgeFromList(list);
 }
 
-Value *ListDecode(Byte **bytes, Error *error) {
+void *ListDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32VLE(bytes);
-    List *list = Create(count, error);
-    if (list == NULL) {
+    Model *model = MemoryAlloc(sizeof(Model) + sizeof(Integer32) * count, error);
+    if (model == NULL) {
 	goto returnError;
     }
+    model->count = count;
     for (Integer32 index = 0; index < count; index += 1) {
-	list->element[index].index = DecodeInteger32VLE(bytes);
+	model->index[index] = DecodeInteger32VLE(bytes);
     }
-    return BridgeFromList(list);
+    return model;
 
 returnError:
     return NULL;
 }
 
-void ListFetch(Value *listValue, Value **values) {
-    List *list = BridgeToList(listValue);
-    for (Integer32 index = 0; index < list->count; index += 1) {
-	Integer32 elementIndex = list->element[index].index;
-	list->element[index].value = values[elementIndex];
+Value *ListEval(void *data, Code *code, bool pure, Error *error) {
+    Model *model = data;
+    List *list = Create(model->count, error);
+    if (list == NULL) {
+	goto returnError;
     }
+    Value *listValue = BridgeFromList(list);
+    for (Integer32 index = 0; index < model->count; index += 1) {
+	Value *value = CodeEvalInstructionAtIndex(code, model->index[index], true, error);
+	if (value == NULL) {
+	    goto deallocList;
+	}
+	list->element[index] = value;
+    }
+    return listValue;
+
+deallocList:
+    ListDealloc(listValue);
+returnError:
+    return NULL;
 }
 
 void ListDealloc(Value *listValue) {
@@ -52,11 +72,11 @@ void ListDealloc(Value *listValue) {
 }
 
 void ListSetValueAtIndex(Value *listValue, Value *value, Integer32 index) {
-    BridgeToList(listValue)->element[index].value = value;
+    BridgeToList(listValue)->element[index] = value;
 }
 
 Value *ListGetValueAtIndex(Value *listValue, Integer32 index) {
-    return BridgeToList(listValue)->element[index].value;
+    return BridgeToList(listValue)->element[index];
 }
 
 Integer64 ListHash(Value *listValue) {
@@ -66,22 +86,6 @@ Integer64 ListHash(Value *listValue) {
 void ListEnumerate(Value *listValue, void (*callback)(Value *value)) {
     List *list = BridgeToList(listValue);
     for (Integer32 index = 0; index < list->count; index += 1) {
-        callback(list->element[index].value);
+        callback(list->element[index]);
     }
-}
-
-Value *ListEval(Value *listValue, bool pure, Error *error) {
-    List *list = BridgeToList(listValue);
-    for (Integer32 index = 0; index < list->count; index += 1) {
-	Value *before = list->element[index].value;
-        Value *after = ValueEval(before, true, error);
-	if (after == NULL) {
-	    goto returnError;
-	}
-	list->element[index].value = after;
-    }
-    return listValue;
-
-returnError:
-    return NULL;
 }

@@ -7,6 +7,7 @@ extern Value *GlobalNil;
 extern Value *GlobalBooleanTrue;
 extern Value *GlobalBooleanFalse;
 extern Stack *GlobalStack;
+extern File *GlobalFileStandardInput;
 
 Status GlobalInit(Error *error);
 void GlobalDealloc(void);

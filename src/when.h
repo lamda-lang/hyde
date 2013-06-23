@@ -3,9 +3,7 @@
 
 #include "api.h"
 
-Value *WhenDecode(Byte **bytes, Error *error);
-void WhenFetch(Value *whenValue, Value **values);
-Value *WhenEval(Value *whenValue, bool pure, Error *error);
-void WhenDealloc(Value *whenValue);
+void *WhenDecode(Byte **bytes, Error *error);
+Value *WhenEval(void *data, Code *code, bool pure, Error *error);
 
 #endif

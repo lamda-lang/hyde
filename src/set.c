@@ -3,70 +3,82 @@
 struct Set {
     Value base;
     Integer32 length;
-    Element *element;
+    Value *element[];
 };
 
-static Integer32 IndexForValue(Integer32 length, Value *value, Integer32 offset) {
-    return (ValueHash(value) + offset) % length;
+typedef struct {
+    Integer32 count;
+    Integer32 index[];
+} Model;
+
+static Integer32 IndexForValue(Set *set, Value *value, Integer32 offset) {
+    return (ValueHash(value) + offset) % set->length;
 }
 
-static void AddValue(Element *element, Integer32 length, Value *value) {
-    Integer32 index = IndexForValue(length, value, 0);
-    while (element[index].value != NULL) {
-	index = IndexForValue(length, value, index);
+static void AddValue(Set *set, Value *value) {
+    Integer32 index = IndexForValue(set, value, 0);
+    while (set->element[index] != NULL) {
+	index = IndexForValue(set, value, index);
     }
-    element[index].value = value;
+   set->element[index] = value;
 }
 
 static Set *Create(Integer32 length, Error *error) {
-    Set *set = MemoryAlloc(sizeof(Set), error);
+    Set *set = MemoryAlloc(sizeof(Set) + sizeof(Value *) * length, error);
     if (set == NULL) {
         goto returnError;
     }
-    Element *element = MemoryAlloc(sizeof(Element) * length, error);
-    if (element == NULL) {
-	goto deallocSet;
-    }
     set->base = TypeSet;
     set->length = length;
-    set->element = element;
+    for (Integer32 index = 0; index < length; index += 1) {
+	set->element[index] = NULL;
+    }
     return set;
 
-deallocSet:
-    MemoryDealloc(set);
 returnError:
     return NULL;
 }
 
-Value *SetDecode(Byte **bytes, Error *error) {
+void *SetDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32VLE(bytes);
-    Set *set = Create(count, error);
+    Model *model = MemoryAlloc(sizeof(Model) + sizeof(Integer32) * count, error);
+    if (model == NULL) {
+	goto returnError;
+    }
+    model->count = count;
+    for (Integer32 index = 0; index < count; index += 1) {
+	model->index[index] = DecodeInteger32VLE(bytes);
+    }
+    return model;
+
+returnError:
+    return NULL;
+}
+
+Value *SetEval(void *data, Code *code, bool pure, Error *error) {
+    Model *model = data;
+    Set *set = Create(model->count * 2, error);
     if (set == NULL) {
 	goto returnError;
     }
-    for (Integer32 index = 0; index < count; index += 1) {
-	set->element[index].index = DecodeInteger32VLE(bytes);
+    Value *setValue = BridgeFromSet(set);
+    for (Integer32 index = 0; index < model->count; index += 1) {
+	Value *value = CodeEvalInstructionAtIndex(code, model->index[index], true, error);
+	if (value == NULL) {
+	    goto deallocSet;
+	}
+	AddValue(set, value);
     }
-    return BridgeFromSet(set);
+    return setValue;
 
+deallocSet:
+    SetDealloc(setValue);
 returnError:
     return NULL;
 }
 
-void SetFetch(Value *setValue, Byte **values) {
-    Set *set = BridgeToSet(setValue);
-    for (Integer32 index = 0; index < set->length; index += 1) {
-	Integer32 elementIndex = set->element[index].index;
-	set->element[index].value = values[elementIndex];
-    }
-}
-
 void SetDealloc(Value *setValue) {
-    if (setValue != NULL) {
-	Set *set = BridgeToSet(setValue);
-	MemoryDealloc(set->element);
-	MemoryDealloc(set);
-    }
+    MemoryDealloc(setValue);
 }
 
 Integer64 SetHash(Value *setValue) {
@@ -76,41 +88,9 @@ Integer64 SetHash(Value *setValue) {
 void SetEnumerate(Value *setValue, void (*callback)(Value *value)) {
     Set *set = BridgeToSet(setValue);
     for (Integer32 index = 0; index < set->length; index += 1) {
-	Value *value = set->element[index].value;
+	Value *value = set->element[index];
 	if (value != NULL) {
 	    callback(value);
 	}
     }
-}
-
-Value *SetEval(Value *setValue, bool pure, Error *error) {
-    Set *set = BridgeToSet(setValue);
-    Integer32 length = set->length << 1;
-    Element *element = MemoryAlloc(sizeof(Element) * length, error);
-    if (element == NULL) {
-        goto returnError;
-    }
-    for (Integer32 index = 0; index < length; index += 1) {
-	element[index].value = NULL;
-    }
-    for (Integer32 index = 0; index < set->length; index += 1) {
-	Value *before = set->element[index].value;
-	Value *after = ValueEval(before, true, error);
-	if (after == NULL) {
-	    goto deallocElement;
-	}
-	AddValue(element, length, after);
-    }
-    MemoryDealloc(set->element);
-    set->length = length;
-    set->element = element;
-    return setValue;
-
-deallocElement:
-    for (Integer32 index = 0; index < length; index += 1) {
-	ValueDealloc(element[index].value);
-    }
-    MemoryDealloc(element);
-returnError:
-    return NULL;
 }
