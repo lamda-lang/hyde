@@ -57,6 +57,7 @@ WHEN
 
 CASE
   I8FLE:13
+  I32VLE:arg_index
   I8FLE:count
   [I32VLE:match_index I32VLE:guard_index I32VLE:value_index].count
 

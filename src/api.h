@@ -98,6 +98,7 @@ enum {
 #include "arg.h"
 #include "boolean.h"
 #include "bridge.h"
+#include "case.h"
 #include "code.h"
 #include "data.h"
 #include "decode.h"

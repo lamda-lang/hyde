@@ -60,9 +60,13 @@ static Foo foo[] = {
 	.decode = MapDecode,
 	.eval = MapEval
     },
-    [13] = {
+    [12] = {
 	.decode = WhenDecode,
 	.eval = WhenEval
+    },
+    [13] = {
+	.decode = CaseDecode,
+	.eval = CaseEval
     }
 };
 
