@@ -108,6 +108,7 @@ enum {
 #include "float.h"
 #include "global.h"
 #include "identifier.h"
+#include "import.h"
 #include "integer.h"
 #include "kernel.h"
 #include "lamda.h"

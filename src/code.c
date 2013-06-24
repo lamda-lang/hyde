@@ -60,15 +60,23 @@ static Foo foo[] = {
 	.decode = MapDecode,
 	.eval = MapEval
     },
-    [12] = {
+    [11] = {
+	.decode = ModuleDecode,
+	.eval = ModuleEval
+    },
+    [14] = {
+	.decode = ImportDecode,
+	.eval = ImportEval
+    },
+    [15] = {
 	.decode = WhenDecode,
 	.eval = WhenEval
     },
-    [13] = {
+    [16] = {
 	.decode = CaseDecode,
 	.eval = CaseEval
     },
-    [14] = {
+    [17] = {
 	.decode = ResultDecode,
 	.eval = ResultEval
     }

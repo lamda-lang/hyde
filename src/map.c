@@ -12,44 +12,31 @@ typedef struct {
 
 struct Map {
     Value base;
-    Integer32 length;
+    Integer32 count;
     Pair pair[];
 };
 
 typedef struct {
     Integer32 count;
-    Index index[];
+    Index pair[];
 } Model;
 
-
-static Integer32 IndexForKey(Map *map, Value *value, Integer32 offset) {
-    return (ValueHash(value) + offset) % map->length;
-}
-
-static void SetValueForKey(Map *map, Value *value, Value *key) {
-    Integer32 index = IndexForKey(map, key, 0);
-    while (map->pair[index].key != NULL) {
-        index = IndexForKey(map, key, index);
-    }
-    map->pair[index].key = key;
-    map->pair[index].value = value;
-}
-
-static Map *Create(Integer32 length, Error *error) {
-    Map *map = MemoryAlloc(sizeof(Map) + sizeof(Pair) * length, error);
+static Map *Create(Integer32 count, Error *error) {
+    Map *map = MemoryAlloc(sizeof(Map) + sizeof(Pair) * count, error);
     if (map == NULL) {
         goto returnError;
     }
     map->base = TypeMap;
-    map->length = length;
-    for (Integer32 index = 0; index < length; index += 1) {
-	map->pair[index].key = NULL;
-	map->pair[index].value = NULL;
-    }
+    map->count = count;
     return map;
 
 returnError:
     return NULL;
+}
+
+Value *MapCreate(Integer32 count, Error *error) {
+    Map *map = Create(count, error);
+    return BridgeFromMap(map);
 }
 
 void *MapDecode(Byte **bytes, Error *error) {
@@ -60,8 +47,8 @@ void *MapDecode(Byte **bytes, Error *error) {
     }
     model->count = count;
     for (Integer32 index = 0; index < count; index += 1) {
-	model->index[index].key = DecodeInteger32VLE(bytes);
-	model->index[index].value = DecodeInteger32VLE(bytes);
+	model->pair[index].key = DecodeInteger32VLE(bytes);
+	model->pair[index].value = DecodeInteger32VLE(bytes);
     }
     return model;
 
@@ -71,21 +58,22 @@ returnError:
 
 Value *MapEval(void *data, Code *code, bool pure, Error *error) {
     Model *model = data;
-    Map *map = Create(model->count * 2, error);
+    Map *map = Create(model->count, error);
     if (map == NULL) {
 	goto returnError;
     }
     Value *mapValue = BridgeFromMap(map);
     for (Integer32 index = 0; index < model->count; index += 1) {
-	Value *key = CodeEvalInstructionAtIndex(code, model->index[index].key, true, error);
+	Value *key = CodeEvalInstructionAtIndex(code, model->pair[index].key, true, error);
 	if (key == NULL) {
 	    goto deallocMap;
 	}
-	Value *value = CodeEvalInstructionAtIndex(code, model->index[index].value, true, error);
+	Value *value = CodeEvalInstructionAtIndex(code, model->pair[index].value, true, error);
 	if (value == NULL) {
 	    goto deallocMap;
 	}
-	SetValueForKey(map, value, key);
+	map->pair[index].key = key;
+	map->pair[index].value = value;
     }
     return mapValue;
 
@@ -100,12 +88,12 @@ void MapDealloc(Value *mapValue) {
 }
 
 Integer64 MapHash(Value *mapValue) {
-    return BridgeToMap(mapValue)->length;
+    return BridgeToMap(mapValue)->count;
 }
 
 void MapEnumerate(Value *mapValue, void (*callback)(Value *value)) {
     Map *map = BridgeToMap(mapValue);
-    for (Integer32 index = 0; index < map->length; index += 1) {
+    for (Integer32 index = 0; index < map->count; index += 1) {
         callback(map->pair[index].key);
         callback(map->pair[index].value);
     }
@@ -113,9 +101,10 @@ void MapEnumerate(Value *mapValue, void (*callback)(Value *value)) {
 
 Value *MapGetValueForKey(Value *mapValue, Value *key) {
     Map *map = BridgeToMap(mapValue);
-    Integer32 index = IndexForKey(map, key, 0);
-    while (map->pair[index].key != NULL && !ValueEqual(key, map->pair[index].key)) {
-        index = IndexForKey(map, key, index);
+    for (Integer32 index = 0; index < map->count; index += 1) {
+	if (ValueEqual(key, map->pair[index].key)) {
+	    return map->pair[index].value;
+	}
     }
-    return map->pair[index].value;
+    return NULL;
 }

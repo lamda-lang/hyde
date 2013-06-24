@@ -19,8 +19,8 @@ returnError:
     return NULL;
 }
 
-File *FileCreateStandardInput(Error *error) {
-    return Create(STDIN_FILENO, error);
+File *FileCreateStandardOut(Error *error) {
+    return Create(STDOUT_FILENO, error);
 }
 
 void FileDealloc(File *file) {

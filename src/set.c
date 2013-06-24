@@ -2,37 +2,22 @@
 
 struct Set {
     Value base;
-    Integer32 length;
+    Integer32 count;
     Value *element[];
 };
 
 typedef struct {
     Integer32 count;
-    Integer32 index[];
+    Integer32 element[];
 } Model;
 
-static Integer32 IndexForValue(Set *set, Value *value, Integer32 offset) {
-    return (ValueHash(value) + offset) % set->length;
-}
-
-static void AddValue(Set *set, Value *value) {
-    Integer32 index = IndexForValue(set, value, 0);
-    while (set->element[index] != NULL) {
-	index = IndexForValue(set, value, index);
-    }
-   set->element[index] = value;
-}
-
-static Set *Create(Integer32 length, Error *error) {
-    Set *set = MemoryAlloc(sizeof(Set) + sizeof(Value *) * length, error);
+static Set *Create(Integer32 count, Error *error) {
+    Set *set = MemoryAlloc(sizeof(Set) + sizeof(Value *) * count, error);
     if (set == NULL) {
         goto returnError;
     }
     set->base = TypeSet;
-    set->length = length;
-    for (Integer32 index = 0; index < length; index += 1) {
-	set->element[index] = NULL;
-    }
+    set->count = count;
     return set;
 
 returnError:
@@ -47,7 +32,7 @@ void *SetDecode(Byte **bytes, Error *error) {
     }
     model->count = count;
     for (Integer32 index = 0; index < count; index += 1) {
-	model->index[index] = DecodeInteger32VLE(bytes);
+	model->element[index] = DecodeInteger32VLE(bytes);
     }
     return model;
 
@@ -57,17 +42,17 @@ returnError:
 
 Value *SetEval(void *data, Code *code, bool pure, Error *error) {
     Model *model = data;
-    Set *set = Create(model->count * 2, error);
+    Set *set = Create(model->count, error);
     if (set == NULL) {
 	goto returnError;
     }
     Value *setValue = BridgeFromSet(set);
     for (Integer32 index = 0; index < model->count; index += 1) {
-	Value *value = CodeEvalInstructionAtIndex(code, model->index[index], true, error);
+	Value *value = CodeEvalInstructionAtIndex(code, model->element[index], true, error);
 	if (value == NULL) {
 	    goto deallocSet;
 	}
-	AddValue(set, value);
+	set->element[index] = value;
     }
     return setValue;
 
@@ -82,15 +67,12 @@ void SetDealloc(Value *setValue) {
 }
 
 Integer64 SetHash(Value *setValue) {
-    return BridgeToSet(setValue)->length;
+    return BridgeToSet(setValue)->count;
 }
 
 void SetEnumerate(Value *setValue, void (*callback)(Value *value)) {
     Set *set = BridgeToSet(setValue);
-    for (Integer32 index = 0; index < set->length; index += 1) {
-	Value *value = set->element[index];
-	if (value != NULL) {
-	    callback(value);
-	}
+    for (Integer32 index = 0; index < set->count; index += 1) {
+	callback(set->element[index]);
     }
 }

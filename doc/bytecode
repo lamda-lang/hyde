@@ -50,33 +50,37 @@ MODULE
   I32VLE:count
   I32VLE:identifier_index I32VLE:value_index].count
 
-WHEN
-  I8FLE:12
-  I8FLE:count
-  [I32VLE:condition_index I32VLE:value_index].count
-
-CASE
-  I8FLE:13
-  I32VLE:arg_index
-  I8FLE:count
-  [I32VLE:match_index I32VLE:guard_index I32VLE:value_index].count
-
-RESULT
-  I8FLE:14
-  I32VLE:lambda_index
-  I8FLE:arg_count
-  [I32VLE:arg_index].arg_count
-
 DO
-  I8FLE:15
+  I8FLE:12
   I32VLE:count
   [I32VLE:element_index].count
 
 LAMBDA
-  I8FLE:16
+  I8FLE:13
   I8FLE:arity
   I8FLE:context_length
   I32VLE:instruction_count
   I32VLE:code_size
   [I32VLE:context_index].context_length
   [I8FLE:code].code_size
+
+IMPORT
+  I8FLE:14
+  I32VLE:name_index
+
+WHEN
+  I8FLE:15
+  I8FLE:count
+  [I32VLE:condition_index I32VLE:value_index].count
+
+CASE
+  I8FLE:16
+  I32VLE:arg_index
+  I8FLE:count
+  [I32VLE:match_index I32VLE:guard_index I32VLE:value_index].count
+
+RESULT
+  I8FLE:17
+  I32VLE:lambda_index
+  I8FLE:arg_count
+  [I32VLE:arg_index].arg_count

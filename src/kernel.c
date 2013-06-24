@@ -53,7 +53,7 @@ Value *KernelIOPrint(Value **args, Integer8 count, Error *error) {
     if (DataAppendBytes(data, newLine, sizeof(newLine), error) == StatusFailure) {
 	goto deallocData;
     }
-    if (FileWrite(GlobalFileStandardInput, data, error) == StatusFailure) {
+    if (FileWrite(GlobalFileStandardOut, data, error) == StatusFailure) {
 	goto deallocData;
     }
     DataDealloc(data);

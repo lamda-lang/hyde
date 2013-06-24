@@ -3,8 +3,9 @@
 Value *GlobalNil = NULL;
 Value *GlobalBooleanTrue = NULL;
 Value *GlobalBooleanFalse = NULL;
+Value *GlobalModuleSpace = NULL;
 Stack *GlobalStack = NULL;
-File *GlobalFileStandardInput = NULL;
+File *GlobalFileStandardOut = NULL;
 
 Status GlobalInit(Error *error) {
     if ((GlobalNil = NilCreate(error)) == NULL) {
@@ -16,10 +17,13 @@ Status GlobalInit(Error *error) {
     if ((GlobalBooleanFalse = BooleanCreate(false, error)) == NULL) {
 	goto deallocGlobal;
     }
+    if ((GlobalModuleMap = MapCreate(64, error)) == NULL) {
+	goto deallocGlobal;
+    }
     if ((GlobalStack = StackCreate(128, error)) == NULL) {
 	goto deallocGlobal;
     }
-    if ((GlobalFileStandardInput = FileCreateStandardInput(error)) == NULL) {
+    if ((GlobalFileStandardOut = FileCreateStandardOut(error)) == NULL) {
 	goto deallocGlobal;
     }
     return StatusSuccess;
@@ -34,5 +38,5 @@ void GlobalDealloc(void) {
     BooleanDealloc(GlobalBooleanTrue);
     BooleanDealloc(GlobalBooleanFalse);
     StackDealloc(GlobalStack);
-    FileDealloc(GlobalFileStandardInput);
+    FileDealloc(GlobalFileStandardOut);
 }

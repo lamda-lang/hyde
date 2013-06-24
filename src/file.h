@@ -3,7 +3,7 @@
 
 #include "api.h"
 
-File *FileCreateStandardInput(Error *error);
+File *FileCreateStandardOut(Error *error);
 void FileDealloc(File *file);
 File *FileOpen(Char *path, Error *error);
 Status FileClose(File *file, Error *error);
