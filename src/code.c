@@ -64,6 +64,14 @@ static Foo foo[] = {
 	.decode = ModuleDecode,
 	.eval = ModuleEval
     },
+    [12] = {
+	.decode = DoDecode,
+	.eval = DoEval
+    },
+    [13] = {
+	.decode = LamdaDecode,
+	.eval = LamdaEval
+    },
     [14] = {
 	.decode = ImportDecode,
 	.eval = ImportEval
@@ -94,15 +102,15 @@ returnError:
     return NULL;
 }
 
-Code *CodeDecode(Byte *byte, Error *error) {
-    Integer32 instructionCount = DecodeInteger32VLE(&byte);
+Code *CodeDecode(Byte **byte, Error *error) {
+    Integer32 instructionCount = DecodeInteger32VLE(byte);
     Code *code = Create(instructionCount, error);
     if (code == NULL) {
 	goto returnError;
     }
     for (Integer32 index = 0; index < instructionCount; index += 1) {
-	Integer8 opcode = DecodeInteger8FLE(&byte);
-	void *data = foo[opcode].decode(&byte, error);
+	Integer8 opcode = DecodeInteger8FLE(byte);
+	void *data = foo[opcode].decode(byte, error);
 	if (data == NULL) {
 	    goto returnError;
 	}

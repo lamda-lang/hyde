@@ -58,11 +58,9 @@ DO
 LAMBDA
   I8FLE:13
   I8FLE:arity
-  I8FLE:context_length
-  I32VLE:instruction_count
-  I32VLE:code_size
-  [I32VLE:context_index].context_length
-  [I8FLE:code].code_size
+  I8FLE:count
+  [I32VLE:context_index].count
+  CODE
 
 IMPORT
   I8FLE:14

@@ -3,7 +3,7 @@
 
 #include "api.h"
 
-Code *CodeDecode(Byte *byte, Error *error);
+Code *CodeDecode(Byte **byte, Error *error);
 Value *CodeEvalInstructionAtIndex(Code *code, Integer32 index, bool pure, Error *error);
 
 #endif

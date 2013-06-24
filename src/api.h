@@ -49,11 +49,6 @@ typedef bool Equal(Value *value, Value *other);
 typedef void Enumerate(Value *value, void (*callback)(Value *value));
 typedef void Fetch(Value *value, Value **values);
 
-typedef union {
-    Value *value;
-    Integer32 index;
-} Element;
-
 /* enumerations */
 enum {
     ErrorOutOfMemory,
