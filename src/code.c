@@ -67,6 +67,10 @@ static Foo foo[] = {
     [13] = {
 	.decode = CaseDecode,
 	.eval = CaseEval
+    },
+    [14] = {
+	.decode = ResultDecode,
+	.eval = ResultEval
     }
 };
 

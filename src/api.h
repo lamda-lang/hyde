@@ -118,6 +118,7 @@ enum {
 #include "nil.h"
 #include "process.h"
 #include "range.h"
+#include "result.h"
 #include "runtime.h"
 #include "set.h"
 #include "stack.h"
