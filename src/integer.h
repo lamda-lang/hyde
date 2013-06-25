@@ -8,6 +8,8 @@ Value *IntegerEval(void *data, Code *code, bool pure, Error *error);
 void IntegerDealloc(Value *integerValue);
 Integer64 IntegerHash(Value *integerValue);
 bool IntegerEqual(Value *integerValue, Value *otherValue);
-Value *IntegerSum(Value *integerValue, Value *otherValue, Error *error);
+
+/* kernels */
+Value *IntegerSum(Value **args, Integer8 count, Error *error);
 
 #endif

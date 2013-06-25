@@ -19,14 +19,6 @@ returnError:
     return NULL;
 }
 
-File *FileCreateStandardOut(Error *error) {
-    return Create(STDOUT_FILENO, error);
-}
-
-void FileDealloc(File *file) {
-    MemoryDealloc(file);
-}
-
 File *FileOpen(Char *path, Error *error) {
     int handle = open(path, O_RDWR);
     if (handle == -1) {
@@ -50,7 +42,7 @@ Status FileClose(File *file, Error *error) {
 	*error = ErrorFileClose;
         goto returnError;
     }
-    FileDealloc(file);
+    MemoryDealloc(file);
     return StatusSuccess;
 
 returnError:

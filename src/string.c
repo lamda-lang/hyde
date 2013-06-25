@@ -80,9 +80,9 @@ bool StringEqual(Value *stringValue, Value *otherValue) {
            MemoryEqual(string->codepoint, other->codepoint, sizeof(Integer32) * string->length);
 }
 
-Value *StringConcatenate(Value *stringValue, Value *otherValue, Error *error) {
-    String *string = BridgeToString(stringValue);
-    String *other = BridgeToString(otherValue);
+Value *StringConcatenate(Value **args, Integer8 count, Error *error) {
+    String *string = BridgeToString(args[0]);
+    String *other = BridgeToString(args[1]);
     String *result = Create(string->length + other->length, error);
     if (result == NULL) {
         goto returnError;
@@ -95,22 +95,6 @@ returnError:
     return NULL;
 }
 
-Data *StringCreateDataWithASCIIEncoding(Value *stringValue, Error *error) {
-    String *string = BridgeToString(stringValue);
-    Data *data = DataCreate(error);
-    if (data == NULL) {
-	goto returnError;
-    }
-    for (Integer32 index = 0; index < string->length; index += 1) {
-	Byte character[] = {string->codepoint[index] & 0XF};
-	if (DataAppendBytes(data, character, sizeof(character), error) == StatusFailure) {
-	    goto deallocData;
-	}
-    }
-    return data;
-
-deallocData:
-    DataDealloc(data);
-returnError:
+Value *StringPrint(Value **args, Integer8 count, Error *error) {
     return NULL;
 }

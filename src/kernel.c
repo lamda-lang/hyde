@@ -1,66 +1,33 @@
 #include "kernel.h"
 
+struct Kernel {
+    Value base;
+    Integer8 arity;
+    Type type[8];
+    KernelFunction *function;
+};
 
-static bool Valid(Value **args, Type *types, Integer8 count, Integer8 arity, Error *error) {
-    if (count != arity) {
-	*error = ErrorArityMismatch;
-	goto returnError;
+static Kernel kernel[] = {
+    [KernelIdentifierIntegerSum] = {
+	.base = TypeLamda | FlagKernel,
+	.arity = 2,
+	.type = {TypeInteger, TypeInteger},
+	.function = IntegerSum
+    },
+    [KernelIdentifierStringConcatenate] = {
+	.base = TypeLamda | FlagKernel,
+	.arity = 2,
+	.type = {TypeString, TypeString},
+	.function = StringConcatenate
+    },
+    [KernelIdentifierDoPrint] = {
+	.base = TypeDo | FlagKernel,
+	.arity = 1,
+	.type = {TypeString},
+	.function = StringPrint
     }
-    for (Integer8 index = 0; index < count; index += 1) {
-	if (ValueType(args[index]) != types[index]) {
-	    *error = ErrorInvalidType;
-	    goto returnError;
-	}
-    }
-    return true;
+};
 
-returnError:
-    return false;
-}
-
-Value *KernelIntegerSum(Value **args, Integer8 count, Error *error) {
-    Type types[] = {TypeInteger, TypeInteger};
-    if (!Valid(args, types, count, 2, error)) {
-	goto returnError;
-    }
-    return IntegerSum(args[0], args[1], error);
-
-returnError:
-    return NULL;
-}
-
-Value *KernelStringConcatenate(Value **args, Integer8 count, Error *error) {
-    Type types[] = {TypeString, TypeString};
-    if (!Valid(args, types, count, 2, error)) {
-	goto returnError;
-    }
-    return StringConcatenate(args[0], args[1], error);
-
-returnError:
-    return NULL;
-}
-
-Value *KernelIOPrint(Value **args, Integer8 count, Error *error) {
-    Type types[] = {TypeString};
-    if (!Valid(args, types, count, 1, error)) {
-	goto returnError;
-    }
-    Data *data = StringCreateDataWithASCIIEncoding(args[0], error);
-    if (data == NULL) {
-	goto returnError;
-    }
-    Byte newLine[] = {'\n'};
-    if (DataAppendBytes(data, newLine, sizeof(newLine), error) == StatusFailure) {
-	goto deallocData;
-    }
-    if (FileWrite(GlobalFileStandardOut, data, error) == StatusFailure) {
-	goto deallocData;
-    }
-    DataDealloc(data);
-    return GlobalNil;
-
-deallocData:
-    DataDealloc(data);
-returnError:
-    return NULL;
+Kernel *KernelWithIdentifier(KernelIdentifier id) {
+    return &kernel[id];
 }

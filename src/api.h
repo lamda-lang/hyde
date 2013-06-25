@@ -14,17 +14,14 @@ typedef uint32_t Integer32;
 typedef uint64_t Integer64;
 typedef size_t Size;
 typedef uint8_t Value;
-typedef uint8_t Error;
 typedef double Float64;
-typedef bool Status;
-typedef uint8_t Type;
-typedef uint8_t Flag;
 
 /* opaque types */
 typedef struct Code Code;
 typedef struct File File;
 typedef struct Stack Stack;
 typedef struct Data Data;
+typedef struct Kernel Kernel;
 typedef struct Boolean Boolean;
 typedef struct Do Do;
 typedef struct Float Float;
@@ -39,18 +36,8 @@ typedef struct Range Range;
 typedef struct Set Set;
 typedef struct String String;
 
-/* function types */
-typedef void *Decode(Byte **code, Error *error);
-typedef Value *Eval(void *data, Code *code, bool pure, Error *error);
-typedef Value *Kernel(Value **values, Integer8 count, Error *error);
-typedef void Dealloc(Value *value);
-typedef Integer64 Hash(Value *value);
-typedef bool Equal(Value *value, Value *other);
-typedef void Enumerate(Value *value, void (*callback)(Value *value));
-typedef void Fetch(Value *value, Value **values);
-
-/* enumerations */
-enum {
+/* enum types */
+typedef enum {
     ErrorOutOfMemory,
     ErrorInvalidType,
     ErrorArityMismatch,
@@ -59,13 +46,20 @@ enum {
     ErrorFileWrite,
     ErrorFileClose,
     ErrorMainNotFound
-};
+} Error;
 
-enum {
+typedef enum {
     StatusSuccess = true,
     StatusFailure = false
-};
+} Status;
 
+typedef enum {
+    KernelIdentifierIntegerSum,
+    KernelIdentifierStringConcatenate,
+    KernelIdentifierDoPrint
+} KernelIdentifier;
+
+typedef uint8_t Type;
 enum {
     TypeNil = 0,
     TypeBoolean = 1,
@@ -82,13 +76,22 @@ enum {
     TypeLamda = 12,
 };
 
+typedef uint8_t Flag;
 enum {
-    FlagNone = 0,
     FlagGarbage = 1 << 4,
     FlagMark = 1 << 5,
-    FlagAlpha = 1 << 6,
-    FlagBeta = 1 << 7
+    FlagKernel = 1 << 6
 };
+
+/* function types */
+typedef void *Decode(Byte **code, Error *error);
+typedef Value *Eval(void *data, Code *code, bool pure, Error *error);
+typedef void Dealloc(Value *value);
+typedef Integer64 Hash(Value *value);
+typedef bool Equal(Value *value, Value *other);
+typedef void Enumerate(Value *value, void (*callback)(Value *value));
+typedef void Fetch(Value *value, Value **values);
+typedef Value *KernelFunction(Value **args, Integer8 count, Error *error);
 
 #include "arg.h"
 #include "boolean.h"

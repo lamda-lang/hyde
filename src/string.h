@@ -9,7 +9,9 @@ Value *StringCreateWithCharacters(Char *chars, Error *error);
 void StringDealloc(Value *stringValue);
 Integer64 StringHash(Value *stringValue);
 bool StringEqual(Value *stringValue, Value *otherValue);
-Value *StringConcatenate(Value *stringValue, Value *otherValue, Error *error);
-Data *StringCreateDataWithASCIIEncoding(Value *stringValue, Error *error);
+
+/* kernels */
+Value *StringConcatenate(Value **args, Integer8 count, Error *error);
+Value *StringPrint(Value **args, Integer8 count, Error *error);
 
 #endif

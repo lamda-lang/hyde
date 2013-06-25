@@ -52,8 +52,9 @@ bool IntegerEqual(Value *integerValue, Value *otherValue) {
     return BridgeToInteger(integerValue)->value == BridgeToInteger(otherValue)->value;
 }
 
-Value *IntegerSum(Value *integerValue, Value *otherValue, Error *error) {
-  Integer64 sum = BridgeToInteger(integerValue)->value + BridgeToInteger(otherValue)->value;
-  Integer *integer = Create(sum, error);
-  return BridgeFromInteger(integer);
+Value *IntegerSum(Value **args, Integer8 count, Error *error) {
+    Integer *integer = BridgeToInteger(args[0]);
+    Integer *other = BridgeToInteger(args[1]);
+    Integer *result = Create(integer->value + other->value, error);
+    return BridgeFromInteger(result);
 }
