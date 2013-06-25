@@ -1,3 +1,5 @@
+#include <limits.h>
+#include <stdio.h>
 #include <string.h>
 #include "string.h"
 
@@ -96,5 +98,11 @@ returnError:
 }
 
 Value *StringPrint(Value **args, Integer8 count, Error *error) {
-    return NULL;
+    String *string = BridgeToString(args[0]);
+    for (Integer32 index = 0; index < string->length; index += 1) {
+	int character = string->codepoint[index] & INT_MAX;
+	putchar(character);
+    }
+    putchar('\n');
+    return GlobalNil;
 }

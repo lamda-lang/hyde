@@ -106,6 +106,5 @@ Integer64 ValueHash(Value *value) {
 
 bool ValueEqual(Value *value, Value *other) {
     Type type = ValueType(value);
-    if (type != ValueType(other)) return false;
-    return class[type].equal(value, other);
+    return type == ValueType(other) ? class[type].equal(value, other) : false;
 }

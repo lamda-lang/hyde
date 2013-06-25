@@ -82,3 +82,7 @@ RESULT
   I32VLE:lambda_index
   I8FLE:arg_count
   [I32VLE:arg_index].arg_count
+
+INPUT
+  I8FLE:18
+  I8FLE:input_index

@@ -21,7 +21,6 @@ typedef struct Code Code;
 typedef struct File File;
 typedef struct Stack Stack;
 typedef struct Data Data;
-typedef struct Kernel Kernel;
 typedef struct Boolean Boolean;
 typedef struct Do Do;
 typedef struct Float Float;
@@ -53,12 +52,6 @@ typedef enum {
     StatusFailure = false
 } Status;
 
-typedef enum {
-    KernelIdentifierIntegerSum,
-    KernelIdentifierStringConcatenate,
-    KernelIdentifierDoPrint
-} KernelIdentifier;
-
 typedef uint8_t Type;
 enum {
     TypeNil = 0,
@@ -73,7 +66,7 @@ enum {
     TypeRange = 9,
     TypeModule = 10,
     TypeDo = 11,
-    TypeLamda = 12,
+    TypeLamda = 12
 };
 
 typedef uint8_t Flag;
@@ -91,7 +84,7 @@ typedef Integer64 Hash(Value *value);
 typedef bool Equal(Value *value, Value *other);
 typedef void Enumerate(Value *value, void (*callback)(Value *value));
 typedef void Fetch(Value *value, Value **values);
-typedef Value *KernelFunction(Value **args, Integer8 count, Error *error);
+typedef Value *Kernel(Value **args, Integer8 count, Error *error);
 
 #include "arg.h"
 #include "boolean.h"
@@ -107,8 +100,8 @@ typedef Value *KernelFunction(Value **args, Integer8 count, Error *error);
 #include "global.h"
 #include "identifier.h"
 #include "import.h"
+#include "input.h"
 #include "integer.h"
-#include "kernel.h"
 #include "lamda.h"
 #include "list.h"
 #include "map.h"
