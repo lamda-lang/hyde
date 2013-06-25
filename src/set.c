@@ -40,7 +40,7 @@ returnError:
     return NULL;
 }
 
-Value *SetEval(void *data, Code *code, bool pure, Error *error) {
+Value *SetEval(void *data, Code *code, Value **context, bool pure, Error *error) {
     Model *model = data;
     Set *set = Create(model->count, error);
     if (set == NULL) {
@@ -48,7 +48,7 @@ Value *SetEval(void *data, Code *code, bool pure, Error *error) {
     }
     Value *setValue = BridgeFromSet(set);
     for (Integer32 index = 0; index < model->count; index += 1) {
-	Value *value = CodeEvalInstructionAtIndex(code, model->element[index], true, error);
+	Value *value = CodeEvalInstructionAtIndex(code, context, model->element[index], true, error);
 	if (value == NULL) {
 	    goto deallocSet;
 	}

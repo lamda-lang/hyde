@@ -56,7 +56,7 @@ returnError:
     return NULL;
 }
 
-Value *ModuleEval(void *data, Code *code, bool pure, Error *error) {
+Value *ModuleEval(void *data, Code *code, Value **context, bool pure, Error *error) {
     Model *model = data;
     Module *module = Create(model->count, error);
     if (module == NULL) {
@@ -64,11 +64,11 @@ Value *ModuleEval(void *data, Code *code, bool pure, Error *error) {
     }
     Value *moduleValue = BridgeFromModule(module);
     for (Integer32 index = 0; index < model->count; index += 1) {
-	Value *key = CodeEvalInstructionAtIndex(code, model->pair[index].id, true, error);
+	Value *key = CodeEvalInstructionAtIndex(code, context, model->pair[index].id, true, error);
 	if (key == NULL) {
 	    goto deallocModule;
 	}
-	Value *value = CodeEvalInstructionAtIndex(code, model->pair[index].value, true, error);
+	Value *value = CodeEvalInstructionAtIndex(code, context, model->pair[index].value, true, error);
 	if (value == NULL) {
 	    goto deallocModule;
 	}

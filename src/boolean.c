@@ -5,28 +5,33 @@ struct Boolean {
     bool truth;
 }; 
 
-Value *BooleanCreate(bool truth, Error *error) {
-    Boolean *boolean = MemoryAlloc(sizeof(Boolean), error);
-    if (boolean == NULL) {
-	goto returnError;
-    }
-    boolean->base = TypeBoolean;
-    boolean->truth = truth;
-    return BridgeFromBoolean(boolean);
+static Boolean trueSingleton = {
+    .base = TypeBoolean,
+    .truth = true
+};
 
-returnError:
-    return NULL;
+static Boolean falseSingleton = {
+    .base = TypeBoolean,
+    .truth = false
+};
+
+Value *BooleanTrueSingleton(void) {
+    return BridgeFromBoolean(&trueSingleton);
+}
+
+Value *BooleanFalseSingleton(void) {
+    return BridgeFromBoolean(&falseSingleton);
 }
 
 void *BooleanDecodeTrue(Byte **bytes, Error *error) {
-    return GlobalBooleanTrue;
+    return &trueSingleton;
 }
 
 void *BooleanDecodeFalse(Byte **bytes, Error *error) {
-    return GlobalBooleanFalse;
+    return &falseSingleton;
 }
 
-Value *BooleanEval(void *data, Code *code, bool pure, Error *error) {
+Value *BooleanEval(void *data, Code *code, Value **context, bool pure, Error *error) {
     return data;
 }
 

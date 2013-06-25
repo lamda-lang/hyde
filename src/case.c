@@ -31,29 +31,29 @@ returnError:
     return NULL;
 }
 
-Value *CaseEval(void *data, Code *code, bool pure, Error *error) {
+Value *CaseEval(void *data, Code *code, Value **context, bool pure, Error *error) {
     Model *model = data;
-    Value *arg = CodeEvalInstructionAtIndex(code, model->arg, true, error);
+    Value *arg = CodeEvalInstructionAtIndex(code, context, model->arg, true, error);
     if (arg == NULL) {
 	goto returnError;
     }
     for (Integer8 index = 0; index < model->length; index += 1) {
 	Clause clause = model->clause[index];
-	Value *match = CodeEvalInstructionAtIndex(code, clause.match, true, error);
+	Value *match = CodeEvalInstructionAtIndex(code, context, clause.match, true, error);
 	if (match == NULL) {
 	    goto returnError;
 	}
 	if (ValueEqual(arg, match)) {
-	    Value *guard = CodeEvalInstructionAtIndex(code, clause.guard, true, error);
+	    Value *guard = CodeEvalInstructionAtIndex(code, context, clause.guard, true, error);
 	    if (guard == NULL) {
 		goto returnError;
 	    }
-	    if (guard == GlobalBooleanTrue) {
-		return CodeEvalInstructionAtIndex(code, clause.value, pure, error);
+	    if (guard == BooleanTrueSingleton()) {
+		return CodeEvalInstructionAtIndex(code, context, clause.value, pure, error);
 	    }
 	}
     }
-    return GlobalNil;
+    return NilSingleton();
 
 returnError:
     return NULL;

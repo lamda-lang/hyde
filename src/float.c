@@ -34,7 +34,7 @@ returnError:
     return NULL;
 }
 
-Value *FloatEval(void *data, Code *code, bool pure, Error *error) {
+Value *FloatEval(void *data, Code *code, Value **context, bool pure, Error *error) {
     Model *model = data;
     Float *fpv = Create(model->value, error);
     return BridgeFromFloat(fpv);

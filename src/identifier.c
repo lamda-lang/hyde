@@ -40,7 +40,7 @@ returnError:
     return NULL;
 }
 
-Value *IdentifierEval(void *data, Code *code, bool pure, Error *error) {
+Value *IdentifierEval(void *data, Code *code, Value **context, bool pure, Error *error) {
     Model *model = data;
     Identifier *id = Create(model->length, error);
     if (id == NULL) {

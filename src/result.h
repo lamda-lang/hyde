@@ -4,6 +4,6 @@
 #include "api.h"
 
 void *ResultDecode(Byte **bytes, Error *error);
-Value *ResultEval(void *data, Code *code, bool pure, Error *error);
+Value *ResultEval(void *data, Code *code, Value **context, bool pure, Error *error);
 
 #endif

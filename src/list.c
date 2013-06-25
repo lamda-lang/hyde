@@ -45,7 +45,7 @@ returnError:
     return NULL;
 }
 
-Value *ListEval(void *data, Code *code, bool pure, Error *error) {
+Value *ListEval(void *data, Code *code, Value **context, bool pure, Error *error) {
     Model *model = data;
     List *list = Create(model->count, error);
     if (list == NULL) {
@@ -53,7 +53,7 @@ Value *ListEval(void *data, Code *code, bool pure, Error *error) {
     }
     Value *listValue = BridgeFromList(list);
     for (Integer32 index = 0; index < model->count; index += 1) {
-	Value *value = CodeEvalInstructionAtIndex(code, model->index[index], true, error);
+	Value *value = CodeEvalInstructionAtIndex(code, context, model->index[index], true, error);
 	if (value == NULL) {
 	    goto deallocList;
 	}

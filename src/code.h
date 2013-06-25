@@ -4,6 +4,6 @@
 #include "api.h"
 
 Code *CodeDecode(Byte **byte, Error *error);
-Value *CodeEvalInstructionAtIndex(Code *code, Integer32 index, bool pure, Error *error);
+Value *CodeEvalInstructionAtIndex(Code *code, Value **context, Integer32 index, bool pure, Error *error);
 
 #endif

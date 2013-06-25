@@ -19,7 +19,6 @@ typedef double Float64;
 /* opaque types */
 typedef struct Code Code;
 typedef struct File File;
-typedef struct Stack Stack;
 typedef struct Data Data;
 typedef struct Boolean Boolean;
 typedef struct Do Do;
@@ -78,7 +77,7 @@ enum {
 
 /* function types */
 typedef void *Decode(Byte **code, Error *error);
-typedef Value *Eval(void *data, Code *code, bool pure, Error *error);
+typedef Value *Eval(void *data, Code *code, Value **context, bool pure, Error *error);
 typedef void Dealloc(Value *value);
 typedef Integer64 Hash(Value *value);
 typedef bool Equal(Value *value, Value *other);
@@ -97,7 +96,6 @@ typedef Value *Kernel(Value **args, Integer8 count, Error *error);
 #include "error.h"
 #include "file.h"
 #include "float.h"
-#include "global.h"
 #include "identifier.h"
 #include "import.h"
 #include "input.h"
@@ -113,7 +111,6 @@ typedef Value *Kernel(Value **args, Integer8 count, Error *error);
 #include "result.h"
 #include "runtime.h"
 #include "set.h"
-#include "stack.h"
 #include "string.h"
 #include "value.h"
 #include "when.h"

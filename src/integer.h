@@ -4,7 +4,7 @@
 #include "api.h"
 
 void *IntegerDecode(Byte **bytes, Error *error);
-Value *IntegerEval(void *data, Code *code, bool pure, Error *error);
+Value *IntegerEval(void *data, Code *code, Value **context, bool pure, Error *error);
 void IntegerDealloc(Value *integerValue);
 Integer64 IntegerHash(Value *integerValue);
 bool IntegerEqual(Value *integerValue, Value *otherValue);

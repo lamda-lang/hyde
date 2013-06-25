@@ -4,7 +4,7 @@
 #include "api.h"
 
 void *StringDecode(Byte **bytes, Error *error);
-Value *StringEval(void *data, Code *code, bool pure, Error *error);
+Value *StringEval(void *data, Code *code, Value **context, bool pure, Error *error);
 Value *StringCreateWithCharacters(Char *chars, Error *error);
 void StringDealloc(Value *stringValue);
 Integer64 StringHash(Value *stringValue);

@@ -127,7 +127,7 @@ returnError:
     return NULL;
 }
 
-Value *CodeEvalInstructionAtIndex(Code *code, Integer32 index, bool pure, Error *error) {
+Value *CodeEvalInstructionAtIndex(Code *code, Value **context, Integer32 index, bool pure, Error *error) {
     Instruction instruction = code->instruction[index];
-    return instruction.eval(instruction.data, code, pure, error);
+    return instruction.eval(instruction.data, code, context, pure, error);
 }

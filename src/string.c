@@ -39,7 +39,7 @@ returnError:
     return NULL;
 }
 
-Value *StringEval(void *data, Code *code, bool pure, Error *error) {
+Value *StringEval(void *data, Code *code, Value **context, bool pure, Error *error) {
     Model *model = data;
     String *string = Create(model->length, error);
     if (string == NULL) {
@@ -104,5 +104,5 @@ Value *StringPrint(Value **args, Integer8 count, Error *error) {
 	putchar(character);
     }
     putchar('\n');
-    return GlobalNil;
+    return NilSingleton();
 }

@@ -4,22 +4,19 @@ struct Nil {
     Value base;
 };
 
-Value *NilCreate(Error *error) {
-    Nil *nil = MemoryAlloc(sizeof(Nil), error);
-    if (nil == NULL) {
-	goto returnError;
-    }
-    return BridgeFromNil(nil);
+static Nil nilSingleton = {
+    .base = TypeNil
+};
 
-returnError:
-    return NULL;
+Value *NilSingleton(void) {
+    return BridgeFromNil(&nilSingleton);
 }
 
 void *NilDecode(Byte **bytes, Error *error) {
-    return GlobalNil;
+    return &nilSingleton;
 }
 
-Value *NilEval(void *data, Code *code, bool pure, Error *error) {
+Value *NilEval(void *data, Code *code, Value **context, bool pure, Error *error) {
     return data;
 }
 

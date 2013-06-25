@@ -3,6 +3,7 @@
 
 #include "api.h"
 
+void ErrorSet(Error *error, Error errno);
 void ErrorPrint(Error error);
 
 #endif

@@ -40,7 +40,7 @@ returnError:
     return NULL;
 }
 
-Value *DoEval(void *data, Code *code, bool pure, Error *error) {
+Value *DoEval(void *data, Code *code, Value **context, bool pure, Error *error) {
     Model *model = data;
     Do *block = Create(model->count, error);
     if (block == NULL) {
@@ -48,7 +48,7 @@ Value *DoEval(void *data, Code *code, bool pure, Error *error) {
     }
     Value *doValue = BridgeFromDo(block);
     for (Integer32 index = 0; index < model->count; index += 1) {
-	Value *value = CodeEvalInstructionAtIndex(code, model->element[index], pure, error);
+	Value *value = CodeEvalInstructionAtIndex(code, context, model->element[index], pure, error);
 	if (value == NULL) {
 	    goto deallocBlock;
 	}

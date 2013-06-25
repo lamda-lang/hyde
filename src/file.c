@@ -22,7 +22,7 @@ returnError:
 File *FileOpen(Char *path, Error *error) {
     int handle = open(path, O_RDWR);
     if (handle == -1) {
-	*error = ErrorFileOpen;
+	ErrorSet(error, ErrorFileOpen);
         goto returnError;
     }
     File *file = Create(handle, error);
@@ -39,7 +39,7 @@ returnError:
 
 Status FileClose(File *file, Error *error) {
     if (close(file->handle) == -1) {
-	*error = ErrorFileClose;
+	ErrorSet(error, ErrorFileClose);
         goto returnError;
     }
     MemoryDealloc(file);
@@ -54,7 +54,7 @@ Status FileRead(File *file, Data *data, Error *error) {
     do {
         consumed = read(file->handle, file->buffer, sizeof(file->buffer));
         if (consumed == -1) {
-	    *error = ErrorFileRead;
+	    ErrorSet(error, ErrorFileRead);
             goto returnError;
         }
         if (DataAppendBytes(data, file->buffer, (Size)consumed, error) == StatusFailure) {
@@ -72,7 +72,7 @@ Status FileWrite(File *file, Data *data, Error *error) {
     Size size = DataSize(data);
     ssize_t written = write(file->handle, bytes, size);
     if (written == -1 || (Size)written != size) {
-	*error = ErrorFileWrite;
+	ErrorSet(error, ErrorFileWrite);
         goto returnError;
     }
     return StatusSuccess;

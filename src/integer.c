@@ -34,7 +34,7 @@ returnError:
     return NULL;
 }
 
-Value *IntegerEval(void *data, Code *code, bool pure, Error *error) {
+Value *IntegerEval(void *data, Code *code, Value **context, bool pure, Error *error) {
     Model *model = data;
     Integer *integer = Create(model->value, error);
     return BridgeFromInteger(integer);

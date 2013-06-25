@@ -4,7 +4,7 @@
 #include "api.h"
 
 void *FloatDecode(Byte **bytes, Error *error);
-Value *FloatEval(void *data, Code *code, bool pure, Error *error);
+Value *FloatEval(void *data, Code *code, Value **context, bool pure, Error *error);
 void FloatDealloc(Value *floatValue);
 Integer64 FloatHash(Value *floatValue);
 bool FloatEqual(Value *floatValue, Value *otherValue);

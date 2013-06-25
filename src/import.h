@@ -4,6 +4,6 @@
 #include "api.h"
 
 void *ImportDecode(Byte **bytes, Error *error);
-Value *ImportEval(void *data, Code *code, bool pure, Error *error);
+Value *ImportEval(void *data, Code *code, Value **context, bool pure, Error *error);
 
 #endif
