@@ -17,87 +17,87 @@ struct Code {
 
 static Foo foo[] = {
     [0] = {
-	.decode = NilDecode,
-	.eval = NilEval
+        .decode = NilDecode,
+        .eval = NilEval
     },
     [1] = {
-	.decode = BooleanDecodeTrue,
-	.eval = BooleanEval
+        .decode = BooleanDecodeTrue,
+        .eval = BooleanEval
     },
     [2] = {
-	.decode = BooleanDecodeFalse,
-	.eval = BooleanEval
+        .decode = BooleanDecodeFalse,
+        .eval = BooleanEval
     },
     [3] = {
-	.decode = IntegerDecode,
-	.eval = IntegerEval
+        .decode = IntegerDecode,
+        .eval = IntegerEval
     },
     [4] = {
-	.decode = FloatDecode,
-	.eval = FloatEval
+        .decode = FloatDecode,
+        .eval = FloatEval
     },
     [5] = {
-	.decode = IdentifierDecode,
-	.eval = IdentifierEval
+        .decode = IdentifierDecode,
+        .eval = IdentifierEval
     },
     [6] = {
-	.decode = StringDecode,
-	.eval = StringEval
+        .decode = StringDecode,
+        .eval = StringEval
     },
     [7] = {
-	.decode = RangeDecode,
-	.eval = RangeEval
+        .decode = RangeDecode,
+        .eval = RangeEval
     },
     [8] = {
-	.decode = SetDecode,
-	.eval = SetEval
+        .decode = SetDecode,
+        .eval = SetEval
     },
     [9] = {
-	.decode = ListDecode,
-	.eval = ListEval
+        .decode = ListDecode,
+        .eval = ListEval
     },
     [10] = {
-	.decode = MapDecode,
-	.eval = MapEval
+        .decode = MapDecode,
+        .eval = MapEval
     },
     [11] = {
-	.decode = ModuleDecode,
-	.eval = ModuleEval
+        .decode = ModuleDecode,
+        .eval = ModuleEval
     },
     [12] = {
-	.decode = DoDecode,
-	.eval = DoEval
+        .decode = DoDecode,
+        .eval = DoEval
     },
     [13] = {
-	.decode = LamdaDecode,
-	.eval = LamdaEval
+        .decode = LamdaDecode,
+        .eval = LamdaEval
     },
     [14] = {
-	.decode = ImportDecode,
-	.eval = ImportEval
+        .decode = ImportDecode,
+        .eval = ImportEval
     },
     [15] = {
-	.decode = WhenDecode,
-	.eval = WhenEval
+        .decode = WhenDecode,
+        .eval = WhenEval
     },
     [16] = {
-	.decode = CaseDecode,
-	.eval = CaseEval
+        .decode = CaseDecode,
+        .eval = CaseEval
     },
     [17] = {
-	.decode = ResultDecode,
-	.eval = ResultEval
+        .decode = ResultDecode,
+        .eval = ResultEval
     },
     [18] = {
-	.decode = InputDecode,
-	.eval = InputEval
+        .decode = InputDecode,
+        .eval = InputEval
     }
 };
 
 static Code *Create(Integer32 count, Error *error) {
     Code *code = MemoryAlloc(sizeof(Code) + sizeof(Instruction) * count, error);
     if (code == NULL) {
-	goto returnError;
+        goto returnError;
     }
     code->count = count;
     return code;
@@ -110,16 +110,16 @@ Code *CodeDecode(Byte **byte, Error *error) {
     Integer32 instructionCount = DecodeInteger32VLE(byte);
     Code *code = Create(instructionCount, error);
     if (code == NULL) {
-	goto returnError;
+        goto returnError;
     }
     for (Integer32 index = 0; index < instructionCount; index += 1) {
-	Integer8 opcode = DecodeInteger8FLE(byte);
-	void *data = foo[opcode].decode(byte, error);
-	if (data == NULL) {
-	    goto returnError;
-	}
-	code->instruction[index].data = data;
-	code->instruction[index].eval = foo[opcode].eval;
+        Integer8 opcode = DecodeInteger8FLE(byte);
+        void *data = foo[opcode].decode(byte, error);
+        if (data == NULL) {
+            goto returnError;
+        }
+        code->instruction[index].data = data;
+        code->instruction[index].eval = foo[opcode].eval;
     }
     return code;
 

@@ -24,7 +24,7 @@ struct Module {
 static Module *Create(Integer32 count, Error *error) {
     Module *module = MemoryAlloc(sizeof(Module) + sizeof(Pair) * count, error);
     if (module == NULL) {
-	goto returnError;
+        goto returnError;
     }
     module->base = TypeModule;
     module->count = count;
@@ -43,12 +43,12 @@ void *ModuleDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32VLE(bytes);
     Model *model = MemoryAlloc(sizeof(Model) + sizeof(Index) * count, error);
     if (model == NULL) {
-	goto returnError;
+        goto returnError;
     }
     model->count = count;
     for (Integer32 index = 0; index < count; index += 1) {
-	model->pair[index].id = DecodeInteger32VLE(bytes);
-	model->pair[index].value = DecodeInteger32VLE(bytes);
+        model->pair[index].id = DecodeInteger32VLE(bytes);
+        model->pair[index].value = DecodeInteger32VLE(bytes);
     }
     return model;
 
@@ -60,20 +60,20 @@ Value *ModuleEval(void *data, Code *code, Value **context, bool pure, Error *err
     Model *model = data;
     Module *module = Create(model->count, error);
     if (module == NULL) {
-	goto returnError;
+        goto returnError;
     }
     Value *moduleValue = BridgeFromModule(module);
     for (Integer32 index = 0; index < model->count; index += 1) {
-	Value *key = CodeEvalInstructionAtIndex(code, context, model->pair[index].id, true, error);
-	if (key == NULL) {
-	    goto deallocModule;
-	}
-	Value *value = CodeEvalInstructionAtIndex(code, context, model->pair[index].value, true, error);
-	if (value == NULL) {
-	    goto deallocModule;
-	}
-	module->pair[index].id = key;
-	module->pair[index].value = value;
+        Value *key = CodeEvalInstructionAtIndex(code, context, model->pair[index].id, true, error);
+        if (key == NULL) {
+            goto deallocModule;
+        }
+        Value *value = CodeEvalInstructionAtIndex(code, context, model->pair[index].value, true, error);
+        if (value == NULL) {
+            goto deallocModule;
+        }
+        module->pair[index].id = key;
+        module->pair[index].value = value;
     }
     return moduleValue;
 
@@ -90,9 +90,9 @@ void ModuleDealloc(Value *moduleValue) {
 Value *ModuleGetValueForIdentifier(Value *moduleValue, Value *idValue) {
     Module *module = BridgeToModule(moduleValue);
     for (Integer32 index = 0; index < module->count; index += 1) {
-	if (ValueEqual(module->pair[index].id, idValue)) {
-	    return module->pair[index].value;
-	}
+        if (ValueEqual(module->pair[index].id, idValue)) {
+            return module->pair[index].value;
+        }
     }
     return NULL;
 }

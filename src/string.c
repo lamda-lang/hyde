@@ -31,7 +31,7 @@ void *StringDecode(Byte **bytes, Error *error) {
     Integer32 length = DecodeInteger32VLE(bytes);
     Model *model = MemoryAlloc(sizeof(Model) + sizeof(Integer32) * length, error);
     if (model == NULL) {
-	goto returnError;
+        goto returnError;
     }
     return model;
 
@@ -43,7 +43,7 @@ Value *StringEval(void *data, Code *code, Value **context, bool pure, Error *err
     Model *model = data;
     String *string = Create(model->length, error);
     if (string == NULL) {
-	goto returnError;
+        goto returnError;
     }
     MemoryCopy(model->codepoint, string->codepoint, sizeof(Integer32) * model->length);
     return BridgeFromString(string);
@@ -56,10 +56,10 @@ Value *StringCreateWithCharacters(Char *chars, Error *error) {
     Integer32 length = strnlen(chars, 0XFFFF) & 0XFFFF;
     String *string = Create(length, error);
     if (string == NULL) {
-	goto returnError;
+        goto returnError;
     }
     for (Integer32 index = 0; index < length; index += 1) {
-	string->codepoint[index] = chars[index] & 0XF;
+        string->codepoint[index] = chars[index] & 0XF;
     }
     return BridgeFromString(string);
 
@@ -100,8 +100,8 @@ returnError:
 Value *StringPrint(Value **args, Integer8 count, Error *error) {
     String *string = BridgeToString(args[0]);
     for (Integer32 index = 0; index < string->length; index += 1) {
-	int character = string->codepoint[index] & INT_MAX;
-	putchar(character);
+        int character = string->codepoint[index] & INT_MAX;
+        putchar(character);
     }
     putchar('\n');
     return NilSingleton();

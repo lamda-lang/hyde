@@ -14,7 +14,7 @@ typedef struct {
 static Range *Create(Value *lower, Value *upper, Error *error) {
     Range *range = MemoryAlloc(sizeof(Range), error);
     if (range == NULL) {
-	goto returnError;
+        goto returnError;
     }
     range->base = TypeRange;
     range->lower = lower;
@@ -28,7 +28,7 @@ returnError:
 void *RangeDecode(Byte **bytes, Error *error) {
     Model *model = MemoryAlloc(sizeof(Model), error);
     if (model == NULL) {
-	goto returnError;
+        goto returnError;
     }
     model->lowerIndex = DecodeInteger32VLE(bytes);
     model->upperIndex = DecodeInteger32VLE(bytes);
@@ -42,15 +42,15 @@ Value *RangeEval(void *data, Code *code, Value **context, bool pure, Error *erro
     Model *model = data;
     Value *lower = CodeEvalInstructionAtIndex(code, context, model->lowerIndex, true, error);
     if (lower == NULL) {
-	goto returnError;
+        goto returnError;
     }
     Value *upper = CodeEvalInstructionAtIndex(code, context, model->upperIndex, true, error);
     if (upper == NULL) {
-	goto deallocLower;
+        goto deallocLower;
     }
     Range *range = Create(lower, upper, error);
     if (range == NULL) {
-	goto deallocUpper;
+        goto deallocUpper;
     }
     return BridgeFromRange(range);
 

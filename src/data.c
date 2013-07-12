@@ -20,8 +20,8 @@ returnError:
 
 void DataDealloc(Data *data) {
     if (data != NULL) {
-	MemoryDealloc(data->bytes);
-	MemoryDealloc(data);
+        MemoryDealloc(data->bytes);
+        MemoryDealloc(data);
     }
 }
 

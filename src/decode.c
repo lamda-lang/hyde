@@ -52,8 +52,8 @@ Integer32 DecodeInteger32VLE(Byte **bytes) {
 
 Float64 DecodeFloat64FLE(Byte **bytes) {
     union {
-	Float64 IEEE754;
-	Integer64 integer64;
+        Float64 IEEE754;
+        Integer64 integer64;
     } binary = {.integer64 = DecodeInteger64FLE(bytes)};
     return binary.IEEE754;;
 }

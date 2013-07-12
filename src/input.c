@@ -7,7 +7,7 @@ typedef struct {
 void *InputDecode(Byte **bytes, Error *error) {
     Model *model = MemoryAlloc(sizeof(Model), error);
     if (model == NULL) {
-	goto returnError;
+        goto returnError;
     }
     model->input = DecodeInteger8FLE(bytes);
     return model;

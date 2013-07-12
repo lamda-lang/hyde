@@ -14,7 +14,7 @@ static Char *string[] = {
 
 void ErrorSet(Error *error, Error errno) {
     if (error != NULL) {
-	*error = errno;
+        *error = errno;
     }
 }
 

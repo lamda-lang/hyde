@@ -10,27 +10,27 @@ typedef struct {
 Class class[] = {
     [TypeBoolean] = {
         .hash = BooleanHash,
-	.equal = BooleanEqual,
+        .equal = BooleanEqual,
     },
     [TypeDo] = {
-	.dealloc = DoDealloc,
-	.hash = DoHash,
-	.enumerate = DoEnumerate,
+        .dealloc = DoDealloc,
+        .hash = DoHash,
+        .enumerate = DoEnumerate,
     },
     [TypeFloat] = {
-	.dealloc = FloatDealloc,
-	.hash = FloatHash,
-	.equal = FloatEqual,
+        .dealloc = FloatDealloc,
+        .hash = FloatHash,
+        .equal = FloatEqual,
     },
     [TypeIdentifier] = {
         .dealloc = IdentifierDealloc,
         .hash = IdentifierHash,
-	.equal = IdentifierEqual,
+        .equal = IdentifierEqual,
     },
     [TypeInteger] = {
         .dealloc = IntegerDealloc,
         .hash = IntegerHash,
-	.equal = IntegerEqual,
+        .equal = IntegerEqual,
     },
     [TypeLamda] = {
         .dealloc = LamdaDealloc,
@@ -48,26 +48,26 @@ Class class[] = {
         .enumerate = MapEnumerate,
     },
     [TypeModule] = {
-	.dealloc = ModuleDealloc,
+        .dealloc = ModuleDealloc,
     },
     [TypeNil] = {
         .hash = NilHash,
-	.equal = NilEqual,
+        .equal = NilEqual,
     },
     [TypeRange] = {
-	.dealloc = RangeDealloc,
-	.hash = RangeHash,
-	.enumerate = RangeEnumerate,
+        .dealloc = RangeDealloc,
+        .hash = RangeHash,
+        .enumerate = RangeEnumerate,
     },
     [TypeSet] = {
-	.dealloc = SetDealloc,
-	.hash = SetHash,
-	.enumerate = SetEnumerate,
+        .dealloc = SetDealloc,
+        .hash = SetHash,
+        .enumerate = SetEnumerate,
     },
     [TypeString] = {
         .dealloc = StringDealloc,
         .hash = StringHash,
-	.equal = StringEqual,
+        .equal = StringEqual,
     },
 };
 

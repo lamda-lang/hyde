@@ -60,7 +60,7 @@ void ArgInit(Char **args, Integer8 count) {
         branch[option]();
     }
     if (count <= optind) {
-	MissingFile();
+        MissingFile();
     }
     argSingleton.file = args[optind];
     argSingleton.args = &args[optind + 1];

@@ -5,8 +5,8 @@
 void *MemoryAlloc(Size size, Error *error) {
     void *buffer = malloc(size);
     if (buffer == NULL) {
-	ErrorSet(error, ErrorOutOfMemory);
-	goto returnError;
+        ErrorSet(error, ErrorOutOfMemory);
+        goto returnError;
     }
     return buffer;
 
@@ -17,8 +17,8 @@ returnError:
 void *MemoryRealloc(void *buffer, Size size, Error *error) {
     void *new = realloc(buffer, size);
     if (new == NULL) {
-	ErrorSet(error, ErrorOutOfMemory);
-	goto returnError;
+        ErrorSet(error, ErrorOutOfMemory);
+        goto returnError;
     }
     return new;
 

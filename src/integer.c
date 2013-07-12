@@ -25,7 +25,7 @@ returnError:
 void *IntegerDecode(Byte **bytes, Error *error) {
     Model *model = MemoryAlloc(sizeof(Model), error);
     if (model == NULL) {
-	goto returnError;
+        goto returnError;
     }
     model->value = DecodeInteger64FLE(bytes);
     return model;

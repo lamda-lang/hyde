@@ -33,12 +33,12 @@ void *LamdaDecode(Byte **bytes, Error *error) {
     Integer8 count = DecodeInteger8FLE(bytes);
     Model *model = MemoryAlloc(sizeof(Model) + sizeof(Integer8) * count, error);
     if (model == NULL) {
-	goto returnError;
+        goto returnError;
     }
     model->arity = arity;
     model->count = count;
     for (Integer8 index = 0; index < count; index += 1) {
-	model->context[index] = DecodeInteger32VLE(bytes);
+        model->context[index] = DecodeInteger32VLE(bytes);
     }
     return model;
 
@@ -50,15 +50,15 @@ Value *LamdaEval(void *data, Code *code, Value **context, bool pure, Error *erro
     Model *model = data;
     Lamda *lamda = Create(model->arity, model->count, error);
     if (lamda == NULL) {
-	goto returnError;
+        goto returnError;
     }
     Value *lamdaValue = BridgeFromLamda(lamda);
     for (Integer8 index = 0; index < model->count; index += 1) {
-	Value *value = CodeEvalInstructionAtIndex(code, context, model->context[index], true, error);
-	if (value == NULL) {
-	    goto deallocLamda;
-	}
-	lamda->context[index] = value;
+        Value *value = CodeEvalInstructionAtIndex(code, context, model->context[index], true, error);
+        if (value == NULL) {
+            goto deallocLamda;
+        }
+        lamda->context[index] = value;
     }
     return lamdaValue;
     

@@ -12,7 +12,7 @@ typedef struct {
 static inline Float *Create(Float64 value, Error *error) {
     Float *fpv = MemoryAlloc(sizeof(Float), error);
     if (fpv == NULL) {
-	goto returnError;
+        goto returnError;
     }
     fpv->base = TypeFloat;
     fpv->value = value;
@@ -25,7 +25,7 @@ returnError:
 void *FloatDecode(Byte **bytes, Error *error) {
     Model *model = MemoryAlloc(sizeof(Model), error);
     if (model == NULL) {
-	goto returnError;
+        goto returnError;
     }
     model->value = DecodeFloat64FLE(bytes);
     return model;

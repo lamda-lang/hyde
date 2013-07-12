@@ -29,10 +29,10 @@ void *IdentifierDecode(Byte **bytes, Error *error) {
     Integer8 length = DecodeInteger8FLE(bytes);
     Model *model = MemoryAlloc(sizeof(Model) + sizeof(Integer8) * length, error);
     if (model == NULL) {
-	goto returnError;
+        goto returnError;
     }
     for (Integer8 index = 0; index < length; index += 1) {
-	model->codepoint[index] = DecodeInteger8FLE(bytes);
+        model->codepoint[index] = DecodeInteger8FLE(bytes);
     }
     return model;
 
@@ -44,7 +44,7 @@ Value *IdentifierEval(void *data, Code *code, Value **context, bool pure, Error 
     Model *model = data;
     Identifier *id = Create(model->length, error);
     if (id == NULL) {
-	goto returnError;
+        goto returnError;
     }
     MemoryCopy(model->codepoint, id->codepoint, sizeof(Integer8) * model->length);
     return BridgeFromIdentifier(id);
@@ -57,7 +57,7 @@ Value *IdentifierCreateWithCharacters(Char *chars, Error *error) {
     Integer8 length = strnlen(chars, 0XF) & 0XF;
     Identifier *id = Create(length, error);
     if (id == NULL) {
-	goto returnError;
+        goto returnError;
     }
     MemoryCopy(chars, id->codepoint, length);
     return BridgeFromIdentifier(id);

@@ -33,11 +33,11 @@ void *ListDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32VLE(bytes);
     Model *model = MemoryAlloc(sizeof(Model) + sizeof(Integer32) * count, error);
     if (model == NULL) {
-	goto returnError;
+        goto returnError;
     }
     model->count = count;
     for (Integer32 index = 0; index < count; index += 1) {
-	model->index[index] = DecodeInteger32VLE(bytes);
+        model->index[index] = DecodeInteger32VLE(bytes);
     }
     return model;
 
@@ -49,15 +49,15 @@ Value *ListEval(void *data, Code *code, Value **context, bool pure, Error *error
     Model *model = data;
     List *list = Create(model->count, error);
     if (list == NULL) {
-	goto returnError;
+        goto returnError;
     }
     Value *listValue = BridgeFromList(list);
     for (Integer32 index = 0; index < model->count; index += 1) {
-	Value *value = CodeEvalInstructionAtIndex(code, context, model->index[index], true, error);
-	if (value == NULL) {
-	    goto deallocList;
-	}
-	list->element[index] = value;
+        Value *value = CodeEvalInstructionAtIndex(code, context, model->index[index], true, error);
+        if (value == NULL) {
+            goto deallocList;
+        }
+        list->element[index] = value;
     }
     return listValue;
 
