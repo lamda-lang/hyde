@@ -38,13 +38,13 @@ returnError:
     return NULL;
 }
 
-Value *RangeEval(void *data, Code *code, Value **context, bool pure, Error *error) {
+Value *RangeEval(void *data, Code *code, Value **context, Bool pure, Error *error) {
     Model *model = data;
-    Value *lower = CodeEvalInstructionAtIndex(code, context, model->lowerIndex, true, error);
+    Value *lower = CodeEvalInstructionAtIndex(code, context, model->lowerIndex, TRUE, error);
     if (lower == NULL) {
         goto returnError;
     }
-    Value *upper = CodeEvalInstructionAtIndex(code, context, model->upperIndex, true, error);
+    Value *upper = CodeEvalInstructionAtIndex(code, context, model->upperIndex, TRUE, error);
     if (upper == NULL) {
         goto deallocLower;
     }

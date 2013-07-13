@@ -23,9 +23,9 @@ returnError:
     return NULL;
 }
 
-Value *ResultEval(void *data, Code *code, Value **context, bool pure, Error *error) {
+Value *ResultEval(void *data, Code *code, Value **context, Bool pure, Error *error) {
     Model *model = data;
-    Value *lamdaValue = CodeEvalInstructionAtIndex(code, context, model->lamda, true, error);
+    Value *lamdaValue = CodeEvalInstructionAtIndex(code, context, model->lamda, TRUE, error);
     if (lamdaValue == NULL) {
         goto returnError;
     }
@@ -39,7 +39,7 @@ Value *ResultEval(void *data, Code *code, Value **context, bool pure, Error *err
     }
     Value **args = LamdaCreateContext(lamdaValue, error);
     for (Integer8 index = 0; index < model->arity; index += 1) {
-        Value *value = CodeEvalInstructionAtIndex(code, args, model->arg[index], true, error);
+        Value *value = CodeEvalInstructionAtIndex(code, args, model->arg[index], TRUE, error);
         if (value == NULL) {
             goto deallocContext;
         }

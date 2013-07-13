@@ -27,10 +27,10 @@ returnError:
     return NULL;
 }
 
-Value *WhenEval(void *data, Code *code, Value **context, bool pure, Error *error) {
+Value *WhenEval(void *data, Code *code, Value **context, Bool pure, Error *error) {
     Model *model = data;
     for (Integer8 index = 0; index < model->count; index += 1) {
-        Value *condition = CodeEvalInstructionAtIndex(code, context, model->index[index].condition, true, error);
+        Value *condition = CodeEvalInstructionAtIndex(code, context, model->index[index].condition, TRUE, error);
         if (condition == NULL) {
             goto returnError;
         }

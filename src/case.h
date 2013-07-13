@@ -4,6 +4,6 @@
 #include "api.h"
 
 void *CaseDecode(Byte **bytes, Error *error);
-Value *CaseEval(void *data, Code *code, Value **context, bool pure, Error *error);
+Value *CaseEval(void *data, Code *code, Value **context, Bool pure, Error *error);
 
 #endif

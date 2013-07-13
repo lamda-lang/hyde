@@ -2,17 +2,17 @@
 
 struct Boolean {
     Value base;
-    bool truth;
+    Bool truth;
 }; 
 
 static Boolean trueSingleton = {
     .base = TypeBoolean,
-    .truth = true
+    .truth = TRUE
 };
 
 static Boolean falseSingleton = {
     .base = TypeBoolean,
-    .truth = false
+    .truth = FALSE
 };
 
 Value *BooleanTrueSingleton(void) {
@@ -31,7 +31,7 @@ void *BooleanDecodeFalse(Byte **bytes, Error *error) {
     return &falseSingleton;
 }
 
-Value *BooleanEval(void *data, Code *code, Value **context, bool pure, Error *error) {
+Value *BooleanEval(void *data, Code *code, Value **context, Bool pure, Error *error) {
     return data;
 }
 
@@ -43,6 +43,6 @@ Integer64 BooleanHash(Value *booleanValue) {
     return BridgeToBoolean(booleanValue)->truth;
 }
 
-bool BooleanEqual(Value *booleanValue, Value *otherValue) {
+Bool BooleanEqual(Value *booleanValue, Value *otherValue) {
     return BridgeToBoolean(booleanValue)->truth == BridgeToBoolean(otherValue)->truth;
 }

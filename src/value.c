@@ -75,11 +75,11 @@ Type ValueType(Value *value) {
     return *value & 0XF;
 }
 
-void ValueSetFlag(Value *value, Flag mask, bool truth) {
+void ValueSetFlag(Value *value, Flag mask, Bool truth) {
     *value = truth ? *value | mask : *value & ~mask;
 }
 
-bool ValueFlagSet(Value *value, Flag mask) {
+Bool ValueFlagSet(Value *value, Flag mask) {
     return (*value & mask) == mask;
 }
 
@@ -104,7 +104,7 @@ Integer64 ValueHash(Value *value) {
     return class[type].hash(value);
 }
 
-bool ValueEqual(Value *value, Value *other) {
+Bool ValueEqual(Value *value, Value *other) {
     Type type = ValueType(value);
-    return type == ValueType(other) ? class[type].equal(value, other) : false;
+    return type == ValueType(other) ? class[type].equal(value, other) : FALSE;
 }

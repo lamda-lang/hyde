@@ -16,7 +16,7 @@ void *NilDecode(Byte **bytes, Error *error) {
     return &nilSingleton;
 }
 
-Value *NilEval(void *data, Code *code, Value **context, bool pure, Error *error) {
+Value *NilEval(void *data, Code *code, Value **context, Bool pure, Error *error) {
     return data;
 }
 
@@ -28,6 +28,6 @@ Integer64 NilHash(Value *nilValue) {
     return 1829;
 }
 
-bool NilEqual(Value *nilValue, Value *otherValue) {
-    return true;
+Bool NilEqual(Value *nilValue, Value *otherValue) {
+    return TRUE;
 }

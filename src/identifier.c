@@ -40,7 +40,7 @@ returnError:
     return NULL;
 }
 
-Value *IdentifierEval(void *data, Code *code, Value **context, bool pure, Error *error) {
+Value *IdentifierEval(void *data, Code *code, Value **context, Bool pure, Error *error) {
     Model *model = data;
     Identifier *id = Create(model->length, error);
     if (id == NULL) {
@@ -74,7 +74,7 @@ Integer64 IdentifierHash(Value *idValue) {
     return BridgeToIdentifier(idValue)->length;
 }
 
-bool IdentifierEqual(Value *idValue, Value *otherValue) {
+Bool IdentifierEqual(Value *idValue, Value *otherValue) {
     Identifier *id = BridgeToIdentifier(idValue);
     Identifier *other = BridgeToIdentifier(otherValue);
     return id->length == other->length &&

@@ -56,7 +56,7 @@ returnError:
     return NULL;
 }
 
-Value *MapEval(void *data, Code *code, Value **context, bool pure, Error *error) {
+Value *MapEval(void *data, Code *code, Value **context, Bool pure, Error *error) {
     Model *model = data;
     Map *map = Create(model->count, error);
     if (map == NULL) {
@@ -64,11 +64,11 @@ Value *MapEval(void *data, Code *code, Value **context, bool pure, Error *error)
     }
     Value *mapValue = BridgeFromMap(map);
     for (Integer32 index = 0; index < model->count; index += 1) {
-        Value *key = CodeEvalInstructionAtIndex(code, context, model->pair[index].key, true, error);
+        Value *key = CodeEvalInstructionAtIndex(code, context, model->pair[index].key, TRUE, error);
         if (key == NULL) {
             goto deallocMap;
         }
-        Value *value = CodeEvalInstructionAtIndex(code, context, model->pair[index].value, true, error);
+        Value *value = CodeEvalInstructionAtIndex(code, context, model->pair[index].value, TRUE, error);
         if (value == NULL) {
             goto deallocMap;
         }

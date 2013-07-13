@@ -16,9 +16,9 @@ returnError:
     return NULL;
 }
 
-Value *ImportEval(void *data, Code *code, Value **context, bool pure, Error *error) {
+Value *ImportEval(void *data, Code *code, Value **context, Bool pure, Error *error) {
     Model *model = data;
-    Value *stringValue = CodeEvalInstructionAtIndex(code, context, model->name, true, error);
+    Value *stringValue = CodeEvalInstructionAtIndex(code, context, model->name, TRUE, error);
     if (stringValue == NULL) {
         goto returnError;
     }

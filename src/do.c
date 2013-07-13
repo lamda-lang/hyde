@@ -40,7 +40,7 @@ returnError:
     return NULL;
 }
 
-Value *DoEval(void *data, Code *code, Value **context, bool pure, Error *error) {
+Value *DoEval(void *data, Code *code, Value **context, Bool pure, Error *error) {
     Model *model = data;
     Do *block = Create(model->count, error);
     if (block == NULL) {

@@ -4,7 +4,7 @@
 #include "api.h"
 
 void *ListDecode(Byte **bytes, Error *error);
-Value *ListEval(void *data, Code *code, Value **context, bool pure, Error *error);
+Value *ListEval(void *data, Code *code, Value **context, Bool pure, Error *error);
 Value *ListCreate(Integer32 count, Error *error);
 void ListDealloc(Value *listValue);
 void ListSetValueAtIndex(Value *listValue, Value *value, Integer32 index);

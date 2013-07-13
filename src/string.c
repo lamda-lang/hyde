@@ -39,7 +39,7 @@ returnError:
     return NULL;
 }
 
-Value *StringEval(void *data, Code *code, Value **context, bool pure, Error *error) {
+Value *StringEval(void *data, Code *code, Value **context, Bool pure, Error *error) {
     Model *model = data;
     String *string = Create(model->length, error);
     if (string == NULL) {
@@ -75,7 +75,7 @@ Integer64 StringHash(Value *stringValue) {
     return BridgeToString(stringValue)->length;
 }
 
-bool StringEqual(Value *stringValue, Value *otherValue) {
+Bool StringEqual(Value *stringValue, Value *otherValue) {
     String *string = BridgeToString(stringValue);
     String *other = BridgeToString(otherValue);
     return string->length == other->length &&

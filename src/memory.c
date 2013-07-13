@@ -34,6 +34,6 @@ void MemoryCopy(void *source, void *target, Size size) {
     memcpy(target, source, size);
 }
 
-bool MemoryEqual(void *buffer, void *other, Size size) {
+Bool MemoryEqual(void *buffer, void *other, Size size) {
     return memcmp(buffer, other, size) == 0;
 }

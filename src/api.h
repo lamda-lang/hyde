@@ -1,11 +1,14 @@
 #ifndef API_H
 #define API_H
 
-#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
+#define FALSE 0
+#define TRUE 1
+
 /* scalar types */
+typedef _Bool Bool;
 typedef unsigned char Byte;
 typedef char Char;
 typedef uint8_t Integer8;
@@ -47,8 +50,8 @@ typedef enum {
 } Error;
 
 typedef enum {
-    StatusSuccess = true,
-    StatusFailure = false
+    StatusSuccess = TRUE,
+    StatusFailure = FALSE
 } Status;
 
 typedef uint8_t Type;
@@ -77,10 +80,10 @@ enum {
 
 /* function types */
 typedef void *Decode(Byte **code, Error *error);
-typedef Value *Eval(void *data, Code *code, Value **context, bool pure, Error *error);
+typedef Value *Eval(void *data, Code *code, Value **context, Bool pure, Error *error);
 typedef void Dealloc(Value *value);
 typedef Integer64 Hash(Value *value);
-typedef bool Equal(Value *value, Value *other);
+typedef Bool Equal(Value *value, Value *other);
 typedef void Enumerate(Value *value, void (*callback)(Value *value));
 typedef void Fetch(Value *value, Value **values);
 typedef Value *Kernel(Value **args, Integer8 count, Error *error);

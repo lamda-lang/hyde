@@ -4,7 +4,7 @@
 #include "api.h"
 
 void *LamdaDecode(Byte **bytes, Error *error);
-Value *LamdaEval(void *data, Code *code, Value **context, bool pure, Error *error);
+Value *LamdaEval(void *data, Code *code, Value **context, Bool pure, Error *error);
 void LamdaDealloc(Value *lamdaValue);
 Integer64 LamdaHash(Value *lamdaValue);
 Integer8 LamdaArity(Value *lamdaValue);

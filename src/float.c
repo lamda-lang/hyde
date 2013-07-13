@@ -34,7 +34,7 @@ returnError:
     return NULL;
 }
 
-Value *FloatEval(void *data, Code *code, Value **context, bool pure, Error *error) {
+Value *FloatEval(void *data, Code *code, Value **context, Bool pure, Error *error) {
     Model *model = data;
     Float *fpv = Create(model->value, error);
     return BridgeFromFloat(fpv);
@@ -48,7 +48,7 @@ Integer64 FloatHash(Value *floatValue) {
     return (Integer64)BridgeToFloat(floatValue)->value;
 }
 
-bool FloatEqual(Value *floatValue, Value *otherValue) {
+Bool FloatEqual(Value *floatValue, Value *otherValue) {
     return BridgeToFloat(floatValue)->value == BridgeToFloat(otherValue)->value;
 }
 

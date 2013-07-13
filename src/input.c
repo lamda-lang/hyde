@@ -16,7 +16,7 @@ returnError:
     return NULL;
 }
 
-Value *InputEval(void *data, Code *code, Value **context, bool pure, Error *error) {
+Value *InputEval(void *data, Code *code, Value **context, Bool pure, Error *error) {
     Model *model = data;
     return context[model->input];
 }

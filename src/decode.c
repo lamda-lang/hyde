@@ -40,7 +40,7 @@ Integer64 DecodeInteger64FLE(Byte **bytes) {
 
 Integer32 DecodeInteger32VLE(Byte **bytes) {
     Integer32 result = 0;
-    bool more = true;
+    Bool more = TRUE;
     for (Integer8 index = 0; more; index += 1) {
         Integer32 value = (**bytes & 0X7F);
         result |= value << index * 7;
