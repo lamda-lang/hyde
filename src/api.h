@@ -15,9 +15,9 @@ typedef uint8_t Integer8;
 typedef uint16_t Integer16;
 typedef uint32_t Integer32;
 typedef uint64_t Integer64;
+typedef double Float64;
 typedef size_t Size;
 typedef uint8_t Value;
-typedef double Float64;
 
 /* opaque types */
 typedef struct Code Code;
@@ -74,8 +74,7 @@ enum {
 typedef uint8_t Flag;
 enum {
     FlagGarbage = 1 << 4,
-    FlagMark = 1 << 5,
-    FlagKernel = 1 << 6
+    FlagMark = 1 << 5
 };
 
 /* function types */
@@ -85,8 +84,6 @@ typedef void Dealloc(Value *value);
 typedef Integer64 Hash(Value *value);
 typedef Bool Equal(Value *value, Value *other);
 typedef void Enumerate(Value *value, void (*callback)(Value *value));
-typedef void Fetch(Value *value, Value **values);
-typedef Value *Kernel(Value **args, Integer8 count, Error *error);
 
 #include "arg.h"
 #include "boolean.h"

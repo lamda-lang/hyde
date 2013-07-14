@@ -8,14 +8,14 @@ typedef struct {
 typedef struct {
     Decode *decode;
     Eval *eval;
-} Foo;
+} Operation;
 
 struct Code {
     Integer32 count;
     Instruction instruction[];
 };
 
-static Foo foo[] = {
+static Operation operation[] = {
     [0] = {
         .decode = NilDecode,
         .eval = NilEval
@@ -107,19 +107,19 @@ returnError:
 }
 
 Code *CodeDecode(Byte **byte, Error *error) {
-    Integer32 instructionCount = DecodeInteger32VLE(byte);
-    Code *code = Create(instructionCount, error);
+    Integer32 count = DecodeInteger32VLE(byte);
+    Code *code = Create(count, error);
     if (code == NULL) {
         goto returnError;
     }
-    for (Integer32 index = 0; index < instructionCount; index += 1) {
+    for (Integer32 index = 0; index < count; index += 1) {
         Integer8 opcode = DecodeInteger8FLE(byte);
-        void *data = foo[opcode].decode(byte, error);
+        void *data = operation[opcode].decode(byte, error);
         if (data == NULL) {
             goto returnError;
         }
         code->instruction[index].data = data;
-        code->instruction[index].eval = foo[opcode].eval;
+        code->instruction[index].eval = operation[opcode].eval;
     }
     return code;
 
