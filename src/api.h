@@ -54,8 +54,7 @@ typedef enum {
     StatusFailure = FALSE
 } Status;
 
-typedef uint8_t Type;
-enum {
+typedef enum {
     TypeNil = 0,
     TypeBoolean = 1,
     TypeInteger = 2,
@@ -69,13 +68,12 @@ enum {
     TypeModule = 10,
     TypeDo = 11,
     TypeLamda = 12
-};
+} Type;
 
-typedef uint8_t Flag;
-enum {
+typedef enum {
     FlagGarbage = 1 << 4,
     FlagMark = 1 << 5
-};
+} Flag;
 
 /* function types */
 typedef void *Decode(Byte **code, Error *error);
@@ -97,8 +95,8 @@ typedef void Enumerate(Value *value, void (*callback)(Value *value));
 #include "file.h"
 #include "float.h"
 #include "identifier.h"
+#include "identity.h"
 #include "import.h"
-#include "input.h"
 #include "integer.h"
 #include "lamda.h"
 #include "list.h"

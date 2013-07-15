@@ -89,8 +89,8 @@ static Operation operation[] = {
         .eval = ResultEval
     },
     [18] = {
-        .decode = InputDecode,
-        .eval = InputEval
+        .decode = IdentityDecode,
+        .eval = IdentityEval
     }
 };
 
