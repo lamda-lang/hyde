@@ -12,8 +12,8 @@ Value *BridgeFromFloat(Float *fpv) {
     return (Value *)fpv;
 }
 
-Value *BridgeFromIdentifier(Identifier *id) {
-    return (Value *)id;
+Value *BridgeFromTag(Tag *tag) {
+    return (Value *)tag;
 }
 
 Value *BridgeFromInteger(Integer *integer) {
@@ -64,8 +64,8 @@ Float *BridgeToFloat(Value *floatValue) {
     return (Float *)floatValue;
 }
 
-Identifier *BridgeToIdentifier(Value *idValue) {
-    return (Identifier *)idValue;
+Tag *BridgeToTag(Value *tagValue) {
+    return (Tag *)tagValue;
 }
 
 Integer *BridgeToInteger(Value *integerValue) {

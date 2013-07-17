@@ -6,7 +6,7 @@
 Value *BridgeFromBoolean(Boolean *boolean);
 Value *BridgeFromDo(Do *block);
 Value *BridgeFromFloat(Float *fpv);
-Value *BridgeFromIdentifier(Identifier *id);
+Value *BridgeFromTag(Tag *tag);
 Value *BridgeFromInteger(Integer *integer);
 Value *BridgeFromLamda(Lamda *lamda);
 Value *BridgeFromList(List *list);
@@ -19,7 +19,7 @@ Value *BridgeFromString(String *string);
 Boolean *BridgeToBoolean(Value *booleanValue);
 Do *BridgeToDo(Value *doValue);
 Float *BridgeToFloat(Value *floatValue);
-Identifier *BridgeToIdentifier(Value *idValue);
+Tag *BridgeToTag(Value *tagValue);
 Integer *BridgeToInteger(Value *integerValue);
 Lamda *BridgeToLamda(Value *lamdaValue);
 List *BridgeToList(Value *listValue);

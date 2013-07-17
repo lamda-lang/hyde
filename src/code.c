@@ -37,8 +37,8 @@ static Operation operation[] = {
         .eval = FloatEval
     },
     [5] = {
-        .decode = IdentifierDecode,
-        .eval = IdentifierEval
+        .decode = TagDecode,
+        .eval = TagEval
     },
     [6] = {
         .decode = StringDecode,

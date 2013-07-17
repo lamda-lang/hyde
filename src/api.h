@@ -26,7 +26,7 @@ typedef struct Data Data;
 typedef struct Boolean Boolean;
 typedef struct Do Do;
 typedef struct Float Float;
-typedef struct Identifier Identifier;
+typedef struct Tag Tag;
 typedef struct Integer Integer;
 typedef struct Lamda Lamda;
 typedef struct List List;
@@ -59,7 +59,7 @@ typedef enum {
     TypeBoolean = 1,
     TypeInteger = 2,
     TypeFloat = 3,
-    TypeIdentifier = 4,
+    TypeTag = 4,
     TypeString = 5,
     TypeSet = 6,
     TypeList = 7,
@@ -94,7 +94,6 @@ typedef void Enumerate(Value *value, void (*callback)(Value *value));
 #include "error.h"
 #include "file.h"
 #include "float.h"
-#include "identifier.h"
 #include "identity.h"
 #include "import.h"
 #include "integer.h"
@@ -110,6 +109,7 @@ typedef void Enumerate(Value *value, void (*callback)(Value *value));
 #include "runtime.h"
 #include "set.h"
 #include "string.h"
+#include "tag.h"
 #include "value.h"
 #include "when.h"
 

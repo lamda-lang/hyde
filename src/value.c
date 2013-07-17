@@ -22,10 +22,10 @@ Class class[] = {
         .hash = FloatHash,
         .equal = FloatEqual,
     },
-    [TypeIdentifier] = {
-        .dealloc = IdentifierDealloc,
-        .hash = IdentifierHash,
-        .equal = IdentifierEqual,
+    [TypeTag] = {
+        .dealloc = TagDealloc,
+        .hash = TagHash,
+        .equal = TagEqual,
     },
     [TypeInteger] = {
         .dealloc = IntegerDealloc,
