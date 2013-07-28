@@ -37,8 +37,8 @@ static Operation operation[] = {
         .eval = FloatEval
     },
     [5] = {
-        .decode = TagDecode,
-        .eval = TagEval
+        .decode = TokenDecode,
+        .eval = TokenEval
     },
     [6] = {
         .decode = StringDecode,
@@ -61,34 +61,26 @@ static Operation operation[] = {
         .eval = MapEval
     },
     [11] = {
-        .decode = ModuleDecode,
-        .eval = ModuleEval
-    },
-    [12] = {
         .decode = DoDecode,
         .eval = DoEval
     },
-    [13] = {
+    [12] = {
         .decode = LamdaDecode,
         .eval = LamdaEval
     },
-    [14] = {
-        .decode = ImportDecode,
-        .eval = ImportEval
-    },
-    [15] = {
+    [13] = {
         .decode = WhenDecode,
         .eval = WhenEval
     },
-    [16] = {
+    [14] = {
         .decode = CaseDecode,
         .eval = CaseEval
     },
-    [17] = {
+    [15] = {
         .decode = ResultDecode,
         .eval = ResultEval
     },
-    [18] = {
+    [16] = {
         .decode = IdentityDecode,
         .eval = IdentityEval
     }

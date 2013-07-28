@@ -22,10 +22,10 @@ Class class[] = {
         .hash = FloatHash,
         .equal = FloatEqual,
     },
-    [TypeTag] = {
-        .dealloc = TagDealloc,
-        .hash = TagHash,
-        .equal = TagEqual,
+    [TypeToken] = {
+        .dealloc = TokenDealloc,
+        .hash = TokenHash,
+        .equal = TokenEqual,
     },
     [TypeInteger] = {
         .dealloc = IntegerDealloc,
@@ -46,9 +46,6 @@ Class class[] = {
         .dealloc = MapDealloc,
         .hash = MapHash,
         .enumerate = MapEnumerate,
-    },
-    [TypeModule] = {
-        .dealloc = ModuleDealloc,
     },
     [TypeNil] = {
         .hash = NilHash,

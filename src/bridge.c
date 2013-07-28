@@ -12,8 +12,8 @@ Value *BridgeFromFloat(Float *fpv) {
     return (Value *)fpv;
 }
 
-Value *BridgeFromTag(Tag *tag) {
-    return (Value *)tag;
+Value *BridgeFromToken(Token *token) {
+    return (Value *)token;
 }
 
 Value *BridgeFromInteger(Integer *integer) {
@@ -30,10 +30,6 @@ Value *BridgeFromList(List *list) {
 
 Value *BridgeFromMap(Map *map) {
     return (Value *)map;
-}
-
-Value *BridgeFromModule(Module *module) {
-    return (Value *)module;
 }
 
 Value *BridgeFromNil(Nil *nil) {
@@ -64,8 +60,8 @@ Float *BridgeToFloat(Value *floatValue) {
     return (Float *)floatValue;
 }
 
-Tag *BridgeToTag(Value *tagValue) {
-    return (Tag *)tagValue;
+Token *BridgeToToken(Value *tokenValue) {
+    return (Token *)tokenValue;
 }
 
 Integer *BridgeToInteger(Value *integerValue) {
@@ -82,10 +78,6 @@ List *BridgeToList(Value *listValue) {
 
 Map *BridgeToMap(Value *mapValue) {
     return (Map *)mapValue;
-}
-
-Module *BridgeToModule(Value *moduleValue) {
-    return (Module *)moduleValue;
 }
 
 Nil *BridgeToNil(Value *nilValue) {
