@@ -93,7 +93,6 @@ typedef void Enumerate(Value *value, void (*callback)(Value *value));
 #include "error.h"
 #include "file.h"
 #include "float.h"
-#include "identity.h"
 #include "integer.h"
 #include "lamda.h"
 #include "list.h"
@@ -108,6 +107,7 @@ typedef void Enumerate(Value *value, void (*callback)(Value *value));
 #include "string.h"
 #include "token.h"
 #include "value.h"
+#include "variable.h"
 #include "when.h"
 
 #endif
