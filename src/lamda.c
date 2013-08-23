@@ -7,33 +7,32 @@ typedef struct {
 } Model;
 
 struct Lamda {
-    Value base;
+    Type  *type;
     Integer8 arity;
     Integer8 count;
-    Code *code;
     Value *context[];
 };
 
-static Lamda *Create(Integer8 arity, Integer8 count, Error *error) {
+static Lamda *Create(Integer8 arity, Integer8 count, Value **error) {
     Lamda *lamda = MemoryAlloc(sizeof(Lamda) + sizeof(Value *) * count, error);
     if (lamda == NULL) {
-        goto returnError;
+        goto returnValue;
     }
-    lamda->base = TypeLamda;
+    lamda->type = TypeLamda;
     lamda->arity = arity;
     lamda->count = count;
     return lamda;
 
-returnError:
+returnValue:
     return NULL;
 }
 
-void *LamdaDecode(Byte **bytes, Error *error) {
+void *LamdaDecode(Byte **bytes, Value **error) {
     Integer8 arity = DecodeInteger8FLE(bytes);
     Integer8 count = DecodeInteger8FLE(bytes);
     Model *model = MemoryAlloc(sizeof(Model) + sizeof(Integer8) * count, error);
     if (model == NULL) {
-        goto returnError;
+        goto returnValue;
     }
     model->arity = arity;
     model->count = count;
@@ -42,29 +41,7 @@ void *LamdaDecode(Byte **bytes, Error *error) {
     }
     return model;
 
-returnError:
-    return NULL;
-}
-
-Value *LamdaEval(void *data, Code *code, Value **context, Bool pure, Error *error) {
-    Model *model = data;
-    Lamda *lamda = Create(model->arity, model->count, error);
-    if (lamda == NULL) {
-        goto returnError;
-    }
-    Value *lamdaValue = BridgeFromLamda(lamda);
-    for (Integer8 index = 0; index < model->count; index += 1) {
-        Value *value = CodeEvalInstructionAtIndex(code, context, model->context[index], TRUE, error);
-        if (value == NULL) {
-            goto deallocLamda;
-        }
-        lamda->context[index] = value;
-    }
-    return lamdaValue;
-    
-deallocLamda:
-    LamdaDealloc(lamdaValue);
-returnError:
+returnValue:
     return NULL;
 }
 
@@ -87,17 +64,11 @@ void LamdaEnumerate(Value *lamdaValue, void (*callback)(Value *value)) {
     }
 }
 
-Value **LamdaCreateContext(Value *lamdaValue, Error *error) {
+Value **LamdaCreateContext(Value *lamdaValue, Value **error) {
     Lamda *lamda = BridgeToLamda(lamdaValue);
     return MemoryAlloc(sizeof(Value *) * (lamda->arity + lamda->count), error);
 }
 
 void LamdaDeallocContext(Value **context) {
     MemoryDealloc(context);
-}
-
-Value *LamdaResult(Value *lamdaValue, Value **context, Error *error) {
-    Lamda *lamda = BridgeToLamda(lamdaValue);
-    MemoryCopy(lamda->context, &context[lamda->arity], sizeof(Value *) * lamda->count);
-    return CodeEvalInstructionAtIndex(lamda->code, context, 0, TRUE, error);
 }

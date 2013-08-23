@@ -1,17 +1,15 @@
 #include "boolean.h"
 
 struct Boolean {
-    Value base;
+    Type *type;
     Bool truth;
 }; 
 
 static Boolean trueSingleton = {
-    .base = TypeBoolean,
     .truth = TRUE
 };
 
 static Boolean falseSingleton = {
-    .base = TypeBoolean,
     .truth = FALSE
 };
 
@@ -23,16 +21,12 @@ Value *BooleanFalseSingleton(void) {
     return BridgeFromBoolean(&falseSingleton);
 }
 
-void *BooleanDecodeTrue(Byte **bytes, Error *error) {
+void *BooleanDecodeTrue(Byte **bytes, Value **error) {
     return &trueSingleton;
 }
 
-void *BooleanDecodeFalse(Byte **bytes, Error *error) {
+void *BooleanDecodeFalse(Byte **bytes, Value **error) {
     return &falseSingleton;
-}
-
-Value *BooleanEval(void *data, Code *code, Value **context, Bool pure, Error *error) {
-    return data;
 }
 
 void BooleanDealloc(Value *booleanValue) {

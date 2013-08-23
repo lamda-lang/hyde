@@ -1,23 +1,19 @@
 #include "nil.h"
 
 struct Nil {
-    Value base;
+    Type *type;
 };
 
 static Nil nilSingleton = {
-    .base = TypeNil
+    .type = NULL
 };
 
 Value *NilSingleton(void) {
     return BridgeFromNil(&nilSingleton);
 }
 
-void *NilDecode(Byte **bytes, Error *error) {
+void *NilDecode(Byte **bytes, Value **error) {
     return &nilSingleton;
-}
-
-Value *NilEval(void *data, Code *code, Value **context, Bool pure, Error *error) {
-    return data;
 }
 
 void NilDealloc(Value *nilValue) {

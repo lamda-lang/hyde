@@ -1,7 +1,7 @@
 #include "range.h"
 
 struct Range {
-    Value base;
+    Type *type;
     Value *lower;
     Value *upper;
 };
@@ -11,54 +11,31 @@ typedef struct {
     Integer32 upperIndex;
 } Model;
 
-static Range *Create(Value *lower, Value *upper, Error *error) {
+/*
+static Range *Create(Value *lower, Value *upper, Value **error) {
     Range *range = MemoryAlloc(sizeof(Range), error);
     if (range == NULL) {
-        goto returnError;
+        goto returnValue;
     }
-    range->base = TypeRange;
+    range->type = TypeRange;
     range->lower = lower;
     range->upper = upper;
     return range;
 
-returnError:
+returnValue:
     return NULL;
 }
-
-void *RangeDecode(Byte **bytes, Error *error) {
+*/
+void *RangeDecode(Byte **bytes, Value **error) {
     Model *model = MemoryAlloc(sizeof(Model), error);
     if (model == NULL) {
-        goto returnError;
+        goto returnValue;
     }
     model->lowerIndex = DecodeInteger32VLE(bytes);
     model->upperIndex = DecodeInteger32VLE(bytes);
     return model;
 
-returnError:
-    return NULL;
-}
-
-Value *RangeEval(void *data, Code *code, Value **context, Bool pure, Error *error) {
-    Model *model = data;
-    Value *lower = CodeEvalInstructionAtIndex(code, context, model->lowerIndex, TRUE, error);
-    if (lower == NULL) {
-        goto returnError;
-    }
-    Value *upper = CodeEvalInstructionAtIndex(code, context, model->upperIndex, TRUE, error);
-    if (upper == NULL) {
-        goto deallocLower;
-    }
-    Range *range = Create(lower, upper, error);
-    if (range == NULL) {
-        goto deallocUpper;
-    }
-    return BridgeFromRange(range);
-
-deallocUpper:
-    ValueDealloc(upper);
-deallocLower:
-    ValueDealloc(lower);
-returnError:
+returnValue:
     return NULL;
 }
 
@@ -67,8 +44,7 @@ void RangeDealloc(Value *rangeValue) {
 }
 
 Integer64 RangeHash(Value *rangeValue) {
-    Range *range = BridgeToRange(rangeValue);
-    return ValueHash(range->lower) + ValueHash(range->upper);
+    return 0;
 }
 
 void RangeEnumerate(Value *rangeValue, void (*callback)(Value *value)) {

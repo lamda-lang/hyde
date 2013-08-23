@@ -4,12 +4,13 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define FALSE 0
+/* macros */
 #define TRUE 1
+#define FALSE 0
 
 /* scalar types */
-typedef _Bool Bool;
 typedef unsigned char Byte;
+typedef _Bool Bool;
 typedef char Char;
 typedef uint8_t Integer8;
 typedef uint16_t Integer16;
@@ -17,83 +18,46 @@ typedef uint32_t Integer32;
 typedef uint64_t Integer64;
 typedef double Float64;
 typedef size_t Size;
-typedef uint8_t Value;
+typedef int File;
 
 /* opaque types */
-typedef struct Code Code;
-typedef struct File File;
-typedef struct Data Data;
 typedef struct Boolean Boolean;
+typedef struct Case Case;
+typedef struct Comprehension Comprehension;
 typedef struct Do Do;
 typedef struct Float Float;
-typedef struct Token Token;
 typedef struct Integer Integer;
 typedef struct Lamda Lamda;
 typedef struct List List;
 typedef struct Map Map;
 typedef struct Nil Nil;
+typedef struct Protocol Protocol;
 typedef struct Range Range;
+typedef struct Result Result;
 typedef struct Set Set;
 typedef struct String String;
-
-/* enum types */
-typedef enum {
-    ErrorOutOfMemory,
-    ErrorInvalidType,
-    ErrorArityMismatch,
-    ErrorFileOpen,
-    ErrorFileRead,
-    ErrorFileWrite,
-    ErrorFileClose,
-    ErrorMainNotFound
-} Error;
-
-typedef enum {
-    StatusSuccess = TRUE,
-    StatusFailure = FALSE
-} Status;
-
-typedef enum {
-    TypeNil = 0,
-    TypeBoolean = 1,
-    TypeInteger = 2,
-    TypeFloat = 3,
-    TypeToken = 4,
-    TypeString = 5,
-    TypeSet = 6,
-    TypeList = 7,
-    TypeMap = 8,
-    TypeRange = 9,
-    TypeModule = 10,
-    TypeDo = 11,
-    TypeLamda = 12
-} Type;
-
-typedef enum {
-    FlagGarbage = 1 << 4,
-    FlagMark = 1 << 5
-} Flag;
+typedef struct Token Token;
+typedef struct Type Type;
+typedef struct Variable Variable;
+typedef struct When When;
+typedef struct Value Value;
 
 /* function types */
-typedef void *Decode(Byte **code, Error *error);
-typedef Value *Eval(void *data, Code *code, Value **context, Bool pure, Error *error);
+typedef void *Decode(Byte **code, Value **error);
 typedef void Dealloc(Value *value);
 typedef Integer64 Hash(Value *value);
 typedef Bool Equal(Value *value, Value *other);
 typedef void Enumerate(Value *value, void (*callback)(Value *value));
 
-#include "arg.h"
 #include "boolean.h"
+#include "case.h"
+#include "comprehension.h"
 #include "bridge.h"
 #include "case.h"
-#include "code.h"
-#include "data.h"
 #include "decode.h"
 #include "do.h"
-#include "error.h"
 #include "file.h"
 #include "float.h"
-#include "hash.h"
 #include "integer.h"
 #include "lamda.h"
 #include "list.h"
@@ -101,12 +65,14 @@ typedef void Enumerate(Value *value, void (*callback)(Value *value));
 #include "memory.h"
 #include "nil.h"
 #include "process.h"
+#include "protocol.h"
 #include "range.h"
 #include "result.h"
 #include "runtime.h"
 #include "set.h"
 #include "string.h"
 #include "token.h"
+#include "type.h"
 #include "value.h"
 #include "variable.h"
 #include "when.h"

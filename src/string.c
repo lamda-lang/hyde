@@ -4,7 +4,7 @@
 #include "string.h"
 
 struct String {
-    Value base;
+    Type *type;
     Integer32 length;
     Integer32 codepoint[];
 };
@@ -14,56 +14,43 @@ typedef struct {
     Integer32 codepoint[];
 } Model;
 
-static String *Create(Integer32 length, Error *error) {
+static String *Create(Integer32 length, Value **error) {
     String *string = MemoryAlloc(sizeof(String) + sizeof(Integer32) * length, error);
     if (string == NULL) {
-        goto returnError;
+        goto returnValue;
     }
-    string->base = TypeString;
+    string->type = TypeString;
     string->length = length;
     return string;
 
-returnError:
+returnValue:
     return NULL;
 }
 
-void *StringDecode(Byte **bytes, Error *error) {
+void *StringDecode(Byte **bytes, Value **error) {
     Integer32 length = DecodeInteger32VLE(bytes);
     Model *model = MemoryAlloc(sizeof(Model) + sizeof(Integer32) * length, error);
     if (model == NULL) {
-        goto returnError;
+        goto returnValue;
     }
     return model;
 
-returnError:
+returnValue:
     return NULL;
 }
 
-Value *StringEval(void *data, Code *code, Value **context, Bool pure, Error *error) {
-    Model *model = data;
-    String *string = Create(model->length, error);
-    if (string == NULL) {
-        goto returnError;
-    }
-    MemoryCopy(model->codepoint, string->codepoint, sizeof(Integer32) * model->length);
-    return BridgeFromString(string);
-
-returnError:
-    return NULL;
-}
-
-Value *StringCreateWithCharacters(Char *chars, Error *error) {
+Value *StringCreateWithCharacters(Char *chars, Value **error) {
     Integer32 length = strnlen(chars, 0XFFFF) & 0XFFFF;
     String *string = Create(length, error);
     if (string == NULL) {
-        goto returnError;
+        goto returnValue;
     }
     for (Integer32 index = 0; index < length; index += 1) {
         string->codepoint[index] = chars[index] & 0XF;
     }
     return BridgeFromString(string);
 
-returnError:
+returnValue:
     return NULL;
 }
 
@@ -82,22 +69,22 @@ Bool StringEqual(Value *stringValue, Value *otherValue) {
            MemoryEqual(string->codepoint, other->codepoint, sizeof(Integer32) * string->length);
 }
 
-Value *StringConcatenate(Value **args, Integer8 count, Error *error) {
+Value *StringConcatenate(Value **args, Integer8 count, Value **error) {
     String *string = BridgeToString(args[0]);
     String *other = BridgeToString(args[1]);
     String *result = Create(string->length + other->length, error);
     if (result == NULL) {
-        goto returnError;
+        goto returnValue;
     }
     MemoryCopy(string->codepoint, result->codepoint, sizeof(Integer32) * string->length);
     MemoryCopy(other->codepoint, result->codepoint + string->length, sizeof(Integer32) * other->length);
     return BridgeFromString(result);
 
-returnError:
+returnValue:
     return NULL;
 }
 
-Value *StringPrint(Value **args, Integer8 count, Error *error) {
+Value *StringPrint(Value **args, Integer8 count, Value **error) {
     String *string = BridgeToString(args[0]);
     for (Integer32 index = 0; index < string->length; index += 1) {
         int character = string->codepoint[index] & INT_MAX;

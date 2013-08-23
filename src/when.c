@@ -1,5 +1,9 @@
 #include "when.h"
 
+struct When {
+    Type *type;
+};
+
 typedef struct {
     Integer32 condition;
     Integer32 value;
@@ -10,11 +14,11 @@ typedef struct {
     Index index[];
 } Model;
 
-void *WhenDecode(Byte **bytes, Error *error) {
+void *WhenDecode(Byte **bytes, Value **error) {
     Integer8 count = DecodeInteger8FLE(bytes);
     Model *model = MemoryAlloc(sizeof(Model) + sizeof(Index) * count, error);
     if (model == NULL) {
-        goto returnError;
+        goto returnValue;
     }
     model->count = count;
     for (Integer8 index = 0; index < count; index += 1) {
@@ -23,23 +27,6 @@ void *WhenDecode(Byte **bytes, Error *error) {
     }
     return model;
 
-returnError:
-    return NULL;
-}
-
-Value *WhenEval(void *data, Code *code, Value **context, Bool pure, Error *error) {
-    Model *model = data;
-    for (Integer8 index = 0; index < model->count; index += 1) {
-        Value *condition = CodeEvalInstructionAtIndex(code, context, model->index[index].condition, TRUE, error);
-        if (condition == NULL) {
-            goto returnError;
-        }
-        if (condition == BooleanTrueSingleton()) {
-            return CodeEvalInstructionAtIndex(code, context, model->index[index].value, pure, error);
-        }
-    }
-    return NilSingleton();
-
-returnError:
+returnValue:
     return NULL;
 }

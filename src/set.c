@@ -1,7 +1,7 @@
 #include "api.h"
 
 struct Set {
-    Value base;
+    Type *type;
     Integer32 count;
     Value *element[];
 };
@@ -11,24 +11,24 @@ typedef struct {
     Integer32 element[];
 } Model;
 
-static Set *Create(Integer32 count, Error *error) {
+static Set *Create(Integer32 count, Value **error) {
     Set *set = MemoryAlloc(sizeof(Set) + sizeof(Value *) * count, error);
     if (set == NULL) {
-        goto returnError;
+        goto returnValue;
     }
-    set->base = TypeSet;
+    set->type = TypeSet;
     set->count = count;
     return set;
 
-returnError:
+returnValue:
     return NULL;
 }
 
-void *SetDecode(Byte **bytes, Error *error) {
+void *SetDecode(Byte **bytes, Value **error) {
     Integer32 count = DecodeInteger32VLE(bytes);
     Model *model = MemoryAlloc(sizeof(Model) + sizeof(Integer32) * count, error);
     if (model == NULL) {
-        goto returnError;
+        goto returnValue;
     }
     model->count = count;
     for (Integer32 index = 0; index < count; index += 1) {
@@ -36,29 +36,7 @@ void *SetDecode(Byte **bytes, Error *error) {
     }
     return model;
 
-returnError:
-    return NULL;
-}
-
-Value *SetEval(void *data, Code *code, Value **context, Bool pure, Error *error) {
-    Model *model = data;
-    Set *set = Create(model->count, error);
-    if (set == NULL) {
-        goto returnError;
-    }
-    Value *setValue = BridgeFromSet(set);
-    for (Integer32 index = 0; index < model->count; index += 1) {
-        Value *value = CodeEvalInstructionAtIndex(code, context, model->element[index], TRUE, error);
-        if (value == NULL) {
-            goto deallocSet;
-        }
-        set->element[index] = value;
-    }
-    return setValue;
-
-deallocSet:
-    SetDealloc(setValue);
-returnError:
+returnValue:
     return NULL;
 }
 

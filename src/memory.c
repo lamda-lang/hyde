@@ -2,28 +2,20 @@
 #include <string.h>
 #include "memory.h"
 
-void *MemoryAlloc(Size size, Error *error) {
+void *MemoryAlloc(Size size, Value **error) {
     void *buffer = malloc(size);
     if (buffer == NULL) {
-        ErrorSet(error, ErrorOutOfMemory);
-        goto returnError;
+        *error = TokenOutOfMemoryError;
     }
     return buffer;
-
-returnError:
-    return NULL;
 }
 
-void *MemoryRealloc(void *buffer, Size size, Error *error) {
+void *MemoryRealloc(void *buffer, Size size, Value **error) {
     void *new = realloc(buffer, size);
     if (new == NULL) {
-        ErrorSet(error, ErrorOutOfMemory);
-        goto returnError;
+        *error = TokenOutOfMemoryError;
     }
     return new;
-
-returnError:
-    return NULL;
 }
 
 void MemoryDealloc(void *buffer) {

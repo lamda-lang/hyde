@@ -1,7 +1,7 @@
 #include "list.h"
 
 struct List {
-    Value base;
+    Type *type;
     Integer32 count;
     Value *element[];
 };
@@ -11,29 +11,29 @@ typedef struct {
     Integer32 index[];
 } Model;
 
-static List *Create(Integer32 count, Error *error) {
+static List *Create(Integer32 count, Value **error) {
     List *list = MemoryAlloc(sizeof(List) + sizeof(Value *) * count, error);
     if (list == NULL) {
-        goto returnError;
+        goto returnValue;
     }
-    list->base = TypeList;
+    list->type = TypeList;
     list->count = count;
     return list;
 
-returnError:
+returnValue:
     return NULL;
 }
 
-Value *ListCreate(Integer32 count, Error *error) {
+Value *ListCreate(Integer32 count, Value **error) {
     List *list = Create(count, error);
     return BridgeFromList(list);
 }
 
-void *ListDecode(Byte **bytes, Error *error) {
+void *ListDecode(Byte **bytes, Value **error) {
     Integer32 count = DecodeInteger32VLE(bytes);
     Model *model = MemoryAlloc(sizeof(Model) + sizeof(Integer32) * count, error);
     if (model == NULL) {
-        goto returnError;
+        goto returnValue;
     }
     model->count = count;
     for (Integer32 index = 0; index < count; index += 1) {
@@ -41,29 +41,7 @@ void *ListDecode(Byte **bytes, Error *error) {
     }
     return model;
 
-returnError:
-    return NULL;
-}
-
-Value *ListEval(void *data, Code *code, Value **context, Bool pure, Error *error) {
-    Model *model = data;
-    List *list = Create(model->count, error);
-    if (list == NULL) {
-        goto returnError;
-    }
-    Value *listValue = BridgeFromList(list);
-    for (Integer32 index = 0; index < model->count; index += 1) {
-        Value *value = CodeEvalInstructionAtIndex(code, context, model->index[index], TRUE, error);
-        if (value == NULL) {
-            goto deallocList;
-        }
-        list->element[index] = value;
-    }
-    return listValue;
-
-deallocList:
-    ListDealloc(listValue);
-returnError:
+returnValue:
     return NULL;
 }
 

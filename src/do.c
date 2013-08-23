@@ -6,29 +6,29 @@ typedef struct {
 } Model;
 
 struct Do {
-  Value base;
+  Type *type;
   Integer32 count;
   Value *element[];
 };
 
-static Do *Create(Integer32 count, Error *error) {
+static Do *Create(Integer32 count, Value **error) {
     Do *block = MemoryAlloc(sizeof(Do) * sizeof(Value *) * count, error);
     if (block == NULL) {
-        goto returnError;
+        goto returnValue;
     }
-    block->base = TypeDo;
+    block->type = TypeDo;
     block->count = count;
     return block;
 
-returnError:
+returnValue:
     return NULL;
 }
 
-void *DoDecode(Byte **bytes, Error *error) {
+void *DoDecode(Byte **bytes, Value **error) {
     Integer32 count = DecodeInteger32VLE(bytes);
     Model *model = MemoryAlloc(sizeof(Model) + sizeof(Integer32) * count, error);
     if (model == NULL) {
-        goto returnError;
+        goto returnValue;
     }
     model->count = count;
     for (Integer32 index = 0; index < count; index += 1) {
@@ -36,29 +36,7 @@ void *DoDecode(Byte **bytes, Error *error) {
     }
     return model;
 
-returnError:
-    return NULL;
-}
-
-Value *DoEval(void *data, Code *code, Value **context, Bool pure, Error *error) {
-    Model *model = data;
-    Do *block = Create(model->count, error);
-    if (block == NULL) {
-        goto returnError;
-    }
-    Value *doValue = BridgeFromDo(block);
-    for (Integer32 index = 0; index < model->count; index += 1) {
-        Value *value = CodeEvalInstructionAtIndex(code, context, model->element[index], pure, error);
-        if (value == NULL) {
-            goto deallocBlock;
-        }
-        block->element[index] = value;
-    }
-    return pure ? doValue : block->element[block->count - 1];
-
-deallocBlock:
-    DoDealloc(doValue);
-returnError:
+returnValue:
     return NULL;
 }
 

@@ -1,5 +1,9 @@
 #include "case.h"
 
+struct Case {
+    Type *type;
+};
+
 typedef struct {
     Integer32 match;
     Integer32 guard;
@@ -12,11 +16,11 @@ typedef struct {
     Clause clause[];
 } Model;
 
-void *CaseDecode(Byte **bytes, Error *error) {
+void *CaseDecode(Byte **bytes, Value **error) {
     Integer8 length = DecodeInteger8FLE(bytes);
     Model *model = MemoryAlloc(sizeof(Model) + sizeof(Clause) * length, error);
     if (model == NULL) {
-        goto returnError;
+        goto returnValue;
     }
     model->length = length;
     model->arg = DecodeInteger32VLE(bytes);
@@ -27,34 +31,6 @@ void *CaseDecode(Byte **bytes, Error *error) {
     }
     return model;
 
-returnError:
-    return NULL;
-}
-
-Value *CaseEval(void *data, Code *code, Value **context, Bool pure, Error *error) {
-    Model *model = data;
-    Value *arg = CodeEvalInstructionAtIndex(code, context, model->arg, TRUE, error);
-    if (arg == NULL) {
-        goto returnError;
-    }
-    for (Integer8 index = 0; index < model->length; index += 1) {
-        Clause clause = model->clause[index];
-        Value *match = CodeEvalInstructionAtIndex(code, context, clause.match, TRUE, error);
-        if (match == NULL) {
-            goto returnError;
-        }
-        if (ValueEqual(arg, match)) {
-            Value *guard = CodeEvalInstructionAtIndex(code, context, clause.guard, TRUE, error);
-            if (guard == NULL) {
-                goto returnError;
-            }
-            if (guard == BooleanTrueSingleton()) {
-                return CodeEvalInstructionAtIndex(code, context, clause.value, pure, error);
-            }
-        }
-    }
-    return NilSingleton();
-
-returnError:
+returnValue:
     return NULL;
 }
