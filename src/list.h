@@ -1,7 +1,7 @@
 #ifndef LIST_H
 #define LIST_H
 
-#include "api.h"
+#include "runtime.h"
 
 void *ListDecode(Byte **bytes, VALUE **error);
 VALUE *ListCreate(Integer32 count, VALUE **error);

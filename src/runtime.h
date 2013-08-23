@@ -1,5 +1,5 @@
-#ifndef API_H
-#define API_H
+#ifndef RUNTIME_H
+#define RUNTIME_H
 
 #include <stddef.h>
 #include <stdint.h>

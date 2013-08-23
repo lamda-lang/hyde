@@ -1,7 +1,7 @@
 #ifndef DECODE_H
 #define DECODE_H
 
-#include "api.h"
+#include "runtime.h"
 
 Integer8 DecodeInteger8FLE(Byte **bytes);
 Integer16 DecodeInteger16FLE(Byte **bytes);

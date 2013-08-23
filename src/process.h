@@ -1,7 +1,7 @@
 #ifndef PROCESS_H
 #define PROCESS_H
 
-#include "api.h"
+#include "runtime.h"
 
 void ProcessExitSuccess(void);
 void ProcessExitFailure(void);

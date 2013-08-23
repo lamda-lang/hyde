@@ -1,7 +1,7 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include "api.h"
+#include "runtime.h"
 
 void *MapDecode(Byte **bytes, VALUE **error);
 VALUE *MapCreate(Integer32 count, VALUE **error);

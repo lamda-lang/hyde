@@ -1,7 +1,7 @@
 #ifndef MEMORY_H
 #define MEMORY_H
 
-#include "api.h"
+#include "runtime.h"
 
 void *MemoryAlloc(Size size, VALUE **error);
 void *MemoryRealloc(void *buffer, Size size, VALUE **error);

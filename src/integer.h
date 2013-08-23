@@ -1,7 +1,7 @@
 #ifndef INTEGER_H
 #define INTEGER_H
 
-#include "api.h"
+#include "runtime.h"
 
 void *IntegerDecode(Byte **bytes, VALUE **error);
 void IntegerDealloc(VALUE *integerVALUE);

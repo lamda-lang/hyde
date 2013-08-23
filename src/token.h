@@ -1,7 +1,7 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
-#include "api.h"
+#include "runtime.h"
 
 void *TokenDecode(Byte **bytes, VALUE **error);
 VALUE *TokenCreateWithCharacters(Char *chars, VALUE **error);

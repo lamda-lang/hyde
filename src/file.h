@@ -1,7 +1,7 @@
 #ifndef FILE_H
 #define FILE_H
 
-#include "api.h"
+#include "runtime.h"
 
 File FileOpen(Char *path, VALUE **error);
 void FileClose(File file, VALUE **error);

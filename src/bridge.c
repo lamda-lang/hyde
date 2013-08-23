@@ -4,16 +4,20 @@ VALUE *BridgeFromBoolean(Boolean *boolean) {
     return (VALUE *)boolean;
 }
 
+VALUE *BridgeFromCase(Case *block) {
+    return (VALUE *)block;
+}
+
+VALUE *BridgeFromComprehension(Comprehension *comprehension) {
+    return (VALUE *)comprehension;
+}
+
 VALUE *BridgeFromDo(Do *block) {
     return (VALUE *)block;
 }
 
 VALUE *BridgeFromFloat(Float *fpv) {
     return (VALUE *)fpv;
-}
-
-VALUE *BridgeFromToken(Token *token) {
-    return (VALUE *)token;
 }
 
 VALUE *BridgeFromInteger(Integer *integer) {
@@ -36,8 +40,16 @@ VALUE *BridgeFromNil(Nil *nil) {
     return (VALUE *)nil;
 }
 
+VALUE *BridgeFromProtocol(Protocol *protocol) {
+    return (VALUE *)protocol;
+}
+
 VALUE *BridgeFromRange(Range *range) {
     return (VALUE *)range;
+}
+
+VALUE *BridgeFromResult(Result *result) {
+    return (VALUE *)result;
 }
 
 VALUE *BridgeFromSet(Set *set) {
@@ -48,50 +60,94 @@ VALUE *BridgeFromString(String *string) {
     return (VALUE *)string;
 }
 
-Boolean *BridgeToBoolean(VALUE *booleanVALUE) {
-    return (Boolean *)booleanVALUE;
+VALUE *BridgeFromToken(Token *token) {
+    return (VALUE *)token;
 }
 
-Do *BridgeToDo(VALUE *doVALUE) {
-    return (Do *)doVALUE;
+VALUE *BridgeFromType(Type *type) {
+    return (VALUE *)type;
 }
 
-Float *BridgeToFloat(VALUE *floatVALUE) {
-    return (Float *)floatVALUE;
+VALUE *BridgeFromVariable(Variable *variable) {
+    return (VALUE *)variable;
 }
 
-Token *BridgeToToken(VALUE *tokenVALUE) {
-    return (Token *)tokenVALUE;
+VALUE *BridgeFromWhen(When *block) {
+    return (VALUE *)block;
 }
 
-Integer *BridgeToInteger(VALUE *integerVALUE) {
-    return (Integer *)integerVALUE;
+Boolean *BridgeToBoolean(VALUE *booleanValue) {
+    return (Boolean *)booleanValue;
 }
 
-Lamda *BridgeToLamda(VALUE *lamdaVALUE) {
-    return (Lamda *)lamdaVALUE;
+Case *BridgeToCase(VALUE *caseValue) {
+    return (Case *)caseValue;
 }
 
-List *BridgeToList(VALUE *listVALUE) {
-    return (List *)listVALUE;
+Comprehension *BridgeToComprehension(VALUE *comprehensionValue) {
+    return (Comprehension *)comprehensionValue;
 }
 
-Map *BridgeToMap(VALUE *mapVALUE) {
-    return (Map *)mapVALUE;
+Do *BridgeToDo(VALUE *doValue) {
+    return (Do *)doValue;
 }
 
-Nil *BridgeToNil(VALUE *nilVALUE) {
-    return (Nil *)nilVALUE;
+Float *BridgeToFloat(VALUE *floatValue) {
+    return (Float *)floatValue;
 }
 
-Range *BridgeToRange(VALUE *rangeVALUE) {
-    return (Range *)rangeVALUE;
+Integer *BridgeToInteger(VALUE *integerValue) {
+    return (Integer *)integerValue;
 }
 
-Set *BridgeToSet(VALUE *setVALUE) {
-    return (Set *)setVALUE;
+Lamda *BridgeToLamda(VALUE *lamdaValue) {
+    return (Lamda *)lamdaValue;
 }
 
-String *BridgeToString(VALUE *stringVALUE) {
-    return (String *)stringVALUE;
+List *BridgeToList(VALUE *listValue) {
+    return (List *)listValue;
+}
+
+Map *BridgeToMap(VALUE *mapValue) {
+    return (Map *)mapValue;
+}
+
+Nil *BridgeToNil(VALUE *nilValue) {
+    return (Nil *)nilValue;
+}
+
+Protocol *BridgeToProtocol(VALUE *protocolValue) {
+    return (Protocol *)protocolValue;
+}
+
+Range *BridgeToRange(VALUE *rangeValue) {
+    return (Range *)rangeValue;
+}
+
+Result *BridgeToResult(VALUE *resultValue) {
+    return (Result *)resultValue;
+}
+
+Set *BridgeToSet(VALUE *setValue) {
+    return (Set *)setValue;
+}
+
+String *BridgeToString(VALUE *stringValue) {
+    return (String *)stringValue;
+}
+
+Token *BridgeToToken(VALUE *tokenValue) {
+    return (Token *)tokenValue;
+}
+
+Type *BridgeToType(VALUE *typeValue) {
+    return (Type *)typeValue;
+}
+
+Variable *BridgeToVariable(VALUE *variableValue) {
+    return (Variable *)variableValue;
+}
+
+When *BridgeToWhen(VALUE *whenValue) {
+    return (When *)whenValue;
 }

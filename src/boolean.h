@@ -1,7 +1,7 @@
 #ifndef BOOLEAN_H
 #define BOOLEAN_H
 
-#include "api.h"
+#include "runtime.h"
 
 void BooleanDealloc(VALUE *booleanVALUE);
 Integer64 BooleanHash(VALUE *booleanVALUE);

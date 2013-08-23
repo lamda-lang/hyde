@@ -1,7 +1,7 @@
 #ifndef STRING_H
 #define STRING_H
 
-#include "api.h"
+#include "runtime.h"
 
 VALUE *StringDecode(Byte **bytes, VALUE **error);
 VALUE *StringCreateWithCharacters(Char *chars, VALUE **error);

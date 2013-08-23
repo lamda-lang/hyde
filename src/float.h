@@ -1,7 +1,7 @@
 #ifndef FLOAT_H
 #define FLOAT_H
 
-#include "api.h"
+#include "runtime.h"
 
 void *FloatDecode(Byte **bytes, VALUE **error);
 void FloatDealloc(VALUE *floatVALUE);

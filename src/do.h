@@ -1,7 +1,7 @@
 #ifndef DO_H
 #define DO_H
 
-#include "api.h"
+#include "runtime.h"
 
 void *DoDecode(Byte **bytes, VALUE **error);
 void DoDealloc(VALUE *doVALUE);

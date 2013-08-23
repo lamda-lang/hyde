@@ -1,7 +1,7 @@
 #ifndef RESULT_H
 #define RESULT_H
 
-#include "api.h"
+#include "runtime.h"
 
 void *ResultDecode(Byte **bytes, VALUE **error);
 

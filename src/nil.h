@@ -1,7 +1,7 @@
 #ifndef NIL_H
 #define NIL_H
 
-#include "api.h"
+#include "runtime.h"
 
 VALUE *NilSingleton(void);
 void *NilDecode(Byte **bytes, VALUE **error);

@@ -1,7 +1,7 @@
 #ifndef SET_H
 #define SET_H
 
-#include "api.h"
+#include "runtime.h"
 
 void *SetDecode(Byte **bytes, VALUE **error);
 void SetDealloc(VALUE *setVALUE);

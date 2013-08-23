@@ -1,7 +1,7 @@
 #ifndef LAMDA_H
 #define LAMDA_H
 
-#include "api.h"
+#include "runtime.h"
 
 void *LamdaDecode(Byte **bytes, VALUE **error);
 void LamdaDealloc(VALUE *lamdaVALUE);

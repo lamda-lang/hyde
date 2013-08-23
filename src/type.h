@@ -1,7 +1,7 @@
 #ifndef TYPE_H
 #define TYPE_H
 
-#include "api.h"
+#include "runtime.h"
 
 extern Type *TypeBoolean;
 extern Type *TypeCase;
