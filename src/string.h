@@ -3,14 +3,14 @@
 
 #include "api.h"
 
-void *StringDecode(Byte **bytes, Value **error);
-Value *StringCreateWithCharacters(Char *chars, Value **error);
-void StringDealloc(Value *stringValue);
-Integer64 StringHash(Value *stringValue);
-Bool StringEqual(Value *stringValue, Value *otherValue);
+VALUE *StringDecode(Byte **bytes, VALUE **error);
+VALUE *StringCreateWithCharacters(Char *chars, VALUE **error);
+void StringDealloc(VALUE *stringVALUE);
+Integer64 StringHash(VALUE *stringVALUE);
+Bool StringEqual(VALUE *stringVALUE, VALUE *otherVALUE);
 
 /* kernels */
-Value *StringConcatenate(Value **args, Integer8 count, Value **error);
-Value *StringPrint(Value **args, Integer8 count, Value **error);
+VALUE *StringConcatenate(VALUE **args, Integer8 count, VALUE **error);
+VALUE *StringPrint(VALUE **args, Integer8 count, VALUE **error);
 
 #endif

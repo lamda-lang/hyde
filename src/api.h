@@ -7,6 +7,7 @@
 /* macros */
 #define TRUE 1
 #define FALSE 0
+#define VALUE Type
 
 /* scalar types */
 typedef unsigned char Byte;
@@ -40,14 +41,11 @@ typedef struct Token Token;
 typedef struct Type Type;
 typedef struct Variable Variable;
 typedef struct When When;
-typedef struct Value Value;
 
 /* function types */
-typedef void *Decode(Byte **code, Value **error);
-typedef void Dealloc(Value *value);
-typedef Integer64 Hash(Value *value);
-typedef Bool Equal(Value *value, Value *other);
-typedef void Enumerate(Value *value, void (*callback)(Value *value));
+typedef void *Decode(Byte **code, VALUE **error);
+typedef Integer64 Hash(VALUE *value);
+typedef Bool Equal(VALUE *value, VALUE *other);
 
 #include "boolean.h"
 #include "case.h"
@@ -68,12 +66,10 @@ typedef void Enumerate(Value *value, void (*callback)(Value *value));
 #include "protocol.h"
 #include "range.h"
 #include "result.h"
-#include "runtime.h"
 #include "set.h"
 #include "string.h"
 #include "token.h"
 #include "type.h"
-#include "value.h"
 #include "variable.h"
 #include "when.h"
 

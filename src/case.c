@@ -16,11 +16,11 @@ typedef struct {
     Clause clause[];
 } Model;
 
-void *CaseDecode(Byte **bytes, Value **error) {
+void *CaseDecode(Byte **bytes, VALUE **error) {
     Integer8 length = DecodeInteger8FLE(bytes);
     Model *model = MemoryAlloc(sizeof(Model) + sizeof(Clause) * length, error);
     if (model == NULL) {
-        goto returnValue;
+        goto returnVALUE;
     }
     model->length = length;
     model->arg = DecodeInteger32VLE(bytes);
@@ -31,6 +31,6 @@ void *CaseDecode(Byte **bytes, Value **error) {
     }
     return model;
 
-returnValue:
+returnVALUE:
     return NULL;
 }

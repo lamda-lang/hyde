@@ -2,7 +2,7 @@
 #include <string.h>
 #include "memory.h"
 
-void *MemoryAlloc(Size size, Value **error) {
+void *MemoryAlloc(Size size, VALUE **error) {
     void *buffer = malloc(size);
     if (buffer == NULL) {
         *error = TokenOutOfMemoryError;
@@ -10,7 +10,7 @@ void *MemoryAlloc(Size size, Value **error) {
     return buffer;
 }
 
-void *MemoryRealloc(void *buffer, Size size, Value **error) {
+void *MemoryRealloc(void *buffer, Size size, VALUE **error) {
     void *new = realloc(buffer, size);
     if (new == NULL) {
         *error = TokenOutOfMemoryError;

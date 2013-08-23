@@ -20,7 +20,7 @@ extern Type *TypeSet;
 extern Type *TypeString;
 extern Type *TypeToken;
 extern Type *TypeType;
-extern Type *TypeValue;
+extern Type *TypeVALUE;
 extern Type *TypeVariable;
 extern Type *TypeWhen;
 

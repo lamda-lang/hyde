@@ -8,22 +8,22 @@ static Nil nilSingleton = {
     .type = NULL
 };
 
-Value *NilSingleton(void) {
+VALUE *NilSingleton(void) {
     return BridgeFromNil(&nilSingleton);
 }
 
-void *NilDecode(Byte **bytes, Value **error) {
+void *NilDecode(Byte **bytes, VALUE **error) {
     return &nilSingleton;
 }
 
-void NilDealloc(Value *nilValue) {
-    MemoryDealloc(nilValue);
+void NilDealloc(VALUE *nilVALUE) {
+    MemoryDealloc(nilVALUE);
 }
 
-Integer64 NilHash(Value *nilValue) {
+Integer64 NilHash(VALUE *nilVALUE) {
     return 1829;
 }
 
-Bool NilEqual(Value *nilValue, Value *otherValue) {
+Bool NilEqual(VALUE *nilVALUE, VALUE *otherVALUE) {
     return TRUE;
 }

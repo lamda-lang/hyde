@@ -3,6 +3,6 @@
 
 #include "api.h"
 
-void *CaseDecode(Byte **bytes, Value **error);
+void *CaseDecode(Byte **bytes, VALUE **error);
 
 #endif

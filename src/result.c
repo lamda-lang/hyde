@@ -10,11 +10,11 @@ typedef struct {
     Integer32 arg[];
 } Model;
 
-void *ResultDecode(Byte **bytes, Value **error) {
+void *ResultDecode(Byte **bytes, VALUE **error) {
     Integer8 arity = DecodeInteger8FLE(bytes);
     Model *model = MemoryAlloc(sizeof(Model) + sizeof(Integer32) * arity, error);
     if (model == NULL) {
-        goto returnValue;
+        goto returnVALUE;
     }
     model->arity = arity;
     model->lamda = DecodeInteger32VLE(bytes);
@@ -23,6 +23,6 @@ void *ResultDecode(Byte **bytes, Value **error) {
     }
     return model;
 
-returnValue:
+returnVALUE:
     return NULL;
 }

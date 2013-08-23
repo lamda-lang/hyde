@@ -8,27 +8,27 @@ typedef struct {
 struct Do {
   Type *type;
   Integer32 count;
-  Value *element[];
+  VALUE *element[];
 };
 
-static Do *Create(Integer32 count, Value **error) {
-    Do *block = MemoryAlloc(sizeof(Do) * sizeof(Value *) * count, error);
+static Do *Create(Integer32 count, VALUE **error) {
+    Do *block = MemoryAlloc(sizeof(Do) * sizeof(VALUE *) * count, error);
     if (block == NULL) {
-        goto returnValue;
+        goto returnVALUE;
     }
     block->type = TypeDo;
     block->count = count;
     return block;
 
-returnValue:
+returnVALUE:
     return NULL;
 }
 
-void *DoDecode(Byte **bytes, Value **error) {
+void *DoDecode(Byte **bytes, VALUE **error) {
     Integer32 count = DecodeInteger32VLE(bytes);
     Model *model = MemoryAlloc(sizeof(Model) + sizeof(Integer32) * count, error);
     if (model == NULL) {
-        goto returnValue;
+        goto returnVALUE;
     }
     model->count = count;
     for (Integer32 index = 0; index < count; index += 1) {
@@ -36,20 +36,20 @@ void *DoDecode(Byte **bytes, Value **error) {
     }
     return model;
 
-returnValue:
+returnVALUE:
     return NULL;
 }
 
-void DoDealloc(Value *doValue) {
-    MemoryDealloc(doValue);
+void DoDealloc(VALUE *doVALUE) {
+    MemoryDealloc(doVALUE);
 }
 
-Integer64 DoHash(Value *doValue) {
-    return BridgeToDo(doValue)->count;
+Integer64 DoHash(VALUE *doVALUE) {
+    return BridgeToDo(doVALUE)->count;
 }
 
-void DoEnumerate(Value *doValue, void (*callback)(Value *value)) {
-    Do *block = BridgeToDo(doValue);
+void DoEnumerate(VALUE *doVALUE, void (*callback)(VALUE *value)) {
+    Do *block = BridgeToDo(doVALUE);
     for (Integer32 index = 0; index < block->count; index += 1) {
         callback(block->element[index]);
     }

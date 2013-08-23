@@ -3,18 +3,18 @@
 
 #include "api.h"
 
-void *TokenDecode(Byte **bytes, Value **error);
-Value *TokenCreateWithCharacters(Char *chars, Value **error);
-void TokenDealloc(Value *tokenValue);
-Integer64 TokenHash(Value *tokenValue);
-Bool TokenEqual(Value *tokenValue, Value *otherValue);
+void *TokenDecode(Byte **bytes, VALUE **error);
+VALUE *TokenCreateWithCharacters(Char *chars, VALUE **error);
+void TokenDealloc(VALUE *tokenVALUE);
+Integer64 TokenHash(VALUE *tokenVALUE);
+Bool TokenEqual(VALUE *tokenVALUE, VALUE *otherVALUE);
 
-extern Value *TokenOutOfMemoryError;
-extern Value *TokenFileOpenError;
-extern Value *TokenFileReadError;
-extern Value *TokenFileWriteError;
-extern Value *TokenFileCloseError;
-extern Value *TokenInvalidTypeError;
-extern Value *TokenArityMismatchError;
+extern VALUE *TokenOutOfMemoryError;
+extern VALUE *TokenFileOpenError;
+extern VALUE *TokenFileReadError;
+extern VALUE *TokenFileWriteError;
+extern VALUE *TokenFileCloseError;
+extern VALUE *TokenInvalidTypeError;
+extern VALUE *TokenArityMismatchError;
 
 #endif

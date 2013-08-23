@@ -2,8 +2,8 @@
 
 struct Range {
     Type *type;
-    Value *lower;
-    Value *upper;
+    VALUE *lower;
+    VALUE *upper;
 };
 
 typedef struct {
@@ -12,43 +12,43 @@ typedef struct {
 } Model;
 
 /*
-static Range *Create(Value *lower, Value *upper, Value **error) {
+static Range *Create(VALUE *lower, VALUE *upper, VALUE **error) {
     Range *range = MemoryAlloc(sizeof(Range), error);
     if (range == NULL) {
-        goto returnValue;
+        goto returnVALUE;
     }
     range->type = TypeRange;
     range->lower = lower;
     range->upper = upper;
     return range;
 
-returnValue:
+returnVALUE:
     return NULL;
 }
 */
-void *RangeDecode(Byte **bytes, Value **error) {
+void *RangeDecode(Byte **bytes, VALUE **error) {
     Model *model = MemoryAlloc(sizeof(Model), error);
     if (model == NULL) {
-        goto returnValue;
+        goto returnVALUE;
     }
     model->lowerIndex = DecodeInteger32VLE(bytes);
     model->upperIndex = DecodeInteger32VLE(bytes);
     return model;
 
-returnValue:
+returnVALUE:
     return NULL;
 }
 
-void RangeDealloc(Value *rangeValue) {
-    MemoryDealloc(rangeValue);
+void RangeDealloc(VALUE *rangeVALUE) {
+    MemoryDealloc(rangeVALUE);
 }
 
-Integer64 RangeHash(Value *rangeValue) {
+Integer64 RangeHash(VALUE *rangeVALUE) {
     return 0;
 }
 
-void RangeEnumerate(Value *rangeValue, void (*callback)(Value *value)) {
-    Range *range = BridgeToRange(rangeValue);
+void RangeEnumerate(VALUE *rangeVALUE, void (*callback)(VALUE *value)) {
+    Range *range = BridgeToRange(rangeVALUE);
     callback(range->upper);
     callback(range->lower);
 }

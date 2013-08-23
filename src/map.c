@@ -1,8 +1,8 @@
 #include "map.h"
 
 typedef struct {
-    Value *key;
-    Value *value;
+    VALUE *key;
+    VALUE *value;
 } Pair;
 
 typedef struct {
@@ -21,29 +21,29 @@ typedef struct {
     Index pair[];
 } Model;
 
-static Map *Create(Integer32 count, Value **error) {
+static Map *Create(Integer32 count, VALUE **error) {
     Map *map = MemoryAlloc(sizeof(Map) + sizeof(Pair) * count, error);
     if (map == NULL) {
-        goto returnValue;
+        goto returnVALUE;
     }
     map->type = TypeMap;
     map->count = count;
     return map;
 
-returnValue:
+returnVALUE:
     return NULL;
 }
 
-Value *MapCreate(Integer32 count, Value **error) {
+VALUE *MapCreate(Integer32 count, VALUE **error) {
     Map *map = Create(count, error);
     return BridgeFromMap(map);
 }
 
-void *MapDecode(Byte **bytes, Value **error) {
+void *MapDecode(Byte **bytes, VALUE **error) {
     Integer32 count = DecodeInteger32VLE(bytes);
     Model *model = MemoryAlloc(sizeof(Model) + sizeof(Index) * count, error);
     if (model == NULL) {
-        goto returnValue;
+        goto returnVALUE;
     }
     model->count = count;
     for (Integer32 index = 0; index < count; index += 1) {
@@ -52,26 +52,26 @@ void *MapDecode(Byte **bytes, Value **error) {
     }
     return model;
 
-returnValue:
+returnVALUE:
     return NULL;
 }
 
-void MapDealloc(Value *mapValue) {
-    MemoryDealloc(mapValue);
+void MapDealloc(VALUE *mapVALUE) {
+    MemoryDealloc(mapVALUE);
 }
 
-Integer64 MapHash(Value *mapValue) {
-    return BridgeToMap(mapValue)->count;
+Integer64 MapHash(VALUE *mapVALUE) {
+    return BridgeToMap(mapVALUE)->count;
 }
 
-void MapEnumerate(Value *mapValue, void (*callback)(Value *value)) {
-    Map *map = BridgeToMap(mapValue);
+void MapEnumerate(VALUE *mapVALUE, void (*callback)(VALUE *value)) {
+    Map *map = BridgeToMap(mapVALUE);
     for (Integer32 index = 0; index < map->count; index += 1) {
         callback(map->pair[index].key);
         callback(map->pair[index].value);
     }
 }
 
-Value *MapGetValueForKey(Value *mapValue, Value *key) {
+VALUE *MapGetVALUEForKey(VALUE *mapVALUE, VALUE *key) {
     return NULL;
 }

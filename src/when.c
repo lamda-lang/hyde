@@ -14,11 +14,11 @@ typedef struct {
     Index index[];
 } Model;
 
-void *WhenDecode(Byte **bytes, Value **error) {
+void *WhenDecode(Byte **bytes, VALUE **error) {
     Integer8 count = DecodeInteger8FLE(bytes);
     Model *model = MemoryAlloc(sizeof(Model) + sizeof(Index) * count, error);
     if (model == NULL) {
-        goto returnValue;
+        goto returnVALUE;
     }
     model->count = count;
     for (Integer8 index = 0; index < count; index += 1) {
@@ -27,6 +27,6 @@ void *WhenDecode(Byte **bytes, Value **error) {
     }
     return model;
 
-returnValue:
+returnVALUE:
     return NULL;
 }

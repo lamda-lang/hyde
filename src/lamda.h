@@ -3,13 +3,13 @@
 
 #include "api.h"
 
-void *LamdaDecode(Byte **bytes, Value **error);
-void LamdaDealloc(Value *lamdaValue);
-Integer64 LamdaHash(Value *lamdaValue);
-Integer8 LamdaArity(Value *lamdaValue);
-void LamdaEnumerate(Value *lamdaValue, void (*callback)(Value *value));
-Value **LamdaCreateContext(Value *lamdaValue, Value **error);
-void LamdaDeallocContext(Value **context);
-Value *LamdaResult(Value *lamdaValue, Value **context, Value **error);
+void *LamdaDecode(Byte **bytes, VALUE **error);
+void LamdaDealloc(VALUE *lamdaVALUE);
+Integer64 LamdaHash(VALUE *lamdaVALUE);
+Integer8 LamdaArity(VALUE *lamdaVALUE);
+void LamdaEnumerate(VALUE *lamdaVALUE, void (*callback)(VALUE *value));
+VALUE **LamdaCreateContext(VALUE *lamdaVALUE, VALUE **error);
+void LamdaDeallocContext(VALUE **context);
+VALUE *LamdaResult(VALUE *lamdaVALUE, VALUE **context, VALUE **error);
 
 #endif

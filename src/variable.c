@@ -8,14 +8,14 @@ typedef struct {
     Integer8 variable;
 } Model;
 
-void *VariableDecode(Byte **bytes, Value **error) {
+void *VariableDecode(Byte **bytes, VALUE **error) {
     Model *model = MemoryAlloc(sizeof(Model), error);
     if (model == NULL) {
-        goto returnValue;
+        goto returnVALUE;
     }
     model->variable = DecodeInteger8FLE(bytes);
     return model;
 
-returnValue:
+returnVALUE:
     return NULL;
 }

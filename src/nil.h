@@ -3,10 +3,10 @@
 
 #include "api.h"
 
-Value *NilSingleton(void);
-void *NilDecode(Byte **bytes, Value **error);
-void NilDealloc(Value *nilValue);
-Integer64 NilHash(Value *nilValue);
-Bool NilEqual(Value *nilValue, Value *otherValue);
+VALUE *NilSingleton(void);
+void *NilDecode(Byte **bytes, VALUE **error);
+void NilDealloc(VALUE *nilVALUE);
+Integer64 NilHash(VALUE *nilVALUE);
+Bool NilEqual(VALUE *nilVALUE, VALUE *otherVALUE);
 
 #endif

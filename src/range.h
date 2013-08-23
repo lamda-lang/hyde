@@ -3,9 +3,9 @@
 
 #include "api.h"
 
-void *RangeDecode(Byte **bytes, Value **error);
-void RangeDealloc(Value *rangeValue);
-Integer64 RangeHash(Value *rangeValue);
-void RangeEnumerate(Value *rangeValue, void (*callback)(Value *value));
+void *RangeDecode(Byte **bytes, VALUE **error);
+void RangeDealloc(VALUE *rangeVALUE);
+Integer64 RangeHash(VALUE *rangeVALUE);
+void RangeEnumerate(VALUE *rangeVALUE, void (*callback)(VALUE *value));
 
 #endif

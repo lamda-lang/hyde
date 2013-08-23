@@ -9,45 +9,45 @@ typedef struct {
     Float64 value;
 } Model;
 
-static inline Float *Create(Float64 value, Value **error) {
+static inline Float *Create(Float64 value, VALUE **error) {
     Float *fpv = MemoryAlloc(sizeof(Float), error);
     if (fpv == NULL) {
-        goto returnValue;
+        goto returnVALUE;
     }
     fpv->type = TypeFloat;
     fpv->value = value;
     return fpv;
 
-returnValue:
+returnVALUE:
     return NULL;
 }
 
-void *FloatDecode(Byte **bytes, Value **error) {
+void *FloatDecode(Byte **bytes, VALUE **error) {
     Model *model = MemoryAlloc(sizeof(Model), error);
     if (model == NULL) {
-        goto returnValue;
+        goto returnVALUE;
     }
     model->value = DecodeFloat64FLE(bytes);
     return model;
 
-returnValue:
+returnVALUE:
     return NULL;
 }
 
-void FloatDealloc(Value *floatValue) {
-    MemoryDealloc(floatValue);
+void FloatDealloc(VALUE *floatVALUE) {
+    MemoryDealloc(floatVALUE);
 }
 
-Integer64 FloatHash(Value *floatValue) {
-    return (Integer64)BridgeToFloat(floatValue)->value;
+Integer64 FloatHash(VALUE *floatVALUE) {
+    return (Integer64)BridgeToFloat(floatVALUE)->value;
 }
 
-Bool FloatEqual(Value *floatValue, Value *otherValue) {
-    return BridgeToFloat(floatValue)->value == BridgeToFloat(otherValue)->value;
+Bool FloatEqual(VALUE *floatVALUE, VALUE *otherVALUE) {
+    return BridgeToFloat(floatVALUE)->value == BridgeToFloat(otherVALUE)->value;
 }
 
-Value *FloatSum(Value *floatValue, Value *otherValue, Value **error) {
-    Float64 sum = BridgeToFloat(floatValue)->value + BridgeToFloat(otherValue)->value;
+VALUE *FloatSum(VALUE *floatVALUE, VALUE *otherVALUE, VALUE **error) {
+    Float64 sum = BridgeToFloat(floatVALUE)->value + BridgeToFloat(otherVALUE)->value;
     Float *fpv = Create(sum, error);
     return BridgeFromFloat(fpv);
 }

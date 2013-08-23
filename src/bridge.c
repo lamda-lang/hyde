@@ -1,97 +1,97 @@
 #include "bridge.h"
 
-Value *BridgeFromBoolean(Boolean *boolean) {
-    return (Value *)boolean;
+VALUE *BridgeFromBoolean(Boolean *boolean) {
+    return (VALUE *)boolean;
 }
 
-Value *BridgeFromDo(Do *block) {
-    return (Value *)block;
+VALUE *BridgeFromDo(Do *block) {
+    return (VALUE *)block;
 }
 
-Value *BridgeFromFloat(Float *fpv) {
-    return (Value *)fpv;
+VALUE *BridgeFromFloat(Float *fpv) {
+    return (VALUE *)fpv;
 }
 
-Value *BridgeFromToken(Token *token) {
-    return (Value *)token;
+VALUE *BridgeFromToken(Token *token) {
+    return (VALUE *)token;
 }
 
-Value *BridgeFromInteger(Integer *integer) {
-    return (Value *)integer;
+VALUE *BridgeFromInteger(Integer *integer) {
+    return (VALUE *)integer;
 }
 
-Value *BridgeFromLamda(Lamda *lamda) {
-    return (Value *)lamda;
+VALUE *BridgeFromLamda(Lamda *lamda) {
+    return (VALUE *)lamda;
 }
 
-Value *BridgeFromList(List *list) {
-    return (Value *)list;
+VALUE *BridgeFromList(List *list) {
+    return (VALUE *)list;
 }
 
-Value *BridgeFromMap(Map *map) {
-    return (Value *)map;
+VALUE *BridgeFromMap(Map *map) {
+    return (VALUE *)map;
 }
 
-Value *BridgeFromNil(Nil *nil) {
-    return (Value *)nil;
+VALUE *BridgeFromNil(Nil *nil) {
+    return (VALUE *)nil;
 }
 
-Value *BridgeFromRange(Range *range) {
-    return (Value *)range;
+VALUE *BridgeFromRange(Range *range) {
+    return (VALUE *)range;
 }
 
-Value *BridgeFromSet(Set *set) {
-    return (Value *)set;
+VALUE *BridgeFromSet(Set *set) {
+    return (VALUE *)set;
 }
 
-Value *BridgeFromString(String *string) {
-    return (Value *)string;
+VALUE *BridgeFromString(String *string) {
+    return (VALUE *)string;
 }
 
-Boolean *BridgeToBoolean(Value *booleanValue) {
-    return (Boolean *)booleanValue;
+Boolean *BridgeToBoolean(VALUE *booleanVALUE) {
+    return (Boolean *)booleanVALUE;
 }
 
-Do *BridgeToDo(Value *doValue) {
-    return (Do *)doValue;
+Do *BridgeToDo(VALUE *doVALUE) {
+    return (Do *)doVALUE;
 }
 
-Float *BridgeToFloat(Value *floatValue) {
-    return (Float *)floatValue;
+Float *BridgeToFloat(VALUE *floatVALUE) {
+    return (Float *)floatVALUE;
 }
 
-Token *BridgeToToken(Value *tokenValue) {
-    return (Token *)tokenValue;
+Token *BridgeToToken(VALUE *tokenVALUE) {
+    return (Token *)tokenVALUE;
 }
 
-Integer *BridgeToInteger(Value *integerValue) {
-    return (Integer *)integerValue;
+Integer *BridgeToInteger(VALUE *integerVALUE) {
+    return (Integer *)integerVALUE;
 }
 
-Lamda *BridgeToLamda(Value *lamdaValue) {
-    return (Lamda *)lamdaValue;
+Lamda *BridgeToLamda(VALUE *lamdaVALUE) {
+    return (Lamda *)lamdaVALUE;
 }
 
-List *BridgeToList(Value *listValue) {
-    return (List *)listValue;
+List *BridgeToList(VALUE *listVALUE) {
+    return (List *)listVALUE;
 }
 
-Map *BridgeToMap(Value *mapValue) {
-    return (Map *)mapValue;
+Map *BridgeToMap(VALUE *mapVALUE) {
+    return (Map *)mapVALUE;
 }
 
-Nil *BridgeToNil(Value *nilValue) {
-    return (Nil *)nilValue;
+Nil *BridgeToNil(VALUE *nilVALUE) {
+    return (Nil *)nilVALUE;
 }
 
-Range *BridgeToRange(Value *rangeValue) {
-    return (Range *)rangeValue;
+Range *BridgeToRange(VALUE *rangeVALUE) {
+    return (Range *)rangeVALUE;
 }
 
-Set *BridgeToSet(Value *setValue) {
-    return (Set *)setValue;
+Set *BridgeToSet(VALUE *setVALUE) {
+    return (Set *)setVALUE;
 }
 
-String *BridgeToString(Value *stringValue) {
-    return (String *)stringValue;
+String *BridgeToString(VALUE *stringVALUE) {
+    return (String *)stringVALUE;
 }

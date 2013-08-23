@@ -3,12 +3,12 @@
 
 #include "api.h"
 
-void *ListDecode(Byte **bytes, Value **error);
-Value *ListCreate(Integer32 count, Value **error);
-void ListDealloc(Value *listValue);
-void ListSetValueAtIndex(Value *listValue, Value *value, Integer32 index);
-Value *ListGetValueAtIndex(Value *listValue, Integer32 index);
-Integer64 ListHash(Value *listValue);
-void ListEnumerate(Value *listValue, void (*callback)(Value *value));
+void *ListDecode(Byte **bytes, VALUE **error);
+VALUE *ListCreate(Integer32 count, VALUE **error);
+void ListDealloc(VALUE *listVALUE);
+void ListSetVALUEAtIndex(VALUE *listVALUE, VALUE *value, Integer32 index);
+VALUE *ListGetVALUEAtIndex(VALUE *listVALUE, Integer32 index);
+Integer64 ListHash(VALUE *listVALUE);
+void ListEnumerate(VALUE *listVALUE, void (*callback)(VALUE *value));
 
 #endif

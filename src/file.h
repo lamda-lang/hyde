@@ -3,9 +3,9 @@
 
 #include "api.h"
 
-File FileOpen(Char *path, Value **error);
-void FileClose(File file, Value **error);
-Size FileRead(File file, void *buffer, Size count, Value **error);
-Size FileWrite(File file, void *buffer, Size count, Value **error);
+File FileOpen(Char *path, VALUE **error);
+void FileClose(File file, VALUE **error);
+Size FileRead(File file, void *buffer, Size size, VALUE **error);
+Size FileWrite(File file, void *buffer, Size size, VALUE **error);
 
 #endif

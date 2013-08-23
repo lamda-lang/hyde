@@ -3,9 +3,9 @@
 
 #include "api.h"
 
-void *DoDecode(Byte **bytes, Value **error);
-void DoDealloc(Value *doValue);
-Integer64 DoHash(Value *doValue);
-void DoEnumerate(Value *doValue, void (*callback)(Value *value));
+void *DoDecode(Byte **bytes, VALUE **error);
+void DoDealloc(VALUE *doVALUE);
+Integer64 DoHash(VALUE *doVALUE);
+void DoEnumerate(VALUE *doVALUE, void (*callback)(VALUE *value));
 
 #endif

@@ -3,7 +3,7 @@
 struct List {
     Type *type;
     Integer32 count;
-    Value *element[];
+    VALUE *element[];
 };
 
 typedef struct {
@@ -11,29 +11,29 @@ typedef struct {
     Integer32 index[];
 } Model;
 
-static List *Create(Integer32 count, Value **error) {
-    List *list = MemoryAlloc(sizeof(List) + sizeof(Value *) * count, error);
+static List *Create(Integer32 count, VALUE **error) {
+    List *list = MemoryAlloc(sizeof(List) + sizeof(VALUE *) * count, error);
     if (list == NULL) {
-        goto returnValue;
+        goto returnVALUE;
     }
     list->type = TypeList;
     list->count = count;
     return list;
 
-returnValue:
+returnVALUE:
     return NULL;
 }
 
-Value *ListCreate(Integer32 count, Value **error) {
+VALUE *ListCreate(Integer32 count, VALUE **error) {
     List *list = Create(count, error);
     return BridgeFromList(list);
 }
 
-void *ListDecode(Byte **bytes, Value **error) {
+void *ListDecode(Byte **bytes, VALUE **error) {
     Integer32 count = DecodeInteger32VLE(bytes);
     Model *model = MemoryAlloc(sizeof(Model) + sizeof(Integer32) * count, error);
     if (model == NULL) {
-        goto returnValue;
+        goto returnVALUE;
     }
     model->count = count;
     for (Integer32 index = 0; index < count; index += 1) {
@@ -41,28 +41,28 @@ void *ListDecode(Byte **bytes, Value **error) {
     }
     return model;
 
-returnValue:
+returnVALUE:
     return NULL;
 }
 
-void ListDealloc(Value *listValue) {
-    MemoryDealloc(listValue);
+void ListDealloc(VALUE *listVALUE) {
+    MemoryDealloc(listVALUE);
 }
 
-void ListSetValueAtIndex(Value *listValue, Value *value, Integer32 index) {
-    BridgeToList(listValue)->element[index] = value;
+void ListSetVALUEAtIndex(VALUE *listVALUE, VALUE *value, Integer32 index) {
+    BridgeToList(listVALUE)->element[index] = value;
 }
 
-Value *ListGetValueAtIndex(Value *listValue, Integer32 index) {
-    return BridgeToList(listValue)->element[index];
+VALUE *ListGetVALUEAtIndex(VALUE *listVALUE, Integer32 index) {
+    return BridgeToList(listVALUE)->element[index];
 }
 
-Integer64 ListHash(Value *listValue) {
-    return BridgeToList(listValue)->count;
+Integer64 ListHash(VALUE *listVALUE) {
+    return BridgeToList(listVALUE)->count;
 }
 
-void ListEnumerate(Value *listValue, void (*callback)(Value *value)) {
-    List *list = BridgeToList(listValue);
+void ListEnumerate(VALUE *listVALUE, void (*callback)(VALUE *value)) {
+    List *list = BridgeToList(listVALUE);
     for (Integer32 index = 0; index < list->count; index += 1) {
         callback(list->element[index]);
     }

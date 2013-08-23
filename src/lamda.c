@@ -10,29 +10,29 @@ struct Lamda {
     Type  *type;
     Integer8 arity;
     Integer8 count;
-    Value *context[];
+    VALUE *context[];
 };
 
-static Lamda *Create(Integer8 arity, Integer8 count, Value **error) {
-    Lamda *lamda = MemoryAlloc(sizeof(Lamda) + sizeof(Value *) * count, error);
+static Lamda *Create(Integer8 arity, Integer8 count, VALUE **error) {
+    Lamda *lamda = MemoryAlloc(sizeof(Lamda) + sizeof(VALUE *) * count, error);
     if (lamda == NULL) {
-        goto returnValue;
+        goto returnVALUE;
     }
     lamda->type = TypeLamda;
     lamda->arity = arity;
     lamda->count = count;
     return lamda;
 
-returnValue:
+returnVALUE:
     return NULL;
 }
 
-void *LamdaDecode(Byte **bytes, Value **error) {
+void *LamdaDecode(Byte **bytes, VALUE **error) {
     Integer8 arity = DecodeInteger8FLE(bytes);
     Integer8 count = DecodeInteger8FLE(bytes);
     Model *model = MemoryAlloc(sizeof(Model) + sizeof(Integer8) * count, error);
     if (model == NULL) {
-        goto returnValue;
+        goto returnVALUE;
     }
     model->arity = arity;
     model->count = count;
@@ -41,34 +41,34 @@ void *LamdaDecode(Byte **bytes, Value **error) {
     }
     return model;
 
-returnValue:
+returnVALUE:
     return NULL;
 }
 
-void LamdaDealloc(Value *lamdaValue) {
-    MemoryDealloc(lamdaValue);
+void LamdaDealloc(VALUE *lamdaVALUE) {
+    MemoryDealloc(lamdaVALUE);
 }
 
-Integer64 LamdaHash(Value *lamdaValue) {
-    return BridgeToLamda(lamdaValue)->arity;
+Integer64 LamdaHash(VALUE *lamdaVALUE) {
+    return BridgeToLamda(lamdaVALUE)->arity;
 }
 
-Integer8 LamdaArity(Value *lamdaValue) {
-    return BridgeToLamda(lamdaValue)->arity;
+Integer8 LamdaArity(VALUE *lamdaVALUE) {
+    return BridgeToLamda(lamdaVALUE)->arity;
 }
 
-void LamdaEnumerate(Value *lamdaValue, void (*callback)(Value *value)) {
-    Lamda *lamda = BridgeToLamda(lamdaValue);
+void LamdaEnumerate(VALUE *lamdaVALUE, void (*callback)(VALUE *value)) {
+    Lamda *lamda = BridgeToLamda(lamdaVALUE);
     for (Integer8 index = 0; index < lamda->count; index += 1) {
         callback(lamda->context[index]);
     }
 }
 
-Value **LamdaCreateContext(Value *lamdaValue, Value **error) {
-    Lamda *lamda = BridgeToLamda(lamdaValue);
-    return MemoryAlloc(sizeof(Value *) * (lamda->arity + lamda->count), error);
+VALUE **LamdaCreateContext(VALUE *lamdaVALUE, VALUE **error) {
+    Lamda *lamda = BridgeToLamda(lamdaVALUE);
+    return MemoryAlloc(sizeof(VALUE *) * (lamda->arity + lamda->count), error);
 }
 
-void LamdaDeallocContext(Value **context) {
+void LamdaDeallocContext(VALUE **context) {
     MemoryDealloc(context);
 }

@@ -3,6 +3,6 @@
 
 #include "api.h"
 
-void *VariableDecode(Byte **bytes, Value **error);
+void *VariableDecode(Byte **bytes, VALUE **error);
 
 #endif

@@ -3,12 +3,12 @@
 
 #include "api.h"
 
-void *IntegerDecode(Byte **bytes, Value **error);
-void IntegerDealloc(Value *integerValue);
-Integer64 IntegerHash(Value *integerValue);
-Bool IntegerEqual(Value *integerValue, Value *otherValue);
+void *IntegerDecode(Byte **bytes, VALUE **error);
+void IntegerDealloc(VALUE *integerVALUE);
+Integer64 IntegerHash(VALUE *integerVALUE);
+Bool IntegerEqual(VALUE *integerVALUE, VALUE *otherVALUE);
 
 /* kernels */
-Value *IntegerSum(Value **args, Integer8 count, Value **error);
+VALUE *IntegerSum(VALUE **args, Integer8 count, VALUE **error);
 
 #endif
