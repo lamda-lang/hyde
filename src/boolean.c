@@ -5,14 +5,34 @@ struct Boolean {
     Bool truth;
 }; 
 
-void BooleanDealloc(VALUE *booleanVALUE) {
-    MemoryDealloc(booleanVALUE);
+static Boolean *BooleanCreate(Bool truth, VALUE **error) {
+    Boolean *boolean = MemoryAlloc(sizeof(Boolean), error);
+    if (*error != NULL) {
+        return NULL;
+    }
+    boolean->type = TypeBoolean;
+    boolean->truth = truth;
+    return boolean;
 }
 
-Integer64 BooleanHash(VALUE *booleanVALUE) {
-    return BridgeToBoolean(booleanVALUE)->truth;
+VALUE *BooleanDecodeTrue(Byte **bytes, VALUE **error) {
+    Boolean *true = BooleanCreate(TRUE, error);
+    return BridgeFromBoolean(true);
 }
 
-Bool BooleanEqual(VALUE *booleanVALUE, VALUE *otherVALUE) {
-    return BridgeToBoolean(booleanVALUE)->truth == BridgeToBoolean(otherVALUE)->truth;
+VALUE *BooleanDecodeFalse(Byte **bytes, VALUE **error) {
+    Boolean *false = BooleanCreate(FALSE, error);
+    return BridgeFromBoolean(false);
+}
+
+void BooleanDealloc(VALUE *booleanValue) {
+    MemoryDealloc(booleanValue);
+}
+
+Integer64 BooleanHash(VALUE *booleanValue) {
+    return BridgeToBoolean(booleanValue)->truth;
+}
+
+Bool BooleanEqual(VALUE *booleanValue, VALUE *otherValue) {
+    return BridgeToBoolean(booleanValue)->truth == BridgeToBoolean(otherValue)->truth;
 }

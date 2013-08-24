@@ -3,7 +3,7 @@
 struct String {
     Type *type;
     Integer32 length;
-    Integer32 codepoint[];
+    Integer32 codepoints[];
 };
 
 static String *StringCreate(Integer32 length, VALUE **error) {
@@ -23,24 +23,24 @@ VALUE *StringDecode(Byte **bytes, VALUE **error) {
         return NULL;
     }
     for (Integer32 index = 0; index < length; index += 1) {
-        string->codepoint[index] = DecodeInteger32VLE(bytes);
+        string->codepoints[index] = DecodeInteger32VLE(bytes);
     }
     return BridgeFromString(string);
 }
 
-void StringDealloc(VALUE *stringVALUE) {
-    MemoryDealloc(stringVALUE);
+void StringDealloc(VALUE *stringValue) {
+    MemoryDealloc(stringValue);
 }
 
-Integer64 StringHash(VALUE *stringVALUE) {
-    return BridgeToString(stringVALUE)->length;
+Integer64 StringHash(VALUE *stringValue) {
+    return BridgeToString(stringValue)->length;
 }
 
-Bool StringEqual(VALUE *stringVALUE, VALUE *otherVALUE) {
-    String *string = BridgeToString(stringVALUE);
-    String *other = BridgeToString(otherVALUE);
+Bool StringEqual(VALUE *stringValue, VALUE *otherValue) {
+    String *string = BridgeToString(stringValue);
+    String *other = BridgeToString(otherValue);
     return string->length == other->length
-        && MemoryEqual(string->codepoint, other->codepoint, sizeof(Integer32) * string->length);
+        && MemoryEqual(string->codepoints, other->codepoints, sizeof(Integer32) * string->length);
 }
 
 VALUE *StringConcatenate(VALUE **args, Integer8 count, VALUE **error) {
@@ -50,7 +50,7 @@ VALUE *StringConcatenate(VALUE **args, Integer8 count, VALUE **error) {
     if (*error != NULL) {
         return NULL;
     }
-    MemoryCopy(string->codepoint, result->codepoint, sizeof(Integer32) * string->length);
-    MemoryCopy(other->codepoint, result->codepoint + string->length, sizeof(Integer32) * other->length);
+    MemoryCopy(string->codepoints, result->codepoints, sizeof(Integer32) * string->length);
+    MemoryCopy(other->codepoints, result->codepoints + string->length, sizeof(Integer32) * other->length);
     return BridgeFromString(result);
 }

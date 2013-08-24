@@ -3,10 +3,9 @@
 
 #include "runtime.h"
 
-void *FloatDecode(Byte **bytes, VALUE **error);
-void FloatDealloc(VALUE *floatVALUE);
-Integer64 FloatHash(VALUE *floatVALUE);
-Bool FloatEqual(VALUE *floatVALUE, VALUE *otherVALUE);
-VALUE *FloatSum(VALUE *floatVALUE, VALUE *otherVALUE, VALUE **error);
+VALUE *FloatDecode(Byte **bytes, VALUE **error);
+void FloatDealloc(VALUE *floatValue);
+Integer64 FloatHash(VALUE *floatValue);
+Bool FloatEqual(VALUE *floatValue, VALUE *otherValue);
 
 #endif

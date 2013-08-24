@@ -1,69 +1,44 @@
-#include <string.h>
 #include "token.h"
 
 struct Token {
     Type *type;
     Integer8 length;
-    Integer8 codepoint[];
+    Integer8 codepoints[];
 };
 
-typedef struct {
-    Integer8 length;
-    Integer8 codepoint[];
-} Model;
-
-static Token *Create(Integer8 length, VALUE **error) {
+static Token *TokenCreate(Integer8 length, VALUE **error) {
     Token *token = MemoryAlloc(sizeof(Token) + sizeof(Integer8) * length, error);
-    if (token == NULL) {
-        goto returnVALUE;
+    if (error != NULL) {
+        return NULL;
     }
     token->type = TypeToken;
     token->length = length;
     return token;
-
-returnVALUE:
-    return NULL;
 }
 
-void *TokenDecode(Byte **bytes, VALUE **error) {
+VALUE *TokenDecode(Byte **bytes, VALUE **error) {
     Integer8 length = DecodeInteger8FLE(bytes);
-    Model *model = MemoryAlloc(sizeof(Model) + sizeof(Integer8) * length, error);
-    if (model == NULL) {
-        goto returnVALUE;
+    Token *token = TokenCreate(length, error);
+    if (error != NULL) {
+        return NULL;
     }
     for (Integer8 index = 0; index < length; index += 1) {
-        model->codepoint[index] = DecodeInteger8FLE(bytes);
+        token->codepoints[index] = DecodeInteger8FLE(bytes);
     }
-    return model;
-
-returnVALUE:
-    return NULL;
-}
-
-VALUE *TokenCreateWithCharacters(Char *chars, VALUE **error) {
-    Integer8 length = strnlen(chars, 0XF) & 0XF;
-    Token *token = Create(length, error);
-    if (token == NULL) {
-        goto returnVALUE;
-    }
-    MemoryCopy(chars, token->codepoint, length);
     return BridgeFromToken(token);
-
-returnVALUE:
-    return NULL;
 }
 
-void TokenDealloc(VALUE *tokenVALUE) {
-    MemoryDealloc(tokenVALUE);
+void TokenDealloc(VALUE *tokenValue) {
+    MemoryDealloc(tokenValue);
 }
 
-Integer64 TokenHash(VALUE *tokenVALUE) {
-    return BridgeToToken(tokenVALUE)->length;
+Integer64 TokenHash(VALUE *tokenValue) {
+    return BridgeToToken(tokenValue)->length;
 }
 
-Bool TokenEqual(VALUE *tokenVALUE, VALUE *otherVALUE) {
-    Token *token = BridgeToToken(tokenVALUE);
-    Token *other = BridgeToToken(otherVALUE);
-    return token->length == other->length &&
-           MemoryEqual(token->codepoint, other->codepoint, sizeof(Integer8) * token->length);
+Bool TokenEqual(VALUE *tokenValue, VALUE *otherValue) {
+    Token *token = BridgeToToken(tokenValue);
+    Token *other = BridgeToToken(otherValue);
+    return token->length == other->length
+        && MemoryEqual(token->codepoints, other->codepoints, sizeof(Integer8) * token->length);
 }

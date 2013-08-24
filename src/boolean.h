@@ -3,8 +3,10 @@
 
 #include "runtime.h"
 
-void BooleanDealloc(VALUE *booleanVALUE);
-Integer64 BooleanHash(VALUE *booleanVALUE);
-Bool BooleanEqual(VALUE *booleanVALUE, VALUE *otherVALUE);
+VALUE *BooleanDecodeTrue(Byte **bytes, VALUE **error);
+VALUE *BooleanDecodeFalse(Byte **bytes, VALUE **error);
+void BooleanDealloc(VALUE *booleanValue);
+Integer64 BooleanHash(VALUE *booleanValue);
+Bool BooleanEqual(VALUE *booleanValue, VALUE *otherValue);
 
 #endif

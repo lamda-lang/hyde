@@ -3,6 +3,9 @@
 
 #include "runtime.h"
 
-void *VariableDecode(Byte **bytes, VALUE **error);
+VALUE *VariableDecode(Byte **bytes, VALUE **error);
+void VariableDealloc(VALUE *tokenValue);
+Integer64 VariableHash(VALUE *tokenValue);
+Bool VariableEqual(VALUE *tokenValue, VALUE *otherValue);
 
 #endif

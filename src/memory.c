@@ -5,7 +5,7 @@
 void *MemoryAlloc(Size size, VALUE **error) {
     void *buffer = malloc(size);
     if (buffer == NULL) {
-        *error = TokenOutOfMemoryError;
+        *error = RuntimeOutOfMemoryError;
     }
     return buffer;
 }
@@ -13,7 +13,7 @@ void *MemoryAlloc(Size size, VALUE **error) {
 void *MemoryRealloc(void *buffer, Size size, VALUE **error) {
     void *new = realloc(buffer, size);
     if (new == NULL) {
-        *error = TokenOutOfMemoryError;
+        *error = RuntimeOutOfMemoryError;
     }
     return new;
 }

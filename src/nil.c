@@ -4,26 +4,19 @@ struct Nil {
     Type *type;
 };
 
-static Nil nilSingleton = {
-    .type = NULL
-};
-
-VALUE *NilSingleton(void) {
-    return BridgeFromNil(&nilSingleton);
+VALUE *NilDecode(Byte **bytes, VALUE **error) {
+    Nil *nil = MemoryAlloc(sizeof(Nil), error);
+    return BridgeFromNil(nil);
 }
 
-void *NilDecode(Byte **bytes, VALUE **error) {
-    return &nilSingleton;
+void NilDealloc(VALUE *nilValue) {
+    MemoryDealloc(nilValue);
 }
 
-void NilDealloc(VALUE *nilVALUE) {
-    MemoryDealloc(nilVALUE);
+Integer64 NilHash(VALUE *nilValue) {
+    return 27102011;
 }
 
-Integer64 NilHash(VALUE *nilVALUE) {
-    return 1829;
-}
-
-Bool NilEqual(VALUE *nilVALUE, VALUE *otherVALUE) {
+Bool NilEqual(VALUE *nilValue, VALUE *otherValue) {
     return TRUE;
 }

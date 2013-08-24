@@ -47,6 +47,15 @@ typedef void *Decode(Byte **code, VALUE **error);
 typedef Integer64 Hash(VALUE *value);
 typedef Bool Equal(VALUE *value, VALUE *other);
 
+/* global errors */
+extern VALUE *RuntimeOutOfMemoryError;
+extern VALUE *RuntimeFileOpenError;
+extern VALUE *RuntimeFileReadError;
+extern VALUE *RuntimeFileWriteError;
+extern VALUE *RuntimeFileCloseError;
+extern VALUE *RuntimeInvalidTypeError;
+extern VALUE *RuntimeArityMismatchError;
+
 #include "boolean.h"
 #include "case.h"
 #include "comprehension.h"
