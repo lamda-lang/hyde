@@ -3,6 +3,6 @@
 
 #include "runtime.h"
 
-void *WhenDecode(Byte **bytes, VALUE **error);
+VALUE *WhenDecode(Byte **bytes, VALUE **error);
 
 #endif

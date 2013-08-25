@@ -26,16 +26,7 @@ returnVALUE:
     return NULL;
 }
 */
-void *RangeDecode(Byte **bytes, VALUE **error) {
-    Model *model = MemoryAlloc(sizeof(Model), error);
-    if (model == NULL) {
-        goto returnVALUE;
-    }
-    model->lowerIndex = DecodeInteger32VLE(bytes);
-    model->upperIndex = DecodeInteger32VLE(bytes);
-    return model;
-
-returnVALUE:
+VALUE *RangeDecode(Byte **bytes, VALUE **error) {
     return NULL;
 }
 

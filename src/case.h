@@ -3,6 +3,6 @@
 
 #include "runtime.h"
 
-void *CaseDecode(Byte **bytes, VALUE **error);
+VALUE *CaseDecode(Byte **bytes, VALUE **error);
 
 #endif

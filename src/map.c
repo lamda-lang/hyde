@@ -39,20 +39,7 @@ VALUE *MapCreate(Integer32 count, VALUE **error) {
     return BridgeFromMap(map);
 }
 
-void *MapDecode(Byte **bytes, VALUE **error) {
-    Integer32 count = DecodeInteger32VLE(bytes);
-    Model *model = MemoryAlloc(sizeof(Model) + sizeof(Index) * count, error);
-    if (model == NULL) {
-        goto returnVALUE;
-    }
-    model->count = count;
-    for (Integer32 index = 0; index < count; index += 1) {
-        model->pair[index].key = DecodeInteger32VLE(bytes);
-        model->pair[index].value = DecodeInteger32VLE(bytes);
-    }
-    return model;
-
-returnVALUE:
+VALUE *MapDecode(Byte **bytes, VALUE **error) {
     return NULL;
 }
 

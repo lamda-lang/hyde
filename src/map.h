@@ -3,7 +3,7 @@
 
 #include "runtime.h"
 
-void *MapDecode(Byte **bytes, VALUE **error);
+VALUE *MapDecode(Byte **bytes, VALUE **error);
 VALUE *MapCreate(Integer32 count, VALUE **error);
 void MapDealloc(VALUE *mapVALUE);
 Integer64 MapHash(VALUE *mapVALUE);

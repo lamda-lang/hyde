@@ -3,7 +3,7 @@
 
 #include "runtime.h"
 
-void *LamdaDecode(Byte **bytes, VALUE **error);
+VALUE *LamdaDecode(Byte **bytes, VALUE **error);
 void LamdaDealloc(VALUE *lamdaVALUE);
 Integer64 LamdaHash(VALUE *lamdaVALUE);
 Integer8 LamdaArity(VALUE *lamdaVALUE);

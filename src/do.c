@@ -24,19 +24,7 @@ returnVALUE:
     return NULL;
 }
 
-void *DoDecode(Byte **bytes, VALUE **error) {
-    Integer32 count = DecodeInteger32VLE(bytes);
-    Model *model = MemoryAlloc(sizeof(Model) + sizeof(Integer32) * count, error);
-    if (model == NULL) {
-        goto returnVALUE;
-    }
-    model->count = count;
-    for (Integer32 index = 0; index < count; index += 1) {
-        model->element[index] = DecodeInteger32VLE(bytes);
-    }
-    return model;
-
-returnVALUE:
+VALUE *DoDecode(Byte **bytes, VALUE **error) {
     return NULL;
 }
 

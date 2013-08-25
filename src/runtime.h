@@ -43,7 +43,7 @@ typedef struct Variable Variable;
 typedef struct When When;
 
 /* function types */
-typedef void *Decode(Byte **code, VALUE **error);
+typedef VALUE *Decode(Byte **bytes, VALUE **error);
 typedef Integer64 Hash(VALUE *value);
 typedef Bool Equal(VALUE *value, VALUE *other);
 

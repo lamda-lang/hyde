@@ -3,6 +3,8 @@
 
 #include "runtime.h"
 
+VALUE *TypeDecode(Byte **bytes, VALUE **error);
+
 extern Type *TypeBoolean;
 extern Type *TypeCase;
 extern Type *TypeComprehension;

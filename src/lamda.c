@@ -27,21 +27,7 @@ returnVALUE:
     return NULL;
 }
 
-void *LamdaDecode(Byte **bytes, VALUE **error) {
-    Integer8 arity = DecodeInteger8FLE(bytes);
-    Integer8 count = DecodeInteger8FLE(bytes);
-    Model *model = MemoryAlloc(sizeof(Model) + sizeof(Integer8) * count, error);
-    if (model == NULL) {
-        goto returnVALUE;
-    }
-    model->arity = arity;
-    model->count = count;
-    for (Integer8 index = 0; index < count; index += 1) {
-        model->context[index] = DecodeInteger32VLE(bytes);
-    }
-    return model;
-
-returnVALUE:
+VALUE *LamdaDecode(Byte **bytes, VALUE **error) {
     return NULL;
 }
 

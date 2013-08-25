@@ -1,5 +1,29 @@
 #include "decode.h"
 
+static Decode *decode[] = {
+    [0] = BooleanDecodeTrue,
+    [1] = BooleanDecodeFalse,
+    [2] = CaseDecode,
+    [3] = ComprehensionDecodeList,
+    [4] = ComprehensionDecodeMap,
+    [5] = ComprehensionDecodeSet,
+    [6] = DoDecode,
+    [7] = FloatDecode,
+    [8] = IntegerDecode,
+    [9] = LamdaDecode,
+    [10] = ListDecode,
+    [11] = MapDecode,
+    [12] = NilDecode,
+    [13] = RangeDecode,
+    [14] = ResultDecode,
+    [15] = SetDecode,
+    [16] = StringDecode,
+    [17] = TokenDecode,
+    [18] = TypeDecode,
+    [19] = VariableDecode,
+    [20] = WhenDecode
+};
+
 Integer8 DecodeInteger8FLE(Byte **bytes) {
     Integer8 value = **bytes;
     *bytes += 1;
@@ -83,4 +107,9 @@ Float64 DecodeFloat64FLE(Byte **bytes) {
         .integer64 = DecodeInteger64FLE(bytes)
     };
     return binary.IEEE754;
+}
+
+VALUE *DecodeValue(Byte **bytes, VALUE **error) {
+    Integer8 code = DecodeInteger8FLE(bytes);
+    return decode[code](bytes, error);
 }
