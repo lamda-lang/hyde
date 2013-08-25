@@ -46,6 +46,7 @@ typedef struct When When;
 typedef VALUE *Decode(Byte **bytes, VALUE **error);
 typedef Integer64 Hash(VALUE *value);
 typedef Bool Equal(VALUE *value, VALUE *other);
+VALUE *Kernel(VALUE **args, Integer8 count, VALUE **error);
 
 /* global errors */
 extern VALUE *RuntimeOutOfMemoryError;

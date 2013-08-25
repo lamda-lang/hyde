@@ -3,42 +3,43 @@
 struct Set {
     Type *type;
     Integer32 count;
-    VALUE *element[];
+    VALUE *elements[];
 };
 
-typedef struct {
-    Integer32 count;
-    Integer32 element[];
-} Model;
-
-static Set *Create(Integer32 count, VALUE **error) {
+static Set *SetCreate(Integer32 count, VALUE **error) {
     Set *set = MemoryAlloc(sizeof(Set) + sizeof(VALUE *) * count, error);
-    if (set == NULL) {
-        goto returnVALUE;
+    if (*error != NULL) {
+        return NULL;
     }
     set->type = TypeSet;
     set->count = count;
     return set;
-
-returnVALUE:
-    return NULL;
 }
 
 VALUE *SetDecode(Byte **bytes, VALUE **error) {
+    Integer32 count = DecodeInteger32VLE(bytes);
+    Set *set = SetCreate(count, error);
+    if (*error != NULL) {
+        goto returnError;
+    }
+    for (Integer32 index = 0; index < count; index += 1) {
+        set->elements[index] = DecodeValue(bytes, error);
+        if (*error != NULL) {
+            goto deallocSet;
+        }
+    }
+    return BridgeFromSet(set);
+
+deallocSet:
+    MemoryDealloc(set);
+returnError:
     return NULL;
 }
 
-void SetDealloc(VALUE *setVALUE) {
-    MemoryDealloc(setVALUE);
+void SetDealloc(VALUE *setValue) {
+    MemoryDealloc(setValue);
 }
 
-Integer64 SetHash(VALUE *setVALUE) {
-    return BridgeToSet(setVALUE)->count;
-}
-
-void SetEnumerate(VALUE *setVALUE, void (*callback)(VALUE *value)) {
-    Set *set = BridgeToSet(setVALUE);
-    for (Integer32 index = 0; index < set->count; index += 1) {
-        callback(set->element[index]);
-    }
+Integer64 SetHash(VALUE *setValue) {
+    return BridgeToSet(setValue)->count;
 }

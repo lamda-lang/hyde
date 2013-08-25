@@ -4,8 +4,7 @@
 #include "runtime.h"
 
 VALUE *DoDecode(Byte **bytes, VALUE **error);
-void DoDealloc(VALUE *doVALUE);
-Integer64 DoHash(VALUE *doVALUE);
-void DoEnumerate(VALUE *doVALUE, void (*callback)(VALUE *value));
+void DoDealloc(VALUE *doValue);
+Integer64 DoHash(VALUE *doValue);
 
 #endif
