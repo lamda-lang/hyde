@@ -10,7 +10,7 @@ static Boolean *BooleanCreate(Bool truth, VALUE **error) {
     if (*error != NULL) {
         return NULL;
     }
-    boolean->type = TypeBoolean;
+    boolean->type = RuntimeBooleanType;
     boolean->truth = truth;
     return boolean;
 }

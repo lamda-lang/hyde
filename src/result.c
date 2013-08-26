@@ -12,7 +12,7 @@ static Result *ResultCreate(VALUE *target, Integer8 count, VALUE **error) {
     if (*error != NULL) {
         return NULL;
     }
-    result->type = TypeResult;
+    result->type = RuntimeResultType;
     result->target = target;
     result->count = count;
     return result;

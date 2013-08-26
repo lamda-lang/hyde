@@ -11,7 +11,7 @@ static Range *RangeCreate(VALUE *lower, VALUE *upper, VALUE **error) {
     if (*error != NULL) {
         return NULL;
     }
-    range->type = TypeRange;
+    range->type = RuntimeRangeType;
     range->lower = lower;
     range->upper = upper;
     return range;

@@ -11,7 +11,7 @@ static Do *DoCreate(Integer32 count, VALUE **error) {
     if (*error != NULL) {
         return NULL;
     }
-    block->type = TypeDo;
+    block->type = RuntimeDoType;
     block->count = count;
     return block;
 }

@@ -10,7 +10,7 @@ static Integer *IntegerCreate(Integer64 value, VALUE **error) {
     if (*error != NULL) {
         return NULL;
     }
-    integer->type = TypeInteger;
+    integer->type = RuntimeIntegerType;
     integer->value = value;
     return integer;
 }

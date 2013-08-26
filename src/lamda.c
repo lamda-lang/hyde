@@ -13,7 +13,7 @@ static Lamda *LamdaCreate(VALUE *result, Integer8 arity, Integer8 count, VALUE *
     if (*error != NULL) {
         return NULL;
     }
-    lamda->type = TypeLamda;
+    lamda->type = RuntimeLamdaType;
     lamda->arity = arity;
     lamda->count = count;
     lamda->result = result;

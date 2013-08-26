@@ -11,7 +11,7 @@ static Variable *VariableCreate(Integer8 length, VALUE **error) {
     if (error != NULL) {
         return NULL;
     }
-    token->type = TypeVariable;
+    token->type = RuntimeVariableType;
     token->length = length;
     return token;
 }

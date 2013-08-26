@@ -16,7 +16,7 @@ static Map *MapCreate(Integer32 count, VALUE **error) {
     if (*error != NULL) {
         return NULL;
     }
-    map->type = TypeMap;
+    map->type = RuntimeMapType;
     map->count = count;
     return map;
 } 

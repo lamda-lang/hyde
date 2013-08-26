@@ -11,7 +11,7 @@ static String *StringCreate(Integer32 length, VALUE **error) {
     if (*error != NULL) {
         return NULL;
     }
-    string->type = TypeString;
+    string->type = RuntimeStringType;
     string->length = length;
     return string;
 }

@@ -16,7 +16,7 @@ static When *WhenCreate(Integer32 count, VALUE **error) {
     if (*error != NULL) {
         return NULL;
     }
-    block->type = TypeWhen;
+    block->type = RuntimeWhenType;
     block->count = count;
     return block;
 }

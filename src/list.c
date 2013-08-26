@@ -11,7 +11,7 @@ static List *ListCreate(Integer32 count, VALUE **error) {
     if (*error != NULL) {
         return NULL;
     }
-    list->type = TypeList;
+    list->type = RuntimeListType;
     list->count = count;
     return list;
 }

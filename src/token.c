@@ -11,7 +11,7 @@ static Token *TokenCreate(Integer8 length, VALUE **error) {
     if (error != NULL) {
         return NULL;
     }
-    token->type = TypeToken;
+    token->type = RuntimeTokenType;
     token->length = length;
     return token;
 }

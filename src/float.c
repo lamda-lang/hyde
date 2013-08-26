@@ -10,7 +10,7 @@ static Float *FloatCreate(Float64 value, VALUE **error) {
     if (error != NULL) {
         return NULL;
     }
-    fpv->type = TypeFloat;
+    fpv->type = RuntimeFloatType;
     fpv->value = value;
     return fpv;
 }

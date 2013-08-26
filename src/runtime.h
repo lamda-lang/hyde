@@ -57,6 +57,27 @@ extern VALUE *RuntimeFileCloseError;
 extern VALUE *RuntimeInvalidTypeError;
 extern VALUE *RuntimeArityMismatchError;
 
+/* global types */
+extern Type *RuntimeBooleanType;
+extern Type *RuntimeCaseType;
+extern Type *RuntimeComprehensionType;
+extern Type *RuntimeDoType;
+extern Type *RuntimeFloatType;
+extern Type *RuntimeIntegerType;
+extern Type *RuntimeLamdaType;
+extern Type *RuntimeListType;
+extern Type *RuntimeMapType;
+extern Type *RuntimeNilType;
+extern Type *RuntimeProtocolType;
+extern Type *RuntimeRangeType;
+extern Type *RuntimeResultType;
+extern Type *RuntimeSetType;
+extern Type *RuntimeStringType;
+extern Type *RuntimeTokenType;
+extern Type *RuntimeTypeType;
+extern Type *RuntimeVariableType;
+extern Type *RuntimeWhenType;
+
 #include "boolean.h"
 #include "case.h"
 #include "comprehension.h"

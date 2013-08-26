@@ -17,7 +17,7 @@ static Case *CaseCreate(Integer32 count, VALUE **error) {
     if (*error != NULL) {
         return NULL;
     }
-    block->type = TypeCase;
+    block->type = RuntimeCaseType;
     block->count = count;
     return block;
 }

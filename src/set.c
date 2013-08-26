@@ -11,7 +11,7 @@ static Set *SetCreate(Integer32 count, VALUE **error) {
     if (*error != NULL) {
         return NULL;
     }
-    set->type = TypeSet;
+    set->type = RuntimeSetType;
     set->count = count;
     return set;
 }
