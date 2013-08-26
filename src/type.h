@@ -5,5 +5,4 @@
 
 VALUE *TypeDecode(Byte **bytes, VALUE **error);
 
-
 #endif
