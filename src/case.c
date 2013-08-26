@@ -4,16 +4,16 @@ typedef struct {
     VALUE *match;
     VALUE *guard;
     VALUE *value;
-} Clause;
+} Branch;
 
 struct Case {
     Type *type;
     Integer32 count;
-    Clause clauses[];
+    Branch branches[];
 };
 
 static Case *CaseCreate(Integer32 count, VALUE **error) {
-    Case *block = MemoryAlloc(sizeof(Case) + sizeof(Clause) * count, error);
+    Case *block = MemoryAlloc(sizeof(Case) + sizeof(Branch) * count, error);
     if (*error != NULL) {
         return NULL;
     }
@@ -29,15 +29,15 @@ VALUE *CaseDecode(Byte **bytes, VALUE **error) {
         goto returnError;
     }
     for (Integer32 index = 0; index < count; index += 1) {
-        block->clauses[index].match = DecodeValue(bytes, error);
+        block->branches[index].match = DecodeValue(bytes, error);
         if (*error != NULL) {
             goto deallocCase;
         }
-        block->clauses[index].guard = DecodeValue(bytes, error);
+        block->branches[index].guard = DecodeValue(bytes, error);
         if (*error != NULL) {
             goto deallocCase;
         }
-        block->clauses[index].value = DecodeValue(bytes, error);
+        block->branches[index].value = DecodeValue(bytes, error);
         if (*error != NULL) {
             goto deallocCase;
         }
