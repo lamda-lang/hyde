@@ -14,14 +14,15 @@ static Decode *decode[] = {
     [10] = ListDecode,
     [11] = MapDecode,
     [12] = NilDecode,
-    [13] = RangeDecode,
-    [14] = ResultDecode,
-    [15] = SetDecode,
-    [16] = StringDecode,
-    [17] = TokenDecode,
-    [18] = TypeDecode,
-    [19] = VariableDecode,
-    [20] = WhenDecode
+    [13] = ProtocolDecode,
+    [14] = RangeDecode,
+    [15] = ResultDecode,
+    [16] = SetDecode,
+    [17] = StringDecode,
+    [18] = TokenDecode,
+    [19] = TypeDecode,
+    [20] = VariableDecode,
+    [21] = WhenDecode
 };
 
 Integer8 DecodeInteger8FLE(Byte **bytes) {

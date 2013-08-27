@@ -3,4 +3,6 @@
 
 #include "runtime.h"
 
+VALUE *ProtocolDecode(Byte **bytes, VALUE **error);
+
 #endif
