@@ -1,9 +1,9 @@
 #include "protocol.h"
 
-struct Protocol {
-    Type *type;
+typedef struct {
+    VALUE *type;
     Integer32 count;
-};
+} Protocol;
 
 static Protocol *ProtocolCreate(Integer32 count, VALUE **error) {
     Protocol *protocol = MemoryAlloc(sizeof(Protocol), error);
@@ -21,7 +21,7 @@ VALUE *ProtocolDecode(Byte **bytes, VALUE **error) {
     if (*error != NULL) {
         goto returnError;
     }
-    return BridgeFromProtocol(protocol);
+    return protocol;
 
 returnError:
     return NULL;

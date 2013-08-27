@@ -6,11 +6,11 @@ typedef struct {
     VALUE *value;
 } Branch;
 
-struct Case {
-    Type *type;
+typedef struct {
+    VALUE *type;
     Integer32 count;
     Branch branches[];
-};
+} Case;
 
 static Case *CaseCreate(Integer32 count, VALUE **error) {
     Case *block = MemoryAlloc(sizeof(Case) + sizeof(Branch) * count, error);
@@ -42,7 +42,7 @@ VALUE *CaseDecode(Byte **bytes, VALUE **error) {
             goto deallocCase;
         }
     }
-    return BridgeFromCase(block);
+    return block;
 
 deallocCase:
     MemoryDealloc(block);

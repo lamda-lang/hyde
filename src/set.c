@@ -1,10 +1,10 @@
 #include "runtime.h"
 
-struct Set {
-    Type *type;
+typedef struct {
+    VALUE *type;
     Integer32 count;
     VALUE *elements[];
-};
+} Set;
 
 static Set *SetCreate(Integer32 count, VALUE **error) {
     Set *set = MemoryAlloc(sizeof(Set) + sizeof(VALUE *) * count, error);
@@ -28,7 +28,7 @@ VALUE *SetDecode(Byte **bytes, VALUE **error) {
             goto deallocSet;
         }
     }
-    return BridgeFromSet(set);
+    return set;
 
 deallocSet:
     MemoryDealloc(set);
@@ -41,5 +41,6 @@ void SetDealloc(VALUE *setValue) {
 }
 
 Integer64 SetHash(VALUE *setValue) {
-    return BridgeToSet(setValue)->count;
+    Set *set = setValue;
+    return set->count;
 }

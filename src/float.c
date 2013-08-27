@@ -1,9 +1,9 @@
 #include "float.h"
 
-struct Float {
-    Type *type;
+typedef struct {
+    VALUE *type;
     Float64 value;
-};
+} Float;
 
 static Float *FloatCreate(Float64 value, VALUE **error) {
     Float *fpv = MemoryAlloc(sizeof(Float), error);
@@ -17,8 +17,7 @@ static Float *FloatCreate(Float64 value, VALUE **error) {
 
 VALUE *FloatDecode(Byte **bytes, VALUE **error) {
     Float64 value = DecodeFloat64FLE(bytes);
-    Float *fpv = FloatCreate(value, error);
-    return BridgeFromFloat(fpv);
+    return FloatCreate(value, error);
 }
 
 void FloatDealloc(VALUE *floatValue) {
@@ -26,9 +25,12 @@ void FloatDealloc(VALUE *floatValue) {
 }
 
 Integer64 FloatHash(VALUE *floatValue) {
-    return (Integer64)BridgeToFloat(floatValue)->value;
+    Float *fpv = floatValue;
+    return (Integer64)fpv->value;
 }
 
 Bool FloatEqual(VALUE *floatValue, VALUE *otherValue) {
-    return BridgeToFloat(floatValue)->value == BridgeToFloat(otherValue)->value;
+    Float *fpv = floatValue;
+    Float *other = floatValue;
+    return fpv->value == other->value;
 }

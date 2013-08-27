@@ -1,9 +1,9 @@
 #include "boolean.h"
 
-struct Boolean {
-    Type *type;
+typedef struct {
+    VALUE *type;
     Bool truth;
-}; 
+} Boolean; 
 
 static Boolean *BooleanCreate(Bool truth, VALUE **error) {
     Boolean *boolean = MemoryAlloc(sizeof(Boolean), error);
@@ -17,12 +17,12 @@ static Boolean *BooleanCreate(Bool truth, VALUE **error) {
 
 VALUE *BooleanDecodeTrue(Byte **bytes, VALUE **error) {
     Boolean *true = BooleanCreate(TRUE, error);
-    return BridgeFromBoolean(true);
+    return true;
 }
 
 VALUE *BooleanDecodeFalse(Byte **bytes, VALUE **error) {
     Boolean *false = BooleanCreate(FALSE, error);
-    return BridgeFromBoolean(false);
+    return false;
 }
 
 void BooleanDealloc(VALUE *booleanValue) {
@@ -30,9 +30,12 @@ void BooleanDealloc(VALUE *booleanValue) {
 }
 
 Integer64 BooleanHash(VALUE *booleanValue) {
-    return BridgeToBoolean(booleanValue)->truth;
+    Boolean *boolean = booleanValue;
+    return boolean->truth;
 }
 
 Bool BooleanEqual(VALUE *booleanValue, VALUE *otherValue) {
-    return BridgeToBoolean(booleanValue)->truth == BridgeToBoolean(otherValue)->truth;
+    Boolean *boolean = booleanValue;
+    Boolean *other = otherValue;
+    return boolean->truth == other->truth;
 }

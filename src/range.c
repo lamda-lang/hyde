@@ -1,10 +1,10 @@
 #include "range.h"
 
-struct Range {
-    Type *type;
+typedef struct {
+    VALUE *type;
     VALUE *lower;
     VALUE *upper;
-};
+} Range;
 
 static Range *RangeCreate(VALUE *lower, VALUE *upper, VALUE **error) {
     Range *range = MemoryAlloc(sizeof(Range), error);
@@ -26,8 +26,7 @@ VALUE *RangeDecode(Byte **bytes, VALUE **error) {
     if (*error != NULL) {
         return NULL;
     }
-    Range *range = RangeCreate(lower, upper, error);
-    return BridgeFromRange(range);
+    return RangeCreate(lower, upper, error);
 }
 
 void RangeDealloc(VALUE *rangeValue) {

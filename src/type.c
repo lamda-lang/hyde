@@ -1,10 +1,10 @@
 #include "type.h"
 
-struct Type {
-    Type *type;
+typedef struct {
+    VALUE *type;
     Integer32 count;
     VALUE *members[];
-};
+} Type;
 
 static Type *TypeCreate(Integer32 count, VALUE **error) {
     Type *type = MemoryAlloc(sizeof(Type) + sizeof(VALUE *) * count, error);
@@ -28,7 +28,7 @@ VALUE *TypeDecode(Byte **bytes, VALUE **error) {
             goto deallocType;
         }
     }
-    return BridgeFromType(type);
+    return type;
 
 deallocType:
     MemoryDealloc(type);

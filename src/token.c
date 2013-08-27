@@ -1,10 +1,10 @@
 #include "token.h"
 
-struct Token {
-    Type *type;
+typedef struct {
+    VALUE *type;
     Integer8 length;
     Integer8 codepoints[];
-};
+} Token;
 
 static Token *TokenCreate(Integer8 length, VALUE **error) {
     Token *token = MemoryAlloc(sizeof(Token) + sizeof(Integer8) * length, error);
@@ -25,7 +25,7 @@ VALUE *TokenDecode(Byte **bytes, VALUE **error) {
     for (Integer8 index = 0; index < length; index += 1) {
         token->codepoints[index] = DecodeInteger8FLE(bytes);
     }
-    return BridgeFromToken(token);
+    return token;
 }
 
 void TokenDealloc(VALUE *tokenValue) {
@@ -33,12 +33,13 @@ void TokenDealloc(VALUE *tokenValue) {
 }
 
 Integer64 TokenHash(VALUE *tokenValue) {
-    return BridgeToToken(tokenValue)->length;
+    Token *token = tokenValue;
+    return token->length;
 }
 
 Bool TokenEqual(VALUE *tokenValue, VALUE *otherValue) {
-    Token *token = BridgeToToken(tokenValue);
-    Token *other = BridgeToToken(otherValue);
+    Token *token = tokenValue;
+    Token *other = otherValue;
     return token->length == other->length
         && MemoryEqual(token->codepoints, other->codepoints, sizeof(Integer8) * token->length);
 }

@@ -1,10 +1,10 @@
 #include "do.h"
 
-struct Do {
-  Type *type;
+typedef struct {
+  VALUE *type;
   Integer32 count;
   VALUE *elements[];
-};
+} Do;
 
 static Do *DoCreate(Integer32 count, VALUE **error) {
     Do *block = MemoryAlloc(sizeof(Do) * sizeof(VALUE *) * count, error);
@@ -28,7 +28,7 @@ VALUE *DoDecode(Byte **bytes, VALUE **error) {
             goto deallocDo;
         }
     }
-    return BridgeFromDo(block);
+    return block;
 
 deallocDo:
     MemoryDealloc(block);
@@ -41,5 +41,6 @@ void DoDealloc(VALUE *doValue) {
 }
 
 Integer64 DoHash(VALUE *doValue) {
-    return BridgeToDo(doValue)->count;
+    Do *block = doValue;
+    return block->count;
 }

@@ -1,12 +1,12 @@
 #include "lamda.h"
 
-struct Lamda {
-    Type  *type;
+typedef struct {
+    VALUE *type;
+    VALUE *result;
     Integer8 arity;
     Integer8 count;
-    VALUE *result;
     VALUE *upvalues[];
-};
+} Lamda;
 
 static Lamda *LamdaCreate(VALUE *result, Integer8 arity, Integer8 count, VALUE **error) {
     Lamda *lamda = MemoryAlloc(sizeof(Lamda) + sizeof(VALUE *) * count, error);
@@ -37,7 +37,7 @@ VALUE *LamdaDecode(Byte **bytes, VALUE **error) {
             goto deallocLamda;
         }
     }
-    return BridgeFromLamda(lamda);
+    return lamda;
 
 deallocLamda:
     MemoryDealloc(lamda);
@@ -50,6 +50,6 @@ void LamdaDealloc(VALUE *lamdaValue) {
 }
 
 Integer64 LamdaHash(VALUE *lamdaValue) {
-    Lamda *lamda = BridgeToLamda(lamdaValue);
+    Lamda *lamda = lamdaValue;
     return lamda->arity + lamda->count;
 }

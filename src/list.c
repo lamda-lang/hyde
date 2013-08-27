@@ -1,10 +1,10 @@
 #include "list.h"
 
-struct List {
-    Type *type;
+typedef struct {
+    VALUE *type;
     Integer32 count;
     VALUE *elements[];
-};
+} List;
 
 static List *ListCreate(Integer32 count, VALUE **error) {
     List *list = MemoryAlloc(sizeof(List) + sizeof(VALUE *) * count, error);
@@ -28,7 +28,7 @@ VALUE *ListDecode(Byte **bytes, VALUE **error) {
             goto deallocList;
         }
     }
-    return BridgeFromList(list);
+    return list;
 
 deallocList:
     MemoryDealloc(list);
@@ -41,5 +41,6 @@ void ListDealloc(VALUE *listValue) {
 }
 
 Integer64 ListHash(VALUE *listValue) {
-    return BridgeToList(listValue)->count;
+    List *list = listValue;
+    return list->count;
 }

@@ -7,7 +7,7 @@
 /* macros */
 #define TRUE 1
 #define FALSE 0
-#define VALUE Type
+#define VALUE void
 
 /* scalar types */
 typedef unsigned char Byte;
@@ -20,27 +20,6 @@ typedef uint64_t Integer64;
 typedef double Float64;
 typedef size_t Size;
 typedef int File;
-
-/* opaque types */
-typedef struct Boolean Boolean;
-typedef struct Case Case;
-typedef struct Comprehension Comprehension;
-typedef struct Do Do;
-typedef struct Float Float;
-typedef struct Integer Integer;
-typedef struct Lamda Lamda;
-typedef struct List List;
-typedef struct Map Map;
-typedef struct Nil Nil;
-typedef struct Protocol Protocol;
-typedef struct Range Range;
-typedef struct Result Result;
-typedef struct Set Set;
-typedef struct String String;
-typedef struct Token Token;
-typedef struct Type Type;
-typedef struct Variable Variable;
-typedef struct When When;
 
 /* function types */
 typedef VALUE *Decode(Byte **bytes, VALUE **error);
@@ -57,31 +36,30 @@ extern VALUE *RuntimeFileCloseError;
 extern VALUE *RuntimeInvalidTypeError;
 extern VALUE *RuntimeArityMismatchError;
 
-/* global types */
-extern Type *RuntimeBooleanType;
-extern Type *RuntimeCaseType;
-extern Type *RuntimeComprehensionType;
-extern Type *RuntimeDoType;
-extern Type *RuntimeFloatType;
-extern Type *RuntimeIntegerType;
-extern Type *RuntimeLamdaType;
-extern Type *RuntimeListType;
-extern Type *RuntimeMapType;
-extern Type *RuntimeNilType;
-extern Type *RuntimeProtocolType;
-extern Type *RuntimeRangeType;
-extern Type *RuntimeResultType;
-extern Type *RuntimeSetType;
-extern Type *RuntimeStringType;
-extern Type *RuntimeTokenType;
-extern Type *RuntimeTypeType;
-extern Type *RuntimeVariableType;
-extern Type *RuntimeWhenType;
+/* global type values */
+extern VALUE *RuntimeBooleanType;
+extern VALUE *RuntimeCaseType;
+extern VALUE *RuntimeComprehensionType;
+extern VALUE *RuntimeDoType;
+extern VALUE *RuntimeFloatType;
+extern VALUE *RuntimeIntegerType;
+extern VALUE *RuntimeLamdaType;
+extern VALUE *RuntimeListType;
+extern VALUE *RuntimeMapType;
+extern VALUE *RuntimeNilType;
+extern VALUE *RuntimeProtocolType;
+extern VALUE *RuntimeRangeType;
+extern VALUE *RuntimeResultType;
+extern VALUE *RuntimeSetType;
+extern VALUE *RuntimeStringType;
+extern VALUE *RuntimeTokenType;
+extern VALUE *RuntimeTypeType;
+extern VALUE *RuntimeVariableType;
+extern VALUE *RuntimeWhenType;
 
 #include "boolean.h"
 #include "case.h"
 #include "comprehension.h"
-#include "bridge.h"
 #include "case.h"
 #include "decode.h"
 #include "do.h"

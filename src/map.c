@@ -5,11 +5,11 @@ typedef struct {
     VALUE *value;
 } Pair;
 
-struct Map {
-    Type *type;
+typedef struct {
+    VALUE *type;
     Integer32 count;
     Pair pairs[];
-};
+} Map;
 
 static Map *MapCreate(Integer32 count, VALUE **error) {
     Map *map = MemoryAlloc(sizeof(Map) + sizeof(Pair) * count, error);
@@ -37,7 +37,7 @@ VALUE *MapDecode(Byte **bytes, VALUE **error) {
             goto deallocMap;
         }
     }
-    return BridgeFromMap(map);
+    return map;
 
 deallocMap:
     MemoryDealloc(map);
@@ -50,5 +50,6 @@ void MapDealloc(VALUE *mapValue) {
 }
 
 Integer64 MapHash(VALUE *mapValue) {
-    return BridgeToMap(mapValue)->count;
+    Map *map = mapValue;
+    return map->count;
 }

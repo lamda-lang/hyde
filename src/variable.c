@@ -1,44 +1,45 @@
 #include "variable.h"
 
-struct Variable {
-    Type *type;
+typedef struct {
+    VALUE *type;
     Integer8 length;
     Integer8 codepoints[];
-};
+} Variable;
 
 static Variable *VariableCreate(Integer8 length, VALUE **error) {
-    Variable *token = MemoryAlloc(sizeof(Variable) + sizeof(Integer8) * length, error);
+    Variable *variable = MemoryAlloc(sizeof(Variable) + sizeof(Integer8) * length, error);
     if (error != NULL) {
         return NULL;
     }
-    token->type = RuntimeVariableType;
-    token->length = length;
-    return token;
+    variable->type = RuntimeVariableType;
+    variable->length = length;
+    return variable;
 }
 
 VALUE *VariableDecode(Byte **bytes, VALUE **error) {
     Integer8 length = DecodeInteger8FLE(bytes);
-    Variable *token = VariableCreate(length, error);
+    Variable *variable = VariableCreate(length, error);
     if (error != NULL) {
         return NULL;
     }
     for (Integer8 index = 0; index < length; index += 1) {
-        token->codepoints[index] = DecodeInteger8FLE(bytes);
+        variable->codepoints[index] = DecodeInteger8FLE(bytes);
     }
-    return BridgeFromVariable(token);
+    return variable;
 }
 
-void VariableDealloc(VALUE *tokenValue) {
-    MemoryDealloc(tokenValue);
+void VariableDealloc(VALUE *variableValue) {
+    MemoryDealloc(variableValue);
 }
 
-Integer64 VariableHash(VALUE *tokenValue) {
-    return BridgeToVariable(tokenValue)->length;
+Integer64 VariableHash(VALUE *variableValue) {
+    Variable *variable = variableValue;
+    return variable->length;
 }
 
-Bool VariableEqual(VALUE *tokenValue, VALUE *otherValue) {
-    Variable *token = BridgeToVariable(tokenValue);
-    Variable *other = BridgeToVariable(otherValue);
-    return token->length == other->length
-        && MemoryEqual(token->codepoints, other->codepoints, sizeof(Integer8) * token->length);
+Bool VariableEqual(VALUE *variableValue, VALUE *otherValue) {
+    Variable *variable = variableValue;
+    Variable *other = otherValue;
+    return variable->length == other->length
+        && MemoryEqual(variable->codepoints, other->codepoints, sizeof(Integer8) * variable->length);
 }

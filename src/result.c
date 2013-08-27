@@ -1,11 +1,11 @@
 #include "result.h"
 
-struct Result {
-    Type *type;
+typedef struct {
+    VALUE *type;
     VALUE *target;
     Integer8 count;
     VALUE *args[];
-};
+} Result;
 
 static Result *ResultCreate(VALUE *target, Integer8 count, VALUE **error) {
     Result *result = MemoryAlloc(sizeof(Result) + sizeof(VALUE *) * count, error);
@@ -34,7 +34,7 @@ VALUE *ResultDecode(Byte **bytes, VALUE **error) {
             goto deallocResult;
         }
     }
-    return BridgeFromResult(result);
+    return result;
 
 deallocResult:
     MemoryDealloc(result);

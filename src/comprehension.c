@@ -1,14 +1,14 @@
 #include "comprehension.h"
 
-struct Comprehension {
-    Type *type;
+typedef struct {
+    VALUE *type;
     VALUE *kind;
     VALUE *key;
     VALUE *value;
     VALUE *variable;
     VALUE *enumerable;
     VALUE *guard;
-};
+} Comprehension;
 
 static Comprehension *ComprehensionCreate(VALUE *kind, VALUE *key, VALUE *value, VALUE *variable, VALUE *enumerable, VALUE *guard, VALUE **error) {
     Comprehension *comprehension = MemoryAlloc(sizeof(Comprehension), error);
@@ -42,8 +42,7 @@ VALUE *ComprehensionDecodeList(Byte **bytes, VALUE **error) {
     if (*error != NULL) {
         goto returnError;
     }
-    Comprehension *comprehension = ComprehensionCreate(RuntimeListType, NULL, value, variable, enumerable, guard, error);
-    return BridgeFromComprehension(comprehension);
+    return ComprehensionCreate(RuntimeListType, NULL, value, variable, enumerable, guard, error);
 
 returnError:
     return NULL;

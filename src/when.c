@@ -5,11 +5,11 @@ typedef struct {
     VALUE *value;
 } Branch;
 
-struct When {
-    Type *type;
+typedef struct {
+    VALUE *type;
     Integer32 count;
     Branch branches[];
-};
+} When;
 
 static When *WhenCreate(Integer32 count, VALUE **error) {
     When *block = MemoryAlloc(sizeof(When) + sizeof(Branch) * count, error);
@@ -37,7 +37,7 @@ VALUE *WhenDecode(Byte **bytes, VALUE **error) {
             goto deallocWhen;
         }
     }
-    return BridgeFromWhen(block);
+    return block;
 
 deallocWhen:
     MemoryDealloc(block);
