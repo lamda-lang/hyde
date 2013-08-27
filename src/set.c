@@ -17,7 +17,7 @@ static Set *SetCreate(Integer32 count, VALUE **error) {
 }
 
 VALUE *SetDecode(Byte **bytes, VALUE **error) {
-    Integer32 count = DecodeInteger32VLE(bytes);
+    Integer32 count = DecodeInteger32(bytes);
     Set *set = SetCreate(count, error);
     if (*error != NULL) {
         goto returnError;

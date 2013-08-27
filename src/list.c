@@ -17,7 +17,7 @@ static List *ListCreate(Integer32 count, VALUE **error) {
 }
 
 VALUE *ListDecode(Byte **bytes, VALUE **error) {
-    Integer32 count = DecodeInteger32VLE(bytes);
+    Integer32 count = DecodeInteger32(bytes);
     List *list = ListCreate(count, error);
     if (*error != NULL) {
         goto returnError;

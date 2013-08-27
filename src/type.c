@@ -17,7 +17,7 @@ static Type *TypeCreate(Integer32 count, VALUE **error) {
 }
 
 VALUE *TypeDecode(Byte **bytes, VALUE **error) {
-    Integer32 count = DecodeInteger32VLE(bytes);
+    Integer32 count = DecodeInteger32(bytes);
     Type *type = TypeCreate(count, error);
     if (*error != NULL) {
         goto returnError;

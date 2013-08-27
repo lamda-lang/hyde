@@ -17,13 +17,13 @@ static Token *TokenCreate(Integer8 length, VALUE **error) {
 }
 
 VALUE *TokenDecode(Byte **bytes, VALUE **error) {
-    Integer8 length = DecodeInteger8FLE(bytes);
+    Integer8 length = DecodeInteger8(bytes);
     Token *token = TokenCreate(length, error);
     if (error != NULL) {
         return NULL;
     }
     for (Integer8 index = 0; index < length; index += 1) {
-        token->codepoints[index] = DecodeInteger8FLE(bytes);
+        token->codepoints[index] = DecodeInteger8(bytes);
     }
     return token;
 }

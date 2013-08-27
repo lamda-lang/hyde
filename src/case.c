@@ -23,7 +23,7 @@ static Case *CaseCreate(Integer32 count, VALUE **error) {
 }
 
 VALUE *CaseDecode(Byte **bytes, VALUE **error) {
-    Integer32 count = DecodeInteger32VLE(bytes);
+    Integer32 count = DecodeInteger32(bytes);
     Case *block = CaseCreate(count, error);
     if (*error != NULL) {
         goto returnError;

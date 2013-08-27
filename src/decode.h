@@ -3,12 +3,10 @@
 
 #include "runtime.h"
 
-Integer8 DecodeInteger8FLE(Byte **bytes);
-Integer16 DecodeInteger16FLE(Byte **bytes);
-Integer32 DecodeInteger32FLE(Byte **bytes);
-Integer64 DecodeInteger64FLE(Byte **bytes);
-Integer32 DecodeInteger32VLE(Byte **bytes);
-Float64 DecodeFloat64FLE(Byte **bytes);
+Integer8 DecodeInteger8(Byte **bytes);
+Integer16 DecodeInteger16(Byte **bytes);
+Integer32 DecodeInteger32(Byte **bytes);
+Integer64 DecodeInteger64(Byte **bytes);
 VALUE *DecodeValue(Byte **bytes, VALUE **error);
 
 #endif

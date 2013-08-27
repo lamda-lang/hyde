@@ -22,7 +22,7 @@ static Map *MapCreate(Integer32 count, VALUE **error) {
 } 
 
 VALUE *MapDecode(Byte **bytes, VALUE **error) {
-    Integer32 count = DecodeInteger32VLE(bytes);
+    Integer32 count = DecodeInteger32(bytes);
     Map *map = MapCreate(count, error);
     if (*error != NULL) {
         goto returnError;

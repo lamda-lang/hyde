@@ -21,8 +21,8 @@ static Lamda *LamdaCreate(VALUE *result, Integer8 arity, Integer8 count, VALUE *
 }
 
 VALUE *LamdaDecode(Byte **bytes, VALUE **error) {
-    Integer8 arity = DecodeInteger8FLE(bytes);
-    Integer8 count = DecodeInteger8FLE(bytes);
+    Integer8 arity = DecodeInteger8(bytes);
+    Integer8 count = DecodeInteger8(bytes);
     VALUE *result = DecodeValue(bytes, error);
     if (*error != NULL) {
         goto returnError;

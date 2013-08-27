@@ -16,7 +16,7 @@ static Protocol *ProtocolCreate(Integer32 count, VALUE **error) {
 }
 
 VALUE *ProtocolDecode(Byte **bytes, VALUE **error) {
-    Integer32 count = DecodeInteger32VLE(bytes);
+    Integer32 count = DecodeInteger32(bytes);
     Protocol *protocol = ProtocolCreate(count, error);
     if (*error != NULL) {
         goto returnError;

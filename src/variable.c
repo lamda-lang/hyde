@@ -17,13 +17,13 @@ static Variable *VariableCreate(Integer8 length, VALUE **error) {
 }
 
 VALUE *VariableDecode(Byte **bytes, VALUE **error) {
-    Integer8 length = DecodeInteger8FLE(bytes);
+    Integer8 length = DecodeInteger8(bytes);
     Variable *variable = VariableCreate(length, error);
     if (error != NULL) {
         return NULL;
     }
     for (Integer8 index = 0; index < length; index += 1) {
-        variable->codepoints[index] = DecodeInteger8FLE(bytes);
+        variable->codepoints[index] = DecodeInteger8(bytes);
     }
     return variable;
 }

@@ -17,13 +17,13 @@ static String *StringCreate(Integer32 length, VALUE **error) {
 }
 
 VALUE *StringDecode(Byte **bytes, VALUE **error) {
-    Integer32 length = DecodeInteger32VLE(bytes);
+    Integer32 length = DecodeInteger32(bytes);
     String *string = StringCreate(length, error);
     if (*error != NULL) {
         return NULL;
     }
     for (Integer32 index = 0; index < length; index += 1) {
-        string->codepoints[index] = DecodeInteger32VLE(bytes);
+        string->codepoints[index] = DecodeInteger32(bytes);
     }
     return string;
 }

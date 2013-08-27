@@ -22,7 +22,7 @@ static When *WhenCreate(Integer32 count, VALUE **error) {
 }
 
 VALUE *WhenDecode(Byte **bytes, VALUE **error) {
-    Integer32 count = DecodeInteger32VLE(bytes);
+    Integer32 count = DecodeInteger32(bytes);
     When *block = WhenCreate(count, error);
     if (*error != NULL) {
         goto returnError;

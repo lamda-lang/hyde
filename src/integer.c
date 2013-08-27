@@ -16,7 +16,7 @@ static Integer *IntegerCreate(Integer64 value, VALUE **error) {
 }
 
 VALUE *IntegerDecode(Byte **bytes, VALUE **error) {
-    Integer64 value = DecodeInteger64FLE(bytes);
+    Integer64 value = DecodeInteger64(bytes);
     return IntegerCreate(value, error);
 }
 

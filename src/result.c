@@ -19,7 +19,7 @@ static Result *ResultCreate(VALUE *target, Integer8 count, VALUE **error) {
 }
 
 VALUE *ResultDecode(Byte **bytes, VALUE **error) {
-    Integer8 count = DecodeInteger8FLE(bytes);
+    Integer8 count = DecodeInteger8(bytes);
     VALUE *target = DecodeValue(bytes, error);
     if (*error != NULL) {
         goto returnError;

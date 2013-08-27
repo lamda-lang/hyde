@@ -1,5 +1,10 @@
 #include "float.h"
 
+typedef union {
+    Integer64 integer;
+    Float64 IEEE754;
+} Binary;
+
 typedef struct {
     VALUE *type;
     Float64 value;
@@ -16,8 +21,8 @@ static Float *FloatCreate(Float64 value, VALUE **error) {
 }
 
 VALUE *FloatDecode(Byte **bytes, VALUE **error) {
-    Float64 value = DecodeFloat64FLE(bytes);
-    return FloatCreate(value, error);
+    Binary binary = {.integer = DecodeInteger64(bytes)};
+    return FloatCreate(binary.IEEE754, error);
 }
 
 void FloatDealloc(VALUE *floatValue) {
