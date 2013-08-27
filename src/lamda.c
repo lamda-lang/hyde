@@ -48,8 +48,3 @@ returnError:
 void LamdaDealloc(VALUE *lamdaValue) {
     MemoryDealloc(lamdaValue);
 }
-
-Integer64 LamdaHash(VALUE *lamdaValue) {
-    Lamda *lamda = lamdaValue;
-    return lamda->arity + lamda->count;
-}

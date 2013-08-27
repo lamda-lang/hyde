@@ -27,7 +27,7 @@ typedef Integer64 Hash(VALUE *value);
 typedef Bool Equal(VALUE *value, VALUE *other);
 VALUE *Kernel(VALUE **args, Integer8 count, VALUE **error);
 
-/* global errors */
+/* global error values */
 extern VALUE *RuntimeOutOfMemoryError;
 extern VALUE *RuntimeFileOpenError;
 extern VALUE *RuntimeFileReadError;

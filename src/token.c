@@ -31,15 +31,3 @@ VALUE *TokenDecode(Byte **bytes, VALUE **error) {
 void TokenDealloc(VALUE *tokenValue) {
     MemoryDealloc(tokenValue);
 }
-
-Integer64 TokenHash(VALUE *tokenValue) {
-    Token *token = tokenValue;
-    return token->length;
-}
-
-Bool TokenEqual(VALUE *tokenValue, VALUE *otherValue) {
-    Token *token = tokenValue;
-    Token *other = otherValue;
-    return token->length == other->length
-        && MemoryEqual(token->codepoints, other->codepoints, sizeof(Integer8) * token->length);
-}

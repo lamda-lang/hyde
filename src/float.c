@@ -23,14 +23,3 @@ VALUE *FloatDecode(Byte **bytes, VALUE **error) {
 void FloatDealloc(VALUE *floatValue) {
     MemoryDealloc(floatValue);
 }
-
-Integer64 FloatHash(VALUE *floatValue) {
-    Float *fpv = floatValue;
-    return (Integer64)fpv->value;
-}
-
-Bool FloatEqual(VALUE *floatValue, VALUE *otherValue) {
-    Float *fpv = floatValue;
-    Float *other = floatValue;
-    return fpv->value == other->value;
-}

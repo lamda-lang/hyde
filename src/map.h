@@ -5,6 +5,5 @@
 
 VALUE *MapDecode(Byte **bytes, VALUE **error);
 void MapDealloc(VALUE *mapValue);
-Integer64 MapHash(VALUE *mapValue);
 
 #endif

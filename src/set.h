@@ -5,6 +5,5 @@
 
 VALUE *SetDecode(Byte **bytes, VALUE **error);
 void SetDealloc(VALUE *setValue);
-Integer64 SetHash(VALUE *setValue);
 
 #endif

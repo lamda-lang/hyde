@@ -39,8 +39,3 @@ returnError:
 void DoDealloc(VALUE *doValue) {
     MemoryDealloc(doValue);
 }
-
-Integer64 DoHash(VALUE *doValue) {
-    Do *block = doValue;
-    return block->count;
-}

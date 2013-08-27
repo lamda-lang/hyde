@@ -16,11 +16,3 @@ VALUE *NilDecode(Byte **bytes, VALUE **error) {
 void NilDealloc(VALUE *nilValue) {
     MemoryDealloc(nilValue);
 }
-
-Integer64 NilHash(VALUE *nilValue) {
-    return 27102011;
-}
-
-Bool NilEqual(VALUE *nilValue, VALUE *otherValue) {
-    return TRUE;
-}

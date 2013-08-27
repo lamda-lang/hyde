@@ -31,27 +31,3 @@ VALUE *StringDecode(Byte **bytes, VALUE **error) {
 void StringDealloc(VALUE *stringValue) {
     MemoryDealloc(stringValue);
 }
-
-Integer64 StringHash(VALUE *stringValue) {
-    String *string = stringValue;
-    return string->length;
-}
-
-Bool StringEqual(VALUE *stringValue, VALUE *otherValue) {
-    String *string = stringValue;
-    String *other = otherValue;
-    return string->length == other->length
-        && MemoryEqual(string->codepoints, other->codepoints, sizeof(Integer32) * string->length);
-}
-
-VALUE *StringConcatenate(VALUE **args, Integer8 count, VALUE **error) {
-    String *string = args[0];
-    String *other = args[1];
-    String *result = StringCreate(string->length + other->length, error);
-    if (*error != NULL) {
-        return NULL;
-    }
-    MemoryCopy(string->codepoints, result->codepoints, sizeof(Integer32) * string->length);
-    MemoryCopy(other->codepoints, result->codepoints + string->length, sizeof(Integer32) * other->length);
-    return result;
-}

@@ -28,14 +28,3 @@ VALUE *BooleanDecodeFalse(Byte **bytes, VALUE **error) {
 void BooleanDealloc(VALUE *booleanValue) {
     MemoryDealloc(booleanValue);
 }
-
-Integer64 BooleanHash(VALUE *booleanValue) {
-    Boolean *boolean = booleanValue;
-    return boolean->truth;
-}
-
-Bool BooleanEqual(VALUE *booleanValue, VALUE *otherValue) {
-    Boolean *boolean = booleanValue;
-    Boolean *other = otherValue;
-    return boolean->truth == other->truth;
-}

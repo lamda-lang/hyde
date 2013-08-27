@@ -5,6 +5,5 @@
 
 VALUE *RangeDecode(Byte **bytes, VALUE **error);
 void RangeDealloc(VALUE *rangeValue);
-Integer64 RangeHash(VALUE *rangeValue);
 
 #endif

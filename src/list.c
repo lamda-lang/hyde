@@ -39,8 +39,3 @@ returnError:
 void ListDealloc(VALUE *listValue) {
     MemoryDealloc(listValue);
 }
-
-Integer64 ListHash(VALUE *listValue) {
-    List *list = listValue;
-    return list->count;
-}

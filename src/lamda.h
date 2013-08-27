@@ -5,6 +5,5 @@
 
 VALUE *LamdaDecode(Byte **bytes, VALUE **error);
 void LamdaDealloc(VALUE *lamdaValue);
-Integer64 LamdaHash(VALUE *lamdaValue);
 
 #endif

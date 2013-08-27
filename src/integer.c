@@ -23,20 +23,3 @@ VALUE *IntegerDecode(Byte **bytes, VALUE **error) {
 void IntegerDealloc(VALUE *integerValue) {
     MemoryDealloc(integerValue);
 }
-
-Integer64 IntegerHash(VALUE *integerValue) {
-    Integer *integer = integerValue;
-    return integer->value;
-}
-
-Bool IntegerEqual(VALUE *integerValue, VALUE *otherValue) {
-    Integer *integer = integerValue;
-    Integer *other = integerValue;
-    return integer->value == other->value;
-}
-
-VALUE *IntegerSum(VALUE **args, Integer8 count, VALUE **error) {
-    Integer *integer = args[0];
-    Integer *other = args[1];
-    return IntegerCreate(integer->value + other->value, error);
-}

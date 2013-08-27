@@ -32,7 +32,3 @@ VALUE *RangeDecode(Byte **bytes, VALUE **error) {
 void RangeDealloc(VALUE *rangeValue) {
     MemoryDealloc(rangeValue);
 }
-
-Integer64 RangeHash(VALUE *rangeValue) {
-    return 7;
-}

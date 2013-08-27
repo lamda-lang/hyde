@@ -39,8 +39,3 @@ returnError:
 void SetDealloc(VALUE *setValue) {
     MemoryDealloc(setValue);
 }
-
-Integer64 SetHash(VALUE *setValue) {
-    Set *set = setValue;
-    return set->count;
-}

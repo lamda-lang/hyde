@@ -48,8 +48,3 @@ returnError:
 void MapDealloc(VALUE *mapValue) {
     MemoryDealloc(mapValue);
 }
-
-Integer64 MapHash(VALUE *mapValue) {
-    Map *map = mapValue;
-    return map->count;
-}

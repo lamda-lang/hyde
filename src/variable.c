@@ -31,15 +31,3 @@ VALUE *VariableDecode(Byte **bytes, VALUE **error) {
 void VariableDealloc(VALUE *variableValue) {
     MemoryDealloc(variableValue);
 }
-
-Integer64 VariableHash(VALUE *variableValue) {
-    Variable *variable = variableValue;
-    return variable->length;
-}
-
-Bool VariableEqual(VALUE *variableValue, VALUE *otherValue) {
-    Variable *variable = variableValue;
-    Variable *other = otherValue;
-    return variable->length == other->length
-        && MemoryEqual(variable->codepoints, other->codepoints, sizeof(Integer8) * variable->length);
-}
