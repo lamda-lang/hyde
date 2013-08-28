@@ -46,6 +46,7 @@ extern VALUE *RuntimeIntegerType;
 extern VALUE *RuntimeLamdaType;
 extern VALUE *RuntimeListType;
 extern VALUE *RuntimeMapType;
+extern VALUE *RuntimeMemberType;
 extern VALUE *RuntimeNilType;
 extern VALUE *RuntimeProtocolType;
 extern VALUE *RuntimeRangeType;
@@ -69,6 +70,7 @@ extern VALUE *RuntimeWhenType;
 #include "lamda.h"
 #include "list.h"
 #include "map.h"
+#include "member.h"
 #include "memory.h"
 #include "nil.h"
 #include "process.h"

@@ -21,7 +21,9 @@ static Float *FloatCreate(Float64 value, VALUE **error) {
 }
 
 VALUE *FloatDecode(Byte **bytes, VALUE **error) {
-    Binary binary = {.integer = DecodeInteger64(bytes)};
+    Binary binary = {
+        .integer = DecodeInteger64(bytes)
+    };
     return FloatCreate(binary.IEEE754, error);
 }
 

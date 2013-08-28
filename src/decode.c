@@ -13,16 +13,17 @@ static Decode *decode[] = {
     [9] = LamdaDecode,
     [10] = ListDecode,
     [11] = MapDecode,
-    [12] = NilDecode,
-    [13] = ProtocolDecode,
-    [14] = RangeDecode,
-    [15] = ResultDecode,
-    [16] = SetDecode,
-    [17] = StringDecode,
-    [18] = TokenDecode,
-    [19] = TypeDecode,
-    [20] = VariableDecode,
-    [21] = WhenDecode
+    [12] = MemberDecode,
+    [13] = NilDecode,
+    [14] = ProtocolDecode,
+    [15] = RangeDecode,
+    [16] = ResultDecode,
+    [17] = SetDecode,
+    [18] = StringDecode,
+    [19] = TokenDecode,
+    [20] = TypeDecode,
+    [21] = VariableDecode,
+    [22] = WhenDecode
 };
 
 Integer8 DecodeInteger8(Byte **bytes) {
