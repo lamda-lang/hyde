@@ -4,5 +4,6 @@
 #include "runtime.h"
 
 VALUE *ProtocolDecode(Byte **bytes, VALUE **error);
+void ProtocolDealloc(VALUE *protocolValue);
 
 #endif
