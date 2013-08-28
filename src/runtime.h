@@ -41,6 +41,7 @@ extern VALUE *RuntimeBooleanType;
 extern VALUE *RuntimeCaseType;
 extern VALUE *RuntimeComprehensionType;
 extern VALUE *RuntimeDoType;
+extern VALUE *RuntimeElementType;
 extern VALUE *RuntimeFloatType;
 extern VALUE *RuntimeIntegerType;
 extern VALUE *RuntimeLamdaType;
@@ -64,6 +65,7 @@ extern VALUE *RuntimeWhenType;
 #include "case.h"
 #include "decode.h"
 #include "do.h"
+#include "element.h"
 #include "file.h"
 #include "float.h"
 #include "integer.h"
