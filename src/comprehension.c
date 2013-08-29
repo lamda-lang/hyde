@@ -3,15 +3,38 @@
 typedef struct {
     VALUE *type;
     VALUE *kind;
+    VALUE *value;
+    VALUE *variable;
+    VALUE *enumerable;
+    VALUE *guard;
+} ComprehensionValue;
+
+typedef struct {
+    VALUE *type;
+    VALUE *kind;
     VALUE *key;
     VALUE *value;
     VALUE *variable;
     VALUE *enumerable;
     VALUE *guard;
-} Comprehension;
+} ComprehensionKeyValue;
 
-static Comprehension *ComprehensionCreate(VALUE *kind, VALUE *key, VALUE *value, VALUE *variable, VALUE *enumerable, VALUE *guard, VALUE **error) {
-    Comprehension *comprehension = MemoryAlloc(sizeof(Comprehension), error);
+static ComprehensionValue *ComprehensionValueCreate(VALUE *kind, VALUE *value, VALUE *variable, VALUE *enumerable, VALUE *guard, VALUE **error) {
+    ComprehensionValue *comprehension = MemoryAlloc(sizeof(ComprehensionValue), error);
+    if (*error != NULL) {
+        return NULL;
+    }
+    comprehension->type = RuntimeComprehensionType;
+    comprehension->kind = kind;
+    comprehension->value = value;
+    comprehension->variable = variable;
+    comprehension->enumerable = enumerable;
+    comprehension->guard = guard;
+    return comprehension;
+}
+
+static ComprehensionKeyValue *ComprehensionKeyValueCreate(VALUE *kind, VALUE *key, VALUE *value, VALUE *variable, VALUE *enumerable, VALUE *guard, VALUE **error) {
+    ComprehensionKeyValue *comprehension = MemoryAlloc(sizeof(ComprehensionKeyValue), error);
     if (*error != NULL) {
         return NULL;
     }
@@ -25,33 +48,58 @@ static Comprehension *ComprehensionCreate(VALUE *kind, VALUE *key, VALUE *value,
     return comprehension;
 }
 
-VALUE *ComprehensionDecodeList(Byte **bytes, VALUE **error) {
+static VALUE *ComprehensionValueDecode(VALUE *kind, Byte **bytes, VALUE **error) {
     VALUE *value = DecodeValue(bytes, error);
     if (*error != NULL) {
-        goto returnError;
+        return NULL;
     }
     VALUE *variable = DecodeValue(bytes, error);
     if (*error != NULL) {
-        goto returnError;
+        return NULL;
     }
     VALUE *enumerable = DecodeValue(bytes, error);
     if (*error != NULL) {
-        goto returnError;
+        return NULL;
     }
     VALUE *guard = DecodeValue(bytes, error);
     if (*error != NULL) {
-        goto returnError;
+        return NULL;
     }
-    return ComprehensionCreate(RuntimeListType, NULL, value, variable, enumerable, guard, error);
+    return ComprehensionValueCreate(kind, value, variable, enumerable, guard, error);
+}
 
-returnError:
-    return NULL;
+static VALUE *ComprehensionKeyValueDecode(VALUE *kind, Byte **bytes, VALUE **error) {
+    VALUE *key = DecodeValue(bytes, error);
+    if (*error != NULL) {
+        return NULL;
+    }
+    VALUE *value = DecodeValue(bytes, error);
+    if (*error != NULL) {
+        return NULL;
+    }
+    VALUE *variable = DecodeValue(bytes, error);
+    if (*error != NULL) {
+        return NULL;
+    }
+    VALUE *enumerable = DecodeValue(bytes, error);
+    if (*error != NULL) {
+        return NULL;
+    }
+    VALUE *guard = DecodeValue(bytes, error);
+    if (*error != NULL) {
+        return NULL;
+    }
+    return ComprehensionKeyValueCreate(kind, key, value, variable, enumerable, guard, error);
+}
+
+VALUE *ComprehensionDecodeList(Byte **bytes, VALUE **error) {
+    return ComprehensionValueDecode(RuntimeListType, bytes, error);
 }
 
 VALUE *ComprehensionDecodeMap(Byte **bytes, VALUE **error) {
-    return NULL;
+    return ComprehensionKeyValueDecode(RuntimeMapType, bytes, error);
 }
 
 VALUE *ComprehensionDecodeSet(Byte **bytes, VALUE **error) {
-    return NULL;
+    return ComprehensionValueDecode(RuntimeSetType, bytes, error);
 }
