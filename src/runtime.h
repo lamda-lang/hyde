@@ -9,23 +9,16 @@
 #define FALSE 0
 #define VALUE void
 
-/* scalar types */
+/* types */
 typedef unsigned char Byte;
 typedef _Bool Bool;
 typedef char Char;
 typedef uint8_t Integer8;
-typedef uint16_t Integer16;
 typedef uint32_t Integer32;
 typedef uint64_t Integer64;
 typedef double Float64;
 typedef size_t Size;
 typedef int File;
-
-/* function types */
-typedef VALUE *Decode(Byte **bytes, VALUE **error);
-typedef Integer64 Hash(VALUE *value);
-typedef Bool Equal(VALUE *value, VALUE *other);
-VALUE *Kernel(VALUE **args, Integer8 count, VALUE **error);
 
 /* global error values */
 extern VALUE *RuntimeOutOfMemoryError;
@@ -48,6 +41,7 @@ extern VALUE *RuntimeLamdaType;
 extern VALUE *RuntimeListType;
 extern VALUE *RuntimeMapType;
 extern VALUE *RuntimeMemberType;
+extern VALUE *RuntimeModuleType;
 extern VALUE *RuntimeNilType;
 extern VALUE *RuntimeProtocolType;
 extern VALUE *RuntimeRangeType;
@@ -58,6 +52,8 @@ extern VALUE *RuntimeTokenType;
 extern VALUE *RuntimeTypeType;
 extern VALUE *RuntimeVariableType;
 extern VALUE *RuntimeWhenType;
+
+int RuntimeStart(int argc, char **argv);
 
 #include "boolean.h"
 #include "case.h"
@@ -74,6 +70,7 @@ extern VALUE *RuntimeWhenType;
 #include "map.h"
 #include "member.h"
 #include "memory.h"
+#include "module.h"
 #include "nil.h"
 #include "process.h"
 #include "protocol.h"
