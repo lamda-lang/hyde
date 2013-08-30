@@ -6,7 +6,7 @@ typedef struct {
     Integer8 codepoints[];
 } Token;
 
-static Token *TokenCreate(Integer8 length, VALUE **error) {
+static Token *TokenCreate(Integer8 length, Error *error) {
     Token *token = MemoryAlloc(sizeof(Token) + sizeof(Integer8) * length, error);
     if (error != NULL) {
         return NULL;
@@ -16,7 +16,7 @@ static Token *TokenCreate(Integer8 length, VALUE **error) {
     return token;
 }
 
-VALUE *TokenDecode(Byte **bytes, VALUE **error) {
+VALUE *TokenDecode(Byte **bytes, Error *error) {
     Integer8 length = DecodeInteger8(bytes);
     Token *token = TokenCreate(length, error);
     if (error != NULL) {

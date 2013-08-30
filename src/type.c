@@ -6,7 +6,7 @@ typedef struct {
     VALUE *members[];
 } Type;
 
-static Type *TypeCreate(Integer32 count, VALUE **error) {
+static Type *TypeCreate(Integer32 count, Error *error) {
     Type *type = MemoryAlloc(sizeof(Type) + sizeof(VALUE *) * count, error);
     if (*error != NULL) {
         return NULL;
@@ -16,7 +16,7 @@ static Type *TypeCreate(Integer32 count, VALUE **error) {
     return type;
 }
 
-VALUE *TypeDecode(Byte **bytes, VALUE **error) {
+VALUE *TypeDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     Type *type = TypeCreate(count, error);
     if (*error != NULL) {

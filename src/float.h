@@ -3,7 +3,7 @@
 
 #include "runtime.h"
 
-VALUE *FloatDecode(Byte **bytes, VALUE **error);
+VALUE *FloatDecode(Byte **bytes, Error *error);
 void FloatDealloc(VALUE *floatValue);
 
 #endif

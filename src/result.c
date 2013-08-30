@@ -7,7 +7,7 @@ typedef struct {
     VALUE *args[];
 } Result;
 
-static Result *ResultCreate(VALUE *target, Integer8 count, VALUE **error) {
+static Result *ResultCreate(VALUE *target, Integer8 count, Error *error) {
     Result *result = MemoryAlloc(sizeof(Result) + sizeof(VALUE *) * count, error);
     if (*error != NULL) {
         return NULL;
@@ -18,7 +18,7 @@ static Result *ResultCreate(VALUE *target, Integer8 count, VALUE **error) {
     return result;
 }
 
-VALUE *ResultDecode(Byte **bytes, VALUE **error) {
+VALUE *ResultDecode(Byte **bytes, Error *error) {
     Integer8 count = DecodeInteger8(bytes);
     VALUE *target = DecodeValue(bytes, error);
     if (*error != NULL) {

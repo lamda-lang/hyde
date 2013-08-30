@@ -10,7 +10,7 @@ typedef struct {
     Float64 value;
 } Float;
 
-static Float *FloatCreate(Float64 value, VALUE **error) {
+static Float *FloatCreate(Float64 value, Error *error) {
     Float *fpv = MemoryAlloc(sizeof(Float), error);
     if (error != NULL) {
         return NULL;
@@ -20,7 +20,7 @@ static Float *FloatCreate(Float64 value, VALUE **error) {
     return fpv;
 }
 
-VALUE *FloatDecode(Byte **bytes, VALUE **error) {
+VALUE *FloatDecode(Byte **bytes, Error *error) {
     Binary binary = {
         .integer = DecodeInteger64(bytes)
     };

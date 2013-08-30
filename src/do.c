@@ -6,7 +6,7 @@ typedef struct {
   VALUE *elements[];
 } Do;
 
-static Do *DoCreate(Integer32 count, VALUE **error) {
+static Do *DoCreate(Integer32 count, Error *error) {
     Do *block = MemoryAlloc(sizeof(Do) * sizeof(VALUE *) * count, error);
     if (*error != NULL) {
         return NULL;
@@ -16,7 +16,7 @@ static Do *DoCreate(Integer32 count, VALUE **error) {
     return block;
 }
 
-VALUE *DoDecode(Byte **bytes, VALUE **error) {
+VALUE *DoDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     Do *block = DoCreate(count, error);
     if (*error != NULL) {

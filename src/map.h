@@ -3,7 +3,7 @@
 
 #include "runtime.h"
 
-VALUE *MapDecode(Byte **bytes, VALUE **error);
+VALUE *MapDecode(Byte **bytes, Error *error);
 void MapDealloc(VALUE *mapValue);
 
 #endif

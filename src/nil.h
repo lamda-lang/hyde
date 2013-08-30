@@ -3,7 +3,7 @@
 
 #include "runtime.h"
 
-VALUE *NilDecode(Byte **bytes, VALUE **error);
+VALUE *NilDecode(Byte **bytes, Error *error);
 void NilDealloc(VALUE *nilValue);
 
 #endif

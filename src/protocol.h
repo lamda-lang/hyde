@@ -3,7 +3,7 @@
 
 #include "runtime.h"
 
-VALUE *ProtocolDecode(Byte **bytes, VALUE **error);
+VALUE *ProtocolDecode(Byte **bytes, Error *error);
 void ProtocolDealloc(VALUE *protocolValue);
 
 #endif

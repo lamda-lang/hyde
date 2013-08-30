@@ -6,7 +6,7 @@ typedef struct {
     Integer32 codepoints[];
 } String;
 
-static String *StringCreate(Integer32 length, VALUE **error) {
+static String *StringCreate(Integer32 length, Error *error) {
     String *string = MemoryAlloc(sizeof(String) + sizeof(Integer32) * length, error);
     if (*error != NULL) {
         return NULL;
@@ -16,7 +16,7 @@ static String *StringCreate(Integer32 length, VALUE **error) {
     return string;
 }
 
-VALUE *StringDecode(Byte **bytes, VALUE **error) {
+VALUE *StringDecode(Byte **bytes, Error *error) {
     Integer32 length = DecodeInteger32(bytes);
     String *string = StringCreate(length, error);
     if (*error != NULL) {

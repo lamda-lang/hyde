@@ -2,7 +2,7 @@
 #include <string.h>
 #include "memory.h"
 
-void *MemoryAlloc(Size size, VALUE **error) {
+void *MemoryAlloc(Size size, Error *error) {
     void *buffer = malloc(size);
     if (buffer == NULL) {
         *error = RuntimeOutOfMemoryError;
@@ -10,7 +10,7 @@ void *MemoryAlloc(Size size, VALUE **error) {
     return buffer;
 }
 
-void *MemoryRealloc(void *buffer, Size size, VALUE **error) {
+void *MemoryRealloc(void *buffer, Size size, Error *error) {
     void *new = realloc(buffer, size);
     if (new == NULL) {
         *error = RuntimeOutOfMemoryError;

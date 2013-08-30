@@ -6,7 +6,7 @@ typedef struct {
     VALUE *field;
 } Member;
 
-static VALUE *MemberCreate(VALUE *record, VALUE *field, VALUE **error) {
+static VALUE *MemberCreate(VALUE *record, VALUE *field, Error *error) {
     Member *member = MemoryAlloc(sizeof(Member), error);
     if (*error != NULL) {
         return NULL;
@@ -17,7 +17,7 @@ static VALUE *MemberCreate(VALUE *record, VALUE *field, VALUE **error) {
     return member;
 }
 
-VALUE *MemberDecode(Byte **bytes, VALUE **error) {
+VALUE *MemberDecode(Byte **bytes, Error *error) {
     VALUE *record = DecodeValue(bytes, error);
     if (*error != NULL) {
         goto returnError;

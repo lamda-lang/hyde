@@ -11,7 +11,7 @@ typedef struct {
     Signature signatures[];
 } Protocol;
 
-static Protocol *ProtocolCreate(Integer32 count, VALUE **error) {
+static Protocol *ProtocolCreate(Integer32 count, Error *error) {
     Protocol *protocol = MemoryAlloc(sizeof(Protocol) + sizeof(Signature) * count, error);
     if (*error != NULL) {
         return NULL;
@@ -21,7 +21,7 @@ static Protocol *ProtocolCreate(Integer32 count, VALUE **error) {
     return protocol;
 }
 
-VALUE *ProtocolDecode(Byte **bytes, VALUE **error) {
+VALUE *ProtocolDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     Protocol *protocol = ProtocolCreate(count, error);
     if (*error != NULL) {

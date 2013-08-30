@@ -6,7 +6,7 @@ typedef struct {
     VALUE *elements[];
 } Set;
 
-static Set *SetCreate(Integer32 count, VALUE **error) {
+static Set *SetCreate(Integer32 count, Error *error) {
     Set *set = MemoryAlloc(sizeof(Set) + sizeof(VALUE *) * count, error);
     if (*error != NULL) {
         return NULL;
@@ -16,7 +16,7 @@ static Set *SetCreate(Integer32 count, VALUE **error) {
     return set;
 }
 
-VALUE *SetDecode(Byte **bytes, VALUE **error) {
+VALUE *SetDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     Set *set = SetCreate(count, error);
     if (*error != NULL) {

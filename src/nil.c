@@ -4,7 +4,7 @@ typedef struct {
     VALUE *type;
 } Nil;
 
-VALUE *NilDecode(Byte **bytes, VALUE **error) {
+VALUE *NilDecode(Byte **bytes, Error *error) {
     Nil *nil = MemoryAlloc(sizeof(Nil), error);
     if (*error != NULL) {
         return NULL;

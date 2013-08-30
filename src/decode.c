@@ -1,6 +1,6 @@
 #include "decode.h"
 
-typedef VALUE *Decode(Byte **bytes, VALUE **error);
+typedef VALUE *Decode(Byte **bytes, Error *error);
 
 static Decode *decode[] = {
     [0] = BooleanDecodeTrue,
@@ -60,7 +60,7 @@ Integer64 DecodeInteger64(Byte **bytes) {
         && (value = value << 7 | blocks[8] & 0XFF, *bytes += 1, blocks[8] & 0XFF), value;
 }
 
-VALUE *DecodeValue(Byte **bytes, VALUE **error) {
+VALUE *DecodeValue(Byte **bytes, Error *error) {
     Integer8 code = DecodeInteger8(bytes);
     return decode[code](bytes, error);
 }

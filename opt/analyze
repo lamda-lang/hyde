@@ -1,0 +1,7 @@
+-std=c99
+-fsyntax-only
+-Weverything
+-Wno-unused-value
+-Wno-shadow
+-Wno-unused-parameter
+-Wno-bitwise-op-parentheses

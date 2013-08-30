@@ -8,7 +8,7 @@ typedef struct {
     VALUE *upvalues[];
 } Lamda;
 
-static Lamda *LamdaCreate(VALUE *result, Integer8 arity, Integer8 count, VALUE **error) {
+static Lamda *LamdaCreate(VALUE *result, Integer8 arity, Integer8 count, Error *error) {
     Lamda *lamda = MemoryAlloc(sizeof(Lamda) + sizeof(VALUE *) * count, error);
     if (*error != NULL) {
         return NULL;
@@ -20,7 +20,7 @@ static Lamda *LamdaCreate(VALUE *result, Integer8 arity, Integer8 count, VALUE *
     return lamda;
 }
 
-VALUE *LamdaDecode(Byte **bytes, VALUE **error) {
+VALUE *LamdaDecode(Byte **bytes, Error *error) {
     Integer8 arity = DecodeInteger8(bytes);
     Integer8 count = DecodeInteger8(bytes);
     VALUE *result = DecodeValue(bytes, error);

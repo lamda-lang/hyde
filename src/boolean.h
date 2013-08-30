@@ -3,8 +3,8 @@
 
 #include "runtime.h"
 
-VALUE *BooleanDecodeTrue(Byte **bytes, VALUE **error);
-VALUE *BooleanDecodeFalse(Byte **bytes, VALUE **error);
+VALUE *BooleanDecodeTrue(Byte **bytes, Error *error);
+VALUE *BooleanDecodeFalse(Byte **bytes, Error *error);
 void BooleanDealloc(VALUE *booleanValue);
 
 #endif

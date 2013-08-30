@@ -6,7 +6,7 @@ typedef struct {
     VALUE *elements[];
 } List;
 
-static List *ListCreate(Integer32 count, VALUE **error) {
+static List *ListCreate(Integer32 count, Error *error) {
     List *list = MemoryAlloc(sizeof(List) + sizeof(VALUE *) * count, error);
     if (*error != NULL) {
         return NULL;
@@ -16,7 +16,7 @@ static List *ListCreate(Integer32 count, VALUE **error) {
     return list;
 }
 
-VALUE *ListDecode(Byte **bytes, VALUE **error) {
+VALUE *ListDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     List *list = ListCreate(count, error);
     if (*error != NULL) {

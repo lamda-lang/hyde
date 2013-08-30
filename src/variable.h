@@ -3,7 +3,7 @@
 
 #include "runtime.h"
 
-VALUE *VariableDecode(Byte **bytes, VALUE **error);
+VALUE *VariableDecode(Byte **bytes, Error *error);
 void VariableDealloc(VALUE *tokenValue);
 
 #endif

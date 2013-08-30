@@ -11,7 +11,7 @@ typedef struct {
     Branch branches[];
 } When;
 
-static When *WhenCreate(Integer32 count, VALUE **error) {
+static When *WhenCreate(Integer32 count, Error *error) {
     When *block = MemoryAlloc(sizeof(When) + sizeof(Branch) * count, error);
     if (*error != NULL) {
         return NULL;
@@ -21,7 +21,7 @@ static When *WhenCreate(Integer32 count, VALUE **error) {
     return block;
 }
 
-VALUE *WhenDecode(Byte **bytes, VALUE **error) {
+VALUE *WhenDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     When *block = WhenCreate(count, error);
     if (*error != NULL) {

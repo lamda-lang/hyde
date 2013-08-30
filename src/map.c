@@ -11,7 +11,7 @@ typedef struct {
     Pair pairs[];
 } Map;
 
-static Map *MapCreate(Integer32 count, VALUE **error) {
+static Map *MapCreate(Integer32 count, Error *error) {
     Map *map = MemoryAlloc(sizeof(Map) + sizeof(Pair) * count, error);
     if (*error != NULL) {
         return NULL;
@@ -21,7 +21,7 @@ static Map *MapCreate(Integer32 count, VALUE **error) {
     return map;
 } 
 
-VALUE *MapDecode(Byte **bytes, VALUE **error) {
+VALUE *MapDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     Map *map = MapCreate(count, error);
     if (*error != NULL) {

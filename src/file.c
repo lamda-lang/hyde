@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include "file.h"
 
-File FileOpen(Char *path, VALUE **error) {
+File FileOpen(Char *path, Error *error) {
     int file = open(path, O_RDWR);
     if (file == -1) {
         *error = RuntimeFileOpenError;
@@ -10,13 +10,13 @@ File FileOpen(Char *path, VALUE **error) {
     return file;
 }
 
-void FileClose(File file, VALUE **error) {
+void FileClose(File file, Error *error) {
     if (close(file) == -1) {
         *error = RuntimeFileCloseError;
     }
 }
 
-Size FileRead(File file, void *buffer, Size size, VALUE **error) {
+Size FileRead(File file, void *buffer, Size size, Error *error) {
     ssize_t consumed = read(file, buffer, size);
     if (consumed == -1) {
         *error = RuntimeFileReadError;
@@ -24,7 +24,7 @@ Size FileRead(File file, void *buffer, Size size, VALUE **error) {
     return (Size)consumed;
 } 
 
-Size FileWrite(File file, void *buffer, Size size, VALUE **error) {
+Size FileWrite(File file, void *buffer, Size size, Error *error) {
     ssize_t written = write(file, buffer, size);
     if (written == -1) {
         *error = RuntimeFileWriteError;

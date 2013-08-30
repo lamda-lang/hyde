@@ -3,7 +3,7 @@
 
 #include "runtime.h"
 
-VALUE *ListDecode(Byte **bytes, VALUE **error);
+VALUE *ListDecode(Byte **bytes, Error *error);
 void ListDealloc(VALUE *listValue);
 
 #endif

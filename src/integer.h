@@ -3,7 +3,7 @@
 
 #include "runtime.h"
 
-VALUE *IntegerDecode(Byte **bytes, VALUE **error);
+VALUE *IntegerDecode(Byte **bytes, Error *error);
 void IntegerDealloc(VALUE *integerValue);
 
 #endif

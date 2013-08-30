@@ -3,6 +3,6 @@
 
 #include "runtime.h"
 
-VALUE *ModuleDecode(Byte **bytes, VALUE **error);
+VALUE *ModuleDecode(Byte **bytes, Error *error);
 
 #endif

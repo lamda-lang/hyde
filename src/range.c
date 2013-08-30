@@ -6,7 +6,7 @@ typedef struct {
     VALUE *upper;
 } Range;
 
-static Range *RangeCreate(VALUE *lower, VALUE *upper, VALUE **error) {
+static Range *RangeCreate(VALUE *lower, VALUE *upper, Error *error) {
     Range *range = MemoryAlloc(sizeof(Range), error);
     if (*error != NULL) {
         return NULL;
@@ -17,7 +17,7 @@ static Range *RangeCreate(VALUE *lower, VALUE *upper, VALUE **error) {
     return range;
 }
 
-VALUE *RangeDecode(Byte **bytes, VALUE **error) {
+VALUE *RangeDecode(Byte **bytes, Error *error) {
     VALUE *lower = DecodeValue(bytes, error);
     if (*error != NULL) {
         return NULL;

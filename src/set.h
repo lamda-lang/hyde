@@ -3,7 +3,7 @@
 
 #include "runtime.h"
 
-VALUE *SetDecode(Byte **bytes, VALUE **error);
+VALUE *SetDecode(Byte **bytes, Error *error);
 void SetDealloc(VALUE *setValue);
 
 #endif

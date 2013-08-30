@@ -3,6 +3,6 @@
 
 #include "runtime.h"
 
-VALUE *MemberDecode(Byte **bytes, VALUE **error);
+VALUE *MemberDecode(Byte **bytes, Error *error);
 
 #endif

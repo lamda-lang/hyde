@@ -5,7 +5,7 @@ typedef struct {
     Integer64 value;
 } Integer;
 
-static Integer *IntegerCreate(Integer64 value, VALUE **error) {
+static Integer *IntegerCreate(Integer64 value, Error *error) {
     Integer *integer = MemoryAlloc(sizeof(Integer), error);
     if (*error != NULL) {
         return NULL;
@@ -15,7 +15,7 @@ static Integer *IntegerCreate(Integer64 value, VALUE **error) {
     return integer;
 }
 
-VALUE *IntegerDecode(Byte **bytes, VALUE **error) {
+VALUE *IntegerDecode(Byte **bytes, Error *error) {
     Integer64 value = DecodeInteger64(bytes);
     return IntegerCreate(value, error);
 }

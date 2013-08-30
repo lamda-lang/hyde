@@ -3,8 +3,8 @@
 
 #include "runtime.h"
 
-VALUE *ComprehensionDecodeList(Byte **bytes, VALUE **error);
-VALUE *ComprehensionDecodeMap(Byte **bytes, VALUE **error);
-VALUE *ComprehensionDecodeSet(Byte **bytes, VALUE **error);
+VALUE *ComprehensionDecodeList(Byte **bytes, Error *error);
+VALUE *ComprehensionDecodeMap(Byte **bytes, Error *error);
+VALUE *ComprehensionDecodeSet(Byte **bytes, Error *error);
 
 #endif

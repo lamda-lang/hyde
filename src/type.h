@@ -3,6 +3,6 @@
 
 #include "runtime.h"
 
-VALUE *TypeDecode(Byte **bytes, VALUE **error);
+VALUE *TypeDecode(Byte **bytes, Error *error);
 
 #endif

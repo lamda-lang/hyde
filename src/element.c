@@ -6,7 +6,7 @@ typedef struct {
     VALUE *key;
 } Element;
 
-static VALUE *ElementCreate(VALUE *collection, VALUE *key, VALUE **error) {
+static VALUE *ElementCreate(VALUE *collection, VALUE *key, Error *error) {
     Element *element = MemoryAlloc(sizeof(Element), error);
     if (*error != NULL) {
         return NULL;
@@ -17,7 +17,7 @@ static VALUE *ElementCreate(VALUE *collection, VALUE *key, VALUE **error) {
     return element;
 }
 
-VALUE *ElementDecode(Byte **bytes, VALUE **error) {
+VALUE *ElementDecode(Byte **bytes, Error *error) {
     VALUE *collection = DecodeValue(bytes, error);
     if (*error != NULL) {
         goto returnError;
