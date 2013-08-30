@@ -4,12 +4,10 @@
 #include <stddef.h>
 #include <stdint.h>
 
-/* macros */
 #define TRUE 1
 #define FALSE 0
 #define VALUE void
 
-/* types */
 typedef unsigned char Byte;
 typedef _Bool Bool;
 typedef char Char;
@@ -20,40 +18,10 @@ typedef double Float64;
 typedef size_t Size;
 typedef int File;
 
-/* global error values */
-extern VALUE *RuntimeOutOfMemoryError;
-extern VALUE *RuntimeFileOpenError;
-extern VALUE *RuntimeFileReadError;
-extern VALUE *RuntimeFileWriteError;
-extern VALUE *RuntimeFileCloseError;
-extern VALUE *RuntimeInvalidTypeError;
-extern VALUE *RuntimeArityMismatchError;
-
-/* global type values */
-extern VALUE *RuntimeBooleanType;
-extern VALUE *RuntimeCaseType;
-extern VALUE *RuntimeComprehensionType;
-extern VALUE *RuntimeDoType;
-extern VALUE *RuntimeElementType;
-extern VALUE *RuntimeFloatType;
-extern VALUE *RuntimeIntegerType;
-extern VALUE *RuntimeLamdaType;
-extern VALUE *RuntimeListType;
-extern VALUE *RuntimeMapType;
-extern VALUE *RuntimeMemberType;
-extern VALUE *RuntimeModuleType;
-extern VALUE *RuntimeNilType;
-extern VALUE *RuntimeProtocolType;
-extern VALUE *RuntimeRangeType;
-extern VALUE *RuntimeResultType;
-extern VALUE *RuntimeSetType;
-extern VALUE *RuntimeStringType;
-extern VALUE *RuntimeTokenType;
-extern VALUE *RuntimeTypeType;
-extern VALUE *RuntimeVariableType;
-extern VALUE *RuntimeWhenType;
-
-int RuntimeStart(int argc, char **argv);
+typedef enum {
+    ErrorNone,
+    ErrorOutOfMemory
+} Error;
 
 #include "boolean.h"
 #include "case.h"
@@ -72,7 +40,6 @@ int RuntimeStart(int argc, char **argv);
 #include "memory.h"
 #include "module.h"
 #include "nil.h"
-#include "process.h"
 #include "protocol.h"
 #include "range.h"
 #include "result.h"

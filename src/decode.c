@@ -30,10 +30,6 @@ static Decode *decode[] = {
     [24] = WhenDecode
 };
 
-static Integer8 DecodeCount(Byte **bytes) {
-    return 0;
-}
-
 Integer8 DecodeInteger8(Byte **bytes) {
     Integer8 value = **bytes;
     *bytes += 1;
@@ -41,23 +37,27 @@ Integer8 DecodeInteger8(Byte **bytes) {
 }
 
 Integer32 DecodeInteger32(Byte **bytes) {
-    return 0;
+    Byte *blocks = *bytes;
+    Integer32 value = 0;
+    return (value = value << 0 | blocks[0] & 0X7F, *bytes += 1, blocks[0] & 0X80)
+        && (value = value << 7 | blocks[1] & 0X7F, *bytes += 1, blocks[1] & 0X80)
+        && (value = value << 7 | blocks[2] & 0X7F, *bytes += 1, blocks[2] & 0X80)
+        && (value = value << 7 | blocks[3] & 0X7F, *bytes += 1, blocks[3] & 0X80)
+        && (value = value << 7 | blocks[4] & 0XFF, *bytes += 1, blocks[4] & 0XFF), value;
 }
 
 Integer64 DecodeInteger64(Byte **bytes) {
     Byte *blocks = *bytes;
-    Integer64 value = blocks[0] & 0X7F;
-    switch (DecodeCount(bytes)) {
-    case 0XFF: ;
-    case 0X7F: ;
-    case 0X3F: ;
-    case 0X1F: ;
-    case 0X0F: ;
-    case 0X07: ;
-    case 0X03: ;
-    case 0X01: ;
-    }
-    return value;
+    Integer64 value = 0;
+    return (value = value << 0 | blocks[0] & 0X7F, *bytes += 1, blocks[0] & 0X80)
+        && (value = value << 7 | blocks[1] & 0X7F, *bytes += 1, blocks[1] & 0X80)
+        && (value = value << 7 | blocks[2] & 0X7F, *bytes += 1, blocks[2] & 0X80)
+        && (value = value << 7 | blocks[3] & 0X7F, *bytes += 1, blocks[3] & 0X80)
+        && (value = value << 7 | blocks[4] & 0X7F, *bytes += 1, blocks[4] & 0X80)
+        && (value = value << 7 | blocks[5] & 0X7F, *bytes += 1, blocks[5] & 0X80)
+        && (value = value << 7 | blocks[6] & 0X7F, *bytes += 1, blocks[6] & 0X80)
+        && (value = value << 7 | blocks[7] & 0X7F, *bytes += 1, blocks[7] & 0X80)
+        && (value = value << 7 | blocks[8] & 0XFF, *bytes += 1, blocks[8] & 0XFF), value;
 }
 
 VALUE *DecodeValue(Byte **bytes, VALUE **error) {
