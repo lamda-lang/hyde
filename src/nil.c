@@ -6,10 +6,10 @@ typedef struct {
 
 VALUE *NilDecode(Byte **bytes, Error *error) {
     Nil *nil = MemoryAlloc(sizeof(Nil), error);
-    if (*error != NULL) {
+    if (*error != ErrorNone) {
         return NULL;
     }
-    nil->type = RuntimeNilType;
+    nil->type = NULL;
     return nil;
 }
 

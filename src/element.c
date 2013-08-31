@@ -8,10 +8,10 @@ typedef struct {
 
 static VALUE *ElementCreate(VALUE *collection, VALUE *key, Error *error) {
     Element *element = MemoryAlloc(sizeof(Element), error);
-    if (*error != NULL) {
+    if (*error != ErrorNone) {
         return NULL;
     }
-    element->type = RuntimeElementType;
+    element->type = NULL;
     element->collection = collection;
     element->key = key;
     return element;
@@ -19,11 +19,11 @@ static VALUE *ElementCreate(VALUE *collection, VALUE *key, Error *error) {
 
 VALUE *ElementDecode(Byte **bytes, Error *error) {
     VALUE *collection = DecodeValue(bytes, error);
-    if (*error != NULL) {
+    if (*error != ErrorNone) {
         goto returnError;
     }
     VALUE *key = DecodeValue(bytes, error);
-    if (*error != NULL) {
+    if (*error != ErrorNone) {
         goto returnError;
     }
     return ElementCreate(collection, key, error);

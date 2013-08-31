@@ -5,7 +5,7 @@
 void *MemoryAlloc(Size size, Error *error) {
     void *buffer = malloc(size);
     if (buffer == NULL) {
-        *error = RuntimeOutOfMemoryError;
+        *error = ErrorOutOfMemory;
     }
     return buffer;
 }
@@ -13,7 +13,7 @@ void *MemoryAlloc(Size size, Error *error) {
 void *MemoryRealloc(void *buffer, Size size, Error *error) {
     void *new = realloc(buffer, size);
     if (new == NULL) {
-        *error = RuntimeOutOfMemoryError;
+        *error = ErrorOutOfMemory;
     }
     return new;
 }

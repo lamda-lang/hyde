@@ -5,21 +5,21 @@
 File FileOpen(Char *path, Error *error) {
     int file = open(path, O_RDWR);
     if (file == -1) {
-        *error = RuntimeFileOpenError;
+        *error = ErrorFileOpen;
     }
     return file;
 }
 
 void FileClose(File file, Error *error) {
     if (close(file) == -1) {
-        *error = RuntimeFileCloseError;
+        *error = ErrorFileClose;
     }
 }
 
 Size FileRead(File file, void *buffer, Size size, Error *error) {
     ssize_t consumed = read(file, buffer, size);
     if (consumed == -1) {
-        *error = RuntimeFileReadError;
+        *error = ErrorFileRead;
     }
     return (Size)consumed;
 } 
@@ -27,7 +27,7 @@ Size FileRead(File file, void *buffer, Size size, Error *error) {
 Size FileWrite(File file, void *buffer, Size size, Error *error) {
     ssize_t written = write(file, buffer, size);
     if (written == -1) {
-        *error = RuntimeFileWriteError;
+        *error = ErrorFileWrite;
     }
     return (Size)written;
 }

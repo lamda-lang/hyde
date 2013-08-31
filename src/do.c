@@ -8,10 +8,10 @@ typedef struct {
 
 static Do *DoCreate(Integer32 count, Error *error) {
     Do *block = MemoryAlloc(sizeof(Do) * sizeof(VALUE *) * count, error);
-    if (*error != NULL) {
+    if (*error != ErrorNone) {
         return NULL;
     }
-    block->type = RuntimeDoType;
+    block->type = NULL;
     block->count = count;
     return block;
 }
@@ -19,12 +19,12 @@ static Do *DoCreate(Integer32 count, Error *error) {
 VALUE *DoDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     Do *block = DoCreate(count, error);
-    if (*error != NULL) {
+    if (*error != ErrorNone) {
         goto returnError;
     }
     for (Integer32 index = 0; index < count; index += 1) {
         block->elements[index] = DecodeValue(bytes, error);
-        if (*error != NULL) {
+        if (*error != ErrorNone) {
             goto deallocDo;
         }
     }

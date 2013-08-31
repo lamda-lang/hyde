@@ -12,10 +12,10 @@ typedef struct {
 
 static Float *FloatCreate(Float64 value, Error *error) {
     Float *fpv = MemoryAlloc(sizeof(Float), error);
-    if (error != NULL) {
+    if (error != ErrorNone) {
         return NULL;
     }
-    fpv->type = RuntimeFloatType;
+    fpv->type = NULL;
     fpv->value = value;
     return fpv;
 }

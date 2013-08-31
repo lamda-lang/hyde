@@ -20,7 +20,11 @@ typedef int File;
 
 typedef enum {
     ErrorNone,
-    ErrorOutOfMemory
+    ErrorOutOfMemory,
+    ErrorFileOpen,
+    ErrorFileClose,
+    ErrorFileRead,
+    ErrorFileWrite
 } Error;
 
 #include "boolean.h"

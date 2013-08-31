@@ -13,10 +13,10 @@ typedef struct {
 
 static Map *MapCreate(Integer32 count, Error *error) {
     Map *map = MemoryAlloc(sizeof(Map) + sizeof(Pair) * count, error);
-    if (*error != NULL) {
+    if (*error != ErrorNone) {
         return NULL;
     }
-    map->type = RuntimeMapType;
+    map->type = NULL;
     map->count = count;
     return map;
 } 
@@ -24,16 +24,16 @@ static Map *MapCreate(Integer32 count, Error *error) {
 VALUE *MapDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     Map *map = MapCreate(count, error);
-    if (*error != NULL) {
+    if (*error != ErrorNone) {
         goto returnError;
     }
     for (Integer32 index = 0; index < count; index += 1) {
         map->pairs[index].key = DecodeValue(bytes, error);
-        if (*error != NULL) {
+        if (*error != ErrorNone) {
             goto deallocMap;
         }
         map->pairs[index].value = DecodeValue(bytes, error);
-        if (*error != NULL) {
+        if (*error != ErrorNone) {
             goto deallocMap;
         }
     }

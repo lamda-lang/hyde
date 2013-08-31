@@ -11,7 +11,7 @@ static Variable *VariableCreate(Integer8 length, Error *error) {
     if (error != NULL) {
         return NULL;
     }
-    variable->type = RuntimeVariableType;
+    variable->type = NULL;
     variable->length = length;
     return variable;
 }

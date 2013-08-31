@@ -8,10 +8,10 @@ typedef struct {
 
 static Range *RangeCreate(VALUE *lower, VALUE *upper, Error *error) {
     Range *range = MemoryAlloc(sizeof(Range), error);
-    if (*error != NULL) {
+    if (*error != ErrorNone) {
         return NULL;
     }
-    range->type = RuntimeRangeType;
+    range->type = NULL;
     range->lower = lower;
     range->upper = upper;
     return range;
@@ -19,11 +19,11 @@ static Range *RangeCreate(VALUE *lower, VALUE *upper, Error *error) {
 
 VALUE *RangeDecode(Byte **bytes, Error *error) {
     VALUE *lower = DecodeValue(bytes, error);
-    if (*error != NULL) {
+    if (*error != ErrorNone) {
         return NULL;
     }
     VALUE *upper = DecodeValue(bytes, error);
-    if (*error != NULL) {
+    if (*error != ErrorNone) {
         return NULL;
     }
     return RangeCreate(lower, upper, error);

@@ -8,10 +8,10 @@ typedef struct {
 
 static Type *TypeCreate(Integer32 count, Error *error) {
     Type *type = MemoryAlloc(sizeof(Type) + sizeof(VALUE *) * count, error);
-    if (*error != NULL) {
+    if (*error != ErrorNone) {
         return NULL;
     }
-    type->type = RuntimeTypeType;
+    type->type = NULL;
     type->count = count;
     return type;
 }
@@ -19,12 +19,12 @@ static Type *TypeCreate(Integer32 count, Error *error) {
 VALUE *TypeDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     Type *type = TypeCreate(count, error);
-    if (*error != NULL) {
+    if (*error != ErrorNone) {
         goto returnError;
     }
     for (Integer32 index = 0; index < count; index += 1) {
         type->members[index] = DecodeValue(bytes, error);
-        if (*error != NULL) {
+        if (*error != ErrorNone) {
             goto deallocType;
         }
     }

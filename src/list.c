@@ -8,10 +8,10 @@ typedef struct {
 
 static List *ListCreate(Integer32 count, Error *error) {
     List *list = MemoryAlloc(sizeof(List) + sizeof(VALUE *) * count, error);
-    if (*error != NULL) {
+    if (*error != ErrorNone) {
         return NULL;
     }
-    list->type = RuntimeListType;
+    list->type = NULL;
     list->count = count;
     return list;
 }
@@ -19,12 +19,12 @@ static List *ListCreate(Integer32 count, Error *error) {
 VALUE *ListDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     List *list = ListCreate(count, error);
-    if (*error != NULL) {
+    if (*error != ErrorNone) {
         goto returnError;
     }
     for (Integer32 index = 0; index < count; index += 1) {
         list->elements[index] = DecodeValue(bytes, error);
-        if (*error != NULL) {
+        if (*error != ErrorNone) {
             goto deallocList;
         }
     }
