@@ -1,7 +1,7 @@
 #ifndef RANGE_H
 #define RANGE_H
 
-#include "runtime.h"
+#include "api.h"
 
 VALUE *RangeDecode(Byte **bytes, Error *error);
 void RangeDealloc(VALUE *rangeValue);

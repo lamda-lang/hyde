@@ -1,7 +1,7 @@
 #ifndef WHEN_H
 #define WHEN_H
 
-#include "runtime.h"
+#include "api.h"
 
 VALUE *WhenDecode(Byte **bytes, Error *error);
 

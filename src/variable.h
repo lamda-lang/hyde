@@ -1,7 +1,7 @@
 #ifndef VARIABLE_H
 #define VARIABLE_H
 
-#include "runtime.h"
+#include "api.h"
 
 VALUE *VariableDecode(Byte **bytes, Error *error);
 void VariableDealloc(VALUE *tokenValue);

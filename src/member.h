@@ -1,7 +1,7 @@
 #ifndef MEMBER_H
 #define MEMBER_H
 
-#include "runtime.h"
+#include "api.h"
 
 VALUE *MemberDecode(Byte **bytes, Error *error);
 

@@ -1,3 +1,7 @@
 -std=c99
--g
--o build/lamda
+-O0
+-dynamiclib
+-current_version 0
+-compatibility_version 0
+-w
+-o build/libhyde.dylib

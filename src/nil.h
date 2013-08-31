@@ -1,7 +1,7 @@
 #ifndef NIL_H
 #define NIL_H
 
-#include "runtime.h"
+#include "api.h"
 
 VALUE *NilDecode(Byte **bytes, Error *error);
 void NilDealloc(VALUE *nilValue);

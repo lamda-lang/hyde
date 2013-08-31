@@ -1,7 +1,7 @@
 #ifndef CASE_H
 #define CASE_H
 
-#include "runtime.h"
+#include "api.h"
 
 VALUE *CaseDecode(Byte **bytes, Error *error);
 

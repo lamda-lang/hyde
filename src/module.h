@@ -1,7 +1,7 @@
 #ifndef MODULE_H
 #define MODULE_H
 
-#include "runtime.h"
+#include "api.h"
 
 VALUE *ModuleDecode(Byte **bytes, Error *error);
 
