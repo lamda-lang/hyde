@@ -4,6 +4,7 @@
 #include "api.h"
 
 VALUE *DoDecode(Byte **bytes, Error *error);
+VALUE *DoCreate(Kernel *kernel, VALUE **args, Integer8 count, Error *error);
 void DoDealloc(VALUE *doValue);
 
 #endif
