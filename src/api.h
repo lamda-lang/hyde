@@ -19,10 +19,7 @@ typedef size_t Size;
 typedef enum {
     ErrorNone,
     ErrorOutOfMemory,
-    ErrorFileOpen,
-    ErrorFileClose,
-    ErrorFileRead,
-    ErrorFileWrite
+    ErrorInvalidBytecodeVersion
 } Error;
 
 #include "boolean.h"
