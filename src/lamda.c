@@ -6,10 +6,16 @@ typedef struct {
     Integer8 arity;
     Integer8 count;
     VALUE *upvalues[];
-} Lamda;
+} LamdaNative;
 
-static Lamda *LamdaCreate(VALUE *result, Integer8 arity, Integer8 count, Error *error) {
-    Lamda *lamda = MemoryAlloc(sizeof(Lamda) + sizeof(VALUE *) * count, error);
+typedef struct {
+    VALUE *type;
+    Kernel *kernel;
+    Integer8 arity;
+} LamdaCore;
+
+static LamdaNative *LamdaNativeCreate(VALUE *result, Integer8 arity, Integer8 count, Error *error) {
+    LamdaNative *lamda = MemoryAlloc(sizeof(LamdaNative) + sizeof(VALUE *) * count, error);
     if (*error != ErrorNone) {
         return NULL;
     }
@@ -20,6 +26,17 @@ static Lamda *LamdaCreate(VALUE *result, Integer8 arity, Integer8 count, Error *
     return lamda;
 }
 
+static LamdaCore *LamdaCoreCreate(Kernel *kernel, Integer8 arity, Error *error) {
+    LamdaCore *lamda = MemoryAlloc(sizeof(LamdaCore), error);
+    if (*error != ErrorNone) {
+        return NULL;
+    }
+    lamda->type = NULL;
+    lamda->arity = arity;
+    lamda->kernel = kernel;
+    return lamda;
+}
+
 VALUE *LamdaDecode(Byte **bytes, Error *error) {
     Integer8 arity = DecodeInteger8(bytes);
     Integer8 count = DecodeInteger8(bytes);
@@ -27,7 +44,7 @@ VALUE *LamdaDecode(Byte **bytes, Error *error) {
     if (*error != ErrorNone) {
         goto returnError;
     }
-    Lamda *lamda = LamdaCreate(result, arity, count, error);
+    LamdaNative *lamda = LamdaNativeCreate(result, arity, count, error);
     if (*error != ErrorNone) {
         goto returnError;
     }
@@ -43,6 +60,10 @@ deallocLamda:
     MemoryDealloc(lamda);
 returnError:
     return NULL;
+}
+
+VALUE *LamdaCreate(Kernel *kernel, Integer8 arity, Error *error) {
+    return LamdaCoreCreate(kernel, arity, error);
 }
 
 void LamdaDealloc(VALUE *lamdaValue) {

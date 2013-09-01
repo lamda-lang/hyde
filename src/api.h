@@ -22,6 +22,8 @@ typedef enum {
     ErrorInvalidBytecodeVersion
 } Error;
 
+typedef VALUE *Kernel(VALUE **args, Integer8 count, Error *error);
+
 #include "boolean.h"
 #include "case.h"
 #include "comprehension.h"
