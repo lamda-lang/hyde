@@ -1,5 +1,0 @@
-#! /bin/bash
-
-mkdir -p build
-cp src/hyde.h build/hyde.h
-clang @opt/build src/*.c
