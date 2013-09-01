@@ -1,10 +1,6 @@
 #include "runtime.h"
 
-Runtime *RuntimeCreate(Error *error) {
-    return NULL;
-}
-
-VALUE *RuntimeLoad(Char *path, Error *error) {
+VALUE *RuntimeLoad(Byte *bytes, Error *error) {
     return NULL;
 }
 

@@ -3,8 +3,7 @@
 
 #include "api.h"
 
-Runtime *RuntimeCreate(Error *error);
-VALUE *RuntimeLoad(Char *path, Error *error);
+VALUE *RuntimeLoad(Byte *bytes, Error *error);
 VALUE *RuntimeEval(VALUE *value, Error *error);
 
 #endif

@@ -10,13 +10,11 @@
 
 typedef unsigned char Byte;
 typedef _Bool Bool;
-typedef char Char;
 typedef uint8_t Integer8;
 typedef uint32_t Integer32;
 typedef uint64_t Integer64;
 typedef double Float64;
 typedef size_t Size;
-typedef int File;
 
 typedef enum {
     ErrorNone,
@@ -27,8 +25,6 @@ typedef enum {
     ErrorFileWrite
 } Error;
 
-typedef struct Runtime Runtime;
-
 #include "boolean.h"
 #include "case.h"
 #include "comprehension.h"
@@ -36,7 +32,6 @@ typedef struct Runtime Runtime;
 #include "decode.h"
 #include "do.h"
 #include "element.h"
-#include "file.h"
 #include "float.h"
 #include "integer.h"
 #include "lamda.h"
