@@ -15,20 +15,16 @@ typedef struct {
 
 static DoNative *DoNativeCreate(Integer32 count, Error *error) {
     DoNative *block = MemoryAlloc(sizeof(DoNative) * sizeof(VALUE *) * count, error);
-    if (*error != ErrorNone) {
-        return NULL;
-    }
-    block->type = NULL;
+    if (*error != ErrorNone) return NULL;
+    block->type = RuntimeValueForConstant(ConstantDoType);
     block->count = count;
     return block;
 }
 
 static DoCore *DoCoreCreate(Kernel *kernel, VALUE **args, Integer8 count, Error *error) {
     DoCore *block = MemoryAlloc(sizeof(DoCore) * sizeof(VALUE *) * count, error);
-    if (*error != ErrorNone) {
-        return NULL;
-    }
-    block->type = NULL;
+    if (*error != ErrorNone) return NULL;
+    block->type = RuntimeValueForConstant(ConstantDoType);
     block->count = count;
     block->kernel = kernel;
     MemoryCopy(args, block->args, sizeof(VALUE *) * count);
@@ -38,14 +34,10 @@ static DoCore *DoCoreCreate(Kernel *kernel, VALUE **args, Integer8 count, Error 
 VALUE *DoDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     DoNative *block = DoNativeCreate(count, error);
-    if (*error != ErrorNone) {
-        goto returnError;
-    }
+    if (*error != ErrorNone) goto returnError;
     for (Integer32 index = 0; index < count; index += 1) {
         block->elements[index] = DecodeValue(bytes, error);
-        if (*error != ErrorNone) {
-            goto deallocDo;
-        }
+        if (*error != ErrorNone) goto deallocDo;
     }
     return block;
 

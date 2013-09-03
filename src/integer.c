@@ -7,10 +7,8 @@ typedef struct {
 
 static Integer *IntegerCreate(Integer64 value, Error *error) {
     Integer *integer = MemoryAlloc(sizeof(Integer), error);
-    if (*error != ErrorNone) {
-        return NULL;
-    }
-    integer->type = NULL;
+    if (*error != ErrorNone) return NULL;
+    integer->type = RuntimeValueForConstant(ConstantIntegerType);
     integer->value = value;
     return integer;
 }

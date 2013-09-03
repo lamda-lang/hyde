@@ -3,6 +3,9 @@
 
 #include "api.h"
 
+VALUE *TypeCreate(Integer32 count, Error *error);
+VALUE *TypeBootstrap(Error *error);
 VALUE *TypeDecode(Byte **bytes, Error *error);
+void TypeDealloc(VALUE *typeValue);
 
 #endif

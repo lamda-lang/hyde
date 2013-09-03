@@ -3,6 +3,7 @@
 
 #include "api.h"
 
+VALUE *NilCreate(Error *error);
 VALUE *NilDecode(Byte **bytes, Error *error);
 void NilDealloc(VALUE *nilValue);
 

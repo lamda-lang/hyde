@@ -6,6 +6,8 @@ typedef struct {
 
 static Module *ModuleCreate(Error *error) {
     Module *module = MemoryAlloc(sizeof(Module), error);
+    if (*error != ErrorNone) return NULL;
+    module->type = RuntimeValueForConstant(ConstantModuleType);
     return module;
 }
 

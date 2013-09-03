@@ -1,8 +1,11 @@
 #ifndef API_H
 #define API_H
 
+#include <pthread.h>
 #include <stddef.h>
+#include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 
 #define TRUE 1
 #define FALSE 0
@@ -22,12 +25,39 @@ typedef enum {
     ErrorInvalidBytecodeVersion
 } Error;
 
+typedef enum {
+    ConstantBooleanType,
+    ConstantCaseType,
+    ConstantComprehensionType,
+    ConstantDoType,
+    ConstantElementType,
+    ConstantFloatType,
+    ConstantIntegerType,
+    ConstantLamdaType,
+    ConstantListType,
+    ConstantMapType,
+    ConstantMemberType,
+    ConstantModuleType,
+    ConstantNilType,
+    ConstantProtocolType,
+    ConstantRangeType,
+    ConstantResultType,
+    ConstantSetType,
+    ConstantStringType,
+    ConstantTokenType,
+    ConstantTypeType,
+    ConstantVariableType,
+    ConstantWhenType,
+    ConstantNil,
+    ConstantTrue,
+    ConstantFalse
+} Constant;
+
 typedef VALUE *Kernel(VALUE **args, Integer8 count, Error *error);
 
 #include "boolean.h"
 #include "case.h"
 #include "comprehension.h"
-#include "case.h"
 #include "decode.h"
 #include "do.h"
 #include "element.h"
@@ -46,6 +76,7 @@ typedef VALUE *Kernel(VALUE **args, Integer8 count, Error *error);
 #include "runtime.h"
 #include "set.h"
 #include "string.h"
+#include "thread.h"
 #include "token.h"
 #include "type.h"
 #include "variable.h"

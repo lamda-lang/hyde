@@ -1,20 +1,14 @@
-#include <stdlib.h>
-#include <string.h>
 #include "memory.h"
 
 void *MemoryAlloc(Size size, Error *error) {
     void *buffer = malloc(size);
-    if (buffer == NULL) {
-        *error = ErrorOutOfMemory;
-    }
+    if (buffer == NULL) *error = ErrorOutOfMemory;
     return buffer;
 }
 
 void *MemoryRealloc(void *buffer, Size size, Error *error) {
     void *new = realloc(buffer, size);
-    if (new == NULL) {
-        *error = ErrorOutOfMemory;
-    }
+    if (new == NULL) *error = ErrorOutOfMemory;
     return new;
 }
 

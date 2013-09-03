@@ -8,10 +8,8 @@ typedef struct {
 
 static Variable *VariableCreate(Integer8 length, Error *error) {
     Variable *variable = MemoryAlloc(sizeof(Variable) + sizeof(Integer8) * length, error);
-    if (error != NULL) {
-        return NULL;
-    }
-    variable->type = NULL;
+    if (error != NULL) return NULL;
+    variable->type = RuntimeValueForConstant(ConstantVariableType);
     variable->length = length;
     return variable;
 }
@@ -19,12 +17,8 @@ static Variable *VariableCreate(Integer8 length, Error *error) {
 VALUE *VariableDecode(Byte **bytes, Error *error) {
     Integer8 length = DecodeInteger8(bytes);
     Variable *variable = VariableCreate(length, error);
-    if (error != NULL) {
-        return NULL;
-    }
-    for (Integer8 index = 0; index < length; index += 1) {
-        variable->codepoints[index] = DecodeInteger8(bytes);
-    }
+    if (error != NULL) return NULL;
+    for (Integer8 index = 0; index < length; index += 1) variable->codepoints[index] = DecodeInteger8(bytes);
     return variable;
 }
 

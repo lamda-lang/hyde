@@ -5,24 +5,20 @@ typedef struct {
     Bool truth;
 } Boolean; 
 
-static Boolean *BooleanCreate(Bool truth, Error *error) {
+VALUE *BooleanCreate(Bool truth, Error *error) {
     Boolean *boolean = MemoryAlloc(sizeof(Boolean), error);
-    if (*error != ErrorNone) {
-        return NULL;
-    }
-    boolean->type = NULL;
+    if (*error != ErrorNone) return NULL;
+    boolean->type = RuntimeValueForConstant(ConstantBooleanType);
     boolean->truth = truth;
     return boolean;
 }
 
 VALUE *BooleanDecodeTrue(Byte **bytes, Error *error) {
-    Boolean *true = BooleanCreate(TRUE, error);
-    return true;
+    return RuntimeValueForConstant(ConstantTrue);
 }
 
 VALUE *BooleanDecodeFalse(Byte **bytes, Error *error) {
-    Boolean *false = BooleanCreate(FALSE, error);
-    return false;
+    return RuntimeValueForConstant(ConstantFalse);
 }
 
 void BooleanDealloc(VALUE *booleanValue) {
