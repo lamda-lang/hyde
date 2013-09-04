@@ -3,7 +3,33 @@
 #define MAJOR 0
 #define MINOR 0
 
-static VALUE *RuntimeConstant[25] = {NULL};
+static VALUE *RuntimeConstant[] = {
+    [ConstantBooleanType] = NULL,
+    [ConstantCaseType] = NULL,
+    [ConstantComprehensionType] = NULL,
+    [ConstantDoType] = NULL,
+    [ConstantElementType] = NULL,
+    [ConstantFloatType] = NULL,
+    [ConstantIntegerType] = NULL,
+    [ConstantLamdaType] = NULL,
+    [ConstantListType] = NULL,
+    [ConstantMapType] = NULL,
+    [ConstantMemberType] = NULL,
+    [ConstantModuleType] = NULL,
+    [ConstantNilType] = NULL,
+    [ConstantProtocolType] = NULL,
+    [ConstantRangeType] = NULL,
+    [ConstantResultType] = NULL,
+    [ConstantSetType] = NULL,
+    [ConstantStringType] = NULL,
+    [ConstantTokenType] = NULL,
+    [ConstantTypeType] = NULL,
+    [ConstantVariableType] = NULL,
+    [ConstantWhenType] = NULL,
+    [ConstantNil] = NULL,
+    [ConstantTrue] = NULL,
+    [ConstantFalse] = NULL
+};
 
 Error RuntimeInitialize(void) {
     Error error = ErrorNone;
@@ -51,11 +77,11 @@ Error RuntimeInitialize(void) {
     if (error != ErrorNone) goto deallocConstants;
     RuntimeConstant[ConstantWhenType] = TypeCreate(0, &error);
     if (error != ErrorNone) goto deallocConstants;
-    RuntimeConstant[ConstantNil] = NULL;
+    RuntimeConstant[ConstantNil] = NilCreate(&error);
     if (error != ErrorNone) goto deallocConstants;
-    RuntimeConstant[ConstantTrue] = NULL;
+    RuntimeConstant[ConstantTrue] = BooleanCreate(TRUE, &error);
     if (error != ErrorNone) goto deallocConstants;
-    RuntimeConstant[ConstantFalse] = NULL;
+    RuntimeConstant[ConstantFalse] = BooleanCreate(FALSE, &error);
     if (error != ErrorNone) goto deallocConstants;
     return error;
 
@@ -65,6 +91,31 @@ deallocConstants:
 }
 
 void RuntimeShutdown(void) {
+    TypeDealloc(RuntimeConstant[ConstantBooleanType]);
+    TypeDealloc(RuntimeConstant[ConstantCaseType]);
+    TypeDealloc(RuntimeConstant[ConstantComprehensionType]);
+    TypeDealloc(RuntimeConstant[ConstantDoType]);
+    TypeDealloc(RuntimeConstant[ConstantElementType]);
+    TypeDealloc(RuntimeConstant[ConstantFloatType]);
+    TypeDealloc(RuntimeConstant[ConstantIntegerType]);
+    TypeDealloc(RuntimeConstant[ConstantLamdaType]);
+    TypeDealloc(RuntimeConstant[ConstantListType]);
+    TypeDealloc(RuntimeConstant[ConstantMapType]);
+    TypeDealloc(RuntimeConstant[ConstantMemberType]);
+    TypeDealloc(RuntimeConstant[ConstantModuleType]);
+    TypeDealloc(RuntimeConstant[ConstantNilType]);
+    TypeDealloc(RuntimeConstant[ConstantProtocolType]);
+    TypeDealloc(RuntimeConstant[ConstantRangeType]);
+    TypeDealloc(RuntimeConstant[ConstantResultType]);
+    TypeDealloc(RuntimeConstant[ConstantSetType]);
+    TypeDealloc(RuntimeConstant[ConstantStringType]);
+    TypeDealloc(RuntimeConstant[ConstantTokenType]);
+    TypeDealloc(RuntimeConstant[ConstantTypeType]);
+    TypeDealloc(RuntimeConstant[ConstantVariableType]);
+    TypeDealloc(RuntimeConstant[ConstantWhenType]);
+    NilDealloc(RuntimeConstant[ConstantNil]);
+    BooleanDealloc(RuntimeConstant[ConstantTrue]);
+    BooleanDealloc(RuntimeConstant[ConstantFalse]);
 }
 
 VALUE *RuntimeValueForConstant(Constant constant) {
