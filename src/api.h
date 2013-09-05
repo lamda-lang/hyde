@@ -7,10 +7,12 @@
 #include <stdint.h>
 #include <string.h>
 
+/* macro */
 #define TRUE 1
 #define FALSE 0
 #define VALUE void
 
+/* type */
 typedef unsigned char Byte;
 typedef _Bool Bool;
 typedef uint8_t Integer8;

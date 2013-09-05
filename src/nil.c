@@ -1,8 +1,10 @@
 #include "nil.h"
 
-typedef struct {
+typedef struct Nil Nil;
+
+struct Nil {
     VALUE *type;
-} Nil;
+};
 
 VALUE *NilCreate(Error *error) {
     Nil *nil = MemoryAlloc(sizeof(Nil), error);

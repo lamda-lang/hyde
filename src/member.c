@@ -1,10 +1,12 @@
 #include "member.h"
 
-typedef struct {
+typedef struct Member Member;
+
+struct Member {
     VALUE *type;
     VALUE *record;
     VALUE *field;
-} Member;
+};
 
 static VALUE *MemberCreate(VALUE *record, VALUE *field, Error *error) {
     Member *member = MemoryAlloc(sizeof(Member), error);

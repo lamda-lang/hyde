@@ -1,10 +1,12 @@
 #include "api.h"
 
-typedef struct {
+typedef struct Set Set;
+
+struct Set {
     VALUE *type;
     Integer32 count;
     VALUE *elements[];
-} Set;
+};
 
 static Set *SetCreate(Integer32 count, Error *error) {
     Set *set = MemoryAlloc(sizeof(Set) + sizeof(VALUE *) * count, error);

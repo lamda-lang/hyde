@@ -1,16 +1,21 @@
 #include "protocol.h"
 
-typedef struct {
+/* type */
+typedef struct Signature Signature;
+typedef struct Protocol Protocol;
+
+struct Signature {
     VALUE *name;
     VALUE *arity;
-} Signature;
+};
 
-typedef struct {
+struct Protocol {
     VALUE *type;
     Integer32 count;
     Signature signatures[];
-} Protocol;
+};
 
+/* private */
 static Protocol *ProtocolCreate(Integer32 count, Error *error) {
     Protocol *protocol = MemoryAlloc(sizeof(Protocol) + sizeof(Signature) * count, error);
     if (*error != ErrorNone) return NULL;
@@ -19,6 +24,7 @@ static Protocol *ProtocolCreate(Integer32 count, Error *error) {
     return protocol;
 }
 
+/* public */
 VALUE *ProtocolDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     Protocol *protocol = ProtocolCreate(count, error);

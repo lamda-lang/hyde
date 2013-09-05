@@ -1,17 +1,20 @@
 #include "do.h"
 
-typedef struct {
+typedef struct DoNative DoNative;
+typedef struct DoCore DoCore;
+
+struct DoNative {
   VALUE *type;
   Integer32 count;
   VALUE *elements[];
-} DoNative;
+};
 
-typedef struct {
+struct DoCore {
     VALUE *type;
     Kernel *kernel;
     Integer8 count;
     VALUE *args[];
-} DoCore;
+};
 
 static DoNative *DoNativeCreate(Integer32 count, Error *error) {
     DoNative *block = MemoryAlloc(sizeof(DoNative) * sizeof(VALUE *) * count, error);

@@ -1,11 +1,13 @@
 #include "result.h"
 
-typedef struct {
+typedef struct Result Result;
+
+struct Result {
     VALUE *type;
     VALUE *target;
     Integer8 count;
     VALUE *args[];
-} Result;
+};
 
 static Result *ResultCreate(VALUE *target, Integer8 count, Error *error) {
     Result *result = MemoryAlloc(sizeof(Result) + sizeof(VALUE *) * count, error);

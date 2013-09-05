@@ -1,10 +1,12 @@
 #include "type.h"
 
-typedef struct {
+typedef struct Type Type;
+
+struct Type {
     VALUE *type;
     Integer32 count;
     VALUE *members[];
-} Type; 
+}; 
 
 VALUE *TypeCreate(Integer32 count, Error *error) {
     Type *type = MemoryAlloc(sizeof(Type) + sizeof(VALUE *) * count, error);

@@ -1,10 +1,12 @@
 #include "range.h"
 
-typedef struct {
+typedef struct Range Range;
+
+struct Range {
     VALUE *type;
     VALUE *lower;
     VALUE *upper;
-} Range;
+};
 
 static Range *RangeCreate(VALUE *lower, VALUE *upper, Error *error) {
     Range *range = MemoryAlloc(sizeof(Range), error);

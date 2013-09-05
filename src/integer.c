@@ -1,9 +1,11 @@
 #include "integer.h"
 
-typedef struct {
+typedef struct Integer Integer;
+
+struct Integer {
     VALUE *type;
     Integer64 value;
-} Integer;
+};
 
 static Integer *IntegerCreate(Integer64 value, Error *error) {
     Integer *integer = MemoryAlloc(sizeof(Integer), error);

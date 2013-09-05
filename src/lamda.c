@@ -1,18 +1,21 @@
 #include "lamda.h"
 
-typedef struct {
+typedef struct LamdaNative LamdaNative;
+typedef struct LamdaCore LamdaCore;
+
+struct LamdaNative {
     VALUE *type;
     VALUE *result;
     Integer8 arity;
     Integer8 count;
     VALUE *upvalues[];
-} LamdaNative;
+};
 
-typedef struct {
+struct LamdaCore {
     VALUE *type;
     Kernel *kernel;
     Integer8 arity;
-} LamdaCore;
+};
 
 static LamdaNative *LamdaNativeCreate(VALUE *result, Integer8 arity, Integer8 count, Error *error) {
     LamdaNative *lamda = MemoryAlloc(sizeof(LamdaNative) + sizeof(VALUE *) * count, error);

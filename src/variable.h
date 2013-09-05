@@ -4,6 +4,7 @@
 #include "api.h"
 
 VALUE *VariableDecode(Byte **bytes, Error *error);
-void VariableDealloc(VALUE *tokenValue);
+void VariableDealloc(VALUE *variableValue);
+VALUE *VariableEval(VALUE *variableValue, VALUE *superior, Error *error); 
 
 #endif

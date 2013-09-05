@@ -1,10 +1,12 @@
 #include "element.h"
 
-typedef struct {
+typedef struct Element Element;
+
+struct Element {
     VALUE *type;
     VALUE *collection;
     VALUE *key;
-} Element;
+};
 
 static VALUE *ElementCreate(VALUE *collection, VALUE *key, Error *error) {
     Element *element = MemoryAlloc(sizeof(Element), error);

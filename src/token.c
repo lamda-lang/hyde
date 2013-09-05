@@ -1,10 +1,12 @@
 #include "token.h"
 
-typedef struct {
+typedef struct Token Token;
+
+struct Token {
     VALUE *type;
     Integer8 length;
     Integer8 codepoints[];
-} Token;
+};
 
 static Token *TokenCreate(Integer8 length, Error *error) {
     Token *token = MemoryAlloc(sizeof(Token) + sizeof(Integer8) * length, error);

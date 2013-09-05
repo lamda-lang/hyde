@@ -1,16 +1,19 @@
 #include "case.h"
 
-typedef struct {
+typedef struct Case Case;
+typedef struct Branch Branch;
+
+struct Branch {
     VALUE *match;
     VALUE *guard;
     VALUE *value;
-} Branch;
+};
 
-typedef struct {
+struct Case {
     VALUE *type;
     Integer32 count;
     Branch branches[];
-} Case;
+};
 
 static Case *CaseCreate(Integer32 count, Error *error) {
     Case *block = MemoryAlloc(sizeof(Case) + sizeof(Branch) * count, error);

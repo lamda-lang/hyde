@@ -1,9 +1,11 @@
 #include "boolean.h"
 
-typedef struct {
+typedef struct Boolean Boolean;
+
+struct Boolean {
     VALUE *type;
     Bool truth;
-} Boolean; 
+}; 
 
 VALUE *BooleanCreate(Bool truth, Error *error) {
     Boolean *boolean = MemoryAlloc(sizeof(Boolean), error);
@@ -19,6 +21,10 @@ VALUE *BooleanDecodeTrue(Byte **bytes, Error *error) {
 
 VALUE *BooleanDecodeFalse(Byte **bytes, Error *error) {
     return RuntimeValueForConstant(ConstantFalse);
+}
+
+VALUE *BooleanEval(VALUE *booleanValue, Bool pure, Error *error) {
+    return booleanValue;
 }
 
 void BooleanDealloc(VALUE *booleanValue) {

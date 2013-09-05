@@ -1,15 +1,18 @@
 #include "comprehension.h"
 
-typedef struct {
+typedef struct ComprehensionValue ComprehensionValue;
+typedef struct ComprehensionKeyValue ComprehensionKeyValue;
+
+struct ComprehensionValue {
     VALUE *type;
     VALUE *kind;
     VALUE *value;
     VALUE *variable;
     VALUE *enumerable;
     VALUE *guard;
-} ComprehensionValue;
+};
 
-typedef struct {
+struct ComprehensionKeyValue {
     VALUE *type;
     VALUE *kind;
     VALUE *key;
@@ -17,7 +20,7 @@ typedef struct {
     VALUE *variable;
     VALUE *enumerable;
     VALUE *guard;
-} ComprehensionKeyValue;
+};
 
 static ComprehensionValue *ComprehensionValueCreate(VALUE *kind, VALUE *value, VALUE *variable, VALUE *enumerable, VALUE *guard, Error *error) {
     ComprehensionValue *comprehension = MemoryAlloc(sizeof(ComprehensionValue), error);

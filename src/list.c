@@ -1,10 +1,12 @@
 #include "list.h"
 
-typedef struct {
+typedef struct List List;
+
+struct List {
     VALUE *type;
     Integer32 count;
     VALUE *elements[];
-} List;
+};
 
 static List *ListCreate(Integer32 count, Error *error) {
     List *list = MemoryAlloc(sizeof(List) + sizeof(VALUE *) * count, error);

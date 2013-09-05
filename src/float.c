@@ -1,14 +1,17 @@
 #include "float.h"
 
-typedef union {
-    Integer64 integer;
-    Float64 IEEE754;
-} Binary;
+typedef struct Float Float;
+typedef union Binary Binary;
 
-typedef struct {
+struct Float {
     VALUE *type;
     Float64 value;
-} Float;
+};
+
+union Binary {
+    Integer64 integer;
+    Float64 IEEE754;
+};
 
 static Float *FloatCreate(Float64 value, Error *error) {
     Float *fpv = MemoryAlloc(sizeof(Float), error);

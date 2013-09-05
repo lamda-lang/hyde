@@ -1,10 +1,12 @@
 #include "string.h"
 
-typedef struct {
+typedef struct String String;
+
+struct String {
     VALUE *type;
     Integer32 length;
     Integer32 codepoints[];
-} String;
+};
 
 static String *StringCreate(Integer32 length, Error *error) {
     String *string = MemoryAlloc(sizeof(String) + sizeof(Integer32) * length, error);

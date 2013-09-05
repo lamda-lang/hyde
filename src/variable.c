@@ -1,10 +1,12 @@
 #include "variable.h"
 
-typedef struct {
+typedef struct Variable Variable;
+
+struct Variable {
     VALUE *type;
     Integer8 length;
     Integer8 codepoints[];
-} Variable;
+};
 
 static Variable *VariableCreate(Integer8 length, Error *error) {
     Variable *variable = MemoryAlloc(sizeof(Variable) + sizeof(Integer8) * length, error);
@@ -24,4 +26,8 @@ VALUE *VariableDecode(Byte **bytes, Error *error) {
 
 void VariableDealloc(VALUE *variableValue) {
     MemoryDealloc(variableValue);
+}
+
+VALUE *VariableEval(VALUE *variableValue, VALUE *superior, Error *error) {
+
 }

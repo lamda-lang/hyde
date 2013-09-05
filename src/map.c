@@ -1,15 +1,18 @@
 #include "map.h"
 
-typedef struct {
+typedef struct Map Map;
+typedef struct Pair Pair;
+
+struct Pair {
     VALUE *key;
     VALUE *value;
-} Pair;
+};
 
-typedef struct {
+struct Map {
     VALUE *type;
     Integer32 count;
     Pair pairs[];
-} Map;
+};
 
 static Map *MapCreate(Integer32 count, Error *error) {
     Map *map = MemoryAlloc(sizeof(Map) + sizeof(Pair) * count, error);

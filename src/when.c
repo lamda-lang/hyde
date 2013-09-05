@@ -1,15 +1,18 @@
 #include "when.h"
 
-typedef struct {
+typedef struct Branch Branch;
+typedef struct When When;
+
+struct Branch {
     VALUE *condition;
     VALUE *value;
-} Branch;
+};
 
-typedef struct {
+struct When {
     VALUE *type;
     Integer32 count;
     Branch branches[];
-} When;
+};
 
 static When *WhenCreate(Integer32 count, Error *error) {
     When *block = MemoryAlloc(sizeof(When) + sizeof(Branch) * count, error);
