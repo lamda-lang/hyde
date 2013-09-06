@@ -68,7 +68,6 @@ typedef VALUE *Kernel(VALUE **args, Integer8 count, Error *error);
 #include "lamda.h"
 #include "list.h"
 #include "map.h"
-#include "member.h"
 #include "memory.h"
 #include "module.h"
 #include "nil.h"

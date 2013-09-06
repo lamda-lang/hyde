@@ -4,10 +4,12 @@
 typedef struct Module Module;
 typedef struct Definition Definition;
 typedef struct Scope Scope;
+typedef struct Import Import;
 
 struct Module {
     VALUE *type;
     Scope *scope;
+    Integer32 count;
 };
 
 struct Definition {
@@ -19,6 +21,11 @@ struct Definition {
 struct Scope {
     Integer32 count;
     Definition definitions[];
+};
+
+struct Import {
+    VALUE *pathValue;
+    VALUE *variableValue;
 };
 
 /* private */

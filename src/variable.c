@@ -27,7 +27,3 @@ VALUE *VariableDecode(Byte **bytes, Error *error) {
 void VariableDealloc(VALUE *variableValue) {
     MemoryDealloc(variableValue);
 }
-
-VALUE *VariableEval(VALUE *variableValue, VALUE *superior, Error *error) {
-
-}
