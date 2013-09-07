@@ -1,9 +1,7 @@
-#ifndef BUILTIN_MODULE_H
-#define BUILTIN_MODULE_H
+#ifndef MODULE_H
+#define MODULE_H
 
-#include <builtin/api.h>
-#include <posix/api.h>
-#include <util/api.h>
+#include <runtime.h>
 
 VALUE *ModuleDecode(Byte **bytes, Error *error);
 

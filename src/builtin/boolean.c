@@ -23,10 +23,6 @@ VALUE *BooleanDecodeFalse(Byte **bytes, Error *error) {
     return RuntimeValueForConstant(ConstantFalse);
 }
 
-VALUE *BooleanEval(VALUE *booleanValue, Bool pure, Error *error) {
-    return booleanValue;
-}
-
 void BooleanDealloc(VALUE *booleanValue) {
     MemoryDealloc(booleanValue);
 }

@@ -1,9 +1,7 @@
-#ifndef BUILTIN_TOKEN_H
-#define BUILTIN_TOKEN_H
+#ifndef TOKEN_H
+#define TOKEN_H
 
-#include <builtin/api.h>
-#include <posix/api.h>
-#include <util/api.h>
+#include <runtime.h>
 
 VALUE *TokenDecode(Byte **bytes, Error *error);
 void TokenDealloc(VALUE *tokenValue);

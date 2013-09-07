@@ -1,9 +1,7 @@
-#ifndef BUILTIN_WHEN_H
-#define BUILTIN_WHEN_H
+#ifndef WHEN_H
+#define WHEN_H
 
-#include <builtin/api.h>
-#include <posix/api.h>
-#include <util/api.h>
+#include <runtime.h>
 
 VALUE *WhenDecode(Byte **bytes, Error *error);
 

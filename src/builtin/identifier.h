@@ -1,9 +1,7 @@
-#ifndef BUILTIN_IDENTIFIER_H
-#define BUILTIN_IDENTIFIER_H
+#ifndef IDENTIFIER_H
+#define IDENTIFIER_H
 
-#include <builtin/api.h>
-#include <posix/api.h>
-#include <util/api.h>
+#include <runtime.h>
 
 VALUE *IdentifierDecode(Byte **bytes, Error *error);
 void IdentifierDealloc(VALUE *identifierValue);

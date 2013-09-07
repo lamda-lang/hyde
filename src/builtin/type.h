@@ -1,9 +1,7 @@
-#ifndef BUILTIN_TYPE_H
-#define BUILTIN_TYPE_H
+#ifndef TYPE_H
+#define TYPE_H
 
-#include <builtin/api.h>
-#include <posix/api.h>
-#include <util/api.h>
+#include <runtime.h>
 
 VALUE *TypeCreate(Integer32 count, Error *error);
 VALUE *TypeBootstrap(Error *error);

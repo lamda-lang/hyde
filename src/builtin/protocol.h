@@ -1,9 +1,7 @@
-#ifndef BUILTIN_PROTOCOL_H
-#define BUILTIN_PROTOCOL_H
+#ifndef PROTOCOL_H
+#define PROTOCOL_H
 
-#include <builtin/api.h>
-#include <posix/api.h>
-#include <util/api.h>
+#include <runtime.h>
 
 VALUE *ProtocolDecode(Byte **bytes, Error *error);
 void ProtocolDealloc(VALUE *protocolValue);

@@ -1,9 +1,7 @@
-#ifndef BUILTIN_DO_H
-#define BUILTIN_DO_H
+#ifndef DO_H
+#define DO_H
 
-#include <builtin/api.h>
-#include <posix/api.h>
-#include <util/api.h>
+#include <runtime.h>
 
 VALUE *DoDecode(Byte **bytes, Error *error);
 VALUE *DoCreate(Kernel *kernel, VALUE **args, Integer8 count, Error *error);

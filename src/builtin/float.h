@@ -1,9 +1,7 @@
-#ifndef BUILTIN_FLOAT_H
-#define BUILTIN_FLOAT_H
+#ifndef FLOAT_H
+#define FLOAT_H
 
-#include <builtin/api.h>
-#include <posix/api.h>
-#include <util/api.h>
+#include <runtime.h>
 
 VALUE *FloatDecode(Byte **bytes, Error *error);
 void FloatDealloc(VALUE *floatValue);

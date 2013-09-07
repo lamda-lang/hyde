@@ -1,7 +1,7 @@
-#ifndef POSIX_MEMORY_H
-#define POSIX_MEMORY_H
+#ifndef MEMORY_H
+#define MEMORY_H
 
-#include <posix/api.h>
+#include <runtime.h>
 
 void *MemoryAlloc(Size size, Error *error);
 void *MemoryRealloc(void *buffer, Size size, Error *error);

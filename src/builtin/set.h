@@ -1,9 +1,7 @@
-#ifndef BUILTIN_SET_H
-#define BUILTIN_SET_H
+#ifndef SET_H
+#define SET_H
 
-#include <builtin/api.h>
-#include <posix/api.h>
-#include <util/api.h>
+#include <runtime.h>
 
 VALUE *SetDecode(Byte **bytes, Error *error);
 void SetDealloc(VALUE *setValue);
