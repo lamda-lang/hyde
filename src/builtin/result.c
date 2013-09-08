@@ -19,9 +19,9 @@ static Result *ResultCreate(VALUE *target, Integer8 count, Error *error) {
 }
 
 VALUE *ResultDecode(Byte **bytes, Error *error) {
-    Integer8 count = DecodeInteger8(bytes);
     VALUE *target = DecodeValue(bytes, error);
     if (*error != ErrorNone) goto returnError;
+    Integer8 count = DecodeInteger8(bytes);
     Result *result = ResultCreate(target, count, error);
     if (*error != ErrorNone) goto returnError;
     for (Integer8 index = 0; index < count; index += 1) {

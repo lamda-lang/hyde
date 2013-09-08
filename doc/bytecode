@@ -1,88 +1,115 @@
-NIL
-  I8FLE:0
+BOOLEAN_TRUE
+  I8:0
 
-TRUE
-  I8FLE:1
-
-FALSE
-  I8FLE:2
-
-INTEGER
-  I8FLE:3
-  I64FLE:value
-
-FLOAT
-  I8FLE:4
-  F64FLE:value
-
-IDENTIFIER
-  I8FLE:5
-  I8FLE:length
-  [I8FLE:codepoint].length
-
-STRING
-  I8FLE:6
-  I32VLE:length
-  [I32VLE:codepoint].length
-
-RANGE
-  I8FLE:7
-  I32VLE:lower_index
-  I32VLE:upper_index
-
-SET
-  I8FLE:8
-  I32VLE:count
-  [I32VLE:element_index].count
-
-LIST
-  I8FLE:9
-  I32VLE:count
-  [I32VLE:element_index].count
-
-MAP
-  I8FLE:10
-  I32VLE:count
-  I32VLE:key_index I32VLE:value_index].count
-
-MODULE
-  I8FLE:11
-  I32VLE:count
-  I32VLE:identifier_index I32VLE:value_index].count
-
-DO
-  I8FLE:12
-  I32VLE:count
-  [I32VLE:element_index].count
-
-LAMBDA
-  I8FLE:13
-  I8FLE:arity
-  I8FLE:count
-  [I32VLE:context_index].count
-  CODE
-
-IMPORT
-  I8FLE:14
-  I32VLE:name_index
-
-WHEN
-  I8FLE:15
-  I8FLE:count
-  [I32VLE:condition_index I32VLE:value_index].count
+BOOLEAN_FALSE
+  I8:1
 
 CASE
-  I8FLE:16
-  I32VLE:arg_index
-  I8FLE:count
-  [I32VLE:match_index I32VLE:guard_index I32VLE:value_index].count
+  I8:2
+  I32:count
+  [V:match V:guard V:value].count
+
+COMPREHENSION_LIST
+  I8:3
+  V:value
+  V:variable
+  V:enumerable
+  V:guard
+
+COMPREHENSION_MAP
+  I8:4
+  V:key
+  V:value
+  V:variable
+  V:enumerable
+  V:guard
+
+COMPREHENSION_SET
+  I8:5
+  V:value
+  V:variable
+  V:enumerable
+  V:guard
+
+DO
+  I8:6
+  I32:count
+  [V:element].count
+
+FLOAT
+  I8:7
+  F64:value
+
+IDENTIFIER
+  I8:8
+  I8:count
+  [I8:length [I8:codepoint].length].count
+
+INTEGER
+  I8:9
+  I64:value
+
+LAMBDA
+  I8:10
+  I8:arity
+  V:value
+  I8:count
+  [V:upvalue].count
+
+LIST
+  I8:11
+  I32:count
+  [V:element].count
+
+MAP
+  I8:12
+  I32:count
+  [V:key V:value].count
+
+MODULE
+  I8:13
+  ???
+
+NIL
+  I8:14
+
+PROTOCOL
+  I8:15
+  I32:count
+  [V:name V:arity].count
+
+RANGE
+  I8:16
+  V:lower
+  V:upper
 
 RESULT
-  I8FLE:17
-  I32VLE:lambda_index
-  I8FLE:arg_count
-  [I32VLE:arg_index].arg_count
+  I8:17
+  V:target
+  I8:count
+  [V:arg].count
 
-INPUT
-  I8FLE:18
-  I8FLE:input_index
+SET
+  I8:18
+  I32:count
+  [V:element].count
+
+STRING
+  I8:19
+  I32:length
+  [I32:codepoint].length
+
+TOKEN
+  I8:20
+  I8:length
+  [I8:codepoint].length
+  
+TYPE
+  I8:21
+  I32:count
+  [V:member].count
+
+WHEN
+  I8:22
+  I32:count
+  [V:condition V:value].count

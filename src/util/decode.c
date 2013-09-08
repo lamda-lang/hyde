@@ -10,8 +10,8 @@ static Decode *decode[] = {
     [4] = ComprehensionDecodeMap,
     [5] = ComprehensionDecodeSet,
     [6] = DoDecode,
-    [7] = ElementDecode,
-    [8] = FloatDecode,
+    [7] = FloatDecode,
+    [8] = IdentifierDecode,
     [9] = IntegerDecode,
     [10] = LamdaDecode,
     [11] = ListDecode,
@@ -25,8 +25,7 @@ static Decode *decode[] = {
     [19] = StringDecode,
     [20] = TokenDecode,
     [21] = TypeDecode,
-    [22] = VariableDecode,
-    [23] = WhenDecode
+    [22] = WhenDecode
 };
 
 Integer8 DecodeInteger8(Byte **bytes) {

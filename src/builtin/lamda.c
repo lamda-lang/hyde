@@ -38,9 +38,9 @@ static LamdaCore *LamdaCoreCreate(Kernel *kernel, Integer8 arity, Error *error) 
 
 VALUE *LamdaDecode(Byte **bytes, Error *error) {
     Integer8 arity = DecodeInteger8(bytes);
-    Integer8 count = DecodeInteger8(bytes);
     VALUE *result = DecodeValue(bytes, error);
     if (*error != ErrorNone) goto returnError;
+    Integer8 count = DecodeInteger8(bytes);
     LamdaNative *lamda = LamdaNativeCreate(result, arity, count, error);
     if (*error != ErrorNone) goto returnError;
     for (Integer8 index = 0; index < count; index += 1) {
