@@ -11,7 +11,7 @@ struct List {
 static List *ListCreate(Integer32 count, Error *error) {
     List *list = MemoryAlloc(sizeof(List) + sizeof(VALUE *) * count, error);
     if (*error != ErrorNone) return NULL;
-    list->type = RuntimeValueForConstant(ConstantListType);
+    list->type = NULL;
     list->count = count;
     return list;
 }

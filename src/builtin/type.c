@@ -16,14 +16,6 @@ VALUE *TypeCreate(Integer32 count, Error *error) {
     return type;
 }
 
-VALUE *TypeBootstrap(Error *error) {
-    Type *type = MemoryAlloc(sizeof(Type), error);
-    if (*error != ErrorNone) return NULL;
-    type->type = NULL;
-    type->count = 0;
-    return type;
-}
-
 VALUE *TypeDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     Type *type = TypeCreate(count, error);

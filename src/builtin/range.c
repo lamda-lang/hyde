@@ -11,7 +11,7 @@ struct Range {
 static Range *RangeCreate(VALUE *lower, VALUE *upper, Error *error) {
     Range *range = MemoryAlloc(sizeof(Range), error);
     if (*error != ErrorNone) return NULL;
-    range->type = RuntimeValueForConstant(ConstantRangeType);
+    range->type = NULL;
     range->lower = lower;
     range->upper = upper;
     return range;

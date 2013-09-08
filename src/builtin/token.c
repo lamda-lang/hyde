@@ -11,7 +11,7 @@ struct Token {
 static Token *TokenCreate(Integer8 length, Error *error) {
     Token *token = MemoryAlloc(sizeof(Token) + sizeof(Integer8) * length, error);
     if (error != NULL) return NULL;
-    token->type = RuntimeValueForConstant(ConstantTokenType);
+    token->type = NULL;
     token->length = length;
     return token;
 }

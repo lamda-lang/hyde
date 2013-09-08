@@ -19,7 +19,7 @@ struct Protocol {
 static Protocol *ProtocolCreate(Integer32 count, Error *error) {
     Protocol *protocol = MemoryAlloc(sizeof(Protocol) + sizeof(Signature) * count, error);
     if (*error != ErrorNone) return NULL;
-    protocol->type = RuntimeValueForConstant(ConstantProtocolType);
+    protocol->type = NULL;
     protocol->count = count;
     return protocol;
 }

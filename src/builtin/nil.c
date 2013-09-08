@@ -9,12 +9,12 @@ struct Nil {
 VALUE *NilCreate(Error *error) {
     Nil *nil = MemoryAlloc(sizeof(Nil), error);
     if (*error != ErrorNone) return NULL;
-    nil->type = RuntimeValueForConstant(ConstantNilType);
+    nil->type = NULL;
     return nil;
 }
 
 VALUE *NilDecode(Byte **bytes, Error *error) {
-    return RuntimeValueForConstant(ConstantNil);
+    return NilCreate(error);
 }
 
 void NilDealloc(VALUE *nilValue) {

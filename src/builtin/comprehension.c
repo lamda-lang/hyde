@@ -25,7 +25,7 @@ struct ComprehensionKeyValue {
 static ComprehensionValue *ComprehensionValueCreate(VALUE *kind, VALUE *value, VALUE *variable, VALUE *enumerable, VALUE *guard, Error *error) {
     ComprehensionValue *comprehension = MemoryAlloc(sizeof(ComprehensionValue), error);
     if (*error != ErrorNone) return NULL;
-    comprehension->type = RuntimeValueForConstant(ConstantComprehensionType);
+    comprehension->type = NULL;
     comprehension->kind = kind;
     comprehension->value = value;
     comprehension->variable = variable;
@@ -37,7 +37,7 @@ static ComprehensionValue *ComprehensionValueCreate(VALUE *kind, VALUE *value, V
 static ComprehensionKeyValue *ComprehensionKeyValueCreate(VALUE *kind, VALUE *key, VALUE *value, VALUE *variable, VALUE *enumerable, VALUE *guard, Error *error) {
     ComprehensionKeyValue *comprehension = MemoryAlloc(sizeof(ComprehensionKeyValue), error);
     if (*error != ErrorNone) return NULL;
-    comprehension->type = RuntimeValueForConstant(ConstantComprehensionType);
+    comprehension->type = NULL;
     comprehension->kind = kind;
     comprehension->key = key;
     comprehension->value = value;

@@ -1,6 +1,5 @@
 #include <builtin/module.h>
 
-/* type */
 typedef struct Module Module;
 typedef struct Definition Definition;
 typedef struct Scope Scope;
@@ -28,11 +27,10 @@ struct Import {
     VALUE *variableValue;
 };
 
-/* private */
 static Module *ModuleCreate(Scope *scope, Error *error) {
     Module *module = MemoryAlloc(sizeof(Module), error);
     if (*error != ErrorNone) return NULL;
-    module->type = RuntimeValueForConstant(ConstantModuleType);
+    module->type = NULL;
     module->scope = scope;
     return module;
 }
@@ -68,7 +66,6 @@ returnError:
     return NULL;
 }
 
-/* public */
 VALUE *ModuleDecode(Byte **bytes, Error *error) {
     Scope *scope = ModuleDecodeScope(bytes, error);
     if (*error != ErrorNone) goto returnError;

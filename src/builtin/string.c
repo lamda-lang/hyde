@@ -11,7 +11,7 @@ struct String {
 static String *StringCreate(Integer32 length, Error *error) {
     String *string = MemoryAlloc(sizeof(String) + sizeof(Integer32) * length, error);
     if (*error != ErrorNone) return NULL;
-    string->type = RuntimeValueForConstant(ConstantStringType);
+    string->type = NULL;
     string->length = length;
     return string;
 }

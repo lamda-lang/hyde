@@ -12,7 +12,7 @@ struct Result {
 static Result *ResultCreate(VALUE *target, Integer8 count, Error *error) {
     Result *result = MemoryAlloc(sizeof(Result) + sizeof(VALUE *) * count, error);
     if (*error != ErrorNone) return NULL;
-    result->type = RuntimeValueForConstant(ConstantResultType);
+    result->type = NULL;
     result->target = target;
     result->count = count;
     return result;

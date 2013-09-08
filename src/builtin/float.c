@@ -16,7 +16,7 @@ union Binary {
 static Float *FloatCreate(Float64 value, Error *error) {
     Float *fpv = MemoryAlloc(sizeof(Float), error);
     if (error != ErrorNone) return NULL;
-    fpv->type = RuntimeValueForConstant(ConstantFloatType);
+    fpv->type = NULL;
     fpv->value = value;
     return fpv;
 }

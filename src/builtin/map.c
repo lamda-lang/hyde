@@ -17,7 +17,7 @@ struct Map {
 static Map *MapCreate(Integer32 count, Error *error) {
     Map *map = MemoryAlloc(sizeof(Map) + sizeof(Pair) * count, error);
     if (*error != ErrorNone) return NULL;
-    map->type = RuntimeValueForConstant(ConstantMapType);
+    map->type = NULL;
     map->count = count;
     return map;
 } 

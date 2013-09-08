@@ -1,7 +1,5 @@
 #include <util/decode.h>
 
-typedef VALUE *Decode(Byte **bytes, Error *error);
-
 static Decode *decode[] = {
     [0] = BooleanDecodeTrue,
     [1] = BooleanDecodeFalse,

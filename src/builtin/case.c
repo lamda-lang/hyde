@@ -18,7 +18,7 @@ struct Case {
 static Case *CaseCreate(Integer32 count, Error *error) {
     Case *block = MemoryAlloc(sizeof(Case) + sizeof(Branch) * count, error);
     if (*error != ErrorNone) return NULL;
-    block->type = RuntimeValueForConstant(ConstantCaseType);
+    block->type = NULL;
     block->count = count;
     return block;
 }

@@ -21,6 +21,7 @@ typedef enum {
     ErrorOutOfMemory
 } Error;
 
+typedef VALUE *Decode(Byte **bytes, Error *error);
 typedef VALUE *Kernel(VALUE **args, Integer8 count, Error *error);
 
 #include <builtin/boolean.h>
