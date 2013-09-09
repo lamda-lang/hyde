@@ -3,20 +3,20 @@
 typedef struct Set Set;
 
 struct Set {
-    VALUE *type;
+    Value *type;
     Integer32 count;
-    VALUE *elements[];
+    Value *elements[];
 };
 
 static Set *SetCreate(Integer32 count, Error *error) {
-    Set *set = MemoryAlloc(sizeof(Set) + sizeof(VALUE *) * count, error);
+    Set *set = MemoryAlloc(sizeof(Set) + sizeof(Value *) * count, error);
     if (*error != ErrorNone) return NULL;
     set->type = NULL;
     set->count = count;
     return set;
 }
 
-VALUE *SetDecode(Byte **bytes, Error *error) {
+Value *SetDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     Set *set = SetCreate(count, error);
     if (*error != ErrorNone) goto returnError;
@@ -32,6 +32,6 @@ returnError:
     return NULL;
 }
 
-void SetDealloc(VALUE *setValue) {
+void SetDealloc(Value *setValue) {
     MemoryDealloc(setValue);
 }

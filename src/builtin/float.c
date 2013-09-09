@@ -4,7 +4,6 @@ typedef struct Float Float;
 typedef union Binary Binary;
 
 struct Float {
-    VALUE *type;
     Float64 value;
 };
 
@@ -15,19 +14,30 @@ union Binary {
 
 static Float *FloatCreate(Float64 value, Error *error) {
     Float *fpv = MemoryAlloc(sizeof(Float), error);
-    if (error != ErrorNone) return NULL;
-    fpv->type = NULL;
+    if (*error != ErrorNone) return NULL;
     fpv->value = value;
     return fpv;
 }
 
-VALUE *FloatDecode(Byte **bytes, Error *error) {
+static void FloatDealloc(Float *fpv) {
+    MemoryDealloc(fpv);
+}
+
+Value *FloatDecode(Byte **bytes, Error *error) {
     Binary binary = {
         .integer = DecodeInteger64(bytes)
     };
-    return FloatCreate(binary.IEEE754, error);
+    Float *fpv = FloatCreate(binary.IEEE754, error);
+    if (*error != ErrorNone) return NULL;
+    return ValueCreate(BuiltinFloat, fpv, error);
 }
 
-void FloatDealloc(VALUE *floatValue) {
-    MemoryDealloc(floatValue);
+Bool FloatEqual(void *floatModel, void *otherModel) {
+    Float *fpv = floatModel;
+    Float *other = otherModel;
+    return fpv->value == other->value;
+}
+
+void FloatRelease(void *floatModel) {
+    FloatDealloc(floatModel);
 }

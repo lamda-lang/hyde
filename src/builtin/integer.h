@@ -3,7 +3,8 @@
 
 #include <runtime.h>
 
-VALUE *IntegerDecode(Byte **bytes, Error *error);
-void IntegerDealloc(VALUE *integerValue);
+Value *IntegerDecode(Byte **bytes, Error *error);
+Bool IntegerEqual(Value *integerValue, Value *otherValue);
+void IntegerRelease(Value *integerValue);
 
 #endif

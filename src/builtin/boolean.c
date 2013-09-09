@@ -3,26 +3,40 @@
 typedef struct Boolean Boolean;
 
 struct Boolean {
-    VALUE *type;
     Bool truth;
-}; 
+};
 
-VALUE *BooleanCreate(Bool truth, Error *error) {
+static Boolean *BooleanCreate(Bool truth, Error *error) {
     Boolean *boolean = MemoryAlloc(sizeof(Boolean), error);
     if (*error != ErrorNone) return NULL;
-    boolean->type = NULL;
     boolean->truth = truth;
     return boolean;
 }
 
-VALUE *BooleanDecodeTrue(Byte **bytes, Error *error) {
-    return BooleanCreate(TRUE, error);
+static void BooleanDealloc(Boolean *boolean) {
+    MemoryDealloc(boolean);
 }
 
-VALUE *BooleanDecodeFalse(Byte **bytes, Error *error) {
-    return BooleanCreate(FALSE, error);
+static Value *BooleanValue(Bool truth, Error *error) {
+    Boolean *boolean = BooleanCreate(TRUE, error);
+    if (*error != ErrorNone) return NULL;
+    return ValueCreate(BuiltinBoolean, boolean, error);
 }
 
-void BooleanDealloc(VALUE *booleanValue) {
-    MemoryDealloc(booleanValue);
+Value *BooleanDecodeTrue(Byte **bytes, Error *error) {
+    return BooleanValue(TRUE, error);
+}
+
+Value *BooleanDecodeFalse(Byte **bytes, Error *error) {
+    return BooleanValue(FALSE, error);
+}
+
+void BooleanRelease(void *booleanModel) {
+    BooleanDealloc(booleanModel);
+}
+
+Bool BooleanEqual(void *booleanModel, void *otherModel) {
+    Boolean *boolean = booleanModel;
+    Boolean *other = otherModel;
+    return boolean->truth == other->truth;
 }

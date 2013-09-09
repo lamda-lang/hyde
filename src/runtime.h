@@ -6,7 +6,6 @@
 
 #define TRUE 1
 #define FALSE 0
-#define VALUE void
 
 typedef unsigned char Byte;
 typedef _Bool Bool;
@@ -15,14 +14,20 @@ typedef uint32_t Integer32;
 typedef uint64_t Integer64;
 typedef double Float64;
 typedef size_t Size;
+typedef struct Value Value;
 
 typedef enum {
     ErrorNone,
     ErrorOutOfMemory
 } Error;
 
-typedef VALUE *Decode(Byte **bytes, Error *error);
-typedef VALUE *Kernel(VALUE **args, Integer8 count, Error *error);
+typedef enum {
+    BuiltinBoolean,
+    BuiltinCase
+} Builtin;
+
+typedef Value *Decode(Byte **bytes, Error *error);
+typedef Value *Kernel(Value **args, Integer8 count, Error *error);
 
 #include <builtin/boolean.h>
 #include <builtin/case.h>
@@ -43,7 +48,10 @@ typedef VALUE *Kernel(VALUE **args, Integer8 count, Error *error);
 #include <builtin/string.h>
 #include <builtin/token.h>
 #include <builtin/type.h>
+#include <builtin/value.h>
 #include <builtin/when.h>
+#include <core/equal.h>
+#include <core/eval.h>
 #include <posix/memory.h>
 #include <util/decode.h>
 

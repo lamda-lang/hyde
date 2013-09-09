@@ -3,7 +3,7 @@
 
 #include <runtime.h>
 
-VALUE *TokenDecode(Byte **bytes, Error *error);
-void TokenDealloc(VALUE *tokenValue);
+Value *TokenDecode(Byte **bytes, Error *error);
+void TokenDealloc(Value *tokenValue);
 
 #endif

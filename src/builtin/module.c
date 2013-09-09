@@ -6,14 +6,14 @@ typedef struct Scope Scope;
 typedef struct Import Import;
 
 struct Module {
-    VALUE *type;
+    Value *type;
     Scope *scope;
     Integer32 count;
 };
 
 struct Definition {
-    VALUE *variable;
-    VALUE *value;
+    Value *variable;
+    Value *value;
     Scope *local;
 };
 
@@ -23,8 +23,8 @@ struct Scope {
 };
 
 struct Import {
-    VALUE *pathValue;
-    VALUE *variableValue;
+    Value *pathValue;
+    Value *variableValue;
 };
 
 static Module *ModuleCreate(Scope *scope, Error *error) {
@@ -66,7 +66,7 @@ returnError:
     return NULL;
 }
 
-VALUE *ModuleDecode(Byte **bytes, Error *error) {
+Value *ModuleDecode(Byte **bytes, Error *error) {
     Scope *scope = ModuleDecodeScope(bytes, error);
     if (*error != ErrorNone) goto returnError;
     Module *module = ModuleCreate(scope, error);

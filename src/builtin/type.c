@@ -3,20 +3,20 @@
 typedef struct Type Type;
 
 struct Type {
-    VALUE *type;
+    Value *type;
     Integer32 count;
-    VALUE *members[];
+    Value *members[];
 }; 
 
-VALUE *TypeCreate(Integer32 count, Error *error) {
-    Type *type = MemoryAlloc(sizeof(Type) + sizeof(VALUE *) * count, error);
+Value *TypeCreate(Integer32 count, Error *error) {
+    Type *type = MemoryAlloc(sizeof(Type) + sizeof(Value *) * count, error);
     if (*error != ErrorNone) return NULL;
     type->type = NULL;
     type->count = count;
     return type;
 }
 
-VALUE *TypeDecode(Byte **bytes, Error *error) {
+Value *TypeDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     Type *type = TypeCreate(count, error);
     if (*error != ErrorNone) goto returnError;
@@ -32,6 +32,6 @@ returnError:
     return NULL;
 }
 
-void TypeDealloc(VALUE *typeValue) {
+void TypeDealloc(Value *typeValue) {
     MemoryDealloc(typeValue);
 }

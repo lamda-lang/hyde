@@ -4,37 +4,37 @@ typedef struct DoNative DoNative;
 typedef struct DoCore DoCore;
 
 struct DoNative {
-  VALUE *type;
+  Value *type;
   Integer32 count;
-  VALUE *elements[];
+  Value *elements[];
 };
 
 struct DoCore {
-    VALUE *type;
+    Value *type;
     Kernel *kernel;
     Integer8 count;
-    VALUE *args[];
+    Value *args[];
 };
 
 static DoNative *DoNativeCreate(Integer32 count, Error *error) {
-    DoNative *block = MemoryAlloc(sizeof(DoNative) * sizeof(VALUE *) * count, error);
+    DoNative *block = MemoryAlloc(sizeof(DoNative) * sizeof(Value *) * count, error);
     if (*error != ErrorNone) return NULL;
     block->type = NULL;
     block->count = count;
     return block;
 }
 
-static DoCore *DoCoreCreate(Kernel *kernel, VALUE **args, Integer8 count, Error *error) {
-    DoCore *block = MemoryAlloc(sizeof(DoCore) * sizeof(VALUE *) * count, error);
+static DoCore *DoCoreCreate(Kernel *kernel, Value **args, Integer8 count, Error *error) {
+    DoCore *block = MemoryAlloc(sizeof(DoCore) * sizeof(Value *) * count, error);
     if (*error != ErrorNone) return NULL;
     block->type = NULL;
     block->count = count;
     block->kernel = kernel;
-    MemoryCopy(args, block->args, sizeof(VALUE *) * count);
+    MemoryCopy(args, block->args, sizeof(Value *) * count);
     return block;
 }
 
-VALUE *DoDecode(Byte **bytes, Error *error) {
+Value *DoDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     DoNative *block = DoNativeCreate(count, error);
     if (*error != ErrorNone) goto returnError;
@@ -50,10 +50,10 @@ returnError:
     return NULL;
 }
 
-VALUE *DoCreate(Kernel *kernel, VALUE **args, Integer8 count, Error *error) {
+Value *DoCreate(Kernel *kernel, Value **args, Integer8 count, Error *error) {
     return DoCoreCreate(kernel, args, count, error);
 }
 
-void DoDealloc(VALUE *doValue) {
+void DoDealloc(Value *doValue) {
     MemoryDealloc(doValue);
 }

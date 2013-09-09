@@ -3,7 +3,8 @@
 
 #include <runtime.h>
 
-VALUE *CaseDecode(Byte **bytes, Error *error);
-VALUE *CaseEval(VALUE *caseValue, Bool pure, Error *error);
+Value *CaseDecode(Byte **bytes, Error *error);
+Bool CaseEqual(Value *caseValue, Value *otherValue);
+void CaseRelease(Value *caseValue);
 
 #endif

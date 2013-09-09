@@ -3,8 +3,8 @@
 
 #include <runtime.h>
 
-VALUE *DoDecode(Byte **bytes, Error *error);
-VALUE *DoCreate(Kernel *kernel, VALUE **args, Integer8 count, Error *error);
-void DoDealloc(VALUE *doValue);
+Value *DoDecode(Byte **bytes, Error *error);
+Value *DoCreate(Kernel *kernel, Value **args, Integer8 count, Error *error);
+void DoDealloc(Value *doValue);
 
 #endif

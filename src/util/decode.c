@@ -56,7 +56,7 @@ Integer64 DecodeInteger64(Byte **bytes) {
         && (value = value << 7 | blocks[8] & 0XFF, *bytes += 1, blocks[8] & 0XFF), value;
 }
 
-VALUE *DecodeValue(Byte **bytes, Error *error) {
+Value *DecodeValue(Byte **bytes, Error *error) {
     Integer8 code = DecodeInteger8(bytes);
     return decode[code](bytes, error);
 }

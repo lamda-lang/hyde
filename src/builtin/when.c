@@ -4,12 +4,12 @@ typedef struct Branch Branch;
 typedef struct When When;
 
 struct Branch {
-    VALUE *condition;
-    VALUE *value;
+    Value *condition;
+    Value *value;
 };
 
 struct When {
-    VALUE *type;
+    Value *type;
     Integer32 count;
     Branch branches[];
 };
@@ -22,7 +22,7 @@ static When *WhenCreate(Integer32 count, Error *error) {
     return block;
 }
 
-VALUE *WhenDecode(Byte **bytes, Error *error) {
+Value *WhenDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     When *block = WhenCreate(count, error);
     if (*error != ErrorNone) goto returnError;

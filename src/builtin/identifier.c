@@ -4,7 +4,7 @@ typedef struct Identifier Identifier;
 typedef struct Component Component;
 
 struct Identifier {
-    VALUE *type;
+    Value value;
     Integer8 count;
     Component *components[];
 };
@@ -15,11 +15,11 @@ struct Component {
 };
 
 static Identifier *IdentifierCreate(Integer8 count, Error *error) {
-    Identifier *identifier = MemoryAlloc(sizeof(Identifier) + sizeof(Integer8) * count, error);
+    Identifier *id = MemoryAlloc(sizeof(Identifier) + sizeof(Integer8) * count, error);
     if (*error != ErrorNone) return NULL;
-    identifier->type = NULL;
-    identifier->count = count;
-    return identifier;
+    id->value = ValueIdentifier;
+    id->count = count;
+    return id;
 }
 
 static Component *IdentifierComponentCreate(Integer8 length, Error *error) {
@@ -29,29 +29,39 @@ static Component *IdentifierComponentCreate(Integer8 length, Error *error) {
     return component;
 }
 
-static void IdentifierRemove(Identifier *identifier, Integer8 count) {
-    for (Integer8 index = 0; index < count; index += 1) MemoryDealloc(identifier->components[index]);
-    MemoryDealloc(identifier);
+static Identifier *IdentifierDealloc(Identifier *id, Integer8 count) {
+    for (Integer8 index = 0; index < count; index += 1) MemoryDealloc(id->components[index]);
+    MemoryDealloc(id);
+    return NULL;
 }
 
-VALUE *IdentifierDecode(Byte **bytes, Error *error) {
+Value *IdentifierDecode(Byte **bytes, Error *error) {
     Integer8 count = DecodeInteger8(bytes);
-    Identifier *identifier = IdentifierCreate(count, error);
-    if (*error != ErrorNone) return NULL;
+    Identifier *id = IdentifierCreate(count, error);
+    if (*error != ErrorNone) return IdentifierDealloc(id, 0);;
     for (Integer8 index = 0; index < count; index += 1) {
         Integer8 length = DecodeInteger8(bytes);
         Component *component = IdentifierComponentCreate(length, error);
-        if (*error != ErrorNone) {
-           IdentifierRemove(identifier, index);
-           return NULL;
-        }
+        if (*error != ErrorNone) return IdentifierDealloc(id, index);
         for (Integer8 index = 0; index < length; index += 1) component->codepoint[index] = DecodeInteger8(bytes);
-        identifier->components[index] = component;
+        id->components[index] = component;
     }
-    return identifier;
+    return id;
 }
 
-void IdentifierDealloc(VALUE *identifierValue) {
-    Identifier *identifier = identifierValue;
-    IdentifierRemove(identifier, identifier->count);
+Bool IdentifierEqual(Value *idValue, Value *otherValue) {
+    if (idValue == otherValue) return TRUE;
+    Identifier *id = idValue;
+    Identifier *other = otherValue;
+    if (id->count != other->count) return FALSE;
+    for (Integer8 index = 0; index < id->count; index += 1) {
+        if (id->components[index]->length != other->components[index]->length) return FALSE;
+        if (!MemoryEqual(id->components[index]->codepoint, other->components[index]->codepoint, sizeof(Integer8) * id->components[index]->length)) return FALSE;
+    }
+    return TRUE;
+}
+
+void IdentifierRelease(Value *idValue) {
+    Identifier *id = idValue;
+    IdentifierDealloc(id, id->count);
 }

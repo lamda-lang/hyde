@@ -3,7 +3,7 @@
 
 #include <runtime.h>
 
-VALUE *StringDecode(Byte **bytes, Error *error);
-void StringDealloc(VALUE *stringValue);
+Value *StringDecode(Byte **bytes, Error *error);
+void StringDealloc(Value *stringValue);
 
 #endif

@@ -4,12 +4,12 @@ typedef struct Map Map;
 typedef struct Pair Pair;
 
 struct Pair {
-    VALUE *key;
-    VALUE *value;
+    Value *key;
+    Value *value;
 };
 
 struct Map {
-    VALUE *type;
+    Value value;
     Integer32 count;
     Pair pairs[];
 };
@@ -17,29 +17,30 @@ struct Map {
 static Map *MapCreate(Integer32 count, Error *error) {
     Map *map = MemoryAlloc(sizeof(Map) + sizeof(Pair) * count, error);
     if (*error != ErrorNone) return NULL;
-    map->type = NULL;
+    map->value = ValueMap;
     map->count = count;
     return map;
 } 
 
-VALUE *MapDecode(Byte **bytes, Error *error) {
-    Integer32 count = DecodeInteger32(bytes);
-    Map *map = MapCreate(count, error);
-    if (*error != ErrorNone) goto returnError;
-    for (Integer32 index = 0; index < count; index += 1) {
-        map->pairs[index].key = DecodeValue(bytes, error);
-        if (*error != ErrorNone) goto deallocMap;
-        map->pairs[index].value = DecodeValue(bytes, error);
-        if (*error != ErrorNone) goto deallocMap;
-    }
-    return map;
-
-deallocMap:
+static Map *MapDealloc(Map *map) {
     MemoryDealloc(map);
-returnError:
     return NULL;
 }
 
-void MapDealloc(VALUE *mapValue) {
-    MemoryDealloc(mapValue);
+Value *MapDecode(Byte **bytes, Error *error) {
+    Integer32 count = DecodeInteger32(bytes);
+    Map *map = MapCreate(count, error);
+    if (*error != ErrorNone) return MapDealloc(map);
+    for (Integer32 index = 0; index < count; index += 1) {
+        map->pairs[index].key = DecodeValue(bytes, error);
+        if (*error != ErrorNone) return MapDealloc(map);
+        map->pairs[index].value = DecodeValue(bytes, error);
+        if (*error != ErrorNone) return MapDealloc(map);
+    }
+    return map;
+}
+
+void MapRelease(Value *mapValue) {
+    Map *map = mapValue;
+    MapDealloc(map);
 }

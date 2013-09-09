@@ -3,7 +3,7 @@
 typedef struct String String;
 
 struct String {
-    VALUE *type;
+    Value *type;
     Integer32 length;
     Integer32 codepoints[];
 };
@@ -16,7 +16,7 @@ static String *StringCreate(Integer32 length, Error *error) {
     return string;
 }
 
-VALUE *StringDecode(Byte **bytes, Error *error) {
+Value *StringDecode(Byte **bytes, Error *error) {
     Integer32 length = DecodeInteger32(bytes);
     String *string = StringCreate(length, error);
     if (*error != ErrorNone) return NULL;
@@ -24,6 +24,6 @@ VALUE *StringDecode(Byte **bytes, Error *error) {
     return string;
 }
 
-void StringDealloc(VALUE *stringValue) {
+void StringDealloc(Value *stringValue) {
     MemoryDealloc(stringValue);
 }

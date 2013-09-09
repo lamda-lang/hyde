@@ -3,8 +3,8 @@
 
 #include <runtime.h>
 
-VALUE *NilCreate(Error *error);
-VALUE *NilDecode(Byte **bytes, Error *error);
-void NilDealloc(VALUE *nilValue);
+Value *NilConstant(void);
+Value *NilDecode(Byte **bytes, Error *error);
+Bool NilEqual(Value *nilValue, Value *otherValue);
 
 #endif

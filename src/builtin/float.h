@@ -1,9 +1,10 @@
-#ifndef FLOAT_H
-#define FLOAT_H
+#ifndef BUILTIN_FLOAT_H
+#define BUILTIN_FLOAT_H
 
 #include <runtime.h>
 
-VALUE *FloatDecode(Byte **bytes, Error *error);
-void FloatDealloc(VALUE *floatValue);
+Value *FloatDecode(Byte **bytes, Error *error);
+Bool FloatEqual(void *floatModel, void *otherModel);
+void FloatRelease(void *floatModel);
 
 #endif

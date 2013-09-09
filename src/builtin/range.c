@@ -3,12 +3,12 @@
 typedef struct Range Range;
 
 struct Range {
-    VALUE *type;
-    VALUE *lower;
-    VALUE *upper;
+    Value *type;
+    Value *lower;
+    Value *upper;
 };
 
-static Range *RangeCreate(VALUE *lower, VALUE *upper, Error *error) {
+static Range *RangeCreate(Value *lower, Value *upper, Error *error) {
     Range *range = MemoryAlloc(sizeof(Range), error);
     if (*error != ErrorNone) return NULL;
     range->type = NULL;
@@ -17,14 +17,14 @@ static Range *RangeCreate(VALUE *lower, VALUE *upper, Error *error) {
     return range;
 }
 
-VALUE *RangeDecode(Byte **bytes, Error *error) {
-    VALUE *lower = DecodeValue(bytes, error);
+Value *RangeDecode(Byte **bytes, Error *error) {
+    Value *lower = DecodeValue(bytes, error);
     if (*error != ErrorNone) return NULL;
-    VALUE *upper = DecodeValue(bytes, error);
+    Value *upper = DecodeValue(bytes, error);
     if (*error != ErrorNone) return NULL;
     return RangeCreate(lower, upper, error);
 }
 
-void RangeDealloc(VALUE *rangeValue) {
+void RangeDealloc(Value *rangeValue) {
     MemoryDealloc(rangeValue);
 }

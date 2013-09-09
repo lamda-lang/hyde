@@ -3,7 +3,7 @@
 typedef struct Token Token;
 
 struct Token {
-    VALUE *type;
+    Value *type;
     Integer8 length;
     Integer8 codepoints[];
 };
@@ -16,7 +16,7 @@ static Token *TokenCreate(Integer8 length, Error *error) {
     return token;
 }
 
-VALUE *TokenDecode(Byte **bytes, Error *error) {
+Value *TokenDecode(Byte **bytes, Error *error) {
     Integer8 length = DecodeInteger8(bytes);
     Token *token = TokenCreate(length, error);
     if (error != NULL) return NULL;
@@ -24,6 +24,6 @@ VALUE *TokenDecode(Byte **bytes, Error *error) {
     return token;
 }
 
-void TokenDealloc(VALUE *tokenValue) {
+void TokenDealloc(Value *tokenValue) {
     MemoryDealloc(tokenValue);
 }

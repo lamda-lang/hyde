@@ -3,7 +3,7 @@
 
 #include <runtime.h>
 
-VALUE *RangeDecode(Byte **bytes, Error *error);
-void RangeDealloc(VALUE *rangeValue);
+Value *RangeDecode(Byte **bytes, Error *error);
+void RangeDealloc(Value *rangeValue);
 
 #endif

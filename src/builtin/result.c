@@ -3,14 +3,14 @@
 typedef struct Result Result;
 
 struct Result {
-    VALUE *type;
-    VALUE *target;
+    Value *type;
+    Value *target;
     Integer8 count;
-    VALUE *args[];
+    Value *args[];
 };
 
-static Result *ResultCreate(VALUE *target, Integer8 count, Error *error) {
-    Result *result = MemoryAlloc(sizeof(Result) + sizeof(VALUE *) * count, error);
+static Result *ResultCreate(Value *target, Integer8 count, Error *error) {
+    Result *result = MemoryAlloc(sizeof(Result) + sizeof(Value *) * count, error);
     if (*error != ErrorNone) return NULL;
     result->type = NULL;
     result->target = target;
@@ -18,8 +18,8 @@ static Result *ResultCreate(VALUE *target, Integer8 count, Error *error) {
     return result;
 }
 
-VALUE *ResultDecode(Byte **bytes, Error *error) {
-    VALUE *target = DecodeValue(bytes, error);
+Value *ResultDecode(Byte **bytes, Error *error) {
+    Value *target = DecodeValue(bytes, error);
     if (*error != ErrorNone) goto returnError;
     Integer8 count = DecodeInteger8(bytes);
     Result *result = ResultCreate(target, count, error);

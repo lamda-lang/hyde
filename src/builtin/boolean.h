@@ -1,11 +1,11 @@
-#ifndef BOOLEAN_H
-#define BOOLEAN_H
+#ifndef BUILTIN_BOOLEAN_H
+#define BUILTIN_BOOLEAN_H
 
 #include <runtime.h>
 
-VALUE *BooleanCreate(Bool truth, Error *error);
-VALUE *BooleanDecodeTrue(Byte **bytes, Error *error);
-VALUE *BooleanDecodeFalse(Byte **bytes, Error *error);
-void BooleanDealloc(VALUE *booleanValue);
+Value *BooleanDecodeTrue(Byte **bytes, Error *error);
+Value *BooleanDecodeFalse(Byte **bytes, Error *error);
+void BooleanRelease(void *booleanModel);
+Bool BooleanEqual(void *booleanModel, void *otherModel);
 
 #endif

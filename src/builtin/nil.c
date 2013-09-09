@@ -3,20 +3,20 @@
 typedef struct Nil Nil;
 
 struct Nil {
-    VALUE *type;
+    Value *type;
 };
 
-VALUE *NilCreate(Error *error) {
-    Nil *nil = MemoryAlloc(sizeof(Nil), error);
-    if (*error != ErrorNone) return NULL;
-    nil->type = NULL;
-    return nil;
+static Nil NilConstantValue = {
+    .value = ValueNil
+};
+
+Value *NilConstant(void) {
+    return &NilConstantValue;
+
+Value *NilDecode(Byte **bytes, Error *error) {
+    return &NilConstantValue;
 }
 
-VALUE *NilDecode(Byte **bytes, Error *error) {
-    return NilCreate(error);
-}
-
-void NilDealloc(VALUE *nilValue) {
-    MemoryDealloc(nilValue);
+Bool NilEqual(Value *nilValue, Value *otherValue) {
+    return TRUE;
 }
