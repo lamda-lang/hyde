@@ -23,7 +23,12 @@ typedef enum {
 
 typedef enum {
     BuiltinBoolean,
-    BuiltinCase
+    BuiltinFloat,
+    BuiltinInteger,
+    BuiltinList,
+    BuiltinNil,
+    BuiltinString,
+    BuiltinToken
 } Builtin;
 
 typedef Value *Decode(Byte **bytes, Error *error);
@@ -50,8 +55,6 @@ typedef Value *Kernel(Value **args, Integer8 count, Error *error);
 #include <builtin/type.h>
 #include <builtin/value.h>
 #include <builtin/when.h>
-#include <core/equal.h>
-#include <core/eval.h>
 #include <posix/memory.h>
 #include <util/decode.h>
 

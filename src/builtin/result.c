@@ -11,7 +11,8 @@ struct Result {
 
 static Result *ResultCreate(Value *target, Integer8 count, Error *error) {
     Result *result = MemoryAlloc(sizeof(Result) + sizeof(Value *) * count, error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     result->type = NULL;
     result->target = target;
     result->count = count;

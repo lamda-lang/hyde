@@ -29,7 +29,8 @@ struct Import {
 
 static Module *ModuleCreate(Scope *scope, Error *error) {
     Module *module = MemoryAlloc(sizeof(Module), error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     module->type = NULL;
     module->scope = scope;
     return module;
@@ -37,7 +38,8 @@ static Module *ModuleCreate(Scope *scope, Error *error) {
 
 static Scope *ModuleCreateScope(Integer32 count, Error *error) {
     Scope *scope = MemoryAlloc(sizeof(Scope) + sizeof(Definition) * count, error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     scope->count = count;
     return scope;
 }

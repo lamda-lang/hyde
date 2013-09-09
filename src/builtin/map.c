@@ -16,7 +16,8 @@ struct Map {
 
 static Map *MapCreate(Integer32 count, Error *error) {
     Map *map = MemoryAlloc(sizeof(Map) + sizeof(Pair) * count, error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     map->value = ValueMap;
     map->count = count;
     return map;
@@ -30,12 +31,15 @@ static Map *MapDealloc(Map *map) {
 Value *MapDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     Map *map = MapCreate(count, error);
-    if (*error != ErrorNone) return MapDealloc(map);
+    if (*error != ErrorNone)
+        return MapDealloc(map);
     for (Integer32 index = 0; index < count; index += 1) {
         map->pairs[index].key = DecodeValue(bytes, error);
-        if (*error != ErrorNone) return MapDealloc(map);
+        if (*error != ErrorNone)
+            return MapDealloc(map);
         map->pairs[index].value = DecodeValue(bytes, error);
-        if (*error != ErrorNone) return MapDealloc(map);
+        if (*error != ErrorNone)
+            return MapDealloc(map);
     }
     return map;
 }

@@ -3,38 +3,48 @@
 typedef struct List List;
 
 struct List {
-    Value value;
     Integer32 count;
     Value *elements[];
 };
 
 static List *ListCreate(Integer32 count, Error *error) {
     List *list = MemoryAlloc(sizeof(List) + sizeof(Value *) * count, error);
-    if (*error != ErrorNone) return NULL;
-    list->value = ValueList;
+    if (*error != ErrorNone)
+        return NULL;
     list->count = count;
     return list;
 }
 
-static List *ListDealloc(List *list) {
+static void ListDealloc(List *list) {
     MemoryDealloc(list);
-    return NULL;
 }
 
 Value *ListDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     List *list = ListCreate(count, error);
-    if (*error != ErrorNone) return ListDealloc(list);
+    if (*error != ErrorNone)
+        return NULL;
     for (Integer32 index = 0; index < count; index += 1) {
         list->elements[index] = DecodeValue(bytes, error);
-        if (*error != ErrorNone) return ListDealloc(list);
+        if (*error != ErrorNone) {
+            ListDealloc(list);
+            return NULL;
+        }
     }
-    return list;
+    return ValueCreate(BuiltinList, list, error);
 }
 
-Bool ListEqual(Value *listValue, Value *otherValue) {
+Bool ListEqual(void *listModel, void *otherModel) {
+    List *list = listModel;
+    List *other = otherModel;
+    if (list->count != other->count)
+        return FALSE;
+    for (Integer32 index = 0; index < list->count; index += 1)
+        if (!ValueEqual(list->elements[index], other->elements[index]))
+            return FALSE;
+    return TRUE;
 }
 
-void ListRelease(Value *listValue) {
-    ListDealloc(listValue);
+void ListRelease(void *listModel) {
+    ListDealloc(listModel);
 }

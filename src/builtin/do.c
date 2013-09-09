@@ -18,7 +18,8 @@ struct DoCore {
 
 static DoNative *DoNativeCreate(Integer32 count, Error *error) {
     DoNative *block = MemoryAlloc(sizeof(DoNative) * sizeof(Value *) * count, error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     block->type = NULL;
     block->count = count;
     return block;
@@ -26,7 +27,8 @@ static DoNative *DoNativeCreate(Integer32 count, Error *error) {
 
 static DoCore *DoCoreCreate(Kernel *kernel, Value **args, Integer8 count, Error *error) {
     DoCore *block = MemoryAlloc(sizeof(DoCore) * sizeof(Value *) * count, error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     block->type = NULL;
     block->count = count;
     block->kernel = kernel;

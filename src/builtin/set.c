@@ -10,7 +10,8 @@ struct Set {
 
 static Set *SetCreate(Integer32 count, Error *error) {
     Set *set = MemoryAlloc(sizeof(Set) + sizeof(Value *) * count, error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     set->type = NULL;
     set->count = count;
     return set;

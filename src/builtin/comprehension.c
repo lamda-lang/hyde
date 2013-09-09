@@ -24,7 +24,8 @@ struct ComprehensionKeyValue {
 
 static ComprehensionValue *ComprehensionValueCreate(Value *kind, Value *value, Value *variable, Value *enumerable, Value *guard, Error *error) {
     ComprehensionValue *comprehension = MemoryAlloc(sizeof(ComprehensionValue), error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     comprehension->type = NULL;
     comprehension->kind = kind;
     comprehension->value = value;
@@ -36,7 +37,8 @@ static ComprehensionValue *ComprehensionValueCreate(Value *kind, Value *value, V
 
 static ComprehensionKeyValue *ComprehensionKeyValueCreate(Value *kind, Value *key, Value *value, Value *variable, Value *enumerable, Value *guard, Error *error) {
     ComprehensionKeyValue *comprehension = MemoryAlloc(sizeof(ComprehensionKeyValue), error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     comprehension->type = NULL;
     comprehension->kind = kind;
     comprehension->key = key;
@@ -49,27 +51,36 @@ static ComprehensionKeyValue *ComprehensionKeyValueCreate(Value *kind, Value *ke
 
 static Value *ComprehensionValueDecode(Value *kind, Byte **bytes, Error *error) {
     Value *value = DecodeValue(bytes, error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     Value *variable = DecodeValue(bytes, error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     Value *enumerable = DecodeValue(bytes, error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     Value *guard = DecodeValue(bytes, error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     return ComprehensionValueCreate(kind, value, variable, enumerable, guard, error);
 }
 
 static Value *ComprehensionKeyValueDecode(Value *kind, Byte **bytes, Error *error) {
     Value *key = DecodeValue(bytes, error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     Value *value = DecodeValue(bytes, error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     Value *variable = DecodeValue(bytes, error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     Value *enumerable = DecodeValue(bytes, error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     Value *guard = DecodeValue(bytes, error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     return ComprehensionKeyValueCreate(kind, key, value, variable, enumerable, guard, error);
 }
 

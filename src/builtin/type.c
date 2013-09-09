@@ -10,7 +10,8 @@ struct Type {
 
 Value *TypeCreate(Integer32 count, Error *error) {
     Type *type = MemoryAlloc(sizeof(Type) + sizeof(Value *) * count, error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     type->type = NULL;
     type->count = count;
     return type;

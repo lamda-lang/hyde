@@ -1,10 +1,10 @@
-#ifndef LIST_H
-#define LIST_H
+#ifndef BUILTIN_LIST_H
+#define BUILTIN_LIST_H
 
 #include <runtime.h>
 
 Value *ListDecode(Byte **bytes, Error *error);
-Bool ListEqual(Value *listValue, Value *otherValue);
-void ListRelease(Value *listValue);
+Bool ListEqual(void *listModel, void *otherModel);
+void ListRelease(void *listModel);
 
 #endif

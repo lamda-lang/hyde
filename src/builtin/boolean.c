@@ -8,7 +8,8 @@ struct Boolean {
 
 static Boolean *BooleanCreate(Bool truth, Error *error) {
     Boolean *boolean = MemoryAlloc(sizeof(Boolean), error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     boolean->truth = truth;
     return boolean;
 }
@@ -19,7 +20,8 @@ static void BooleanDealloc(Boolean *boolean) {
 
 static Value *BooleanValue(Bool truth, Error *error) {
     Boolean *boolean = BooleanCreate(TRUE, error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     return ValueCreate(BuiltinBoolean, boolean, error);
 }
 

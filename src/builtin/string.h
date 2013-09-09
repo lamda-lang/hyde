@@ -1,9 +1,10 @@
-#ifndef STRING_H
-#define STRING_H
+#ifndef BUILTIN_STRING_H
+#define BUILTIN_STRING_H
 
 #include <runtime.h>
 
 Value *StringDecode(Byte **bytes, Error *error);
-void StringDealloc(Value *stringValue);
+void StringRelease(void *stringModel);
+Bool StringEqual(void *stringModel, void *otherModel);
 
 #endif

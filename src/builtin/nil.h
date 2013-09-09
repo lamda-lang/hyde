@@ -1,10 +1,9 @@
-#ifndef NIL_H
-#define NIL_H
+#ifndef BUILTIN_NIL_H
+#define BUILTIN_NIL_H
 
 #include <runtime.h>
 
-Value *NilConstant(void);
 Value *NilDecode(Byte **bytes, Error *error);
-Bool NilEqual(Value *nilValue, Value *otherValue);
+Bool NilEqual(void *nilModel, void *otherModel);
 
 #endif

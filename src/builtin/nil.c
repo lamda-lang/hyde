@@ -1,22 +1,9 @@
 #include <builtin/nil.h>
 
-typedef struct Nil Nil;
-
-struct Nil {
-    Value *type;
-};
-
-static Nil NilConstantValue = {
-    .value = ValueNil
-};
-
-Value *NilConstant(void) {
-    return &NilConstantValue;
-
 Value *NilDecode(Byte **bytes, Error *error) {
-    return &NilConstantValue;
+    return ValueCreate(BuiltinNil, NULL, error);
 }
 
-Bool NilEqual(Value *nilValue, Value *otherValue) {
+Bool NilEqual(void *nilModel, void *otherModel) {
     return TRUE;
 }

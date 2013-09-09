@@ -16,7 +16,8 @@ struct When {
 
 static When *WhenCreate(Integer32 count, Error *error) {
     When *block = MemoryAlloc(sizeof(When) + sizeof(Branch) * count, error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     block->type = NULL;
     block->count = count;
     return block;

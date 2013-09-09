@@ -19,7 +19,8 @@ struct LamdaCore {
 
 static LamdaNative *LamdaNativeCreate(Value *result, Integer8 arity, Integer8 count, Error *error) {
     LamdaNative *lamda = MemoryAlloc(sizeof(LamdaNative) + sizeof(Value *) * count, error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     lamda->type = NULL;
     lamda->arity = arity;
     lamda->count = count;
@@ -29,7 +30,8 @@ static LamdaNative *LamdaNativeCreate(Value *result, Integer8 arity, Integer8 co
 
 static LamdaCore *LamdaCoreCreate(Kernel *kernel, Integer8 arity, Error *error) {
     LamdaCore *lamda = MemoryAlloc(sizeof(LamdaCore), error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     lamda->type = NULL;
     lamda->arity = arity;
     lamda->kernel = kernel;

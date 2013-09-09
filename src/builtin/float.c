@@ -14,7 +14,8 @@ union Binary {
 
 static Float *FloatCreate(Float64 value, Error *error) {
     Float *fpv = MemoryAlloc(sizeof(Float), error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     fpv->value = value;
     return fpv;
 }
@@ -28,7 +29,8 @@ Value *FloatDecode(Byte **bytes, Error *error) {
         .integer = DecodeInteger64(bytes)
     };
     Float *fpv = FloatCreate(binary.IEEE754, error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     return ValueCreate(BuiltinFloat, fpv, error);
 }
 

@@ -10,7 +10,8 @@ struct Range {
 
 static Range *RangeCreate(Value *lower, Value *upper, Error *error) {
     Range *range = MemoryAlloc(sizeof(Range), error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     range->type = NULL;
     range->lower = lower;
     range->upper = upper;
@@ -19,9 +20,11 @@ static Range *RangeCreate(Value *lower, Value *upper, Error *error) {
 
 Value *RangeDecode(Byte **bytes, Error *error) {
     Value *lower = DecodeValue(bytes, error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     Value *upper = DecodeValue(bytes, error);
-    if (*error != ErrorNone) return NULL;
+    if (*error != ErrorNone)
+        return NULL;
     return RangeCreate(lower, upper, error);
 }
 
