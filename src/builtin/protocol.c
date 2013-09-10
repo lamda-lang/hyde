@@ -9,45 +9,50 @@ struct Signature {
 };
 
 struct Protocol {
-    Value value;
     Integer32 count;
     Signature signatures[];
 };
 
-static Protocol *ProtocolCreate(Integer32 count, Error *error) {
-    Protocol *protocol = MemoryAlloc(sizeof(Protocol) + sizeof(Signature) * count, error);
-    if (*error != ErrorNone)
+static Protocol *ProtocolCreate(Integer32 count) {
+    Protocol *protocol = MemoryAlloc(sizeof(Protocol) + sizeof(Signature) * count);
+    if (protocol == NULL)
         return NULL;
-    protocol->value = ValueProtocol;
     protocol->count = count;
     return protocol;
 }
 
-static Protocol *ProtocolDealloc(Protocol *protocol) {
-    MemoryDealloc(protocol);
-    return NULL;
-}
-
-Value *ProtocolDecode(Byte **bytes, Error *error) {
+Value *ProtocolDecode(Byte **bytes) {
     Integer32 count = DecodeInteger32(bytes);
-    Protocol *protocol = ProtocolCreate(count, error);
-    if (*error != ErrorNone)
-        return ProtocolDealloc(protocol);
+    Protocol *protocol = ProtocolCreate(count);
+    if (protocol == NULL)
+        return NULL;
     for (Integer32 index = 0; index < count; index += 1) {
-        protocol->signatures[index].name = DecodeValue(bytes, error);
-        if (*error != ErrorNone)
-            return ProtocolDealloc(protocol);
-        protocol->signatures[index].arity = DecodeValue(bytes, error);
-        if (*error != ErrorNone)
-            return ProtocolDealloc(protocol);
+        Value *name = ValueDecode(bytes);
+        if (name == NULL)
+            return ProtocolRelease(protocol), NULL;
+        Value *arity = ValueDecode(bytes);
+        if (arity == NULL)
+            return ProtocolRelease(protocol), NULL;
+        protocol->signatures[index].name = name;
+        protocol->signatures[index].arity = arity;
     }
-    return protocol;
+    return ValueCreate(ModelProtocol, protocol);
 }
 
-Bool ProtocolEqual(Value *protocolValue, Value *otherValue) {
+Bool ProtocolEqual(void *protocolModel, void *otherModel) {
+    Protocol *protocol = protocolModel;
+    Protocol *other = otherModel;
+    if (protocol->count == other->count)
+        return NULL;
+    for (Integer32 index = 0; index < protocol->count; index += 1) {
+        if (!ValueEqual(protocol->signatures[index].name, other->signatures[index].name)
+            return FALSE;
+        if (!ValueEqual(protocol->signatures[index].arity, other->signatures[index].arity)
+            return FALSE;
+    }
+    return TRUE;
 }
 
-void ProtocolDealloc(Value *protocolValue) {
-    Protocol *protocol = protocolValue;
-    ProtocolDealloc(protocol);
+void ProtocolRelease(void *protocolModel) {
+    MemoryDealloc(protocolModel);
 }

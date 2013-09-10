@@ -1,10 +1,10 @@
-#ifndef PROTOCOL_H
-#define PROTOCOL_H
+#ifndef BUILTIN_PROTOCOL_H
+#define BUILTIN_PROTOCOL_H
 
 #include <runtime.h>
 
 Value *ProtocolDecode(Byte **bytes, Error *error);
-Bool ProtocolEqual(Value *protocolValue, Value *otherValue);
-void ProtocolRelease(Value *protocolValue);
+Bool ProtocolEqual(void *protocolData, void *otherData);
+void ProtocolRelease(void *protocolData);
 
 #endif

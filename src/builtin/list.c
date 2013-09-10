@@ -4,47 +4,42 @@ typedef struct List List;
 
 struct List {
     Integer32 count;
-    Value *elements[];
+    Value *values[];
 };
 
-static List *ListCreate(Integer32 count, Error *error) {
-    List *list = MemoryAlloc(sizeof(List) + sizeof(Value *) * count, error);
-    if (*error != ErrorNone)
+static List *ListCreate(Integer32 count) {
+    List *list = MemoryAlloc(sizeof(List) + sizeof(Value *) * count);
+    if (list == NULL)
         return NULL;
     list->count = count;
     return list;
 }
 
-static void ListDealloc(List *list) {
-    MemoryDealloc(list);
-}
-
 Value *ListDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
-    List *list = ListCreate(count, error);
-    if (*error != ErrorNone)
+    List *list = ListCreate(count);
+    if (list == NULL)
         return NULL;
     for (Integer32 index = 0; index < count; index += 1) {
-        list->elements[index] = DecodeValue(bytes, error);
-        if (*error != ErrorNone) {
-            ListDealloc(list);
-            return NULL;
-        }
+        Value *value = DecodeValue(bytes, error);
+        if (value == NULL)
+            return ListRelease(list), NULL;
+        list->values[index] = value;
     }
-    return ValueCreate(BuiltinList, list, error);
+    return ValueCreate(ModelList, list);
 }
 
-Bool ListEqual(void *listModel, void *otherModel) {
-    List *list = listModel;
-    List *other = otherModel;
+Bool ListEqual(void *listData, void *otherData) {
+    List *list = listData;
+    List *other = otherData;
     if (list->count != other->count)
         return FALSE;
     for (Integer32 index = 0; index < list->count; index += 1)
-        if (!ValueEqual(list->elements[index], other->elements[index]))
+        if (!ValueEqual(list->values[index], other->values[index]))
             return FALSE;
     return TRUE;
 }
 
-void ListRelease(void *listModel) {
-    ListDealloc(listModel);
+void ListRelease(void *listData) {
+    MemoryDealloc(listData);
 }

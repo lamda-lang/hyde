@@ -7,39 +7,25 @@ struct Float {
     Float64 value;
 };
 
-union Binary {
-    Integer64 integer;
-    Float64 IEEE754;
-};
-
-static Float *FloatCreate(Float64 value, Error *error) {
+static Value *FloatCreate(Float64 value) {
     Float *fpv = MemoryAlloc(sizeof(Float), error);
-    if (*error != ErrorNone)
+    if (fpv == NULL)
         return NULL;
     fpv->value = value;
-    return fpv;
+    return ValueCreate(ModelFloat, fpv);
 }
 
-static void FloatDealloc(Float *fpv) {
-    MemoryDealloc(fpv);
+Value *FloatDecode(Byte **bytes) {
+    Float64 value = DecodeFloat64(bytes);
+    return FloatCreate(value);
 }
 
-Value *FloatDecode(Byte **bytes, Error *error) {
-    Binary binary = {
-        .integer = DecodeInteger64(bytes)
-    };
-    Float *fpv = FloatCreate(binary.IEEE754, error);
-    if (*error != ErrorNone)
-        return NULL;
-    return ValueCreate(BuiltinFloat, fpv, error);
-}
-
-Bool FloatEqual(void *floatModel, void *otherModel) {
-    Float *fpv = floatModel;
-    Float *other = otherModel;
+Bool FloatEqual(void *floatData, void *otherData) {
+    Float *fpv = floatData;
+    Float *other = otherData;
     return fpv->value == other->value;
 }
 
-void FloatRelease(void *floatModel) {
-    FloatDealloc(floatModel);
+void FloatRelease(void *floatData) {
+    MemoryDealloc(floatData);
 }

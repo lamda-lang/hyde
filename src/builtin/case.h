@@ -1,10 +1,10 @@
-#ifndef CASE_H
-#define CASE_H
+#ifndef BUILTIN_CASE_H
+#define BUILTIN_CASE_H
 
 #include <runtime.h>
 
-Value *CaseDecode(Byte **bytes, Error *error);
-Bool CaseEqual(Value *caseValue, Value *otherValue);
-void CaseRelease(Value *caseValue);
+Value *CaseDecode(Byte **bytes);
+Bool CaseEqual(void *caseData, void *otherData);
+void CaseRelease(void *caseData);
 
 #endif

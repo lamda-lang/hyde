@@ -1,9 +1,9 @@
 #include <builtin/nil.h>
 
 Value *NilDecode(Byte **bytes, Error *error) {
-    return ValueCreate(BuiltinNil, NULL, error);
+    return ValueCreate(ModelNil, NULL);
 }
 
-Bool NilEqual(void *nilModel, void *otherModel) {
+Bool NilEqual(void *nilData, void *otherData) {
     return TRUE;
 }

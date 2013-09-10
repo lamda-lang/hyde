@@ -17,19 +17,18 @@ typedef size_t Size;
 typedef struct Value Value;
 
 typedef enum {
-    ErrorNone,
-    ErrorOutOfMemory
+    ERROR_OF_OF_MEMORY
 } Error;
 
 typedef enum {
-    BuiltinBoolean,
-    BuiltinFloat,
-    BuiltinInteger,
-    BuiltinList,
-    BuiltinNil,
-    BuiltinString,
-    BuiltinToken
-} Builtin;
+    ModelBoolean,
+    ModelFloat,
+    ModelInteger,
+    ModelList,
+    ModelNil,
+    ModelString,
+    ModelToken
+} Model;
 
 typedef Value *Decode(Byte **bytes, Error *error);
 typedef Value *Kernel(Value **args, Integer8 count, Error *error);
@@ -55,7 +54,7 @@ typedef Value *Kernel(Value **args, Integer8 count, Error *error);
 #include <builtin/type.h>
 #include <builtin/value.h>
 #include <builtin/when.h>
-#include <posix/memory.h>
+#include <kernel/memory.h>
 #include <util/decode.h>
 
 #endif

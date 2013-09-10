@@ -3,8 +3,8 @@
 
 #include <runtime.h>
 
-Value *IntegerDecode(Byte **bytes, Error *error);
-Bool IntegerEqual(void *integerModel, void *otherModel);
-void IntegerRelease(void *integerModel);
+Value *IntegerDecode(Byte **bytes);
+Bool IntegerEqual(void *integerData, void *otherData);
+void IntegerRelease(void *integerData);
 
 #endif

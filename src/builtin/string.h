@@ -3,8 +3,8 @@
 
 #include <runtime.h>
 
-Value *StringDecode(Byte **bytes, Error *error);
-void StringRelease(void *stringModel);
-Bool StringEqual(void *stringModel, void *otherModel);
+Value *StringDecode(Byte **bytes);
+void StringRelease(void *stringData);
+Bool StringEqual(void *stringData, void *otherData);
 
 #endif

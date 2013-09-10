@@ -3,8 +3,8 @@
 
 #include <runtime.h>
 
-Value *TokenDecode(Byte **bytes, Error *error);
-Bool TokenEqual(void *tokenModel, void *otherModel);
-void TokenRelease(void *tokenModel);
+Value *TokenDecode(Byte **bytes);
+Bool TokenEqual(void *tokenData, void *otherData);
+void TokenRelease(void *tokenData);
 
 #endif

@@ -3,8 +3,8 @@
 
 #include <runtime.h>
 
-Value *FloatDecode(Byte **bytes, Error *error);
-Bool FloatEqual(void *floatModel, void *otherModel);
-void FloatRelease(void *floatModel);
+Value *FloatDecode(Byte **bytes);
+Bool FloatEqual(void *floatData, void *otherData);
+void FloatRelease(void *floatData);
 
 #endif

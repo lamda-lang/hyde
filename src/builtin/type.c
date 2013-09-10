@@ -3,36 +3,43 @@
 typedef struct Type Type;
 
 struct Type {
-    Value *type;
     Integer32 count;
     Value *members[];
 }; 
 
-Value *TypeCreate(Integer32 count, Error *error) {
-    Type *type = MemoryAlloc(sizeof(Type) + sizeof(Value *) * count, error);
-    if (*error != ErrorNone)
+Value *TypeCreate(Integer32 count) {
+    Type *type = MemoryAlloc(sizeof(Type) + sizeof(Value *) * count);
+    if (type == NULL)
         return NULL;
-    type->type = NULL;
     type->count = count;
     return type;
 }
 
-Value *TypeDecode(Byte **bytes, Error *error) {
+Value *TypeDecode(Byte **bytes) {
     Integer32 count = DecodeInteger32(bytes);
-    Type *type = TypeCreate(count, error);
-    if (*error != ErrorNone) goto returnError;
+    Type *type = TypeCreate(count);
+    if (type == NULL)
+        return NULL;
     for (Integer32 index = 0; index < count; index += 1) {
-        type->members[index] = DecodeValue(bytes, error);
-        if (*error != ErrorNone) goto deallocType;
+        Value *value = DecodeValue(bytes);
+        if (value == NULL)
+            return TypeRelease(type), NULL;
+        type->members[index] = value;
     }
-    return type;
-
-deallocType:
-    MemoryDealloc(type);
-returnError:
-    return NULL;
+    return ValueCreate(ModelType, type);
 }
 
-void TypeDealloc(Value *typeValue) {
-    MemoryDealloc(typeValue);
+void TypeRelease(void *typeData) {
+    MemoryDealloc(typeData);
+}
+
+Bool TypeEqual(void *typeData, void *otherData) {
+    Type *type = typeData;
+    Type *other = otherData;
+    if (type->count != other->count)
+        return FALSE;
+    for (Integer32 index = 0; index < type->cpunt; index += 1) 
+        if (!ValueEqual(type->members[index], other->members[index])
+            return FALSE;
+    return TRUE;
 }

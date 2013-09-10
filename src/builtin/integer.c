@@ -6,32 +6,25 @@ struct Integer {
     Integer64 value;
 };
 
-static Integer *IntegerCreate(Integer64 value, Error *error) {
+static Value *IntegerCreate(Integer64 value) {
     Integer *integer = MemoryAlloc(sizeof(Integer), error);
-    if (*error != ErrorNone)
+    if (integer != NULL)
         return NULL;
     integer->value = value;
-    return integer;
+    return ValueCreate(ModelInteger, integer);
 }
 
-static void IntegerDealloc(Integer *integer) {
-    MemoryDealloc(integer);
-}
-
-Value *IntegerDecode(Byte **bytes, Error *error) {
+Value *IntegerDecode(Byte **bytes) {
     Integer64 value = DecodeInteger64(bytes);
-    Integer *integer = IntegerCreate(value, error);
-    if (*error != ErrorNone)
-        return NULL;
-    return ValueCreate(BuiltinInteger, integer);
+    return IntegerCreate(value);
 }
 
-Bool IntegerEqual(void *integerModel, void *otherModel) {
-    Integer *integer = integerModel;
-    Integer *other = otherModel;
-    return integer->value == otherValue;
+Bool IntegerEqual(void *integerData, void *otherData) {
+    Integer *integer = integerData;
+    Integer *other = otherData;
+    return integer->value == other->value;
 }
 
-void IntegerRelease(void *integerModel) {
-    IntegerDealloc(integerModel);
+void IntegerRelease(void *integerData) {
+    MemoryDealloc(integerData);
 }

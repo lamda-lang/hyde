@@ -1,9 +1,10 @@
-#ifndef MAP_H
-#define MAP_H
+#ifndef BUILTIN_MAP_H
+#define BUILTIN_MAP_H
 
 #include <runtime.h>
 
-Value *MapDecode(Byte **bytes, Error *error);
-void MapRelease(Value *mapValue);
+Value *MapDecode(Byte **bytes);
+void MapRelease(void *mapData);
+Bool MapEqual(void *mapData, void *otherData); 
 
 #endif

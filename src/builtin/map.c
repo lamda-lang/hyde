@@ -9,42 +9,58 @@ struct Pair {
 };
 
 struct Map {
-    Value value;
     Integer32 count;
     Pair pairs[];
 };
 
-static Map *MapCreate(Integer32 count, Error *error) {
+static Map *MapCreate(Integer32 count) {
     Map *map = MemoryAlloc(sizeof(Map) + sizeof(Pair) * count, error);
-    if (*error != ErrorNone)
+    if (map == NULL)
         return NULL;
     map->value = ValueMap;
     map->count = count;
     return map;
 } 
 
-static Map *MapDealloc(Map *map) {
-    MemoryDealloc(map);
+static Value *MapValueForKey(Map *map, Value *key) {
+    for (Integer32 index = 0; index < map->count; index += 1)
+        if (ValueEqual(key, map->pairs[index].key)
+            return map->pairs[index].value;
     return NULL;
 }
 
+
 Value *MapDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
-    Map *map = MapCreate(count, error);
-    if (*error != ErrorNone)
-        return MapDealloc(map);
+    Map *map = MapCreate(count);
+    if (map == NULL)
+        return NULL;
     for (Integer32 index = 0; index < count; index += 1) {
-        map->pairs[index].key = DecodeValue(bytes, error);
-        if (*error != ErrorNone)
-            return MapDealloc(map);
-        map->pairs[index].value = DecodeValue(bytes, error);
-        if (*error != ErrorNone)
-            return MapDealloc(map);
+        Value *key = ValueDecode(bytes);
+        if (key == NULL)
+            return MapRelease(map), NULL;
+        Value *value = ValueDecode(bytes);
+        if (value == NULL)
+            return MapRelease(map), NULL;
+        map->pairs[index].key = key;
+        map->pairs[index].value = value;
     }
-    return map;
+    return ValueCreate(ModelMap, map);
 }
 
-void MapRelease(Value *mapValue) {
-    Map *map = mapValue;
-    MapDealloc(map);
+void MapRelease(void *mapData) {
+    MemoryDealloc(mapData);
+}
+
+Bool MapEqual(void *mapData, void *otherData) {
+    Map *map = mapData;
+    Map *other = otherData;
+    if (map->count != other->count)
+        return FALSE
+    for (Integer32 index = 0; index < map->count; index += 1) {
+        Value *value = MapValueForKey(other, map->pairs[index].key);
+        if (value == NULL && !ValueEqual(value, map->pairs[index].value))
+            return FALSE;
+    }
+    return TRUE;
 }

@@ -1,5 +1,6 @@
 #include <builtin/case.h>
 
+typedef struct Case Case;
 typedef struct Branch Branch;
 
 struct Branch {
@@ -9,57 +10,43 @@ struct Branch {
 };
 
 struct Case {
-    Value value;
     Integer32 count;
     Branch branches[];
 };
 
-static Value *CaseToValue(Case *block) {
-    return (Value *)block;
-}
-
-static Case *CaseFromValue(Value *value) {
-    return (Case *)value;
-}
-
-static Case *CaseCreate(Integer32 count, Error *error) {
-    Case *block = MemoryAlloc(sizeof(Case) + sizeof(Branch) * count, error);
-    if (*error != ErrorNone)
+static Case *CaseCreate(Integer32 count) {
+    Case *block = MemoryAlloc(sizeof(Case) + sizeof(Branch) * count);
+    if (block == NULL)
         return NULL;
-    block->value = ValueCase;
     block->count = count;
     return block;
 }
 
-static Value *CaseDealloc(Case *block) {
-    MemoryDealloc(block);
-    return NULL;
-}
-
-Value *CaseDecode(Byte **bytes, Error *error) {
+Value *CaseDecode(Byte **bytes) {
     Integer32 count = DecodeInteger32(bytes);
-    Case *block = CaseCreate(count, error);
-    if (*error != ErrorNone)
-        return CaseDealloc(block);
+    Case *block = CaseCreate(count);
+    if (block == NULL)
+        return NULL;
     for (Integer32 index = 0; index < count; index += 1) {
-        block->branches[index].match = DecodeValue(bytes, error);
-        if (*error != ErrorNone)
-            return CaseDealloc(block);
-        block->branches[index].guard = DecodeValue(bytes, error);
-        if (*error != ErrorNone)
-            return CaseDealloc(block);
-        block->branches[index].value = DecodeValue(bytes, error);
-        if (*error != ErrorNone)
-            return CaseDealloc(block);
+        Value *match = ValueDecode(bytes);
+        if (match == NULL)
+            return CaseRelease(case), NULL;
+        Value *guard = ValueDecode(bytes);
+        if (guard == NULL)
+            return CaseRelease(case), NULL;
+        Value *value = ValueDecode(bytes);
+        if (value == NULL)
+            return CaseRelease(case), NULL;
+        block->branches[index].match = match;
+        block->branches[index].guard = guard;
+        block->branches[index].value = value;
     }
-    return block;
+    return ValueCreate(ModelCase, block);
 }
 
-Bool CaseEqual(Value *caseValue, Value *otherValue) {
-    if (caseValue == otherValue)
-        return TRUE;
-    Case *block = caseValue;
-    Case *other = otherValue;
+Bool CaseEqual(void *caseData, void *otherData) {
+    Case *block = caseData;
+    Case *other = otherData;
     if (block->count != other->count)
         return FALSE;
     for (Integer32 index = 0; index < block->count; index += 1) {
@@ -73,6 +60,6 @@ Bool CaseEqual(Value *caseValue, Value *otherValue) {
     return TRUE;
 }
 
-void CaseRelease(Value *caseValue) {
-    CaseDealloc(caseValue);
+void CaseRelease(void *caseData) {
+    MemoryDealloc(caseData);
 }

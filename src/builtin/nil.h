@@ -4,6 +4,6 @@
 #include <runtime.h>
 
 Value *NilDecode(Byte **bytes, Error *error);
-Bool NilEqual(void *nilModel, void *otherModel);
+Bool NilEqual(void *nilData, void *otherData);
 
 #endif

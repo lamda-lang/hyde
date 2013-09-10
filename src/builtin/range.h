@@ -1,9 +1,10 @@
-#ifndef RANGE_H
-#define RANGE_H
+#ifndef BUILTIN_RANGE_H
+#define BUILTIN_RANGE_H
 
 #include <runtime.h>
 
-Value *RangeDecode(Byte **bytes, Error *error);
-void RangeDealloc(Value *rangeValue);
+Value *RangeDecode(Byte **bytes);
+void RangeRelease(void *rangeData);
+Bool RangeEqual(void *rangeData, void *otherData);
 
 #endif

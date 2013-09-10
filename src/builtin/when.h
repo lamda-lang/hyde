@@ -1,8 +1,10 @@
-#ifndef WHEN_H
-#define WHEN_H
+#ifndef BUILTIN_WHEN_H
+#define BUILTIN_WHEN_H
 
 #include <runtime.h>
 
-Value *WhenDecode(Byte **bytes, Error *error);
+Value *WhenDecode(Byte **bytes);
+void WhenRelease(void *whenData);
+Bool WhenEqual(void *whenData, void *otherData);
 
 #endif

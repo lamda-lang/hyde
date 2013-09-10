@@ -3,36 +3,50 @@
 typedef struct Set Set;
 
 struct Set {
-    Value *type;
     Integer32 count;
-    Value *elements[];
+    Value *values[];
 };
 
-static Set *SetCreate(Integer32 count, Error *error) {
-    Set *set = MemoryAlloc(sizeof(Set) + sizeof(Value *) * count, error);
-    if (*error != ErrorNone)
+static Set *SetCreate(Integer32 count) {
+    Set *set = MemoryAlloc(sizeof(Set) + sizeof(Value *) * count);
+    if (set == NULL)
         return NULL;
-    set->type = NULL;
     set->count = count;
     return set;
 }
 
-Value *SetDecode(Byte **bytes, Error *error) {
-    Integer32 count = DecodeInteger32(bytes);
-    Set *set = SetCreate(count, error);
-    if (*error != ErrorNone) goto returnError;
-    for (Integer32 index = 0; index < count; index += 1) {
-        set->elements[index] = DecodeValue(bytes, error);
-        if (*error != ErrorNone) goto deallocSet;
-    }
-    return set;
-
-deallocSet:
-    MemoryDealloc(set);
-returnError:
-    return NULL;
+static Bool SetElement(Set *set, Value *value) {
+    for (Integer32 index = 0; index < set->count; index += 1)
+        if (ValueEqual(value, set->values[index])
+            return TRUE
+    return FALSE;
 }
 
-void SetDealloc(Value *setValue) {
-    MemoryDealloc(setValue);
+Value *SetDecode(Byte **bytes, Error *error) {
+    Integer32 count = DecodeInteger32(bytes);
+    Set *set = SetCreate(count);
+    if (set == NULL)
+        return NULL;
+    for (Integer32 index = 0; index < count; index += 1) {
+        Value *value = DecodeValue(bytes, error);
+        if (value == NULL)
+            return SetRelease(set), NULL;
+        set->values[index] = value;
+    }
+    return ValueCreate(ModelSet, set);
+}
+
+void SetRelease(void *setData) {
+    MemoryDealloc(setData);
+}
+
+Bool SetEqual(void *setData, void *otherData) {
+    Set *set = setData;
+    Set *other = otherData;
+    if (set->count != other->count)
+        return FALSE;
+    for (Integer32 index = 0; index < set->count; index += 1)
+        if (!SetElement(other, set->values[index])
+            return FALSE;
+    return TRUE;
 }

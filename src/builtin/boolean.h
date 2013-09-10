@@ -3,9 +3,9 @@
 
 #include <runtime.h>
 
-Value *BooleanDecodeTrue(Byte **bytes, Error *error);
-Value *BooleanDecodeFalse(Byte **bytes, Error *error);
-void BooleanRelease(void *booleanModel);
-Bool BooleanEqual(void *booleanModel, void *otherModel);
+Value *BooleanDecodeTrue(Byte **bytes);
+Value *BooleanDecodeFalse(Byte **bytes);
+void BooleanRelease(void *booleanData);
+Bool BooleanEqual(void *booleanData, void *otherData);
 
 #endif

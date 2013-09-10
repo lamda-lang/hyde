@@ -1,10 +1,10 @@
-#ifndef IDENTIFIER_H
-#define IDENTIFIER_H
+#ifndef BUILTIN_IDENTIFIER_H
+#define BUILTIN_IDENTIFIER_H
 
 #include <runtime.h>
 
-Value *IdentifierDecode(Byte **bytes, Error *error);
-Bool IdentifierEqual(Value *identifierValue, Value *otherValue);
-void IdentifierRelease(Value *identifierValue);
+Value *IdentifierDecode(Byte **bytes);
+Bool IdentifierEqual(void *identifierData, void *otherData);
+void IdentifierRelease(void *identifierData);
 
 #endif

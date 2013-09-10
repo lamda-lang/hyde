@@ -6,39 +6,28 @@ struct Boolean {
     Bool truth;
 };
 
-static Boolean *BooleanCreate(Bool truth, Error *error) {
+static Value *BooleanCreate(Bool truth) {
     Boolean *boolean = MemoryAlloc(sizeof(Boolean), error);
-    if (*error != ErrorNone)
+    if (boolean == NULL)
         return NULL;
     boolean->truth = truth;
-    return boolean;
+    return ValueCreate(ModelBoolean, boolean);
 }
 
-static void BooleanDealloc(Boolean *boolean) {
-    MemoryDealloc(boolean);
+Value *BooleanDecodeTrue(Byte **bytes) {
+    return BooleanCreate(TRUE);
 }
 
-static Value *BooleanValue(Bool truth, Error *error) {
-    Boolean *boolean = BooleanCreate(TRUE, error);
-    if (*error != ErrorNone)
-        return NULL;
-    return ValueCreate(BuiltinBoolean, boolean, error);
+Value *BooleanDecodeFalse(Byte **bytes) {
+    return BooleanValue(FALSE);
 }
 
-Value *BooleanDecodeTrue(Byte **bytes, Error *error) {
-    return BooleanValue(TRUE, error);
+void BooleanRelease(void *booleanData) {
+    MemoryDealloc(booleanData);
 }
 
-Value *BooleanDecodeFalse(Byte **bytes, Error *error) {
-    return BooleanValue(FALSE, error);
-}
-
-void BooleanRelease(void *booleanModel) {
-    BooleanDealloc(booleanModel);
-}
-
-Bool BooleanEqual(void *booleanModel, void *otherModel) {
-    Boolean *boolean = booleanModel;
-    Boolean *other = otherModel;
+Bool BooleanEqual(void *booleanData, void *otherData) {
+    Boolean *boolean = booleanData;
+    Boolean *other = otherData;
     return boolean->truth == other->truth;
 }

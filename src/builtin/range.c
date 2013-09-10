@@ -3,31 +3,35 @@
 typedef struct Range Range;
 
 struct Range {
-    Value *type;
     Value *lower;
     Value *upper;
 };
 
-static Range *RangeCreate(Value *lower, Value *upper, Error *error) {
-    Range *range = MemoryAlloc(sizeof(Range), error);
-    if (*error != ErrorNone)
+static Value *RangeCreate(Value *lower, Value *upper) {
+    Range *range = MemoryAlloc(sizeof(Range));
+    if (range == NULL)
         return NULL;
-    range->type = NULL;
     range->lower = lower;
     range->upper = upper;
-    return range;
+    return ValueCreate(ModelRange, range);
 }
 
-Value *RangeDecode(Byte **bytes, Error *error) {
-    Value *lower = DecodeValue(bytes, error);
-    if (*error != ErrorNone)
+Value *RangeDecode(Byte **bytes) {
+    Value *lower = ValueDecode(bytes);
+    if (lower == NULL)
         return NULL;
-    Value *upper = DecodeValue(bytes, error);
-    if (*error != ErrorNone)
+    Value *upper = ValueDecode(bytes);
+    if (lower == NULL)
         return NULL;
-    return RangeCreate(lower, upper, error);
+    return RangeCreate(lower, upper);
 }
 
-void RangeDealloc(Value *rangeValue) {
-    MemoryDealloc(rangeValue);
+void RangeRelease(void *rangeData) {
+    MemoryDealloc(rangeData);
+}
+
+Bool RangeEqual(void *rangeData, void *otherData) {
+    Range *range = rangeData;
+    Range *other = otherData;
+    return ValueEqual(range->lower, other->lower) && ValueEqual(range->upper, other->upper);
 }

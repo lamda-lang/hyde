@@ -3,8 +3,8 @@
 
 #include <runtime.h>
 
-Value *ListDecode(Byte **bytes, Error *error);
-Bool ListEqual(void *listModel, void *otherModel);
-void ListRelease(void *listModel);
+Value *ListDecode(Byte **bytes);
+Bool ListEqual(void *listData, void *otherData);
+void ListRelease(void *listData);
 
 #endif

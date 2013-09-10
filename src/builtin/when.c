@@ -9,16 +9,14 @@ struct Branch {
 };
 
 struct When {
-    Value *type;
     Integer32 count;
     Branch branches[];
 };
 
-static When *WhenCreate(Integer32 count, Error *error) {
-    When *block = MemoryAlloc(sizeof(When) + sizeof(Branch) * count, error);
-    if (*error != ErrorNone)
+static When *WhenCreate(Integer32 count) {
+    When *block = MemoryAlloc(sizeof(When) + sizeof(Branch) * count);
+    if (block == NULL)
         return NULL;
-    block->type = NULL;
     block->count = count;
     return block;
 }
@@ -26,17 +24,35 @@ static When *WhenCreate(Integer32 count, Error *error) {
 Value *WhenDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     When *block = WhenCreate(count, error);
-    if (*error != ErrorNone) goto returnError;
+    if (block == NULL)
+        return NULL;
     for (Integer32 index = 0; index < count; index += 1) {
-        block->branches[index].condition = DecodeValue(bytes, error);
-        if (*error != ErrorNone) goto deallocWhen;
-        block->branches[index].value = DecodeValue(bytes, error);
-        if (*error != ErrorNone) goto deallocWhen;
+        Value *condition = ValueDecode(bytes);
+        if (condition == NULL)
+            return WhenRelease(block), NULL;
+        Value *value = ValueDecode(bytes);
+        if (value == NULL)
+            return WhenRelease(block), NULL;
+        block->branches[index].condition = condition;
+        block->branches[index].value = value;
     }
-    return block;
+    return ValueCreate(ModelWhen, block);
+}
 
-deallocWhen:
-    MemoryDealloc(block);
-returnError:
-    return NULL;
+void WhenRelease(void *whenData) {
+    MemoryDealloc(whenData);
+}
+
+Bool WhenEqual(void *whenData, void *otherData) {
+    When *block = whenData;
+    When *other = otherData;
+    if (block->count != other->count)
+        return FALSE;
+    for (Integer32 index = 0; index < block->count, index += 1) {
+        if (!ValueEqual(block->branches[index].condition, other->branches[index].condition))
+            return FALSE;
+        if (!ValueEqual(block->branches[index].value, other->branches[index].value))
+            return FALSE;
+    }
+    return TRUE;
 }
