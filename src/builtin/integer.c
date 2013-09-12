@@ -1,7 +1,5 @@
 #include <builtin/integer.h>
 
-typedef struct Integer Integer;
-
 struct Integer {
     Integer64 value;
 };
@@ -11,7 +9,7 @@ static Value *IntegerCreate(Integer64 value) {
     if (integer != NULL)
         return NULL;
     integer->value = value;
-    return ValueCreate(ModelInteger, integer);
+    return ValueCreate(MODEL_INTEGER, integer);
 }
 
 Value *IntegerDecode(Byte **bytes) {
@@ -19,12 +17,10 @@ Value *IntegerDecode(Byte **bytes) {
     return IntegerCreate(value);
 }
 
-Bool IntegerEqual(void *integerData, void *otherData) {
-    Integer *integer = integerData;
-    Integer *other = otherData;
+Bool IntegerEqual(Integer *integer, Integer *other) {
     return integer->value == other->value;
 }
 
-void IntegerRelease(void *integerData) {
-    MemoryDealloc(integerData);
+void IntegerRelease(Integer *integer) {
+    MemoryDealloc(integer);
 }

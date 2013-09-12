@@ -1,7 +1,5 @@
 #include <builtin/do.h>
 
-typedef struct Do Do;
-
 struct Do {
   Integer32 count;
   Value *values[];
@@ -26,16 +24,14 @@ Value *DoDecode(Byte **bytes) {
             return DoRelase(block), NULL;
         block->values[index] = value;
     }
-    return ValueCreate(ModelDo, block);
+    return ValueCreate(MODEL_DO, block);
 }
 
-void DoRelase(void *doData) {
-    MemoryDealloc(doData);
+void DoRelase(Do *block) {
+    MemoryDealloc(block);
 }
 
-Bool DoEqual(void *doData, void *otherData) {
-    Do *block = doData;
-    Do *other = otherData;
+Bool DoEqual(Do *block, Do *other) {
     if (block->count != other->count)
         return FALSE;
     for (Integer32 index = 0; index < block->count; index += 1)

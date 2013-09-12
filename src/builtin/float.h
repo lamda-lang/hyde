@@ -4,7 +4,7 @@
 #include <runtime.h>
 
 Value *FloatDecode(Byte **bytes);
-Bool FloatEqual(void *floatData, void *otherData);
-void FloatRelease(void *floatData);
+Bool FloatEqual(Float *fpv, Float *other);
+void FloatRelease(Float *fpv);
 
 #endif

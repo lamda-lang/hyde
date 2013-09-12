@@ -4,7 +4,7 @@
 #include <runtime.h>
 
 Value *IntegerDecode(Byte **bytes);
-Bool IntegerEqual(void *integerData, void *otherData);
-void IntegerRelease(void *integerData);
+Bool IntegerEqual(Integer *integer, Integer *other);
+void IntegerRelease(Integer *integer);
 
 #endif

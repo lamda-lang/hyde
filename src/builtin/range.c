@@ -1,7 +1,5 @@
 #include <builtin/range.h>
 
-typedef struct Range Range;
-
 struct Range {
     Value *lower;
     Value *upper;
@@ -13,7 +11,7 @@ static Value *RangeCreate(Value *lower, Value *upper) {
         return NULL;
     range->lower = lower;
     range->upper = upper;
-    return ValueCreate(ModelRange, range);
+    return ValueCreate(MODEL_RANGE, range);
 }
 
 Value *RangeDecode(Byte **bytes) {
@@ -26,12 +24,10 @@ Value *RangeDecode(Byte **bytes) {
     return RangeCreate(lower, upper);
 }
 
-void RangeRelease(void *rangeData) {
-    MemoryDealloc(rangeData);
+void RangeRelease(Range *range) {
+    MemoryDealloc(range);
 }
 
-Bool RangeEqual(void *rangeData, void *otherData) {
-    Range *range = rangeData;
-    Range *other = otherData;
+Bool RangeEqual(Range *range, Range *other) {
     return ValueEqual(range->lower, other->lower) && ValueEqual(range->upper, other->upper);
 }

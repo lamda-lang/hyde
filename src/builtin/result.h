@@ -4,7 +4,7 @@
 #include <runtime.h>
 
 Value *ResultDecode(Byte **bytes);
-void ResultRelease(void *resultData);
-Bool ResultEqual(void *resultData, void *otherData);
+void ResultRelease(Result *result);
+Bool ResultEqual(Result *result, Result *other);
 
 #endif

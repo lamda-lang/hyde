@@ -1,6 +1,5 @@
 #include <builtin/case.h>
 
-typedef struct Case Case;
 typedef struct Branch Branch;
 
 struct Branch {
@@ -41,12 +40,10 @@ Value *CaseDecode(Byte **bytes) {
         block->branches[index].guard = guard;
         block->branches[index].value = value;
     }
-    return ValueCreate(ModelCase, block);
+    return ValueCreate(MODEL_CASE, block);
 }
 
-Bool CaseEqual(void *caseData, void *otherData) {
-    Case *block = caseData;
-    Case *other = otherData;
+Bool CaseEqual(Case *block, Case *other) {
     if (block->count != other->count)
         return FALSE;
     for (Integer32 index = 0; index < block->count; index += 1) {
@@ -60,6 +57,6 @@ Bool CaseEqual(void *caseData, void *otherData) {
     return TRUE;
 }
 
-void CaseRelease(void *caseData) {
-    MemoryDealloc(caseData);
+void CaseRelease(Case *block) {
+    MemoryDealloc(block);
 }

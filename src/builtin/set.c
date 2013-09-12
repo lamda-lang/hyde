@@ -1,7 +1,5 @@
 #include <builtin/set.h>
 
-typedef struct Set Set;
-
 struct Set {
     Integer32 count;
     Value *values[];
@@ -33,16 +31,14 @@ Value *SetDecode(Byte **bytes) {
             return SetRelease(set), NULL;
         set->values[index] = value;
     }
-    return ValueCreate(ModelSet, set);
+    return ValueCreate(MODEL_SET, set);
 }
 
-void SetRelease(void *setData) {
-    MemoryDealloc(setData);
+void SetRelease(Set *set) {
+    MemoryDealloc(set);
 }
 
-Bool SetEqual(void *setData, void *otherData) {
-    Set *set = setData;
-    Set *other = otherData;
+Bool SetEqual(Set *set, Set *other) {
     if (set->count != other->count)
         return FALSE;
     for (Integer32 index = 0; index < set->count; index += 1)

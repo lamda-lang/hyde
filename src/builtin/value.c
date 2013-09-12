@@ -1,40 +1,66 @@
 #include <builtin/value.h>
 
-static Decode *decode[] = {
-    [0] = BooleanDecodeTrue,
-    [1] = BooleanDecodeFalse,
-    [2] = CaseDecode,
-    [3] = ComprehensionDecodeList,
-    [4] = ComprehensionDecodeMap,
-    [5] = ComprehensionDecodeSet,
-    [6] = DoDecode,
-    [7] = FloatDecode,
-    [8] = IdentifierDecode,
-    [9] = IntegerDecode,
-    [10] = LamdaDecode,
-    [11] = ListDecode,
-    [12] = MapDecode,
-    [13] = ModuleDecode,
-    [14] = NilDecode,
-    [15] = ProtocolDecode,
-    [16] = RangeDecode,
-    [17] = ResultDecode,
-    [18] = SetDecode,
-    [19] = StringDecode,
-    [20] = TokenDecode,
-    [21] = TypeDecode,
-    [22] = WhenDecode
-};
-
 struct Value {
-    Model model;
     void *data;
+    Model model;
 };
 
 Value *ValueCreate(Model model, void *data) {
-    return NULL;
+    Value *value = MemoryAlloc(sizeof(Value));
+    if (value == NULL)
+        return NULL;
+    value->model = model;
+    value->data = data;
+    return value;
 }
 
 Bool ValueEqual(Value *value, Value *other) {
-    return TRUE;
+    if (value->model != other->model)
+        return FALSE;
+    switch (value->model) {
+    case MODEL_BOOLEAN:
+        return BooleanEqual(value->data, other->data);
+    case MODEL_CASE:
+        return CaseEqual(value->data, other->data);
+    case MODEL_COMPREHENSION_LIST:
+        return ComprehensionEqual(value->data, other->data);
+    case MODEL_COMPREHENSION_MAP:
+        return ComprehensionEqual(value->data, other->data);
+    case MODEL_COMPREHENSION_SET:
+        return ComprehensionEqual(value->data, other->data);
+    case MODEL_DO:
+        return DoEqual(value->data, other->data);
+    case MODEL_FLOAT:
+        return FloatEqual(value->data, other->data);
+    case MODEL_IDENTIFIER:
+        return IdentifierEqual(value->data, other->data);
+    case MODEL_INTEGER:
+        return IntegerEqual(value->data, other->data);
+    case MODEL_LAMDA:
+        return LamdaEqual(value->data, other->data);
+    case MODEL_LIST:
+        return ListEqual(value->data, other->data);
+    case MODEL_MAP:
+        return MapEqual(value->data, other->data);
+    case MODEL_MODULE:
+        return ModuleEqual(value->data, other->data);
+    case MODEL_NIL:
+        return TRUE;
+    case MODEL_PROTOCOL:
+        return ProtocolEqual(value->data, other->data);
+    case MODEL_RANGE:
+        return RangeEqual(value->data, other->data);
+    case MODEL_RESULT:
+        return ResultEqual(value->data, other->data);
+    case MODEL_SET:
+        return SetEqual(value->data, other->data);
+    case MODEL_STRING:
+        return StringEqual(value->data, other->data);
+    case MODEL_TOKEN:
+        return TokenEqual(value->data, other->data);
+    case MODEL_TYPE:
+        return TypeEqual(value->data, other->data);
+    case MODEL_WHEN:
+        return WhenEqual(value->data, other->data);
+    }
 }

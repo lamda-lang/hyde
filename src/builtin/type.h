@@ -4,7 +4,7 @@
 #include <runtime.h>
 
 Value *TypeDecode(Byte **bytes);
-void TypeRelease(void *typeData);
-Bool TypeEqual(void *typeData, void *otherData);
+void TypeRelease(Type *type);
+Bool TypeEqual(Type *type, Type *other);
 
 #endif

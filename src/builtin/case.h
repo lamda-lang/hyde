@@ -4,7 +4,7 @@
 #include <runtime.h>
 
 Value *CaseDecode(Byte **bytes);
-Bool CaseEqual(void *caseData, void *otherData);
-void CaseRelease(void *caseData);
+Bool CaseEqual(Case *block, Case *other);
+void CaseRelease(Case *block);
 
 #endif

@@ -1,6 +1,5 @@
 #include <builtin/map.h>
 
-typedef struct Map Map;
 typedef struct Pair Pair;
 
 struct Pair {
@@ -28,7 +27,6 @@ static Value *MapValueForKey(Map *map, Value *key) {
     return NULL;
 }
 
-
 Value *MapDecode(Byte **bytes) {
     Integer32 count = DecodeInteger32(bytes);
     Map *map = MapCreate(count);
@@ -44,16 +42,14 @@ Value *MapDecode(Byte **bytes) {
         map->pairs[index].key = key;
         map->pairs[index].value = value;
     }
-    return ValueCreate(ModelMap, map);
+    return ValueCreate(MODEL_MAP, map);
 }
 
-void MapRelease(void *mapData) {
-    MemoryDealloc(mapData);
+void MapRelease(Map *map) {
+    MemoryDealloc(map);
 }
 
-Bool MapEqual(void *mapData, void *otherData) {
-    Map *map = mapData;
-    Map *other = otherData;
+Bool MapEqual(Map *map, Map *other) {
     if (map->count != other->count)
         return FALSE;
     for (Integer32 index = 0; index < map->count; index += 1) {

@@ -4,7 +4,7 @@
 #include <runtime.h>
 
 Value *MapDecode(Byte **bytes);
-void MapRelease(void *mapData);
-Bool MapEqual(void *mapData, void *otherData); 
+void MapRelease(Map *map);
+Bool MapEqual(Map *map, Map *other); 
 
 #endif

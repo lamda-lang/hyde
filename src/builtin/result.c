@@ -1,7 +1,5 @@
 #include <builtin/result.h>
 
-typedef struct Result Result;
-
 struct Result {
     Value *target;
     Integer8 count;
@@ -31,15 +29,14 @@ Value *ResultDecode(Byte **bytes) {
             return ResultRelease(result), NULL;
         result->args[index] = value;
     }
-    return ValueCreate(ModelResult, result);
-}
-void ResultRelease(void *resultData) {
-    MemoryDealloc(resultData);
+    return ValueCreate(MODEL_RESULT, result);
 }
 
-Bool ResultEqual(void *resultData, void *otherData) {
-    Result *result = resultData;
-    Result *other = otherData;
+void ResultRelease(Result *result) {
+    MemoryDealloc(result);
+}
+
+Bool ResultEqual(Result *result, Result *other) {
     if (result->count != other->count && !ValueEqual(result->target, other->target))
         return FALSE;
     for (Integer8 index = 0; index < result->count; index += 1)

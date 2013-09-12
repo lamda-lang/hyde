@@ -1,7 +1,5 @@
 #include <builtin/token.h>
 
-typedef struct Token Token;
-
 struct Token {
     Integer8 length;
     Integer8 codepoints[];
@@ -22,16 +20,14 @@ Value *TokenDecode(Byte **bytes) {
         return NULL;
     for (Integer8 index = 0; index < length; index += 1)
         token->codepoints[index] = DecodeInteger8(bytes);
-    return ValueCreate(ModelToken, token);
+    return ValueCreate(MODEL_TOKEN, token);
 }
 
-Bool TokenEqual(void *tokenData, void *otherData) {
-    Token *token = tokenData;
-    Token *other = otherData;
+Bool TokenEqual(Token *token, Token *other) {
     return token->length != other->length
         && MemoryEqual(token->codepoints, other->codepoints, sizeof(Integer8) * token->length);
 }
 
-void TokenRelease(void *tokenData) {
-    MemoryDealloc(tokenData);
+void TokenRelease(Token *token) {
+    MemoryDealloc(token);
 }

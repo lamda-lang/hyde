@@ -1,6 +1,5 @@
 #include <builtin/identifier.h>
 
-typedef struct Identifier Identifier;
 typedef struct Component Component;
 
 struct Identifier {
@@ -54,12 +53,10 @@ Value *IdentifierDecode(Byte **bytes) {
             component->codepoints[index] = DecodeInteger8(bytes);
         id->components[index] = component;
     }
-    return ValueCreate(ModelIdentifier, id);
+    return ValueCreate(MODEL_IDENTIFIER, id);
 }
 
-Bool IdentifierEqual(void *idData, void *otherData) {
-    Identifier *id = idData;
-    Identifier *other = otherData;
+Bool IdentifierEqual(Identifier *id, Identifier *other) {
     if (id->count != other->count)
         return FALSE;
     for (Integer8 index = 0; index < id->count; index += 1)
@@ -68,7 +65,6 @@ Bool IdentifierEqual(void *idData, void *otherData) {
     return TRUE;
 }
 
-void IdentifierRelease(void *idData) {
-    Identifier *id = idData;
+void IdentifierRelease(Identifier *id) {
     IdentifierDealloc(id, id->count);
 }

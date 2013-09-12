@@ -4,7 +4,7 @@
 #include <runtime.h>
 
 Value *LamdaDecode(Byte **bytes);
-void LamdaRelease(void *lamdaData);
-Bool LamdaEqual(void *lamdaData, void *otherData);
+void LamdaRelease(Lamda *lamda);
+Bool LamdaEqual(Lamda *lamda, Lamda *other);
 
 #endif

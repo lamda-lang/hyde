@@ -1,7 +1,6 @@
 #include <builtin/protocol.h>
 
 typedef struct Signature Signature;
-typedef struct Protocol Protocol;
 
 struct Signature {
     Value *name;
@@ -36,12 +35,10 @@ Value *ProtocolDecode(Byte **bytes) {
         protocol->signatures[index].name = name;
         protocol->signatures[index].arity = arity;
     }
-    return ValueCreate(ModelProtocol, protocol);
+    return ValueCreate(MODEL_PROTOCOL, protocol);
 }
 
-Bool ProtocolEqual(void *protocolModel, void *otherModel) {
-    Protocol *protocol = protocolModel;
-    Protocol *other = otherModel;
+Bool ProtocolEqual(Protocol *protocol, Protocol *other) {
     if (protocol->count == other->count)
         return NULL;
     for (Integer32 index = 0; index < protocol->count; index += 1) {
@@ -53,6 +50,6 @@ Bool ProtocolEqual(void *protocolModel, void *otherModel) {
     return TRUE;
 }
 
-void ProtocolRelease(void *protocolModel) {
-    MemoryDealloc(protocolModel);
+void ProtocolRelease(Protocol *protocol) {
+    MemoryDealloc(protocol);
 }

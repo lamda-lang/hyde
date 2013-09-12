@@ -4,7 +4,7 @@
 #include <runtime.h>
 
 Value *ListDecode(Byte **bytes);
-Bool ListEqual(void *listData, void *otherData);
-void ListRelease(void *listData);
+Bool ListEqual(List *list, List *other);
+void ListRelease(List *list);
 
 #endif

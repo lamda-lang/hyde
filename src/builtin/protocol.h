@@ -4,7 +4,7 @@
 #include <runtime.h>
 
 Value *ProtocolDecode(Byte **bytes);
-Bool ProtocolEqual(void *protocolData, void *otherData);
-void ProtocolRelease(void *protocolData);
+Bool ProtocolEqual(Protocol *protocol, Protocol *other);
+void ProtocolRelease(Protocol *protocol);
 
 #endif

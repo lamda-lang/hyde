@@ -4,7 +4,7 @@
 #include <runtime.h>
 
 Value *DoDecode(Byte **bytes);
-void DoRelase(void *doData);
-Bool DoEqual(void *doData, void *otherData);
+void DoRelase(Do *block);
+Bool DoEqual(Do *block, Do *other);
 
 #endif

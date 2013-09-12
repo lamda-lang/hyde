@@ -1,7 +1,5 @@
 #include <builtin/type.h>
 
-typedef struct Type Type;
-
 struct Type {
     Integer32 count;
     Value *members[];
@@ -26,16 +24,14 @@ Value *TypeDecode(Byte **bytes) {
             return TypeRelease(type), NULL;
         type->members[index] = value;
     }
-    return ValueCreate(ModelType, type);
+    return ValueCreate(MODEL_TYPE, type);
 }
 
-void TypeRelease(void *typeData) {
-    MemoryDealloc(typeData);
+void TypeRelease(Type *type) {
+    MemoryDealloc(type);
 }
 
-Bool TypeEqual(void *typeData, void *otherData) {
-    Type *type = typeData;
-    Type *other = otherData;
+Bool TypeEqual(Type *type, Type *other) {
     if (type->count != other->count)
         return FALSE;
     for (Integer32 index = 0; index < type->count; index += 1) 

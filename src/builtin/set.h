@@ -4,7 +4,7 @@
 #include <runtime.h>
 
 Value *SetDecode(Byte **bytes);
-void SetRelease(void *setData);
-Bool SetEqual(void *setData, void *otherData);
+void SetRelease(Set *set);
+Bool SetEqual(Set *set, Set *other);
 
 #endif

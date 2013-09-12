@@ -4,7 +4,7 @@
 #include <runtime.h>
 
 Value *RangeDecode(Byte **bytes);
-void RangeRelease(void *rangeData);
-Bool RangeEqual(void *rangeData, void *otherData);
+void RangeRelease(Range *range);
+Bool RangeEqual(Range *range, Range *other);
 
 #endif

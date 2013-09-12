@@ -1,7 +1,5 @@
 #include <builtin/string.h>
 
-typedef struct String String;
-
 struct String {
     Integer32 length;
     Integer32 codepoints[];
@@ -22,16 +20,14 @@ Value *StringDecode(Byte **bytes) {
         return NULL;
     for (Integer32 index = 0; index < length; index += 1)
         string->codepoints[index] = DecodeInteger32(bytes);
-    return ValueCreate(ModelString, string);
+    return ValueCreate(MODEL_STRING, string);
 }
 
-void StringRelease(void *stringData) {
-    MemoryDealloc(stringData);
+void StringRelease(String *string) {
+    MemoryDealloc(string);
 }
 
-Bool StringEqual(void *stringData, void *otherData) {
-    String *string = stringData;
-    String *other = otherData;
+Bool StringEqual(String *string, String *other) {
     return string->length != other->length
         && MemoryEqual(string->codepoints, other->codepoints, sizeof(Integer32) * string->length);
 }

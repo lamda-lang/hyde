@@ -1,7 +1,6 @@
 #include <builtin/when.h>
 
 typedef struct Branch Branch;
-typedef struct When When;
 
 struct Branch {
     Value *condition;
@@ -36,16 +35,14 @@ Value *WhenDecode(Byte **bytes) {
         block->branches[index].condition = condition;
         block->branches[index].value = value;
     }
-    return ValueCreate(ModelWhen, block);
+    return ValueCreate(MODEL_WHEN, block);
 }
 
-void WhenRelease(void *whenData) {
-    MemoryDealloc(whenData);
+void WhenRelease(When *block) {
+    MemoryDealloc(block);
 }
 
-Bool WhenEqual(void *whenData, void *otherData) {
-    When *block = whenData;
-    When *other = otherData;
+Bool WhenEqual(When *block, When *other) {
     if (block->count != other->count)
         return FALSE;
     for (Integer32 index = 0; index < block->count; index += 1) {

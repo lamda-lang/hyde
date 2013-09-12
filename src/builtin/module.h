@@ -4,7 +4,7 @@
 #include <runtime.h>
 
 Value *ModuleDecode(Byte **bytes);
-Bool ModuleEqual(void *moduleData, void *otherData);
-void ModuleRelease(void *moduleData);
+Bool ModuleEqual(Module *module, Module *other);
+void ModuleRelease(Module *module);
 
 #endif

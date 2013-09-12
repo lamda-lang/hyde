@@ -1,7 +1,5 @@
 #include <builtin/comprehension.h>
 
-typedef struct Comprehension Comprehension;
-
 struct Comprehension {
     Value *key;
     Value *value;
@@ -39,23 +37,21 @@ static Value *ComprehensionCommonDecode(Byte **bytes, Model model, Value *key) {
 }
 
 Value *ComprehensionDecodeList(Byte **bytes) {
-    return ComprehensionCommonDecode(bytes, ModelListComprehension, NULL);
+    return ComprehensionCommonDecode(bytes, MODEL_COMPREHENSION_LIST, NULL);
 }
 
 Value *ComprehensionDecodeMap(Byte **bytes) {
     Value *key = ValueDecode(bytes);
     if (key == NULL)
         return NULL;
-    return ComprehensionCommonDecode(bytes, ModelSetComprehension, key);
+    return ComprehensionCommonDecode(bytes, MODEL_COMPREHENSION_MAP, key);
 }
 
 Value *ComprehensionDecodeSet(Byte **bytes) {
-    return ComprehensionCommonDecode(bytes, ModelSetComprehension, NULL);
+    return ComprehensionCommonDecode(bytes, MODEL_COMPREHENSION_SET, NULL);
 }
 
-Bool ComprehensionEqual(void *comprehensionData, void *otherData) {
-    Comprehension *comprehension = comprehensionData;
-    Comprehension *other = otherData;
+Bool ComprehensionEqual(Comprehension *comprehension, Comprehension *other) {
     if (!ValueEqual(comprehension->key, other->key))
         return FALSE;
     if (!ValueEqual(comprehension->value, other->value))
@@ -69,6 +65,6 @@ Bool ComprehensionEqual(void *comprehensionData, void *otherData) {
     return TRUE;
 }
 
-void ComprehensionRelease(void *comprehensionData) {
-    MemoryDealloc(comprehensionData);
+void ComprehensionRelease(Comprehension *comprehension) {
+    MemoryDealloc(comprehension);
 }

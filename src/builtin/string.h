@@ -4,7 +4,7 @@
 #include <runtime.h>
 
 Value *StringDecode(Byte **bytes);
-void StringRelease(void *stringData);
-Bool StringEqual(void *stringData, void *otherData);
+void StringRelease(String *string);
+Bool StringEqual(String *string, String *other);
 
 #endif

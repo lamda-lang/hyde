@@ -1,7 +1,5 @@
 #include <builtin/boolean.h>
 
-typedef struct Boolean Boolean;
-
 struct Boolean {
     Bool truth;
 };
@@ -11,7 +9,7 @@ static Value *BooleanCreate(Bool truth) {
     if (boolean == NULL)
         return NULL;
     boolean->truth = truth;
-    return ValueCreate(ModelBoolean, boolean);
+    return ValueCreate(MODEL_BOOLEAN, boolean);
 }
 
 Value *BooleanDecodeTrue(Byte **bytes) {
@@ -22,12 +20,10 @@ Value *BooleanDecodeFalse(Byte **bytes) {
     return BooleanCreate(FALSE);
 }
 
-void BooleanRelease(void *booleanData) {
-    MemoryDealloc(booleanData);
+void BooleanRelease(Boolean *boolean) {
+    MemoryDealloc(boolean);
 }
 
-Bool BooleanEqual(void *booleanData, void *otherData) {
-    Boolean *boolean = booleanData;
-    Boolean *other = otherData;
+Bool BooleanEqual(Boolean *boolean, Boolean *other) {
     return boolean->truth == other->truth;
 }

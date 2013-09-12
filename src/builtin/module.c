@@ -1,6 +1,5 @@
 #include <builtin/module.h>
 
-typedef struct Module Module;
 typedef struct Definition Definition;
 typedef struct Scope Scope;
 typedef struct Dependency Dependency;
@@ -51,9 +50,9 @@ Value *ModuleDecode(Byte **bytes) {
     return NULL;
 }
 
-Bool ModuleEqual(void *moduleData, void *otherData){
+Bool ModuleEqual(Module *module, Module *other){
     return TRUE;
 }
 
-void ModuleRelease(void *moduleData) {
+void ModuleRelease(Module *module) {
 }

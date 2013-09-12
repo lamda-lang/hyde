@@ -4,7 +4,7 @@
 #include <runtime.h>
 
 Value *TokenDecode(Byte **bytes);
-Bool TokenEqual(void *tokenData, void *otherData);
-void TokenRelease(void *tokenData);
+Bool TokenEqual(Token *token, Token *other);
+void TokenRelease(Token *token);
 
 #endif

@@ -1,7 +1,5 @@
 #include <builtin/list.h>
 
-typedef struct List List;
-
 struct List {
     Integer32 count;
     Value *values[];
@@ -26,12 +24,10 @@ Value *ListDecode(Byte **bytes) {
             return ListRelease(list), NULL;
         list->values[index] = value;
     }
-    return ValueCreate(ModelList, list);
+    return ValueCreate(MODEL_LIST, list);
 }
 
-Bool ListEqual(void *listData, void *otherData) {
-    List *list = listData;
-    List *other = otherData;
+Bool ListEqual(List *list, List *other) {
     if (list->count != other->count)
         return FALSE;
     for (Integer32 index = 0; index < list->count; index += 1)
@@ -40,6 +36,6 @@ Bool ListEqual(void *listData, void *otherData) {
     return TRUE;
 }
 
-void ListRelease(void *listData) {
-    MemoryDealloc(listData);
+void ListRelease(List *list) {
+    MemoryDealloc(list);
 }

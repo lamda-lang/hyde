@@ -4,7 +4,7 @@
 #include <runtime.h>
 
 Value *IdentifierDecode(Byte **bytes);
-Bool IdentifierEqual(void *identifierData, void *otherData);
-void IdentifierRelease(void *identifierData);
+Bool IdentifierEqual(Identifier *identifier, Identifier *other);
+void IdentifierRelease(Identifier *identifier);
 
 #endif

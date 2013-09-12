@@ -1,7 +1,5 @@
 #include <builtin/lamda.h>
 
-typedef struct Lamda Lamda;
-
 struct Lamda {
     Integer8 arity;
     Integer8 count;
@@ -34,16 +32,14 @@ Value *LamdaDecode(Byte **bytes) {
             return LamdaRelease(lamda), NULL;
         lamda->upvalues[index] = upvalue;
     }
-    return ValueCreate(ModelLamda, lamda);
+    return ValueCreate(MODEL_LAMDA, lamda);
 }
 
-void LamdaRelease(void *lamdaData) {
-    MemoryDealloc(lamdaData);
+void LamdaRelease(Lamda *lamda) {
+    MemoryDealloc(lamda);
 }
 
-Bool LamdaEqual(void *lamdaData, void *otherData) {
-    Lamda *lamda = lamdaData;
-    Lamda *other = otherData;
+Bool LamdaEqual(Lamda *lamda, Lamda *other) {
     if (lamda->arity != other->arity)
         return FALSE;
     if (lamda->count != other->count)

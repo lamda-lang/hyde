@@ -5,7 +5,7 @@
 
 Value *BooleanDecodeTrue(Byte **bytes);
 Value *BooleanDecodeFalse(Byte **bytes);
-void BooleanRelease(void *booleanData);
-Bool BooleanEqual(void *booleanData, void *otherData);
+void BooleanRelease(Boolean *boolean);
+Bool BooleanEqual(Boolean *boolean, Boolean *other);
 
 #endif

@@ -6,7 +6,7 @@
 Value *ComprehensionDecodeList(Byte **bytes);
 Value *ComprehensionDecodeMap(Byte **bytes);
 Value *ComprehensionDecodeSet(Byte **bytes);
-Bool ComprehensionEqual(void *comprehensionData, void *otherData);
-void ComprehensionRelease(void *comprehensionData);
+Bool ComprehensionEqual(Comprehension *comprehension, Comprehension *other);
+void ComprehensionRelease(Comprehension *comprehension);
 
 #endif
