@@ -7,7 +7,7 @@ struct Boolean {
 };
 
 static Value *BooleanCreate(Bool truth) {
-    Boolean *boolean = MemoryAlloc(sizeof(Boolean), error);
+    Boolean *boolean = MemoryAlloc(sizeof(Boolean));
     if (boolean == NULL)
         return NULL;
     boolean->truth = truth;
@@ -19,7 +19,7 @@ Value *BooleanDecodeTrue(Byte **bytes) {
 }
 
 Value *BooleanDecodeFalse(Byte **bytes) {
-    return BooleanValue(FALSE);
+    return BooleanCreate(FALSE);
 }
 
 void BooleanRelease(void *booleanData) {

@@ -7,7 +7,7 @@ struct Integer {
 };
 
 static Value *IntegerCreate(Integer64 value) {
-    Integer *integer = MemoryAlloc(sizeof(Integer), error);
+    Integer *integer = MemoryAlloc(sizeof(Integer));
     if (integer != NULL)
         return NULL;
     integer->value = value;

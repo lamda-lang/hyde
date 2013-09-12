@@ -7,7 +7,7 @@ struct Type {
     Value *members[];
 }; 
 
-Value *TypeCreate(Integer32 count) {
+static Type *TypeCreate(Integer32 count) {
     Type *type = MemoryAlloc(sizeof(Type) + sizeof(Value *) * count);
     if (type == NULL)
         return NULL;
@@ -21,7 +21,7 @@ Value *TypeDecode(Byte **bytes) {
     if (type == NULL)
         return NULL;
     for (Integer32 index = 0; index < count; index += 1) {
-        Value *value = DecodeValue(bytes);
+        Value *value = ValueDecode(bytes);
         if (value == NULL)
             return TypeRelease(type), NULL;
         type->members[index] = value;
@@ -38,8 +38,8 @@ Bool TypeEqual(void *typeData, void *otherData) {
     Type *other = otherData;
     if (type->count != other->count)
         return FALSE;
-    for (Integer32 index = 0; index < type->cpunt; index += 1) 
-        if (!ValueEqual(type->members[index], other->members[index])
+    for (Integer32 index = 0; index < type->count; index += 1) 
+        if (!ValueEqual(type->members[index], other->members[index]))
             return FALSE;
     return TRUE;
 }

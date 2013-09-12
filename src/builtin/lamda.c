@@ -1,66 +1,57 @@
 #include <builtin/lamda.h>
 
-typedef struct LamdaNative LamdaNative;
-typedef struct LamdaCore LamdaCore;
+typedef struct Lamda Lamda;
 
-struct LamdaNative {
-    Value *type;
-    Value *result;
+struct Lamda {
     Integer8 arity;
     Integer8 count;
+    Value *result;
     Value *upvalues[];
 };
 
-struct LamdaCore {
-    Value *type;
-    Kernel *kernel;
-    Integer8 arity;
-};
-
-static LamdaNative *LamdaNativeCreate(Value *result, Integer8 arity, Integer8 count, Error *error) {
-    LamdaNative *lamda = MemoryAlloc(sizeof(LamdaNative) + sizeof(Value *) * count, error);
-    if (*error != ErrorNone)
+static Lamda *LamdaCreate(Value *result, Integer8 arity, Integer8 count) {
+    Lamda *lamda = MemoryAlloc(sizeof(Lamda) + sizeof(Value *) * count);
+    if (lamda == NULL)
         return NULL;
-    lamda->type = NULL;
     lamda->arity = arity;
     lamda->count = count;
     lamda->result = result;
     return lamda;
 }
 
-static LamdaCore *LamdaCoreCreate(Kernel *kernel, Integer8 arity, Error *error) {
-    LamdaCore *lamda = MemoryAlloc(sizeof(LamdaCore), error);
-    if (*error != ErrorNone)
-        return NULL;
-    lamda->type = NULL;
-    lamda->arity = arity;
-    lamda->kernel = kernel;
-    return lamda;
-}
-
-Value *LamdaDecode(Byte **bytes, Error *error) {
+Value *LamdaDecode(Byte **bytes) {
     Integer8 arity = DecodeInteger8(bytes);
-    Value *result = DecodeValue(bytes, error);
-    if (*error != ErrorNone) goto returnError;
+    Value *result = ValueDecode(bytes);
+    if (result == NULL)
+        return NULL;
     Integer8 count = DecodeInteger8(bytes);
-    LamdaNative *lamda = LamdaNativeCreate(result, arity, count, error);
-    if (*error != ErrorNone) goto returnError;
+    Lamda *lamda = LamdaCreate(result, arity, count);
+    if (lamda == NULL)
+        return NULL;
     for (Integer8 index = 0; index < count; index += 1) {
-        lamda->upvalues[index] = DecodeValue(bytes, error);
-        if (*error != ErrorNone) goto deallocLamda;
+        Value *upvalue = ValueDecode(bytes);
+        if (upvalue == NULL)
+            return LamdaRelease(lamda), NULL;
+        lamda->upvalues[index] = upvalue;
     }
-    return lamda;
-
-deallocLamda:
-    MemoryDealloc(lamda);
-returnError:
-    return NULL;
+    return ValueCreate(ModelLamda, lamda);
 }
 
-Value *LamdaCreate(Kernel *kernel, Integer8 arity, Error *error) {
-    return LamdaCoreCreate(kernel, arity, error);
+void LamdaRelease(void *lamdaData) {
+    MemoryDealloc(lamdaData);
 }
 
-void LamdaDealloc(Value *lamdaValue) {
-    MemoryDealloc(lamdaValue);
+Bool LamdaEqual(void *lamdaData, void *otherData) {
+    Lamda *lamda = lamdaData;
+    Lamda *other = otherData;
+    if (lamda->arity != other->arity)
+        return FALSE;
+    if (lamda->count != other->count)
+        return FALSE;
+    if (!ValueEqual(lamda->result, other->result))
+        return FALSE;
+    for (Integer8 index = 0; index < lamda->count; index += 1)
+        if (!ValueEqual(lamda->upvalues[index], other->upvalues[index]))
+            return NULL;
+    return TRUE;
 }

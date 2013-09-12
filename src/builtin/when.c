@@ -21,9 +21,9 @@ static When *WhenCreate(Integer32 count) {
     return block;
 }
 
-Value *WhenDecode(Byte **bytes, Error *error) {
+Value *WhenDecode(Byte **bytes) {
     Integer32 count = DecodeInteger32(bytes);
-    When *block = WhenCreate(count, error);
+    When *block = WhenCreate(count);
     if (block == NULL)
         return NULL;
     for (Integer32 index = 0; index < count; index += 1) {
@@ -48,7 +48,7 @@ Bool WhenEqual(void *whenData, void *otherData) {
     When *other = otherData;
     if (block->count != other->count)
         return FALSE;
-    for (Integer32 index = 0; index < block->count, index += 1) {
+    for (Integer32 index = 0; index < block->count; index += 1) {
         if (!ValueEqual(block->branches[index].condition, other->branches[index].condition))
             return FALSE;
         if (!ValueEqual(block->branches[index].value, other->branches[index].value))

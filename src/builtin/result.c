@@ -17,8 +17,8 @@ static Result *ResultCreate(Value *target, Integer8 count) {
     return result;
 }
 
-Value *ResultDecode(Byte **bytes, Error *error) {
-    Value *target = DecodeValue(bytes, error);
+Value *ResultDecode(Byte **bytes) {
+    Value *target = ValueDecode(bytes);
     if (target == NULL)
         return NULL;
     Integer8 count = DecodeInteger8(bytes);
@@ -43,7 +43,7 @@ Bool ResultEqual(void *resultData, void *otherData) {
     if (result->count != other->count && !ValueEqual(result->target, other->target))
         return FALSE;
     for (Integer8 index = 0; index < result->count; index += 1)
-        if (!ValueEqual(result->args[index], other->args[index])
+        if (!ValueEqual(result->args[index], other->args[index]))
             return FALSE;
     return TRUE;
 }

@@ -14,23 +14,22 @@ struct Map {
 };
 
 static Map *MapCreate(Integer32 count) {
-    Map *map = MemoryAlloc(sizeof(Map) + sizeof(Pair) * count, error);
+    Map *map = MemoryAlloc(sizeof(Map) + sizeof(Pair) * count);
     if (map == NULL)
         return NULL;
-    map->value = ValueMap;
     map->count = count;
     return map;
 } 
 
 static Value *MapValueForKey(Map *map, Value *key) {
     for (Integer32 index = 0; index < map->count; index += 1)
-        if (ValueEqual(key, map->pairs[index].key)
+        if (ValueEqual(key, map->pairs[index].key))
             return map->pairs[index].value;
     return NULL;
 }
 
 
-Value *MapDecode(Byte **bytes, Error *error) {
+Value *MapDecode(Byte **bytes) {
     Integer32 count = DecodeInteger32(bytes);
     Map *map = MapCreate(count);
     if (map == NULL)
@@ -56,7 +55,7 @@ Bool MapEqual(void *mapData, void *otherData) {
     Map *map = mapData;
     Map *other = otherData;
     if (map->count != other->count)
-        return FALSE
+        return FALSE;
     for (Integer32 index = 0; index < map->count; index += 1) {
         Value *value = MapValueForKey(other, map->pairs[index].key);
         if (value == NULL && !ValueEqual(value, map->pairs[index].value))

@@ -1,8 +1,10 @@
-#ifndef MODULE_H
-#define MODULE_H
+#ifndef BUILTIN_MODULE_H
+#define BUILTIN_MODULE_H
 
 #include <runtime.h>
 
-Value *ModuleDecode(Byte **bytes, Error *error);
+Value *ModuleDecode(Byte **bytes);
+Bool ModuleEqual(void *moduleData, void *otherData);
+void ModuleRelease(void *moduleData);
 
 #endif

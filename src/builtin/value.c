@@ -27,6 +27,14 @@ static Decode *decode[] = {
 };
 
 struct Value {
-    Builtin builtin;
-    void *model;
+    Model model;
+    void *data;
+};
+
+Value *ValueCreate(Model model, void *data) {
+    return NULL;
+}
+
+Bool ValueEqual(Value *value, Value *other) {
+    return TRUE;
 }

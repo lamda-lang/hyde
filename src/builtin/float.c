@@ -8,7 +8,7 @@ struct Float {
 };
 
 static Value *FloatCreate(Float64 value) {
-    Float *fpv = MemoryAlloc(sizeof(Float), error);
+    Float *fpv = MemoryAlloc(sizeof(Float));
     if (fpv == NULL)
         return NULL;
     fpv->value = value;

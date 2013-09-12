@@ -22,16 +22,31 @@ typedef enum {
 
 typedef enum {
     ModelBoolean,
+    ModelCase,
+    ModelListComprehension,
+    ModelMapComprehension,
+    ModelSetComprehension,
+    ModelDo,
     ModelFloat,
+    ModelIdentifier,
     ModelInteger,
+    ModelLamda,
     ModelList,
+    ModelMap,
+    ModelModule,
     ModelNil,
+    ModelProtocol,
+    ModelRange,
+    ModelResult,
+    ModelSet,
     ModelString,
-    ModelToken
+    ModelToken,
+    ModelType,
+    ModelWhen
 } Model;
 
-typedef Value *Decode(Byte **bytes, Error *error);
-typedef Value *Kernel(Value **args, Integer8 count, Error *error);
+typedef Value *Decode(Byte **bytes);
+typedef Value *Kernel(Value **args, Integer8 count);
 
 #include <builtin/boolean.h>
 #include <builtin/case.h>

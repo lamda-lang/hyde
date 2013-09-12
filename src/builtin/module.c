@@ -3,16 +3,20 @@
 typedef struct Module Module;
 typedef struct Definition Definition;
 typedef struct Scope Scope;
-typedef struct Import Import;
+typedef struct Dependency Dependency;
+
+struct Dependency {
+    int foo;
+};
 
 struct Module {
-    Value *type;
     Scope *scope;
     Integer32 count;
+    Dependency dependencies[];
 };
 
 struct Definition {
-    Value *variable;
+    Value *name;
     Value *value;
     Scope *local;
 };
@@ -22,61 +26,34 @@ struct Scope {
     Definition definitions[];
 };
 
-struct Import {
-    Value *pathValue;
-    Value *variableValue;
-};
-
-static Module *ModuleCreate(Scope *scope, Error *error) {
-    Module *module = MemoryAlloc(sizeof(Module), error);
-    if (*error != ErrorNone)
+static Module *ModuleCreate(Scope *scope, Integer32 count) {
+    Module *module = MemoryAlloc(sizeof(Module) + sizeof(Dependency) * count);
+    if (module == NULL)
         return NULL;
-    module->type = NULL;
     module->scope = scope;
+    module->count = count;
     return module;
 }
 
-static Scope *ModuleCreateScope(Integer32 count, Error *error) {
-    Scope *scope = MemoryAlloc(sizeof(Scope) + sizeof(Definition) * count, error);
-    if (*error != ErrorNone)
+static Scope *ModuleCreateScope(Integer32 count) {
+    Scope *scope = MemoryAlloc(sizeof(Scope) + sizeof(Definition) * count);
+    if (scope == NULL)
         return NULL;
     scope->count = count;
     return scope;
 }
 
-static void ModuleDeallocScope(Scope *scope) {
-    MemoryDealloc(scope);
-}
-
 static Scope *ModuleDecodeScope(Byte **bytes, Error *error) {
-    Integer32 count = DecodeInteger32(bytes);
-    Scope *scope = ModuleCreateScope(count, error);
-    if (*error != ErrorNone) goto returnError;
-    for (Integer32 index = 0; index < count; index += 1) {
-        scope->definitions[index].variable = DecodeValue(bytes, error);
-        if (*error != ErrorNone) goto deallocScope;
-        scope->definitions[index].value = DecodeValue(bytes, error);
-        if (*error != ErrorNone) goto deallocScope;
-        scope->definitions[index].local = ModuleDecodeScope(bytes, error);
-        if (*error != ErrorNone) goto deallocScope;
-    }
-    return scope;
-
-deallocScope:
-    ModuleDeallocScope(scope);
-returnError:
     return NULL;
 }
 
-Value *ModuleDecode(Byte **bytes, Error *error) {
-    Scope *scope = ModuleDecodeScope(bytes, error);
-    if (*error != ErrorNone) goto returnError;
-    Module *module = ModuleCreate(scope, error);
-    if (*error != ErrorNone) goto deallocScope;
-    return module;
-
-deallocScope:
-    ModuleDeallocScope(scope);
-returnError:
+Value *ModuleDecode(Byte **bytes) {
     return NULL;
+}
+
+Bool ModuleEqual(void *moduleData, void *otherData){
+    return TRUE;
+}
+
+void ModuleRelease(void *moduleData) {
 }

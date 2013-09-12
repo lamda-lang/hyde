@@ -1,104 +1,74 @@
 #include <builtin/comprehension.h>
 
-typedef struct ComprehensionValue ComprehensionValue;
-typedef struct ComprehensionKeyValue ComprehensionKeyValue;
+typedef struct Comprehension Comprehension;
 
-struct ComprehensionValue {
-    Value *type;
-    Value *kind;
-    Value *value;
-    Value *variable;
-    Value *enumerable;
-    Value *guard;
-};
-
-struct ComprehensionKeyValue {
-    Value *type;
-    Value *kind;
+struct Comprehension {
     Value *key;
     Value *value;
-    Value *variable;
+    Value *element;
     Value *enumerable;
     Value *guard;
 };
 
-static ComprehensionValue *ComprehensionValueCreate(Value *kind, Value *value, Value *variable, Value *enumerable, Value *guard, Error *error) {
-    ComprehensionValue *comprehension = MemoryAlloc(sizeof(ComprehensionValue), error);
-    if (*error != ErrorNone)
+static Value *ComprehensionCreate(Model model, Value *key, Value *value, Value *element, Value *enumerable, Value *guard) {
+    Comprehension *comprehension = MemoryAlloc(sizeof(Comprehension));
+    if (comprehension == NULL)
         return NULL;
-    comprehension->type = NULL;
-    comprehension->kind = kind;
-    comprehension->value = value;
-    comprehension->variable = variable;
-    comprehension->enumerable = enumerable;
-    comprehension->guard = guard;
-    return comprehension;
-}
-
-static ComprehensionKeyValue *ComprehensionKeyValueCreate(Value *kind, Value *key, Value *value, Value *variable, Value *enumerable, Value *guard, Error *error) {
-    ComprehensionKeyValue *comprehension = MemoryAlloc(sizeof(ComprehensionKeyValue), error);
-    if (*error != ErrorNone)
-        return NULL;
-    comprehension->type = NULL;
-    comprehension->kind = kind;
     comprehension->key = key;
     comprehension->value = value;
-    comprehension->variable = variable;
+    comprehension->element = element;
     comprehension->enumerable = enumerable;
     comprehension->guard = guard;
-    return comprehension;
+    return ValueCreate(model, comprehension);
 }
 
-static Value *ComprehensionValueDecode(Value *kind, Byte **bytes, Error *error) {
-    Value *value = DecodeValue(bytes, error);
-    if (*error != ErrorNone)
+static Value *ComprehensionCommonDecode(Byte **bytes, Model model, Value *key) {
+    Value *value = ValueDecode(bytes);
+    if (value == NULL)
         return NULL;
-    Value *variable = DecodeValue(bytes, error);
-    if (*error != ErrorNone)
+    Value *element = ValueDecode(bytes);
+    if (element == NULL)
         return NULL;
-    Value *enumerable = DecodeValue(bytes, error);
-    if (*error != ErrorNone)
+    Value *enumerable = ValueDecode(bytes);
+    if (enumerable == NULL)
         return NULL;
-    Value *guard = DecodeValue(bytes, error);
-    if (*error != ErrorNone)
+    Value *guard = ValueDecode(bytes);
+    if (guard == NULL)
         return NULL;
-    return ComprehensionValueCreate(kind, value, variable, enumerable, guard, error);
+    return ComprehensionCreate(model, key, value, element, enumerable, guard);
 }
 
-static Value *ComprehensionKeyValueDecode(Value *kind, Byte **bytes, Error *error) {
-    Value *key = DecodeValue(bytes, error);
-    if (*error != ErrorNone)
-        return NULL;
-    Value *value = DecodeValue(bytes, error);
-    if (*error != ErrorNone)
-        return NULL;
-    Value *variable = DecodeValue(bytes, error);
-    if (*error != ErrorNone)
-        return NULL;
-    Value *enumerable = DecodeValue(bytes, error);
-    if (*error != ErrorNone)
-        return NULL;
-    Value *guard = DecodeValue(bytes, error);
-    if (*error != ErrorNone)
-        return NULL;
-    return ComprehensionKeyValueCreate(kind, key, value, variable, enumerable, guard, error);
+Value *ComprehensionDecodeList(Byte **bytes) {
+    return ComprehensionCommonDecode(bytes, ModelListComprehension, NULL);
 }
 
-Value *ComprehensionDecodeList(Byte **bytes, Error *error) {
-    return ComprehensionValueDecode(NULL, bytes, error);
+Value *ComprehensionDecodeMap(Byte **bytes) {
+    Value *key = ValueDecode(bytes);
+    if (key == NULL)
+        return NULL;
+    return ComprehensionCommonDecode(bytes, ModelSetComprehension, key);
 }
 
-Value *ComprehensionDecodeMap(Byte **bytes, Error *error) {
-    return ComprehensionKeyValueDecode(NULL, bytes, error);
+Value *ComprehensionDecodeSet(Byte **bytes) {
+    return ComprehensionCommonDecode(bytes, ModelSetComprehension, NULL);
 }
 
-Value *ComprehensionDecodeSet(Byte **bytes, Error *error) {
-    return ComprehensionValueDecode(NULL, bytes, error);
-}
-
-Bool ComprehensionEqual(Value *comprehensionValue, Value *otherValue) {
+Bool ComprehensionEqual(void *comprehensionData, void *otherData) {
+    Comprehension *comprehension = comprehensionData;
+    Comprehension *other = otherData;
+    if (!ValueEqual(comprehension->key, other->key))
+        return FALSE;
+    if (!ValueEqual(comprehension->value, other->value))
+        return FALSE;
+    if (!ValueEqual(comprehension->element, other->element))
+        return FALSE;
+    if (!ValueEqual(comprehension->enumerable, other->enumerable))
+        return FALSE;
+    if (!ValueEqual(comprehension->guard, other->guard))
+        return FALSE;
     return TRUE;
 }
 
-void ComprehensionDealloc(Value *comprehensionValue) {
+void ComprehensionRelease(void *comprehensionData) {
+    MemoryDealloc(comprehensionData);
 }

@@ -15,9 +15,9 @@ static String *StringCreate(Integer32 length) {
     return string;
 }
 
-Value *StringDecode(Byte **bytes, Error *error) {
+Value *StringDecode(Byte **bytes) {
     Integer32 length = DecodeInteger32(bytes);
-    String *string = StringCreate(length, error);
+    String *string = StringCreate(length);
     if (string == NULL)
         return NULL;
     for (Integer32 index = 0; index < length; index += 1)

@@ -1,6 +1,6 @@
 #include <builtin/nil.h>
 
-Value *NilDecode(Byte **bytes, Error *error) {
+Value *NilDecode(Byte **bytes) {
     return ValueCreate(ModelNil, NULL);
 }
 

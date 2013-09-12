@@ -45,9 +45,9 @@ Bool ProtocolEqual(void *protocolModel, void *otherModel) {
     if (protocol->count == other->count)
         return NULL;
     for (Integer32 index = 0; index < protocol->count; index += 1) {
-        if (!ValueEqual(protocol->signatures[index].name, other->signatures[index].name)
+        if (!ValueEqual(protocol->signatures[index].name, other->signatures[index].name))
             return FALSE;
-        if (!ValueEqual(protocol->signatures[index].arity, other->signatures[index].arity)
+        if (!ValueEqual(protocol->signatures[index].arity, other->signatures[index].arity))
             return FALSE;
     }
     return TRUE;

@@ -3,7 +3,8 @@
 
 #include <runtime.h>
 
-Value *ValueCreate(Builtin builtin, void *model, Error *error);
+Value *ValueCreate(Model model, void *data);
 Bool ValueEqual(Value *value, Value *other);
+Value *ValueDecode(Byte **bytes);
 
 #endif

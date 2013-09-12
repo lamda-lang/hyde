@@ -17,18 +17,18 @@ static Set *SetCreate(Integer32 count) {
 
 static Bool SetElement(Set *set, Value *value) {
     for (Integer32 index = 0; index < set->count; index += 1)
-        if (ValueEqual(value, set->values[index])
-            return TRUE
+        if (ValueEqual(value, set->values[index]))
+            return TRUE;
     return FALSE;
 }
 
-Value *SetDecode(Byte **bytes, Error *error) {
+Value *SetDecode(Byte **bytes) {
     Integer32 count = DecodeInteger32(bytes);
     Set *set = SetCreate(count);
     if (set == NULL)
         return NULL;
     for (Integer32 index = 0; index < count; index += 1) {
-        Value *value = DecodeValue(bytes, error);
+        Value *value = ValueDecode(bytes);
         if (value == NULL)
             return SetRelease(set), NULL;
         set->values[index] = value;
@@ -46,7 +46,7 @@ Bool SetEqual(void *setData, void *otherData) {
     if (set->count != other->count)
         return FALSE;
     for (Integer32 index = 0; index < set->count; index += 1)
-        if (!SetElement(other, set->values[index])
+        if (!SetElement(other, set->values[index]))
             return FALSE;
     return TRUE;
 }

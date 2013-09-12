@@ -30,13 +30,13 @@ Value *CaseDecode(Byte **bytes) {
     for (Integer32 index = 0; index < count; index += 1) {
         Value *match = ValueDecode(bytes);
         if (match == NULL)
-            return CaseRelease(case), NULL;
+            return CaseRelease(block), NULL;
         Value *guard = ValueDecode(bytes);
         if (guard == NULL)
-            return CaseRelease(case), NULL;
+            return CaseRelease(block), NULL;
         Value *value = ValueDecode(bytes);
         if (value == NULL)
-            return CaseRelease(case), NULL;
+            return CaseRelease(block), NULL;
         block->branches[index].match = match;
         block->branches[index].guard = guard;
         block->branches[index].value = value;
@@ -50,11 +50,11 @@ Bool CaseEqual(void *caseData, void *otherData) {
     if (block->count != other->count)
         return FALSE;
     for (Integer32 index = 0; index < block->count; index += 1) {
-        if (!Equal(block->branches[index].match, other->branches[index].match))
+        if (!ValueEqual(block->branches[index].match, other->branches[index].match))
             return FALSE;
-        if (!Equal(block->branches[index].guard, other->branches[index].guard))
+        if (!ValueEqual(block->branches[index].guard, other->branches[index].guard))
             return FALSE;
-        if (!Equal(block->branches[index].value, other->branches[index].value))
+        if (!ValueEqual(block->branches[index].value, other->branches[index].value))
             return FALSE;
     }
     return TRUE;

@@ -10,7 +10,7 @@ struct Identifier {
 
 struct Component {
     Integer8 length;
-    Integer8 codepoint[];
+    Integer8 codepoints[];
 };
 
 static Identifier *IdentifierCreate(Integer8 count) {
@@ -23,7 +23,7 @@ static Identifier *IdentifierCreate(Integer8 count) {
 
 static Component *IdentifierComponentCreate(Integer8 length) {
     Component *component = MemoryAlloc(sizeof(Component) + sizeof(Integer8) * length);
-    if (id == NULL)
+    if (component == NULL)
         return NULL;
     component->length = length;
     return component;
@@ -34,7 +34,7 @@ static Bool IdentifierComponentEqual(Component *component, Component *other) {
         && MemoryEqual(component->codepoints, other->codepoints, sizeof(Integer8) * component->length);
 }
 
-static Identifier *IdentifierDealloc(Identifier *id, Integer8 count) {
+static void IdentifierDealloc(Identifier *id, Integer8 count) {
     for (Integer8 index = 0; index < count; index += 1)
         MemoryDealloc(id->components[index]);
     MemoryDealloc(id);
@@ -42,7 +42,7 @@ static Identifier *IdentifierDealloc(Identifier *id, Integer8 count) {
 
 Value *IdentifierDecode(Byte **bytes) {
     Integer8 count = DecodeInteger8(bytes);
-    Identifier *id = IdentifierCreate(count, error);
+    Identifier *id = IdentifierCreate(count);
     if (id == NULL)
         return NULL;
     for (Integer8 index = 0; index < count; index += 1) {
@@ -51,7 +51,7 @@ Value *IdentifierDecode(Byte **bytes) {
         if (component == NULL)
             return IdentifierDealloc(id, index), NULL;
         for (Integer8 index = 0; index < length; index += 1)
-            component->codepoint[index] = DecodeInteger8(bytes);
+            component->codepoints[index] = DecodeInteger8(bytes);
         id->components[index] = component;
     }
     return ValueCreate(ModelIdentifier, id);
@@ -63,8 +63,8 @@ Bool IdentifierEqual(void *idData, void *otherData) {
     if (id->count != other->count)
         return FALSE;
     for (Integer8 index = 0; index < id->count; index += 1)
-        if (!IdentifierComponentEqual(id->components[index], other->components[index])
-            return FALSE
+        if (!IdentifierComponentEqual(id->components[index], other->components[index]))
+            return FALSE;
     return TRUE;
 }
 

@@ -1,61 +1,45 @@
 #include <builtin/do.h>
 
-typedef struct DoNative DoNative;
-typedef struct DoCore DoCore;
+typedef struct Do Do;
 
-struct DoNative {
-  Value *type;
+struct Do {
   Integer32 count;
-  Value *elements[];
+  Value *values[];
 };
 
-struct DoCore {
-    Value *type;
-    Kernel *kernel;
-    Integer8 count;
-    Value *args[];
-};
-
-static DoNative *DoNativeCreate(Integer32 count, Error *error) {
-    DoNative *block = MemoryAlloc(sizeof(DoNative) * sizeof(Value *) * count, error);
-    if (*error != ErrorNone)
+static Do *DoCreate(Integer32 count) {
+    Do *block = MemoryAlloc(sizeof(Do) * sizeof(Value *) * count);
+    if (block == NULL)
         return NULL;
-    block->type = NULL;
     block->count = count;
     return block;
 }
 
-static DoCore *DoCoreCreate(Kernel *kernel, Value **args, Integer8 count, Error *error) {
-    DoCore *block = MemoryAlloc(sizeof(DoCore) * sizeof(Value *) * count, error);
-    if (*error != ErrorNone)
-        return NULL;
-    block->type = NULL;
-    block->count = count;
-    block->kernel = kernel;
-    MemoryCopy(args, block->args, sizeof(Value *) * count);
-    return block;
-}
-
-Value *DoDecode(Byte **bytes, Error *error) {
+Value *DoDecode(Byte **bytes) {
     Integer32 count = DecodeInteger32(bytes);
-    DoNative *block = DoNativeCreate(count, error);
-    if (*error != ErrorNone) goto returnError;
+    Do *block = DoCreate(count);
+    if (block == NULL)
+        return NULL;
     for (Integer32 index = 0; index < count; index += 1) {
-        block->elements[index] = DecodeValue(bytes, error);
-        if (*error != ErrorNone) goto deallocDo;
+        Value *value = ValueDecode(bytes);
+        if (value == NULL)
+            return DoRelase(block), NULL;
+        block->values[index] = value;
     }
-    return block;
-
-deallocDo:
-    MemoryDealloc(block);
-returnError:
-    return NULL;
+    return ValueCreate(ModelDo, block);
 }
 
-Value *DoCreate(Kernel *kernel, Value **args, Integer8 count, Error *error) {
-    return DoCoreCreate(kernel, args, count, error);
+void DoRelase(void *doData) {
+    MemoryDealloc(doData);
 }
 
-void DoDealloc(Value *doValue) {
-    MemoryDealloc(doValue);
+Bool DoEqual(void *doData, void *otherData) {
+    Do *block = doData;
+    Do *other = otherData;
+    if (block->count != other->count)
+        return FALSE;
+    for (Integer32 index = 0; index < block->count; index += 1)
+        if (!ValueEqual(block->values[index], other->values[index]))
+            return FALSE;
+    return TRUE;
 }
