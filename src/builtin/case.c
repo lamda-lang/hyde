@@ -10,20 +10,25 @@ struct Branch {
 
 struct Case {
     Integer32 count;
+    Value *arg;
     Branch branches[];
 };
 
-static Case *CaseCreate(Integer32 count) {
+static Case *CaseCreate(Value *arg, Integer32 count) {
     Case *block = MemoryAlloc(sizeof(Case) + sizeof(Branch) * count);
     if (block == NULL)
         return NULL;
+    block->arg = arg;
     block->count = count;
     return block;
 }
 
 Value *CaseDecode(Byte **bytes) {
+    Value *arg = ValueDecode(bytes);
+    if (arg == NULL)
+        return NULL;
     Integer32 count = DecodeInteger32(bytes);
-    Case *block = CaseCreate(count);
+    Case *block = CaseCreate(arg, count);
     if (block == NULL)
         return NULL;
     for (Integer32 index = 0; index < count; index += 1) {
