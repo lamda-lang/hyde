@@ -6,6 +6,7 @@ BOOLEAN_FALSE
 
 CASE
   I8:2
+  V:arg
   I32:count
   [V:match V:guard V:value].count
 
