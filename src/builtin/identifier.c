@@ -65,6 +65,11 @@ Bool IdentifierEqual(Identifier *id, Identifier *other) {
     return TRUE;
 }
 
-void IdentifierRelease(Identifier *id) {
-    IdentifierDealloc(id, id->count);
+Size IdentifierRelease(Identifier *id) {
+    Integer8 count = id->count;
+    Size size = sizeof(Identifier) + sizeof(Component *) * count;
+    for (Integer8 index = 0; index < count; index += 1)
+        size += sizeof(Component) + sizeof(Integer8) * id->components[index]->length;
+    IdentifierDealloc(id, count);
+    return size;
 }

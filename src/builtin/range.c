@@ -24,8 +24,9 @@ Value *RangeDecode(Byte **bytes) {
     return RangeCreate(lower, upper);
 }
 
-void RangeRelease(Range *range) {
+Size RangeRelease(Range *range) {
     MemoryDealloc(range);
+    return sizeof(Range);
 }
 
 Bool RangeEqual(Range *range, Range *other) {

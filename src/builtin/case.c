@@ -57,6 +57,8 @@ Bool CaseEqual(Case *block, Case *other) {
     return TRUE;
 }
 
-void CaseRelease(Case *block) {
+Size CaseRelease(Case *block) {
+    Integer32 count = block->count;
     MemoryDealloc(block);
+    return sizeof(Case) + sizeof(Branch) * count;
 }

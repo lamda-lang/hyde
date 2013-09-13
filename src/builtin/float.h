@@ -3,8 +3,10 @@
 
 #include <runtime.h>
 
+typedef struct Float Float;
+
 Value *FloatDecode(Byte **bytes);
 Bool FloatEqual(Float *fpv, Float *other);
-void FloatRelease(Float *fpv);
+Size FloatRelease(Float *fpv);
 
 #endif

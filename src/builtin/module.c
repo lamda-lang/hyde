@@ -54,5 +54,5 @@ Bool ModuleEqual(Module *module, Module *other){
     return TRUE;
 }
 
-void ModuleRelease(Module *module) {
+Size ModuleRelease(Module *module) {
 }

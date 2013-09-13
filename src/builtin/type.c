@@ -27,8 +27,10 @@ Value *TypeDecode(Byte **bytes) {
     return ValueCreate(MODEL_TYPE, type);
 }
 
-void TypeRelease(Type *type) {
+Size TypeRelease(Type *type) {
+    Integer32 count = type->count;
     MemoryDealloc(type);
+    return sizeof(Type) + sizeof(Value *) * count;
 }
 
 Bool TypeEqual(Type *type, Type *other) {

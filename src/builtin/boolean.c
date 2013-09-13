@@ -20,8 +20,9 @@ Value *BooleanDecodeFalse(Byte **bytes) {
     return BooleanCreate(FALSE);
 }
 
-void BooleanRelease(Boolean *boolean) {
+Size BooleanRelease(Boolean *boolean) {
     MemoryDealloc(boolean);
+    return sizeof(Boolean);
 }
 
 Bool BooleanEqual(Boolean *boolean, Boolean *other) {

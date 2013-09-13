@@ -21,6 +21,7 @@ Bool FloatEqual(Float *fpv, Float *other) {
     return fpv->value == other->value;
 }
 
-void FloatRelease(Float *fpv) {
+Size FloatRelease(Float *fpv) {
     MemoryDealloc(fpv);
+    return sizeof(Float);
 }

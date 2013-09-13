@@ -3,8 +3,10 @@
 
 #include <runtime.h>
 
+typedef struct Protocol Protocol;
+
 Value *ProtocolDecode(Byte **bytes);
 Bool ProtocolEqual(Protocol *protocol, Protocol *other);
-void ProtocolRelease(Protocol *protocol);
+Size ProtocolRelease(Protocol *protocol);
 
 #endif

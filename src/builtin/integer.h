@@ -3,8 +3,10 @@
 
 #include <runtime.h>
 
+typedef struct Integer Integer;
+
 Value *IntegerDecode(Byte **bytes);
 Bool IntegerEqual(Integer *integer, Integer *other);
-void IntegerRelease(Integer *integer);
+Size IntegerRelease(Integer *integer);
 
 #endif

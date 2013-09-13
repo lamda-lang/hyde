@@ -32,8 +32,10 @@ Value *ResultDecode(Byte **bytes) {
     return ValueCreate(MODEL_RESULT, result);
 }
 
-void ResultRelease(Result *result) {
+Size ResultRelease(Result *result) {
+    Integer8 count = result->count;
     MemoryDealloc(result);
+    return sizeof(Result) + sizeof(Value *) * count;
 }
 
 Bool ResultEqual(Result *result, Result *other) {

@@ -3,8 +3,10 @@
 
 #include <runtime.h>
 
+typedef struct Identifier Identifier;
+
 Value *IdentifierDecode(Byte **bytes);
 Bool IdentifierEqual(Identifier *identifier, Identifier *other);
-void IdentifierRelease(Identifier *identifier);
+Size IdentifierRelease(Identifier *identifier);
 
 #endif

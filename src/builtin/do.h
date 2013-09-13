@@ -3,8 +3,10 @@
 
 #include <runtime.h>
 
+typedef struct Do Do;
+
 Value *DoDecode(Byte **bytes);
-void DoRelase(Do *block);
+Size DoRelease(Do *block);
 Bool DoEqual(Do *block, Do *other);
 
 #endif

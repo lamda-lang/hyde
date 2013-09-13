@@ -34,8 +34,10 @@ Value *SetDecode(Byte **bytes) {
     return ValueCreate(MODEL_SET, set);
 }
 
-void SetRelease(Set *set) {
+Size SetRelease(Set *set) {
+    Integer32 count = set->count;
     MemoryDealloc(set);
+    return sizeof(Set) + sizeof(Value *) * count;
 }
 
 Bool SetEqual(Set *set, Set *other) {

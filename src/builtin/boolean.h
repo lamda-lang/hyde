@@ -3,9 +3,11 @@
 
 #include <runtime.h>
 
+typedef struct Boolean Boolean;
+
 Value *BooleanDecodeTrue(Byte **bytes);
 Value *BooleanDecodeFalse(Byte **bytes);
-void BooleanRelease(Boolean *boolean);
+Size BooleanRelease(Boolean *boolean);
 Bool BooleanEqual(Boolean *boolean, Boolean *other);
 
 #endif

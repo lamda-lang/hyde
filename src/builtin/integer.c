@@ -21,6 +21,7 @@ Bool IntegerEqual(Integer *integer, Integer *other) {
     return integer->value == other->value;
 }
 
-void IntegerRelease(Integer *integer) {
+Size IntegerRelease(Integer *integer) {
     MemoryDealloc(integer);
+    return sizeof(Integer);
 }

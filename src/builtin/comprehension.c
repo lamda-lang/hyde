@@ -65,6 +65,7 @@ Bool ComprehensionEqual(Comprehension *comprehension, Comprehension *other) {
     return TRUE;
 }
 
-void ComprehensionRelease(Comprehension *comprehension) {
+Size ComprehensionRelease(Comprehension *comprehension) {
     MemoryDealloc(comprehension);
+    return sizeof(Comprehension);
 }

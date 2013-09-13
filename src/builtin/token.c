@@ -28,6 +28,8 @@ Bool TokenEqual(Token *token, Token *other) {
         && MemoryEqual(token->codepoints, other->codepoints, sizeof(Integer8) * token->length);
 }
 
-void TokenRelease(Token *token) {
+Size TokenRelease(Token *token) {
+    Integer8 length = token->length;
     MemoryDealloc(token);
+    return sizeof(Token) + sizeof(Integer8) * length;
 }

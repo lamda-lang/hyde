@@ -3,8 +3,10 @@
 
 #include <runtime.h>
 
+typedef struct Token Token;
+
 Value *TokenDecode(Byte **bytes);
 Bool TokenEqual(Token *token, Token *other);
-void TokenRelease(Token *token);
+Size TokenRelease(Token *token);
 
 #endif

@@ -21,14 +21,16 @@ Value *DoDecode(Byte **bytes) {
     for (Integer32 index = 0; index < count; index += 1) {
         Value *value = ValueDecode(bytes);
         if (value == NULL)
-            return DoRelase(block), NULL;
+            return DoRelease(block), NULL;
         block->values[index] = value;
     }
     return ValueCreate(MODEL_DO, block);
 }
 
-void DoRelase(Do *block) {
+Size DoRelease(Do *block) {
+    Integer32 count = block->count;
     MemoryDealloc(block);
+    return sizeof(Do) + sizeof(Value *) * count;
 }
 
 Bool DoEqual(Do *block, Do *other) {

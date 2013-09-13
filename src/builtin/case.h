@@ -3,8 +3,10 @@
 
 #include <runtime.h>
 
+typedef struct Case Case;
+
 Value *CaseDecode(Byte **bytes);
 Bool CaseEqual(Case *block, Case *other);
-void CaseRelease(Case *block);
+Size CaseRelease(Case *block);
 
 #endif

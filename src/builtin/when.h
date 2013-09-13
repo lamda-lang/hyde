@@ -3,8 +3,10 @@
 
 #include <runtime.h>
 
+typedef struct When When;
+
 Value *WhenDecode(Byte **bytes);
-void WhenRelease(When *block);
+Size WhenRelease(When *block);
 Bool WhenEqual(When *block, When *other);
 
 #endif

@@ -35,8 +35,10 @@ Value *LamdaDecode(Byte **bytes) {
     return ValueCreate(MODEL_LAMDA, lamda);
 }
 
-void LamdaRelease(Lamda *lamda) {
+Size LamdaRelease(Lamda *lamda) {
+    Integer8 count = lamda->count;
     MemoryDealloc(lamda);
+    return sizeof(Lamda) + sizeof(Value *) * count;
 }
 
 Bool LamdaEqual(Lamda *lamda, Lamda *other) {

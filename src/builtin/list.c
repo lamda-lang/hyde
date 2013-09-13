@@ -36,6 +36,8 @@ Bool ListEqual(List *list, List *other) {
     return TRUE;
 }
 
-void ListRelease(List *list) {
+Size ListRelease(List *list) {
+    Integer32 count = list->count;
     MemoryDealloc(list);
+    return sizeof(List) + sizeof(Value *) * count;
 }

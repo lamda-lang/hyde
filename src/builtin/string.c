@@ -23,8 +23,10 @@ Value *StringDecode(Byte **bytes) {
     return ValueCreate(MODEL_STRING, string);
 }
 
-void StringRelease(String *string) {
+Size StringRelease(String *string) {
+    Integer32 length = string->length;
     MemoryDealloc(string);
+    return sizeof(String) + sizeof(Integer32) * length;
 }
 
 Bool StringEqual(String *string, String *other) {

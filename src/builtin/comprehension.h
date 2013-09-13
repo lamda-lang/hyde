@@ -3,10 +3,12 @@
 
 #include <runtime.h>
 
+typedef struct Comprehension Comprehension;
+
 Value *ComprehensionDecodeList(Byte **bytes);
 Value *ComprehensionDecodeMap(Byte **bytes);
 Value *ComprehensionDecodeSet(Byte **bytes);
 Bool ComprehensionEqual(Comprehension *comprehension, Comprehension *other);
-void ComprehensionRelease(Comprehension *comprehension);
+Size ComprehensionRelease(Comprehension *comprehension);
 
 #endif

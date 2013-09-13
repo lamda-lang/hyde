@@ -45,8 +45,10 @@ Value *MapDecode(Byte **bytes) {
     return ValueCreate(MODEL_MAP, map);
 }
 
-void MapRelease(Map *map) {
+Size MapRelease(Map *map) {
+    Integer32 count = map->count;
     MemoryDealloc(map);
+    return sizeof(Map) + sizeof(Pair) * count;
 }
 
 Bool MapEqual(Map *map, Map *other) {

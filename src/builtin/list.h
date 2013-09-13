@@ -3,8 +3,10 @@
 
 #include <runtime.h>
 
+typedef struct List List;
+
 Value *ListDecode(Byte **bytes);
 Bool ListEqual(List *list, List *other);
-void ListRelease(List *list);
+Size ListRelease(List *list);
 
 #endif

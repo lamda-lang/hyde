@@ -3,8 +3,10 @@
 
 #include <runtime.h>
 
+typedef struct Result Result;
+
 Value *ResultDecode(Byte **bytes);
-void ResultRelease(Result *result);
+Size ResultRelease(Result *result);
 Bool ResultEqual(Result *result, Result *other);
 
 #endif

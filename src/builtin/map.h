@@ -3,8 +3,10 @@
 
 #include <runtime.h>
 
+typedef struct Map Map;
+
 Value *MapDecode(Byte **bytes);
-void MapRelease(Map *map);
+Size MapRelease(Map *map);
 Bool MapEqual(Map *map, Map *other); 
 
 #endif

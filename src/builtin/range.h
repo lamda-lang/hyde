@@ -3,8 +3,10 @@
 
 #include <runtime.h>
 
+typedef struct Range Range;
+
 Value *RangeDecode(Byte **bytes);
-void RangeRelease(Range *range);
+Size RangeRelease(Range *range);
 Bool RangeEqual(Range *range, Range *other);
 
 #endif

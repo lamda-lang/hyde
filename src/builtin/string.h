@@ -3,8 +3,10 @@
 
 #include <runtime.h>
 
+typedef struct String String;
+
 Value *StringDecode(Byte **bytes);
-void StringRelease(String *string);
+Size StringRelease(String *string);
 Bool StringEqual(String *string, String *other);
 
 #endif

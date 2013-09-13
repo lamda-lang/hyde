@@ -3,8 +3,10 @@
 
 #include <runtime.h>
 
+typedef struct Lamda Lamda;
+
 Value *LamdaDecode(Byte **bytes);
-void LamdaRelease(Lamda *lamda);
+Size LamdaRelease(Lamda *lamda);
 Bool LamdaEqual(Lamda *lamda, Lamda *other);
 
 #endif

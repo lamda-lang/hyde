@@ -64,3 +64,56 @@ Bool ValueEqual(Value *value, Value *other) {
         return WhenEqual(value->data, other->data);
     }
 }
+
+Size ValueRelease(Value *value) {
+    void *data = value->data;
+    Model model = value->model;
+    MemoryDealloc(value);
+    Size size = sizeof(Value);
+    switch (model) {
+    case MODEL_BOOLEAN:
+        return size + BooleanRelease(data);
+    case MODEL_CASE:
+        return size + CaseRelease(data);
+    case MODEL_COMPREHENSION_LIST:
+        return size + ComprehensionRelease(data);
+    case MODEL_COMPREHENSION_MAP:
+        return size + ComprehensionRelease(data);
+    case MODEL_COMPREHENSION_SET:
+        return size + ComprehensionRelease(data);
+    case MODEL_DO:
+        return size + DoRelease(data);
+    case MODEL_FLOAT:
+        return size + FloatRelease(data);
+    case MODEL_IDENTIFIER:
+        return size + IdentifierRelease(data);
+    case MODEL_INTEGER:
+        return size + IntegerRelease(data);
+    case MODEL_LAMDA:
+        return size + LamdaRelease(data);
+    case MODEL_LIST:
+        return size + ListRelease(data);
+    case MODEL_MAP:
+        return size + MapRelease(data);
+    case MODEL_MODULE:
+        return size + ModuleRelease(data);
+    case MODEL_NIL:
+        return size;
+    case MODEL_PROTOCOL:
+        return size + ProtocolRelease(data);
+    case MODEL_RANGE:
+        return size + RangeRelease(data);
+    case MODEL_RESULT:
+        return size + ResultRelease(data);
+    case MODEL_SET:
+        return size + SetRelease(data);
+    case MODEL_STRING:
+        return size + StringRelease(data);
+    case MODEL_TOKEN:
+        return size + TokenRelease(data);
+    case MODEL_TYPE:
+        return size + TypeRelease(data);
+    case MODEL_WHEN:
+        return size + WhenRelease(data);
+    }
+}

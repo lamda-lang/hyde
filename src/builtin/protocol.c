@@ -50,6 +50,8 @@ Bool ProtocolEqual(Protocol *protocol, Protocol *other) {
     return TRUE;
 }
 
-void ProtocolRelease(Protocol *protocol) {
+Size ProtocolRelease(Protocol *protocol) {
+    Integer32 count = protocol->count;
     MemoryDealloc(protocol);
+    return sizeof(Protocol) + sizeof(Signature) * count;
 }

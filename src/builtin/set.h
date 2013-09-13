@@ -3,8 +3,10 @@
 
 #include <runtime.h>
 
+typedef struct Set Set;
+
 Value *SetDecode(Byte **bytes);
-void SetRelease(Set *set);
+Size SetRelease(Set *set);
 Bool SetEqual(Set *set, Set *other);
 
 #endif

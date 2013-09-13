@@ -38,8 +38,10 @@ Value *WhenDecode(Byte **bytes) {
     return ValueCreate(MODEL_WHEN, block);
 }
 
-void WhenRelease(When *block) {
+Size WhenRelease(When *block) {
+    Integer32 count = block->count;
     MemoryDealloc(block);
+    return sizeof(When) + sizeof(Branch) * count;
 }
 
 Bool WhenEqual(When *block, When *other) {

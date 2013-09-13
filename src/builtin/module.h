@@ -3,8 +3,10 @@
 
 #include <runtime.h>
 
+typedef struct Module Module;
+
 Value *ModuleDecode(Byte **bytes);
 Bool ModuleEqual(Module *module, Module *other);
-void ModuleRelease(Module *module);
+Size ModuleRelease(Module *module);
 
 #endif

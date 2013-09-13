@@ -3,8 +3,10 @@
 
 #include <runtime.h>
 
+typedef struct Type Type;
+
 Value *TypeDecode(Byte **bytes);
-void TypeRelease(Type *type);
+Size TypeRelease(Type *type);
 Bool TypeEqual(Type *type, Type *other);
 
 #endif
