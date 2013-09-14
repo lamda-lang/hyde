@@ -35,6 +35,9 @@ Value *LamdaDecode(Byte **bytes) {
     return ValueCreate(MODEL_LAMDA, lamda);
 }
 
+Value *LamdaEval(Lamda *lamda, Value *context) {
+}
+
 Size LamdaRelease(Lamda *lamda) {
     Integer8 count = lamda->count;
     MemoryDealloc(lamda);

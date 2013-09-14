@@ -38,6 +38,51 @@ Value *ValueCreate(Model model, void *data) {
     return value;
 }
 
+Value *ValueEval(Value *value, Value *context) {
+    switch (value->model) {
+    case MODEL_BOOLEAN:
+        return value;
+    case MODEL_CASE:
+        return CaseEval(value->data, context);
+    case MODEL_COMPREHENSION:
+        return ComprehensionEval(value->data, context);
+    case MODEL_DO:
+        return DoEval(value->data, context);
+    case MODEL_FLOAT:
+        return value;
+    case MODEL_IDENTIFIER:
+        return IdentifierEval(value->data, context);
+    case MODEL_INTEGER:
+        return value;
+    case MODEL_LAMDA:
+        return LamdaEval(value->data, context);
+    case MODEL_LIST:
+        return ListEval(value->data, context);
+    case MODEL_MAP:
+        return MapEval(value->data, context);
+    case MODEL_MODULE:
+        return ModuleEval(value->data, context);
+    case MODEL_NIL:
+        return value;
+    case MODEL_PROTOCOL:
+        return value;
+    case MODEL_RANGE:
+        return RangeEval(value->data, context);
+    case MODEL_RESULT:
+        return ResultEval(value->data, context);
+    case MODEL_SET:
+        return SetEval(value->data, context);
+    case MODEL_STRING:
+        return value;
+    case MODEL_TOKEN:
+        return value;
+    case MODEL_TYPE:
+        return value;
+    case MODEL_WHEN:
+        return WhenEval(value->data, context);
+    }
+}
+
 Value *ValueDecode(Byte **bytes) {
     Integer8 opcode = DecodeInteger8(bytes);
     switch (opcode) {
@@ -48,11 +93,11 @@ Value *ValueDecode(Byte **bytes) {
     case OPCODE_CASE:
         return CaseDecode(bytes);
     case OPCODE_COMPREHENSION_LIST:
-        return ComprehensionDecodeList(bytes);
+        return ComprehensionDecode(bytes);
     case OPCODE_COMPREHENSION_MAP:
-        return ComprehensionDecodeMap(bytes);
+        return ComprehensionDecode(bytes);
     case OPCODE_COMPREHENSION_SET:
-        return ComprehensionDecodeSet(bytes);
+        return ComprehensionDecode(bytes);
     case OPCODE_DO:
         return DoDecode(bytes);
     case OPCODE_FLOAT:
@@ -98,11 +143,7 @@ Bool ValueEqual(Value *value, Value *other) {
         return BooleanEqual(value->data, other->data);
     case MODEL_CASE:
         return CaseEqual(value->data, other->data);
-    case MODEL_COMPREHENSION_LIST:
-        return ComprehensionEqual(value->data, other->data);
-    case MODEL_COMPREHENSION_MAP:
-        return ComprehensionEqual(value->data, other->data);
-    case MODEL_COMPREHENSION_SET:
+    case MODEL_COMPREHENSION:
         return ComprehensionEqual(value->data, other->data);
     case MODEL_DO:
         return DoEqual(value->data, other->data);
@@ -151,11 +192,7 @@ Size ValueRelease(Value *value) {
         return size + BooleanRelease(data);
     case MODEL_CASE:
         return size + CaseRelease(data);
-    case MODEL_COMPREHENSION_LIST:
-        return size + ComprehensionRelease(data);
-    case MODEL_COMPREHENSION_MAP:
-        return size + ComprehensionRelease(data);
-    case MODEL_COMPREHENSION_SET:
+    case MODEL_COMPREHENSION:
         return size + ComprehensionRelease(data);
     case MODEL_DO:
         return size + DoRelease(data);

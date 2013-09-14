@@ -48,6 +48,9 @@ Value *CaseDecode(Byte **bytes) {
     return ValueCreate(MODEL_CASE, block);
 }
 
+Value *CaseEval(Case *block, Value *context) {
+}
+
 Bool CaseEqual(Case *block, Case *other) {
     if (block->count != other->count)
         return FALSE;

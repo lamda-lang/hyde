@@ -27,6 +27,9 @@ Value *DoDecode(Byte **bytes) {
     return ValueCreate(MODEL_DO, block);
 }
 
+Value *DoEval(Do *block, Value *context) {
+}
+
 Size DoRelease(Do *block) {
     Integer32 count = block->count;
     MemoryDealloc(block);

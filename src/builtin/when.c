@@ -38,6 +38,9 @@ Value *WhenDecode(Byte **bytes) {
     return ValueCreate(MODEL_WHEN, block);
 }
 
+Value *WhenEval(When *block, Value *context) {
+}
+
 Size WhenRelease(When *block) {
     Integer32 count = block->count;
     MemoryDealloc(block);

@@ -50,6 +50,9 @@ Value *ModuleDecode(Byte **bytes) {
     return NULL;
 }
 
+Value *ModuleEval(Module *module, Value *context) {
+}
+
 Bool ModuleEqual(Module *module, Module *other){
     return TRUE;
 }

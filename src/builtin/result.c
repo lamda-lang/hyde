@@ -32,6 +32,9 @@ Value *ResultDecode(Byte **bytes) {
     return ValueCreate(MODEL_RESULT, result);
 }
 
+Value *ResultEval(Result *result, Value *context) {
+}
+
 Size ResultRelease(Result *result) {
     Integer8 count = result->count;
     MemoryDealloc(result);

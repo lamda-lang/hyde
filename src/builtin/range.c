@@ -24,6 +24,9 @@ Value *RangeDecode(Byte **bytes) {
     return RangeCreate(lower, upper);
 }
 
+Value *RangeEval(Range *range, Value *context) {
+}
+
 Size RangeRelease(Range *range) {
     MemoryDealloc(range);
     return sizeof(Range);

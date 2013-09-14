@@ -5,9 +5,8 @@
 
 typedef struct Comprehension Comprehension;
 
-Value *ComprehensionDecodeList(Byte **bytes);
-Value *ComprehensionDecodeMap(Byte **bytes);
-Value *ComprehensionDecodeSet(Byte **bytes);
+Value *ComprehensionDecode(Byte **bytes);
+Value *ComprehensionEval(Comprehension *comprehension, Value *context);
 Bool ComprehensionEqual(Comprehension *comprehension, Comprehension *other);
 Size ComprehensionRelease(Comprehension *comprehension);
 

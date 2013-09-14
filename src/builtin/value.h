@@ -25,9 +25,7 @@
 typedef enum {
     MODEL_BOOLEAN,
     MODEL_CASE,
-    MODEL_COMPREHENSION_LIST,
-    MODEL_COMPREHENSION_MAP,
-    MODEL_COMPREHENSION_SET,
+    MODEL_COMPREHENSION,
     MODEL_DO,
     MODEL_FLOAT,
     MODEL_IDENTIFIER,
@@ -48,8 +46,9 @@ typedef enum {
 } Model;
 
 Value *ValueCreate(Model model, void *data);
-Bool ValueEqual(Value *value, Value *other);
 Value *ValueDecode(Byte **bytes);
+Value *ValueEval(Value *value, Value *context);
+Bool ValueEqual(Value *value, Value *other);
 Size ValueRelease(Value *value);
 
 #endif

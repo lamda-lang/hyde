@@ -45,6 +45,9 @@ Value *MapDecode(Byte **bytes) {
     return ValueCreate(MODEL_MAP, map);
 }
 
+Value *MapEval(Map *map, Value *context) {
+}
+
 Size MapRelease(Map *map) {
     Integer32 count = map->count;
     MemoryDealloc(map);

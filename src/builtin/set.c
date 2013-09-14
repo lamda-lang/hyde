@@ -34,6 +34,9 @@ Value *SetDecode(Byte **bytes) {
     return ValueCreate(MODEL_SET, set);
 }
 
+Value *SetEval(Set *set, Value *context) {
+}
+
 Size SetRelease(Set *set) {
     Integer32 count = set->count;
     MemoryDealloc(set);

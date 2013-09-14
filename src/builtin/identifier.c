@@ -56,6 +56,9 @@ Value *IdentifierDecode(Byte **bytes) {
     return ValueCreate(MODEL_IDENTIFIER, id);
 }
 
+Value *IdentifierEval(Identifier *id, Value *context) {
+}
+
 Bool IdentifierEqual(Identifier *id, Identifier *other) {
     if (id->count != other->count)
         return FALSE;

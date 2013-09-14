@@ -1,26 +1,24 @@
 #include <builtin/comprehension.h>
 
 struct Comprehension {
-    Value *key;
     Value *value;
     Value *element;
     Value *enumerable;
     Value *guard;
 };
 
-static Value *ComprehensionCreate(Model model, Value *key, Value *value, Value *element, Value *enumerable, Value *guard) {
+static Value *ComprehensionCreate(Value *value, Value *element, Value *enumerable, Value *guard) {
     Comprehension *comprehension = MemoryAlloc(sizeof(Comprehension));
     if (comprehension == NULL)
         return NULL;
-    comprehension->key = key;
     comprehension->value = value;
     comprehension->element = element;
     comprehension->enumerable = enumerable;
     comprehension->guard = guard;
-    return ValueCreate(model, comprehension);
+    return ValueCreate(MODEL_COMPREHENSION, comprehension);
 }
 
-static Value *ComprehensionCommonDecode(Byte **bytes, Model model, Value *key) {
+Value *ComprehensionDecode(Byte **bytes) {
     Value *value = ValueDecode(bytes);
     if (value == NULL)
         return NULL;
@@ -33,27 +31,13 @@ static Value *ComprehensionCommonDecode(Byte **bytes, Model model, Value *key) {
     Value *guard = ValueDecode(bytes);
     if (guard == NULL)
         return NULL;
-    return ComprehensionCreate(model, key, value, element, enumerable, guard);
+    return ComprehensionCreate(value, element, enumerable, guard);
 }
 
-Value *ComprehensionDecodeList(Byte **bytes) {
-    return ComprehensionCommonDecode(bytes, MODEL_COMPREHENSION_LIST, NULL);
-}
-
-Value *ComprehensionDecodeMap(Byte **bytes) {
-    Value *key = ValueDecode(bytes);
-    if (key == NULL)
-        return NULL;
-    return ComprehensionCommonDecode(bytes, MODEL_COMPREHENSION_MAP, key);
-}
-
-Value *ComprehensionDecodeSet(Byte **bytes) {
-    return ComprehensionCommonDecode(bytes, MODEL_COMPREHENSION_SET, NULL);
+Value *ComprehensionEval(Comprehension *comprehension, Value *context) {
 }
 
 Bool ComprehensionEqual(Comprehension *comprehension, Comprehension *other) {
-    if (!ValueEqual(comprehension->key, other->key))
-        return FALSE;
     if (!ValueEqual(comprehension->value, other->value))
         return FALSE;
     if (!ValueEqual(comprehension->element, other->element))

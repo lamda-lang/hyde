@@ -27,6 +27,9 @@ Value *ListDecode(Byte **bytes) {
     return ValueCreate(MODEL_LIST, list);
 }
 
+Value *ListEval(List *list, Value *context) {
+}
+
 Bool ListEqual(List *list, List *other) {
     if (list->count != other->count)
         return FALSE;
