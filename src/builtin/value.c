@@ -1,5 +1,29 @@
 #include <builtin/value.h>
 
+#define OPCODE_BOOLEAN_TRUE 0
+#define OPCODE_BOOLEAN_FALSE 1
+#define OPCODE_CASE 2
+#define OPCODE_COMPREHENSION_LIST 3
+#define OPCODE_COMPREHENSION_MAP 4
+#define OPCODE_COMPREHENSION_SET 5
+#define OPCODE_DO 6
+#define OPCODE_FLOAT 7
+#define OPCODE_IDENTIFIER 8
+#define OPCODE_INTEGER 9
+#define OPCODE_LAMDA 10
+#define OPCODE_LIST 11
+#define OPCODE_MAP 12
+#define OPCODE_MODULE 13
+#define OPCODE_NIL 14
+#define OPCODE_PROTOCOL 15
+#define OPCODE_RANGE 16
+#define OPCODE_RESULT 17
+#define OPCODE_SET 18
+#define OPCODE_STRING 19
+#define OPCODE_TOKEN 20
+#define OPCODE_TYPE 21
+#define OPCODE_WHEN 22
+
 struct Value {
     void *data;
     Model model;
@@ -12,6 +36,58 @@ Value *ValueCreate(Model model, void *data) {
     value->model = model;
     value->data = data;
     return value;
+}
+
+Value *ValueDecode(Byte **bytes) {
+    Integer8 opcode = DecodeInteger8(bytes);
+    switch (opcode) {
+    case OPCODE_BOOLEAN_TRUE:
+        return BooleanCreate(TRUE);
+    case OPCODE_BOOLEAN_FALSE:
+        return BooleanCreate(FALSE);
+    case OPCODE_CASE:
+        return CaseDecode(bytes);
+    case OPCODE_COMPREHENSION_LIST:
+        return ComprehensionDecodeList(bytes);
+    case OPCODE_COMPREHENSION_MAP:
+        return ComprehensionDecodeMap(bytes);
+    case OPCODE_COMPREHENSION_SET:
+        return ComprehensionDecodeSet(bytes);
+    case OPCODE_DO:
+        return DoDecode(bytes);
+    case OPCODE_FLOAT:
+        return FloatDecode(bytes);
+    case OPCODE_IDENTIFIER:
+        return IdentifierDecode(bytes);
+    case OPCODE_INTEGER:
+        return IntegerDecode(bytes);
+    case OPCODE_LAMDA:
+        return LamdaDecode(bytes);
+    case OPCODE_LIST:
+        return ListDecode(bytes);
+    case OPCODE_MAP:
+        return MapDecode(bytes);
+    case OPCODE_MODULE:
+        return ModuleDecode(bytes);
+    case OPCODE_NIL:
+        return ValueCreate(MODEL_NIL, NULL);
+    case OPCODE_PROTOCOL:
+        return ProtocolDecode(bytes);
+    case OPCODE_RANGE:
+        return RangeDecode(bytes);
+    case OPCODE_RESULT:
+        return ResultDecode(bytes);
+    case OPCODE_SET:
+        return SetDecode(bytes);
+    case OPCODE_STRING:
+        return StringDecode(bytes);
+    case OPCODE_TOKEN:
+        return TokenDecode(bytes);
+    case OPCODE_TYPE:
+        return TypeDecode(bytes);
+    case OPCODE_WHEN:
+        return WhenDecode(bytes);
+    }
 }
 
 Bool ValueEqual(Value *value, Value *other) {

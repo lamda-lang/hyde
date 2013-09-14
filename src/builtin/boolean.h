@@ -5,8 +5,7 @@
 
 typedef struct Boolean Boolean;
 
-Value *BooleanDecodeTrue(Byte **bytes);
-Value *BooleanDecodeFalse(Byte **bytes);
+Value *BooleanCreate(Bool truth);
 Size BooleanRelease(Boolean *boolean);
 Bool BooleanEqual(Boolean *boolean, Boolean *other);
 
