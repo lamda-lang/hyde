@@ -13,7 +13,7 @@ CASE
 COMPREHENSION_LIST
   I8:3
   V:value
-  V:variable
+  V:value_id
   V:enumerable
   V:guard
 
@@ -21,21 +21,22 @@ COMPREHENSION_MAP
   I8:4
   V:key
   V:value
-  V:variable
+  V:key_id
+  V:value_id
   V:enumerable
   V:guard
 
 COMPREHENSION_SET
   I8:5
   V:value
-  V:variable
+  V:value_id
   V:enumerable
   V:guard
 
 DO
   I8:6
   I32:count
-  [V:element].count
+  [V:name V:value].count
 
 FLOAT
   I8:7
@@ -52,15 +53,14 @@ INTEGER
 
 LAMBDA
   I8:10
-  I8:arity
   V:value
-  I8:count
-  [V:upvalue].count
+  I8:arity
+  [V:arg].arity
 
 LIST
   I8:11
   I32:count
-  [V:element].count
+  [V:value].count
 
 MAP
   I8:12
@@ -93,7 +93,7 @@ RESULT
 SET
   I8:18
   I32:count
-  [V:element].count
+  [V:value].count
 
 STRING
   I8:19
