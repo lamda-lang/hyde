@@ -28,15 +28,25 @@ Value *ListDecode(Byte **bytes) {
 }
 
 Value *ListEval(List *list, Value *context) {
+    List *new = ListCreate(list->count);
+    if (new == NULL)
+        return NULL;
+    for (Integer32 index = 0; index < list->count; index += 1) {
+        Value *value = ValueEval(list->values[index], context);
+        if (value == NULL)
+            return ListRelease(new), NULL;
+        new->values[index] = value;
+    }
+    return ValueCreate(MODEL_LIST, new);
 }
 
-Bool ListEqual(List *list, List *other) {
+Value *ListEqual(List *list, List *other) {
     if (list->count != other->count)
-        return FALSE;
+        return VALUE_FALSE;
     for (Integer32 index = 0; index < list->count; index += 1)
-        if (!ValueEqual(list->values[index], other->values[index]))
-            return FALSE;
-    return TRUE;
+        if (ValueEqual(list->values[index], other->values[index]) == VALUE_FALSE)
+            return VALUE_FALSE;
+    return VALUE_TRUE;
 }
 
 Size ListRelease(List *list) {

@@ -49,20 +49,36 @@ Value *CaseDecode(Byte **bytes) {
 }
 
 Value *CaseEval(Case *block, Value *context) {
+    Value *arg = ValueEval(block->arg, context);
+    if (arg == NULL)
+        return NULL;
+    for (Integer32 index = 0; index < block->count; index += 1) {
+        Value *match = ValueEval(block->branches[index].match, context);
+        if (match == NULL)
+            return NULL;
+        if (ValueEqual(arg, match) == VALUE_FALSE)
+            continue;
+        Value *guard = ValueEval(block->branches[index].guard, context);
+        if (guard == NULL)
+            return NULL;
+        if (guard == VALUE_TRUE)
+            return ValueEval(block->branches[index].value, context);
+    }
+    return VALUE_NIL;
 }
 
-Bool CaseEqual(Case *block, Case *other) {
+Value *CaseEqual(Case *block, Case *other) {
     if (block->count != other->count)
-        return FALSE;
+        return VALUE_FALSE;
     for (Integer32 index = 0; index < block->count; index += 1) {
-        if (!ValueEqual(block->branches[index].match, other->branches[index].match))
-            return FALSE;
-        if (!ValueEqual(block->branches[index].guard, other->branches[index].guard))
-            return FALSE;
-        if (!ValueEqual(block->branches[index].value, other->branches[index].value))
-            return FALSE;
+        if (ValueEqual(block->branches[index].match, other->branches[index].match) == VALUE_FALSE)
+            return VALUE_FALSE;
+        if (ValueEqual(block->branches[index].guard, other->branches[index].guard) == VALUE_FALSE)
+            return VALUE_FALSE;
+        if (ValueEqual(block->branches[index].value, other->branches[index].value) == VALUE_FALSE)
+            return VALUE_FALSE;
     }
-    return TRUE;
+    return VALUE_TRUE;
 }
 
 Size CaseRelease(Case *block) {

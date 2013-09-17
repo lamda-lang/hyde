@@ -56,16 +56,13 @@ Value *IdentifierDecode(Byte **bytes) {
     return ValueCreate(MODEL_IDENTIFIER, id);
 }
 
-Value *IdentifierEval(Identifier *id, Value *context) {
-}
-
-Bool IdentifierEqual(Identifier *id, Identifier *other) {
+Value *IdentifierEqual(Identifier *id, Identifier *other) {
     if (id->count != other->count)
-        return FALSE;
+        return VALUE_FALSE;
     for (Integer8 index = 0; index < id->count; index += 1)
         if (!IdentifierComponentEqual(id->components[index], other->components[index]))
-            return FALSE;
-    return TRUE;
+            return VALUE_FALSE;
+    return VALUE_TRUE;
 }
 
 Size IdentifierRelease(Identifier *id) {

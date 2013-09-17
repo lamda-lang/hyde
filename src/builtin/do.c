@@ -1,12 +1,24 @@
 #include <builtin/do.h>
 
-struct Do {
-  Integer32 count;
-  Value *values[];
+typedef struct Statement Statement;
+
+struct Statement {
+    Value *name;
+    Value *value;
 };
 
+struct Do {
+  Integer32 count;
+  Statement statements[];
+};
+
+static Size DoSize(Integer32 count) {
+    return sizeof(Do) * sizeof(Statement) * count;
+}
+
 static Do *DoCreate(Integer32 count) {
-    Do *block = MemoryAlloc(sizeof(Do) * sizeof(Value *) * count);
+    Size size = DoSize(count);
+    Do *block = MemoryAlloc(size);
     if (block == NULL)
         return NULL;
     block->count = count;
@@ -19,28 +31,44 @@ Value *DoDecode(Byte **bytes) {
     if (block == NULL)
         return NULL;
     for (Integer32 index = 0; index < count; index += 1) {
+        Value *name = ValueDecode(bytes);
+        if (name == NULL)
+            return DoRelease(block), NULL;
         Value *value = ValueDecode(bytes);
         if (value == NULL)
             return DoRelease(block), NULL;
-        block->values[index] = value;
+        block->statements[index].name = name;
+        block->statements[index].value = value;
     }
     return ValueCreate(MODEL_DO, block);
 }
 
 Value *DoEval(Do *block, Value *context) {
+    Value *value = NULL;
+    for (Integer32 index = 0; index < block->count; index += 1) {
+        value = ValueEval(block->statements[index].value, context);
+        if (value == NULL)
+            return NULL;
+        if (block->statements[index].name != VALUE_NIL)
+            context = ValueSetValueForKey(context, value, block->statements[index].name);
+    }
+    return value;
+}
+
+Value *DoEqual(Do *block, Do *other) {
+    if (block->count != other->count)
+        return VALUE_FALSE;
+    for (Integer32 index = 0; index < block->count; index += 1) {
+        if (ValueEqual(block->statements[index].name, other->statements[index].name) == VALUE_FALSE)
+            return VALUE_FALSE;
+        if (ValueEqual(block->statements[index].value, other->statements[index].value) == VALUE_FALSE)
+            return VALUE_FALSE;
+    }
+    return VALUE_TRUE;
 }
 
 Size DoRelease(Do *block) {
-    Integer32 count = block->count;
+    Size size = DoSize(block->count);
     MemoryDealloc(block);
-    return sizeof(Do) + sizeof(Value *) * count;
-}
-
-Bool DoEqual(Do *block, Do *other) {
-    if (block->count != other->count)
-        return FALSE;
-    for (Integer32 index = 0; index < block->count; index += 1)
-        if (!ValueEqual(block->values[index], other->values[index]))
-            return FALSE;
-    return TRUE;
+    return size;
 }

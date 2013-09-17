@@ -23,9 +23,10 @@ Value *TokenDecode(Byte **bytes) {
     return ValueCreate(MODEL_TOKEN, token);
 }
 
-Bool TokenEqual(Token *token, Token *other) {
-    return token->length != other->length
-        && MemoryEqual(token->codepoints, other->codepoints, sizeof(Integer8) * token->length);
+Value *TokenEqual(Token *token, Token *other) {
+    if (token->length != other->length)
+        return VALUE_FALSE;
+    return MemoryEqual(token->codepoints, other->codepoints, sizeof(Integer8) * token->length) ? VALUE_TRUE : VALUE_FALSE;
 }
 
 Size TokenRelease(Token *token) {

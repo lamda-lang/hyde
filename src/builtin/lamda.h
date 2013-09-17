@@ -7,7 +7,7 @@ typedef struct Lamda Lamda;
 
 Value *LamdaDecode(Byte **bytes);
 Value *LamdaEval(Lamda *lamda, Value *context);
+Value *LamdaEqual(Lamda *lamda, Lamda *other);
 Size LamdaRelease(Lamda *lamda);
-Bool LamdaEqual(Lamda *lamda, Lamda *other);
 
 #endif

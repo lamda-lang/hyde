@@ -2,30 +2,10 @@
 #define BUILTIN_VALUE_H
 
 #include <runtime.h>
-#include <builtin/boolean.h>
-#include <builtin/case.h>
-#include <builtin/comprehension.h>
-#include <builtin/do.h>
-#include <builtin/float.h>
-#include <builtin/identifier.h>
-#include <builtin/integer.h>
-#include <builtin/lamda.h>
-#include <builtin/list.h>
-#include <builtin/map.h>
-#include <builtin/module.h>
-#include <builtin/protocol.h>
-#include <builtin/range.h>
-#include <builtin/result.h>
-#include <builtin/set.h>
-#include <builtin/string.h>
-#include <builtin/token.h>
-#include <builtin/type.h>
-#include <builtin/when.h>
 
 typedef enum {
     MODEL_BOOLEAN,
     MODEL_CASE,
-    MODEL_COMPREHENSION,
     MODEL_DO,
     MODEL_FLOAT,
     MODEL_IDENTIFIER,
@@ -48,7 +28,14 @@ typedef enum {
 Value *ValueCreate(Model model, void *data);
 Value *ValueDecode(Byte **bytes);
 Value *ValueEval(Value *value, Value *context);
-Bool ValueEqual(Value *value, Value *other);
+Value *ValueEqual(Value *value, Value *other);
+Value *ValueSetValueForKey(Value *collection, Value *value, Value *key);
+Value *ValueGetValueForKey(Value *collection, Value *key);
+Value *ValueCall(Value *value, Value **args, Integer8 count);
 Size ValueRelease(Value *value);
+
+extern Value *VALUE_TRUE;
+extern Value *VALUE_FALSE;
+extern Value *VALUE_NIL;
 
 #endif

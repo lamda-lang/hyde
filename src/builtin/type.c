@@ -27,17 +27,17 @@ Value *TypeDecode(Byte **bytes) {
     return ValueCreate(MODEL_TYPE, type);
 }
 
+Value *TypeEqual(Type *type, Type *other) {
+    if (type->count != other->count)
+        return VALUE_FALSE;
+    for (Integer32 index = 0; index < type->count; index += 1) 
+        if (ValueEqual(type->members[index], other->members[index]) == VALUE_FALSE)
+            return VALUE_FALSE;
+    return VALUE_TRUE;
+}
+
 Size TypeRelease(Type *type) {
     Integer32 count = type->count;
     MemoryDealloc(type);
     return sizeof(Type) + sizeof(Value *) * count;
-}
-
-Bool TypeEqual(Type *type, Type *other) {
-    if (type->count != other->count)
-        return FALSE;
-    for (Integer32 index = 0; index < type->count; index += 1) 
-        if (!ValueEqual(type->members[index], other->members[index]))
-            return FALSE;
-    return TRUE;
 }

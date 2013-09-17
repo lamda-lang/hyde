@@ -39,22 +39,30 @@ Value *WhenDecode(Byte **bytes) {
 }
 
 Value *WhenEval(When *block, Value *context) {
+    for (Integer32 index = 0; index < block->count; index += 1) {
+        Value *condition = ValueEval(block->branches[index].condition, context);
+        if (condition == NULL)
+            return NULL;
+        if (condition == VALUE_TRUE)
+            return ValueEval(block->branches[index].value, context);
+    }
+    return VALUE_NIL;
+}
+
+Value *WhenEqual(When *block, When *other) {
+    if (block->count != other->count)
+        return VALUE_FALSE;
+    for (Integer32 index = 0; index < block->count; index += 1) {
+        if (ValueEqual(block->branches[index].condition, other->branches[index].condition) == VALUE_FALSE)
+            return VALUE_FALSE;
+        if (ValueEqual(block->branches[index].value, other->branches[index].value) == VALUE_FALSE)
+            return VALUE_FALSE;
+    }
+    return VALUE_TRUE;
 }
 
 Size WhenRelease(When *block) {
     Integer32 count = block->count;
     MemoryDealloc(block);
     return sizeof(When) + sizeof(Branch) * count;
-}
-
-Bool WhenEqual(When *block, When *other) {
-    if (block->count != other->count)
-        return FALSE;
-    for (Integer32 index = 0; index < block->count; index += 1) {
-        if (!ValueEqual(block->branches[index].condition, other->branches[index].condition))
-            return FALSE;
-        if (!ValueEqual(block->branches[index].value, other->branches[index].value))
-            return FALSE;
-    }
-    return TRUE;
 }

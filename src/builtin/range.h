@@ -7,7 +7,7 @@ typedef struct Range Range;
 
 Value *RangeDecode(Byte **bytes);
 Value *RangeEval(Range *range, Value *context);
+Value *RangeEqual(Range *range, Range *other);
 Size RangeRelease(Range *range);
-Bool RangeEqual(Range *range, Range *other);
 
 #endif

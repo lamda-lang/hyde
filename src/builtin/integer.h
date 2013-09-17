@@ -6,7 +6,7 @@
 typedef struct Integer Integer;
 
 Value *IntegerDecode(Byte **bytes);
-Bool IntegerEqual(Integer *integer, Integer *other);
+Value *IntegerEqual(Integer *integer, Integer *other);
 Size IntegerRelease(Integer *integer);
 
 #endif

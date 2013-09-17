@@ -1,9 +1,17 @@
 #include <stdlib.h>
 #include <string.h>
-#include <kernel/memory.h>
+#include <posix/memory.h>
 
 void *MemoryAlloc(Size size) {
     return malloc(size);
+}
+
+void *MemoryClone(void *buffer, Size size) {
+    void *clone = malloc(size);
+    if (clone == NULL)
+        return NULL;
+    memcpy(clone, buffer, size);
+    return clone;
 }
 
 void MemoryDealloc(void *buffer) {

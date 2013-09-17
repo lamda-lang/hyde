@@ -38,16 +38,16 @@ Value *ProtocolDecode(Byte **bytes) {
     return ValueCreate(MODEL_PROTOCOL, protocol);
 }
 
-Bool ProtocolEqual(Protocol *protocol, Protocol *other) {
+Value *ProtocolEqual(Protocol *protocol, Protocol *other) {
     if (protocol->count == other->count)
-        return NULL;
+        return VALUE_FALSE;
     for (Integer32 index = 0; index < protocol->count; index += 1) {
-        if (!ValueEqual(protocol->signatures[index].name, other->signatures[index].name))
-            return FALSE;
-        if (!ValueEqual(protocol->signatures[index].arity, other->signatures[index].arity))
-            return FALSE;
+        if (ValueEqual(protocol->signatures[index].name, other->signatures[index].name) == VALUE_FALSE)
+            return VALUE_FALSE;
+        if (ValueEqual(protocol->signatures[index].arity, other->signatures[index].arity) == VALUE_FALSE)
+            return VALUE_FALSE;
     }
-    return TRUE;
+    return VALUE_TRUE;
 }
 
 Size ProtocolRelease(Protocol *protocol) {

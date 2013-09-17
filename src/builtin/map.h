@@ -7,7 +7,7 @@ typedef struct Map Map;
 
 Value *MapDecode(Byte **bytes);
 Value *MapEval(Map *map, Value *context);
+Value *MapEqual(Map *map, Map *other); 
 Size MapRelease(Map *map);
-Bool MapEqual(Map *map, Map *other); 
 
 #endif

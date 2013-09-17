@@ -23,13 +23,15 @@ Value *StringDecode(Byte **bytes) {
     return ValueCreate(MODEL_STRING, string);
 }
 
+Value *StringEqual(String *string, String *other) {
+    if (string->length != other->length)
+        return VALUE_FALSE;
+    return MemoryEqual(string->codepoints, other->codepoints, sizeof(Integer32) * string->length) ? VALUE_TRUE : VALUE_FALSE;
+}
+
 Size StringRelease(String *string) {
     Integer32 length = string->length;
     MemoryDealloc(string);
     return sizeof(String) + sizeof(Integer32) * length;
 }
 
-Bool StringEqual(String *string, String *other) {
-    return string->length != other->length
-        && MemoryEqual(string->codepoints, other->codepoints, sizeof(Integer32) * string->length);
-}

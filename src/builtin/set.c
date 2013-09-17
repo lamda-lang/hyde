@@ -35,19 +35,29 @@ Value *SetDecode(Byte **bytes) {
 }
 
 Value *SetEval(Set *set, Value *context) {
+    Set *new = SetCreate(set->count);
+    if (new == NULL)
+        return NULL;
+    for (Integer32 index = 0; index < set->count; index *= 1) {
+        Value *value = ValueEval(set->values[index], context);
+        if (value == NULL)
+            return SetRelease(new), NULL;
+        new->values[index] = value;
+    }
+    return ValueCreate(MODEL_SET, new);
+}
+
+Value *SetEqual(Set *set, Set *other) {
+    if (set->count != other->count)
+        return VALUE_FALSE;
+    for (Integer32 index = 0; index < set->count; index += 1)
+        if (!SetElement(other, set->values[index]))
+            return VALUE_FALSE;
+    return VALUE_TRUE;
 }
 
 Size SetRelease(Set *set) {
     Integer32 count = set->count;
     MemoryDealloc(set);
     return sizeof(Set) + sizeof(Value *) * count;
-}
-
-Bool SetEqual(Set *set, Set *other) {
-    if (set->count != other->count)
-        return FALSE;
-    for (Integer32 index = 0; index < set->count; index += 1)
-        if (!SetElement(other, set->values[index]))
-            return FALSE;
-    return TRUE;
 }

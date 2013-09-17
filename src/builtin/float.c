@@ -5,11 +5,11 @@ struct Float {
 };
 
 static Value *FloatCreate(Float64 value) {
-    Float *fpv = MemoryAlloc(sizeof(Float));
-    if (fpv == NULL)
+    Float *fpn = MemoryAlloc(sizeof(Float));
+    if (fpn == NULL)
         return NULL;
-    fpv->value = value;
-    return ValueCreate(MODEL_FLOAT, fpv);
+    fpn->value = value;
+    return ValueCreate(MODEL_FLOAT, fpn);
 }
 
 Value *FloatDecode(Byte **bytes) {
@@ -17,11 +17,11 @@ Value *FloatDecode(Byte **bytes) {
     return FloatCreate(value);
 }
 
-Bool FloatEqual(Float *fpv, Float *other) {
-    return fpv->value == other->value;
+Value *FloatEqual(Float *fpn, Float *other) {
+    return fpn->value == other->value ? VALUE_TRUE : VALUE_FALSE;
 }
 
-Size FloatRelease(Float *fpv) {
-    MemoryDealloc(fpv);
+Size FloatRelease(Float *fpn) {
+    MemoryDealloc(fpn);
     return sizeof(Float);
 }

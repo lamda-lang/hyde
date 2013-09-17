@@ -3,9 +3,6 @@
 #define OPCODE_BOOLEAN_TRUE 0
 #define OPCODE_BOOLEAN_FALSE 1
 #define OPCODE_CASE 2
-#define OPCODE_COMPREHENSION_LIST 3
-#define OPCODE_COMPREHENSION_MAP 4
-#define OPCODE_COMPREHENSION_SET 5
 #define OPCODE_DO 6
 #define OPCODE_FLOAT 7
 #define OPCODE_IDENTIFIER 8
@@ -38,20 +35,64 @@ Value *ValueCreate(Model model, void *data) {
     return value;
 }
 
+Value *ValueDecode(Byte **bytes) {
+    Integer8 opcode = DecodeInteger8(bytes);
+    switch (opcode) {
+    case OPCODE_BOOLEAN_TRUE:
+        return VALUE_TRUE;
+    case OPCODE_BOOLEAN_FALSE:
+        return VALUE_FALSE;
+    case OPCODE_CASE:
+        return CaseDecode(bytes);
+    case OPCODE_DO:
+        return DoDecode(bytes);
+    case OPCODE_FLOAT:
+        return FloatDecode(bytes);
+    case OPCODE_IDENTIFIER:
+        return IdentifierDecode(bytes);
+    case OPCODE_INTEGER:
+        return IntegerDecode(bytes);
+    case OPCODE_LAMDA:
+        return LamdaDecode(bytes);
+    case OPCODE_LIST:
+        return ListDecode(bytes);
+    case OPCODE_MAP:
+        return MapDecode(bytes);
+    case OPCODE_MODULE:
+        return ModuleDecode(bytes);
+    case OPCODE_NIL:
+        return VALUE_NIL;
+    case OPCODE_PROTOCOL:
+        return ProtocolDecode(bytes);
+    case OPCODE_RANGE:
+        return RangeDecode(bytes);
+    case OPCODE_RESULT:
+        return ResultDecode(bytes);
+    case OPCODE_SET:
+        return SetDecode(bytes);
+    case OPCODE_STRING:
+        return StringDecode(bytes);
+    case OPCODE_TOKEN:
+        return TokenDecode(bytes);
+    case OPCODE_TYPE:
+        return TypeDecode(bytes);
+    case OPCODE_WHEN:
+        return WhenDecode(bytes);
+    }
+}
+
 Value *ValueEval(Value *value, Value *context) {
     switch (value->model) {
     case MODEL_BOOLEAN:
         return value;
     case MODEL_CASE:
         return CaseEval(value->data, context);
-    case MODEL_COMPREHENSION:
-        return ComprehensionEval(value->data, context);
     case MODEL_DO:
         return DoEval(value->data, context);
     case MODEL_FLOAT:
         return value;
     case MODEL_IDENTIFIER:
-        return IdentifierEval(value->data, context);
+        return ValueGetValueForKey(context, value);
     case MODEL_INTEGER:
         return value;
     case MODEL_LAMDA:
@@ -83,68 +124,14 @@ Value *ValueEval(Value *value, Value *context) {
     }
 }
 
-Value *ValueDecode(Byte **bytes) {
-    Integer8 opcode = DecodeInteger8(bytes);
-    switch (opcode) {
-    case OPCODE_BOOLEAN_TRUE:
-        return BooleanCreate(TRUE);
-    case OPCODE_BOOLEAN_FALSE:
-        return BooleanCreate(FALSE);
-    case OPCODE_CASE:
-        return CaseDecode(bytes);
-    case OPCODE_COMPREHENSION_LIST:
-        return ComprehensionDecode(bytes);
-    case OPCODE_COMPREHENSION_MAP:
-        return ComprehensionDecode(bytes);
-    case OPCODE_COMPREHENSION_SET:
-        return ComprehensionDecode(bytes);
-    case OPCODE_DO:
-        return DoDecode(bytes);
-    case OPCODE_FLOAT:
-        return FloatDecode(bytes);
-    case OPCODE_IDENTIFIER:
-        return IdentifierDecode(bytes);
-    case OPCODE_INTEGER:
-        return IntegerDecode(bytes);
-    case OPCODE_LAMDA:
-        return LamdaDecode(bytes);
-    case OPCODE_LIST:
-        return ListDecode(bytes);
-    case OPCODE_MAP:
-        return MapDecode(bytes);
-    case OPCODE_MODULE:
-        return ModuleDecode(bytes);
-    case OPCODE_NIL:
-        return ValueCreate(MODEL_NIL, NULL);
-    case OPCODE_PROTOCOL:
-        return ProtocolDecode(bytes);
-    case OPCODE_RANGE:
-        return RangeDecode(bytes);
-    case OPCODE_RESULT:
-        return ResultDecode(bytes);
-    case OPCODE_SET:
-        return SetDecode(bytes);
-    case OPCODE_STRING:
-        return StringDecode(bytes);
-    case OPCODE_TOKEN:
-        return TokenDecode(bytes);
-    case OPCODE_TYPE:
-        return TypeDecode(bytes);
-    case OPCODE_WHEN:
-        return WhenDecode(bytes);
-    }
-}
-
-Bool ValueEqual(Value *value, Value *other) {
+Value *ValueEqual(Value *value, Value *other) {
     if (value->model != other->model)
-        return FALSE;
+        return VALUE_FALSE;
     switch (value->model) {
     case MODEL_BOOLEAN:
-        return BooleanEqual(value->data, other->data);
+        return value == other ? VALUE_TRUE : VALUE_FALSE;
     case MODEL_CASE:
         return CaseEqual(value->data, other->data);
-    case MODEL_COMPREHENSION:
-        return ComprehensionEqual(value->data, other->data);
     case MODEL_DO:
         return DoEqual(value->data, other->data);
     case MODEL_FLOAT:
@@ -162,7 +149,7 @@ Bool ValueEqual(Value *value, Value *other) {
     case MODEL_MODULE:
         return ModuleEqual(value->data, other->data);
     case MODEL_NIL:
-        return TRUE;
+        return VALUE_TRUE;
     case MODEL_PROTOCOL:
         return ProtocolEqual(value->data, other->data);
     case MODEL_RANGE:
@@ -189,11 +176,9 @@ Size ValueRelease(Value *value) {
     Size size = sizeof(Value);
     switch (model) {
     case MODEL_BOOLEAN:
-        return size + BooleanRelease(data);
+        return size;
     case MODEL_CASE:
         return size + CaseRelease(data);
-    case MODEL_COMPREHENSION:
-        return size + ComprehensionRelease(data);
     case MODEL_DO:
         return size + DoRelease(data);
     case MODEL_FLOAT:

@@ -6,6 +6,8 @@ struct Result {
     Value *args[];
 };
 
+static Value *args[256] = {NULL};
+
 static Result *ResultCreate(Value *target, Integer8 count) {
     Result *result = MemoryAlloc(sizeof(Result) + sizeof(Value *) * count);
     if (result == NULL)
@@ -33,19 +35,31 @@ Value *ResultDecode(Byte **bytes) {
 }
 
 Value *ResultEval(Result *result, Value *context) {
+    Value *target = ValueEval(result->target, context);
+    if (target == NULL)
+        return NULL;
+    for (Integer8 index = 0; index < result->count; index += 1) {
+        Value *arg = ValueEval(result->args[index], context);
+        if (arg == NULL)
+            return NULL;
+        args[index] = arg;
+    }
+    return ValueCall(target, args, result->count);
+}
+
+Value *ResultEqual(Result *result, Result *other) {
+    if (result->count != other->count)
+        return VALUE_FALSE;
+    if (ValueEqual(result->target, other->target) == VALUE_FALSE)
+        return VALUE_FALSE;
+    for (Integer8 index = 0; index < result->count; index += 1)
+        if (ValueEqual(result->args[index], other->args[index]) == VALUE_FALSE)
+            return VALUE_FALSE;
+    return VALUE_TRUE;
 }
 
 Size ResultRelease(Result *result) {
     Integer8 count = result->count;
     MemoryDealloc(result);
     return sizeof(Result) + sizeof(Value *) * count;
-}
-
-Bool ResultEqual(Result *result, Result *other) {
-    if (result->count != other->count && !ValueEqual(result->target, other->target))
-        return FALSE;
-    for (Integer8 index = 0; index < result->count; index += 1)
-        if (!ValueEqual(result->args[index], other->args[index]))
-            return FALSE;
-    return TRUE;
 }

@@ -7,7 +7,7 @@ typedef struct Set Set;
 
 Value *SetDecode(Byte **bytes);
 Value *SetEval(Set *set, Value *context);
+Value *SetEqual(Set *set, Set *other);
 Size SetRelease(Set *set);
-Bool SetEqual(Set *set, Set *other);
 
 #endif

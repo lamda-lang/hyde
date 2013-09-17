@@ -25,13 +25,24 @@ Value *RangeDecode(Byte **bytes) {
 }
 
 Value *RangeEval(Range *range, Value *context) {
+    Value *lower = ValueEval(range->lower, context);
+    if (lower == NULL)
+        return NULL;
+    Value *upper = ValueEval(range->upper, context);
+    if (upper == NULL)
+        return NULL;
+    return RangeCreate(lower, upper);
+}
+
+Value *RangeEqual(Range *range, Range *other) {
+    if (ValueEqual(range->lower, other->lower) == VALUE_FALSE)
+        return VALUE_FALSE;
+    if (ValueEqual(range->upper, other->upper) == VALUE_FALSE)
+        return VALUE_FALSE;
+    return VALUE_TRUE;
 }
 
 Size RangeRelease(Range *range) {
     MemoryDealloc(range);
     return sizeof(Range);
-}
-
-Bool RangeEqual(Range *range, Range *other) {
-    return ValueEqual(range->lower, other->lower) && ValueEqual(range->upper, other->upper);
 }

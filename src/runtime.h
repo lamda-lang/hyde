@@ -21,8 +21,25 @@ typedef enum {
     ERROR_OF_OF_MEMORY
 } Error;
 
-#include <kernel/memory.h>
-#include <util/decode.h>
+#include <builtin/case.h>
+#include <builtin/do.h>
+#include <builtin/float.h>
+#include <builtin/identifier.h>
+#include <builtin/integer.h>
+#include <builtin/lamda.h>
+#include <builtin/list.h>
+#include <builtin/map.h>
+#include <builtin/module.h>
+#include <builtin/protocol.h>
+#include <builtin/range.h>
+#include <builtin/result.h>
+#include <builtin/set.h>
+#include <builtin/string.h>
+#include <builtin/token.h>
+#include <builtin/type.h>
 #include <builtin/value.h>
+#include <builtin/when.h>
+#include <posix/memory.h>
+#include <util/decode.h>
 
 #endif

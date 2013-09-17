@@ -7,7 +7,7 @@ typedef struct Module Module;
 
 Value *ModuleDecode(Byte **bytes);
 Value *ModuleEval(Module *module, Value *context);
-Bool ModuleEqual(Module *module, Module *other);
+Value *ModuleEqual(Module *module, Module *other);
 Size ModuleRelease(Module *module);
 
 #endif
