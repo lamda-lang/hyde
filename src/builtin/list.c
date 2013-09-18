@@ -27,7 +27,7 @@ List *ListDecode(Byte **bytes) {
     return list;
 }
 
-Value *ListEval(List *list, Value *context) {
+List *ListEval(List *list, Value *context) {
     List *new = ListCreate(list->count);
     if (new == NULL)
         return NULL;
@@ -37,16 +37,16 @@ Value *ListEval(List *list, Value *context) {
             return ListRelease(new), NULL;
         new->values[index] = value;
     }
-    return NULL; /* missing */
+    return new;
 }
 
-Value *ListEqual(List *list, List *other) {
+Bool ListEqual(List *list, List *other) {
     if (list->count != other->count)
-        return VALUE_FALSE;
+        return FALSE;
     for (Integer32 index = 0; index < list->count; index += 1)
-        if (ValueEqual(list->values[index], other->values[index]) == VALUE_FALSE)
-            return VALUE_FALSE;
-    return VALUE_TRUE;
+        if (!ValueEqual(list->values[index], other->values[index]))
+            return FALSE;
+    return TRUE;
 }
 
 Size ListRelease(List *list) {

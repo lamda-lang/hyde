@@ -56,7 +56,7 @@ Value *CaseEval(Case *block, Value *context) {
         Value *match = ValueEval(block->branches[index].match, context);
         if (match == NULL)
             return NULL;
-        if (ValueEqual(arg, match) == VALUE_FALSE)
+        if (!ValueEqual(arg, match))
             continue;
         Value *guard = ValueEval(block->branches[index].guard, context);
         if (guard == NULL)
@@ -67,18 +67,18 @@ Value *CaseEval(Case *block, Value *context) {
     return VALUE_NIL;
 }
 
-Value *CaseEqual(Case *block, Case *other) {
+Bool CaseEqual(Case *block, Case *other) {
     if (block->count != other->count)
-        return VALUE_FALSE;
+        return FALSE;
     for (Integer32 index = 0; index < block->count; index += 1) {
-        if (ValueEqual(block->branches[index].match, other->branches[index].match) == VALUE_FALSE)
-            return VALUE_FALSE;
-        if (ValueEqual(block->branches[index].guard, other->branches[index].guard) == VALUE_FALSE)
-            return VALUE_FALSE;
-        if (ValueEqual(block->branches[index].value, other->branches[index].value) == VALUE_FALSE)
-            return VALUE_FALSE;
+        if (!ValueEqual(block->branches[index].match, other->branches[index].match))
+            return FALSE;
+        if (!ValueEqual(block->branches[index].guard, other->branches[index].guard))
+            return FALSE;
+        if (!ValueEqual(block->branches[index].value, other->branches[index].value))
+            return FALSE;
     }
-    return VALUE_TRUE;
+    return TRUE;
 }
 
 Size CaseRelease(Case *block) {

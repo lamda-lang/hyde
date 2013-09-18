@@ -24,22 +24,22 @@ Range *RangeDecode(Byte **bytes) {
     return RangeCreate(lower, upper);
 }
 
-Value *RangeEval(Range *range, Value *context) {
+Range *RangeEval(Range *range, Value *context) {
     Value *lower = ValueEval(range->lower, context);
     if (lower == NULL)
         return NULL;
     Value *upper = ValueEval(range->upper, context);
     if (upper == NULL)
         return NULL;
-    return NULL; /* missing */
+    return RangeCreate(lower, upper);
 }
 
-Value *RangeEqual(Range *range, Range *other) {
-    if (ValueEqual(range->lower, other->lower) == VALUE_FALSE)
-        return VALUE_FALSE;
-    if (ValueEqual(range->upper, other->upper) == VALUE_FALSE)
-        return VALUE_FALSE;
-    return VALUE_TRUE;
+Bool RangeEqual(Range *range, Range *other) {
+    if (!ValueEqual(range->lower, other->lower))
+        return FALSE;
+    if (!ValueEqual(range->upper, other->upper))
+        return FALSE;
+    return TRUE;
 }
 
 Size RangeRelease(Range *range) {

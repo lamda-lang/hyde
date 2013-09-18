@@ -6,7 +6,7 @@
 typedef struct Float Float;
 
 Float *FloatDecode(Byte **bytes);
-Value *FloatEqual(Float *fpn, Float *other);
+Bool FloatEqual(Float *fpn, Float *other);
 Size FloatRelease(Float *fpn);
 
 #endif

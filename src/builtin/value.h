@@ -5,7 +5,7 @@
 
 Value *ValueDecode(Byte **bytes);
 Value *ValueEval(Value *value, Value *context);
-Value *ValueEqual(Value *value, Value *other);
+Bool ValueEqual(Value *value, Value *other);
 Value *ValueSetValueForKey(Value *collection, Value *value, Value *key);
 Value *ValueGetValueForKey(Value *collection, Value *key);
 Value *ValueCall(Value *value, Value **args, Integer8 count);

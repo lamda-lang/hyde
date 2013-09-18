@@ -6,8 +6,8 @@
 typedef struct List List;
 
 List *ListDecode(Byte **bytes);
-Value *ListEval(List *list, Value *context);
-Value *ListEqual(List *list, List *other);
+List *ListEval(List *list, Value *context);
+Bool ListEqual(List *list, List *other);
 Size ListRelease(List *list);
 
 #endif

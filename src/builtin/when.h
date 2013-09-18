@@ -7,7 +7,7 @@ typedef struct When When;
 
 When *WhenDecode(Byte **bytes);
 Value *WhenEval(When *block, Value *context);
-Value *WhenEqual(When *block, When *other);
+Bool WhenEqual(When *block, When *other);
 Size WhenRelease(When *block);
 
 #endif

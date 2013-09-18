@@ -45,7 +45,7 @@ Map *MapDecode(Byte **bytes) {
     return map;
 }
 
-Value *MapEval(Map *map, Value *context) {
+Map *MapEval(Map *map, Value *context) {
     Map *new = MapCreate(map->count);
     if (new == NULL)
         return NULL;
@@ -59,18 +59,18 @@ Value *MapEval(Map *map, Value *context) {
         new->pairs[index].key = key;
         new->pairs[index].value = value;
     }
-    return NULL;
+    return new;
 }
 
-Value *MapEqual(Map *map, Map *other) {
+Bool MapEqual(Map *map, Map *other) {
     if (map->count != other->count)
-        return VALUE_FALSE;
+        return FALSE;
     for (Integer32 index = 0; index < map->count; index += 1) {
         Value *value = MapValueForKey(other, map->pairs[index].key);
-        if (value == NULL || ValueEqual(value, map->pairs[index].value) == VALUE_FALSE)
-            return VALUE_FALSE;
+        if (value == NULL || !ValueEqual(value, map->pairs[index].value))
+            return FALSE;
     }
-    return VALUE_TRUE;
+    return TRUE;
 }
 
 Size MapRelease(Map *map) {

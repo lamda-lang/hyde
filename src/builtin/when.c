@@ -49,16 +49,16 @@ Value *WhenEval(When *block, Value *context) {
     return VALUE_NIL;
 }
 
-Value *WhenEqual(When *block, When *other) {
+Bool WhenEqual(When *block, When *other) {
     if (block->count != other->count)
-        return VALUE_FALSE;
+        return FALSE;
     for (Integer32 index = 0; index < block->count; index += 1) {
-        if (ValueEqual(block->branches[index].condition, other->branches[index].condition) == VALUE_FALSE)
-            return VALUE_FALSE;
-        if (ValueEqual(block->branches[index].value, other->branches[index].value) == VALUE_FALSE)
-            return VALUE_FALSE;
+        if (!ValueEqual(block->branches[index].condition, other->branches[index].condition))
+            return FALSE;
+        if (!ValueEqual(block->branches[index].value, other->branches[index].value))
+            return FALSE;
     }
-    return VALUE_TRUE;
+    return TRUE;
 }
 
 Size WhenRelease(When *block) {

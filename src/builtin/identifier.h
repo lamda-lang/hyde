@@ -6,7 +6,7 @@
 typedef struct Identifier Identifier;
 
 Identifier *IdentifierDecode(Byte **bytes);
-Value *IdentifierEqual(Identifier *id, Identifier *other);
+Bool IdentifierEqual(Identifier *id, Identifier *other);
 Size IdentifierRelease(Identifier *id);
 
 #endif

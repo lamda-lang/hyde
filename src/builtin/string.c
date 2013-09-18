@@ -23,10 +23,10 @@ String *StringDecode(Byte **bytes) {
     return string;
 }
 
-Value *StringEqual(String *string, String *other) {
+Bool StringEqual(String *string, String *other) {
     if (string->length != other->length)
-        return VALUE_FALSE;
-    return MemoryEqual(string->codepoints, other->codepoints, sizeof(Integer32) * string->length) ? VALUE_TRUE : VALUE_FALSE;
+        return FALSE;
+    return MemoryEqual(string->codepoints, other->codepoints, sizeof(Integer32) * string->length);
 }
 
 Size StringRelease(String *string) {

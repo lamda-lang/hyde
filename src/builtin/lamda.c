@@ -42,28 +42,28 @@ Lamda *LamdaDecode(Byte **bytes) {
     return lamda;
 }
 
-Value *LamdaEval(Lamda *lamda, Value *context) {
+Lamda *LamdaEval(Lamda *lamda, Value *context) {
     Size size = LamdaSize(lamda->count);
     Lamda *new = MemoryClone(lamda, size);
     if (new == NULL)
         return NULL;
     new->context = context;
-    return NULL; /* missing */
+    return new;
 }
 
-Value *LamdaEqual(Lamda *lamda, Lamda *other) {
+Bool LamdaEqual(Lamda *lamda, Lamda *other) {
     if (lamda->arity != other->arity)
-        return VALUE_FALSE;
+        return FALSE;
     if (lamda->count != other->count)
-        return VALUE_FALSE;
-    if (ValueEqual(lamda->result, other->result) == VALUE_FALSE)
-        return VALUE_FALSE;
-    if (ValueEqual(lamda->context, other->context) == VALUE_FALSE)
-        return VALUE_FALSE;
+        return FALSE;
+    if (!ValueEqual(lamda->result, other->result))
+        return FALSE;
+    if (!ValueEqual(lamda->context, other->context))
+        return FALSE;
     for (Integer8 index = 0; index < lamda->count; index += 1)
-        if (ValueEqual(lamda->args[index], other->args[index]) == VALUE_FALSE)
-            return VALUE_FALSE;
-    return VALUE_TRUE;
+        if (!ValueEqual(lamda->args[index], other->args[index]))
+            return FALSE;
+    return TRUE;
 }
 
 Size LamdaRelease(Lamda *lamda) {

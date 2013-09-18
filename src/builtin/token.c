@@ -23,10 +23,10 @@ Token *TokenDecode(Byte **bytes) {
     return token;
 }
 
-Value *TokenEqual(Token *token, Token *other) {
+Bool TokenEqual(Token *token, Token *other) {
     if (token->length != other->length)
-        return VALUE_FALSE;
-    return MemoryEqual(token->codepoints, other->codepoints, sizeof(Integer8) * token->length) ? VALUE_TRUE : VALUE_FALSE;
+        return FALSE;
+    return MemoryEqual(token->codepoints, other->codepoints, sizeof(Integer8) * token->length);
 }
 
 Size TokenRelease(Token *token) {

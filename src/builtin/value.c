@@ -122,23 +122,23 @@ Value *ValueEval(Value *value, Value *context) {
     case MODEL_INTEGER:
         return value;
     case MODEL_LAMDA:
-        return LamdaEval(value->data, context);
+        return ValueCreate(MODEL_LAMDA, LamdaEval(value->data, context));
     case MODEL_LIST:
-        return ListEval(value->data, context);
+        return ValueCreate(MODEL_LIST, ListEval(value->data, context));
     case MODEL_MAP:
-        return MapEval(value->data, context);
+        return ValueCreate(MODEL_MAP, MapEval(value->data, context));
     case MODEL_MODULE:
-        return ModuleEval(value->data, context);
+        return ValueCreate(MODEL_MODULE, ModuleEval(value->data, context));
     case MODEL_NIL:
         return value;
     case MODEL_PROTOCOL:
         return value;
     case MODEL_RANGE:
-        return RangeEval(value->data, context);
+        return ValueCreate(MODEL_RANGE, RangeEval(value->data, context));
     case MODEL_RESULT:
         return ResultEval(value->data, context);
     case MODEL_SET:
-        return SetEval(value->data, context);
+        return ValueCreate(MODEL_SET, SetEval(value->data, context));
     case MODEL_STRING:
         return value;
     case MODEL_TOKEN:
@@ -150,12 +150,12 @@ Value *ValueEval(Value *value, Value *context) {
     }
 }
 
-Value *ValueEqual(Value *value, Value *other) {
+Bool ValueEqual(Value *value, Value *other) {
     if (value->model != other->model)
-        return VALUE_FALSE;
+        return FALSE;
     switch (value->model) {
     case MODEL_BOOLEAN:
-        return value == other ? VALUE_TRUE : VALUE_FALSE;
+        return value == other;
     case MODEL_CASE:
         return CaseEqual(value->data, other->data);
     case MODEL_DO:

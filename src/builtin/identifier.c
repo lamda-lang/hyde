@@ -56,13 +56,13 @@ Identifier *IdentifierDecode(Byte **bytes) {
     return id;
 }
 
-Value *IdentifierEqual(Identifier *id, Identifier *other) {
+Bool IdentifierEqual(Identifier *id, Identifier *other) {
     if (id->count != other->count)
-        return VALUE_FALSE;
+        return FALSE;
     for (Integer8 index = 0; index < id->count; index += 1)
         if (!IdentifierComponentEqual(id->components[index], other->components[index]))
-            return VALUE_FALSE;
-    return VALUE_TRUE;
+            return FALSE;
+    return TRUE;
 }
 
 Size IdentifierRelease(Identifier *id) {

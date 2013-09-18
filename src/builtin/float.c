@@ -17,8 +17,8 @@ Float *FloatDecode(Byte **bytes) {
     return FloatCreate(value);
 }
 
-Value *FloatEqual(Float *fpn, Float *other) {
-    return fpn->value == other->value ? VALUE_TRUE : VALUE_FALSE;
+Bool FloatEqual(Float *fpn, Float *other) {
+    return fpn->value == other->value;
 }
 
 Size FloatRelease(Float *fpn) {

@@ -7,7 +7,7 @@ typedef struct Do Do;
 
 Do *DoDecode(Byte **bytes);
 Value *DoEval(Do *block, Value *context);
-Value *DoEqual(Do *block, Do *other);
+Bool DoEqual(Do *block, Do *other);
 Size DoRelease(Do *block);
 
 #endif

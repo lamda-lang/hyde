@@ -7,7 +7,7 @@ typedef struct Result Result;
 
 Result *ResultDecode(Byte **bytes);
 Value *ResultEval(Result *result, Value *context);
-Value *ResultEqual(Result *result, Result *other);
+Bool ResultEqual(Result *result, Result *other);
 Size ResultRelease(Result *result);
 
 #endif

@@ -17,8 +17,8 @@ Integer *IntegerDecode(Byte **bytes) {
     return IntegerCreate(value);
 }
 
-Value *IntegerEqual(Integer *integer, Integer *other) {
-    return integer->value == other->value ? VALUE_TRUE : VALUE_FALSE;
+Bool IntegerEqual(Integer *integer, Integer *other) {
+    return integer->value == other->value;
 }
 
 Size IntegerRelease(Integer *integer) {

@@ -56,7 +56,7 @@ Module *ModuleDecode(Byte **bytes) {
     return module;
 }
 
-Value *ModuleEval(Module *module, Value *context) {
+Module *ModuleEval(Module *module, Value *context) {
     for (Integer32 index = 0; index < module->count; index += 1) {
         context = ValueSetValueForKey(context, module->definitions[index].value, module->definitions[index].name);
         if (context == NULL)
@@ -72,10 +72,10 @@ Value *ModuleEval(Module *module, Value *context) {
         new->definitions[index].name = module->definitions[index].name;
         new->definitions[index].value = value;
     }
-    return NULL; /* missing */
+    return new;
 }
 
-Value *ModuleEqual(Module *module, Module *other) {
+Bool ModuleEqual(Module *module, Module *other) {
 }
 
 Size ModuleRelease(Module *module) {

@@ -34,7 +34,7 @@ Set *SetDecode(Byte **bytes) {
     return set;
 }
 
-Value *SetEval(Set *set, Value *context) {
+Set *SetEval(Set *set, Value *context) {
     Set *new = SetCreate(set->count);
     if (new == NULL)
         return NULL;
@@ -44,16 +44,16 @@ Value *SetEval(Set *set, Value *context) {
             return SetRelease(new), NULL;
         new->values[index] = value;
     }
-    return NULL; /* missing */
+    return new;
 }
 
-Value *SetEqual(Set *set, Set *other) {
+Bool SetEqual(Set *set, Set *other) {
     if (set->count != other->count)
-        return VALUE_FALSE;
+        return FALSE;
     for (Integer32 index = 0; index < set->count; index += 1)
         if (!SetElement(other, set->values[index]))
-            return VALUE_FALSE;
-    return VALUE_TRUE;
+            return FALSE;
+    return TRUE;
 }
 
 Size SetRelease(Set *set) {

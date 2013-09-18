@@ -27,13 +27,13 @@ Type *TypeDecode(Byte **bytes) {
     return type;
 }
 
-Value *TypeEqual(Type *type, Type *other) {
+Bool TypeEqual(Type *type, Type *other) {
     if (type->count != other->count)
-        return VALUE_FALSE;
+        return FALSE;
     for (Integer32 index = 0; index < type->count; index += 1) 
-        if (ValueEqual(type->members[index], other->members[index]) == VALUE_FALSE)
-            return VALUE_FALSE;
-    return VALUE_TRUE;
+        if (!ValueEqual(type->members[index], other->members[index]))
+            return FALSE;
+    return TRUE;
 }
 
 Size TypeRelease(Type *type) {

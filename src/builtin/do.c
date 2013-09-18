@@ -55,16 +55,16 @@ Value *DoEval(Do *block, Value *context) {
     return value;
 }
 
-Value *DoEqual(Do *block, Do *other) {
+Bool DoEqual(Do *block, Do *other) {
     if (block->count != other->count)
-        return VALUE_FALSE;
+        return FALSE;
     for (Integer32 index = 0; index < block->count; index += 1) {
-        if (ValueEqual(block->statements[index].name, other->statements[index].name) == VALUE_FALSE)
-            return VALUE_FALSE;
-        if (ValueEqual(block->statements[index].value, other->statements[index].value) == VALUE_FALSE)
-            return VALUE_FALSE;
+        if (!ValueEqual(block->statements[index].name, other->statements[index].name))
+            return FALSE;
+        if (!ValueEqual(block->statements[index].value, other->statements[index].value))
+            return FALSE;
     }
-    return VALUE_TRUE;
+    return TRUE;
 }
 
 Size DoRelease(Do *block) {

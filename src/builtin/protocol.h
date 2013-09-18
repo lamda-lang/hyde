@@ -6,7 +6,7 @@
 typedef struct Protocol Protocol;
 
 Protocol *ProtocolDecode(Byte **bytes);
-Value *ProtocolEqual(Protocol *protocol, Protocol *other);
+Bool ProtocolEqual(Protocol *protocol, Protocol *other);
 Size ProtocolRelease(Protocol *protocol);
 
 #endif
