@@ -5,7 +5,7 @@
 
 typedef struct List List;
 
-Value *ListDecode(Byte **bytes);
+List *ListDecode(Byte **bytes);
 Value *ListEval(List *list, Value *context);
 Value *ListEqual(List *list, List *other);
 Size ListRelease(List *list);

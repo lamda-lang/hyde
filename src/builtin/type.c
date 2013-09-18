@@ -13,7 +13,7 @@ static Type *TypeCreate(Integer32 count) {
     return type;
 }
 
-Value *TypeDecode(Byte **bytes) {
+Type *TypeDecode(Byte **bytes) {
     Integer32 count = DecodeInteger32(bytes);
     Type *type = TypeCreate(count);
     if (type == NULL)
@@ -24,7 +24,7 @@ Value *TypeDecode(Byte **bytes) {
             return TypeRelease(type), NULL;
         type->members[index] = value;
     }
-    return ValueCreate(MODEL_TYPE, type);
+    return type;
 }
 
 Value *TypeEqual(Type *type, Type *other) {

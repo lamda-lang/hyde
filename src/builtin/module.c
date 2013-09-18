@@ -34,7 +34,7 @@ static Size ModuleDealloc(Module *module, Integer32 count) {
     return size;
 }
 
-static Module *ModuleDecodeRecursive(Byte **bytes) {
+Module *ModuleDecode(Byte **bytes) {
     Integer32 count = DecodeInteger32(bytes);
     Module *module = ModuleCreate(count);
     if (module == NULL)
@@ -46,7 +46,7 @@ static Module *ModuleDecodeRecursive(Byte **bytes) {
         Value *value = ValueDecode(bytes);
         if (value == NULL)
             return ModuleDealloc(module, index), NULL;
-        Module *local = ModuleDecodeRecursive(bytes);
+        Module *local = ModuleDecode(bytes);
         if (local == NULL)
             return ModuleDealloc(module, index), NULL;
         module->definitions[index].name = name;
@@ -54,11 +54,6 @@ static Module *ModuleDecodeRecursive(Byte **bytes) {
         module->definitions[index].local = local;
     }
     return module;
-}
-
-Value *ModuleDecode(Byte **bytes) {
-    Module *module = ModuleDecodeRecursive(bytes);
-    return ValueCreate(MODEL_MODULE, module);
 }
 
 Value *ModuleEval(Module *module, Value *context) {
@@ -77,7 +72,7 @@ Value *ModuleEval(Module *module, Value *context) {
         new->definitions[index].name = module->definitions[index].name;
         new->definitions[index].value = value;
     }
-    return ValueCreate(MODEL_MODULE, new);
+    return NULL; /* missing */
 }
 
 Value *ModuleEqual(Module *module, Module *other) {

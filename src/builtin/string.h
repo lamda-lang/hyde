@@ -5,7 +5,7 @@
 
 typedef struct String String;
 
-Value *StringDecode(Byte **bytes);
+String *StringDecode(Byte **bytes);
 Value *StringEqual(String *string, String *other);
 Size StringRelease(String *string);
 

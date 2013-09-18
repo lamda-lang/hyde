@@ -5,16 +5,16 @@ struct Range {
     Value *upper;
 };
 
-static Value *RangeCreate(Value *lower, Value *upper) {
+static Range *RangeCreate(Value *lower, Value *upper) {
     Range *range = MemoryAlloc(sizeof(Range));
     if (range == NULL)
         return NULL;
     range->lower = lower;
     range->upper = upper;
-    return ValueCreate(MODEL_RANGE, range);
+    return range;
 }
 
-Value *RangeDecode(Byte **bytes) {
+Range *RangeDecode(Byte **bytes) {
     Value *lower = ValueDecode(bytes);
     if (lower == NULL)
         return NULL;
@@ -31,7 +31,7 @@ Value *RangeEval(Range *range, Value *context) {
     Value *upper = ValueEval(range->upper, context);
     if (upper == NULL)
         return NULL;
-    return RangeCreate(lower, upper);
+    return NULL; /* missing */
 }
 
 Value *RangeEqual(Range *range, Range *other) {

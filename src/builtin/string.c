@@ -13,14 +13,14 @@ static String *StringCreate(Integer32 length) {
     return string;
 }
 
-Value *StringDecode(Byte **bytes) {
+String *StringDecode(Byte **bytes) {
     Integer32 length = DecodeInteger32(bytes);
     String *string = StringCreate(length);
     if (string == NULL)
         return NULL;
     for (Integer32 index = 0; index < length; index += 1)
         string->codepoints[index] = DecodeInteger32(bytes);
-    return ValueCreate(MODEL_STRING, string);
+    return string;
 }
 
 Value *StringEqual(String *string, String *other) {

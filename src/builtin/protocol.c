@@ -20,7 +20,7 @@ static Protocol *ProtocolCreate(Integer32 count) {
     return protocol;
 }
 
-Value *ProtocolDecode(Byte **bytes) {
+Protocol *ProtocolDecode(Byte **bytes) {
     Integer32 count = DecodeInteger32(bytes);
     Protocol *protocol = ProtocolCreate(count);
     if (protocol == NULL)
@@ -35,7 +35,7 @@ Value *ProtocolDecode(Byte **bytes) {
         protocol->signatures[index].name = name;
         protocol->signatures[index].arity = arity;
     }
-    return ValueCreate(MODEL_PROTOCOL, protocol);
+    return protocol;
 }
 
 Value *ProtocolEqual(Protocol *protocol, Protocol *other) {

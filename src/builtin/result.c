@@ -17,7 +17,7 @@ static Result *ResultCreate(Value *target, Integer8 count) {
     return result;
 }
 
-Value *ResultDecode(Byte **bytes) {
+Result *ResultDecode(Byte **bytes) {
     Value *target = ValueDecode(bytes);
     if (target == NULL)
         return NULL;
@@ -31,7 +31,7 @@ Value *ResultDecode(Byte **bytes) {
             return ResultRelease(result), NULL;
         result->args[index] = value;
     }
-    return ValueCreate(MODEL_RESULT, result);
+    return result;
 }
 
 Value *ResultEval(Result *result, Value *context) {

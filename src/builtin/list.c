@@ -13,7 +13,7 @@ static List *ListCreate(Integer32 count) {
     return list;
 }
 
-Value *ListDecode(Byte **bytes) {
+List *ListDecode(Byte **bytes) {
     Integer32 count = DecodeInteger32(bytes);
     List *list = ListCreate(count);
     if (list == NULL)
@@ -24,7 +24,7 @@ Value *ListDecode(Byte **bytes) {
             return ListRelease(list), NULL;
         list->values[index] = value;
     }
-    return ValueCreate(MODEL_LIST, list);
+    return list;
 }
 
 Value *ListEval(List *list, Value *context) {
@@ -37,7 +37,7 @@ Value *ListEval(List *list, Value *context) {
             return ListRelease(new), NULL;
         new->values[index] = value;
     }
-    return ValueCreate(MODEL_LIST, new);
+    return NULL; /* missing */
 }
 
 Value *ListEqual(List *list, List *other) {

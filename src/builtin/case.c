@@ -23,7 +23,7 @@ static Case *CaseCreate(Value *arg, Integer32 count) {
     return block;
 }
 
-Value *CaseDecode(Byte **bytes) {
+Case *CaseDecode(Byte **bytes) {
     Value *arg = ValueDecode(bytes);
     if (arg == NULL)
         return NULL;
@@ -45,7 +45,7 @@ Value *CaseDecode(Byte **bytes) {
         block->branches[index].guard = guard;
         block->branches[index].value = value;
     }
-    return ValueCreate(MODEL_CASE, block);
+    return block;
 }
 
 Value *CaseEval(Case *block, Value *context) {

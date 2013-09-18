@@ -25,7 +25,7 @@ static Do *DoCreate(Integer32 count) {
     return block;
 }
 
-Value *DoDecode(Byte **bytes) {
+Do *DoDecode(Byte **bytes) {
     Integer32 count = DecodeInteger32(bytes);
     Do *block = DoCreate(count);
     if (block == NULL)
@@ -40,7 +40,7 @@ Value *DoDecode(Byte **bytes) {
         block->statements[index].name = name;
         block->statements[index].value = value;
     }
-    return ValueCreate(MODEL_DO, block);
+    return block;
 }
 
 Value *DoEval(Do *block, Value *context) {

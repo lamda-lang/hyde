@@ -5,7 +5,7 @@
 
 typedef struct Token Token;
 
-Value *TokenDecode(Byte **bytes);
+Token *TokenDecode(Byte **bytes);
 Value *TokenEqual(Token *token, Token *other);
 Size TokenRelease(Token *token);
 

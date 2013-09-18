@@ -5,7 +5,7 @@
 
 typedef struct Module Module;
 
-Value *ModuleDecode(Byte **bytes);
+Module *ModuleDecode(Byte **bytes);
 Value *ModuleEval(Module *module, Value *context);
 Value *ModuleEqual(Module *module, Module *other);
 Size ModuleRelease(Module *module);

@@ -5,7 +5,7 @@
 
 typedef struct Type Type;
 
-Value *TypeDecode(Byte **bytes);
+Type *TypeDecode(Byte **bytes);
 Value *TypeEqual(Type *type, Type *other);
 Size TypeRelease(Type *type);
 

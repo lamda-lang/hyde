@@ -5,7 +5,7 @@
 
 typedef struct Case Case;
 
-Value *CaseDecode(Byte **bytes);
+Case *CaseDecode(Byte **bytes);
 Value *CaseEval(Case *block, Value *context);
 Value *CaseEqual(Case *block, Case *other);
 Size CaseRelease(Case *block);

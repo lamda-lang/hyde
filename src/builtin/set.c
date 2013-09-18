@@ -20,7 +20,7 @@ static Bool SetElement(Set *set, Value *value) {
     return FALSE;
 }
 
-Value *SetDecode(Byte **bytes) {
+Set *SetDecode(Byte **bytes) {
     Integer32 count = DecodeInteger32(bytes);
     Set *set = SetCreate(count);
     if (set == NULL)
@@ -31,7 +31,7 @@ Value *SetDecode(Byte **bytes) {
             return SetRelease(set), NULL;
         set->values[index] = value;
     }
-    return ValueCreate(MODEL_SET, set);
+    return set;
 }
 
 Value *SetEval(Set *set, Value *context) {
@@ -44,7 +44,7 @@ Value *SetEval(Set *set, Value *context) {
             return SetRelease(new), NULL;
         new->values[index] = value;
     }
-    return ValueCreate(MODEL_SET, new);
+    return NULL; /* missing */
 }
 
 Value *SetEqual(Set *set, Set *other) {

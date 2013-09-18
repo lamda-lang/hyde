@@ -27,7 +27,7 @@ static Value *MapValueForKey(Map *map, Value *key) {
     return NULL;
 }
 
-Value *MapDecode(Byte **bytes) {
+Map *MapDecode(Byte **bytes) {
     Integer32 count = DecodeInteger32(bytes);
     Map *map = MapCreate(count);
     if (map == NULL)
@@ -42,7 +42,7 @@ Value *MapDecode(Byte **bytes) {
         map->pairs[index].key = key;
         map->pairs[index].value = value;
     }
-    return ValueCreate(MODEL_MAP, map);
+    return map;
 }
 
 Value *MapEval(Map *map, Value *context) {
@@ -59,7 +59,7 @@ Value *MapEval(Map *map, Value *context) {
         new->pairs[index].key = key;
         new->pairs[index].value = value;
     }
-    return ValueCreate(MODEL_MAP, new);
+    return NULL;
 }
 
 Value *MapEqual(Map *map, Map *other) {

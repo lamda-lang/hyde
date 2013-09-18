@@ -39,7 +39,7 @@ static void IdentifierDealloc(Identifier *id, Integer8 count) {
     MemoryDealloc(id);
 }
 
-Value *IdentifierDecode(Byte **bytes) {
+Identifier *IdentifierDecode(Byte **bytes) {
     Integer8 count = DecodeInteger8(bytes);
     Identifier *id = IdentifierCreate(count);
     if (id == NULL)
@@ -53,7 +53,7 @@ Value *IdentifierDecode(Byte **bytes) {
             component->codepoints[index] = DecodeInteger8(bytes);
         id->components[index] = component;
     }
-    return ValueCreate(MODEL_IDENTIFIER, id);
+    return id;
 }
 
 Value *IdentifierEqual(Identifier *id, Identifier *other) {

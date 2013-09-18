@@ -4,15 +4,15 @@ struct Float {
     Float64 value;
 };
 
-static Value *FloatCreate(Float64 value) {
+static Float *FloatCreate(Float64 value) {
     Float *fpn = MemoryAlloc(sizeof(Float));
     if (fpn == NULL)
         return NULL;
     fpn->value = value;
-    return ValueCreate(MODEL_FLOAT, fpn);
+    return fpn;
 }
 
-Value *FloatDecode(Byte **bytes) {
+Float *FloatDecode(Byte **bytes) {
     Float64 value = DecodeFloat64(bytes);
     return FloatCreate(value);
 }

@@ -1,35 +1,61 @@
 #include <builtin/value.h>
 
-#define OPCODE_BOOLEAN_TRUE 0
-#define OPCODE_BOOLEAN_FALSE 1
-#define OPCODE_CASE 2
-#define OPCODE_DO 6
-#define OPCODE_FLOAT 7
-#define OPCODE_IDENTIFIER 8
-#define OPCODE_INTEGER 9
-#define OPCODE_LAMDA 10
-#define OPCODE_LIST 11
-#define OPCODE_MAP 12
-#define OPCODE_MODULE 13
-#define OPCODE_NIL 14
-#define OPCODE_PROTOCOL 15
-#define OPCODE_RANGE 16
-#define OPCODE_RESULT 17
-#define OPCODE_SET 18
-#define OPCODE_STRING 19
-#define OPCODE_TOKEN 20
-#define OPCODE_TYPE 21
-#define OPCODE_WHEN 22
+enum {
+    OPCODE_BOOLEAN_TRUE = 0,
+    OPCODE_BOOLEAN_FALSE = 1,
+    OPCODE_CASE = 2,
+    OPCODE_DO = 6,
+    OPCODE_FLOAT = 7,
+    OPCODE_IDENTIFIER = 8,
+    OPCODE_INTEGER = 9,
+    OPCODE_LAMDA = 10,
+    OPCODE_LIST = 11,
+    OPCODE_MAP = 12,
+    OPCODE_MODULE = 13,
+    OPCODE_NIL = 14,
+    OPCODE_PROTOCOL = 15,
+    OPCODE_RANGE = 16,
+    OPCODE_RESULT = 17,
+    OPCODE_SET = 18,
+    OPCODE_STRING = 19,
+    OPCODE_TOKEN = 20,
+    OPCODE_TYPE = 21,
+    OPCODE_WHEN = 22
+};
+
+typedef enum {
+    MODEL_BOOLEAN,
+    MODEL_CASE,
+    MODEL_DO,
+    MODEL_FLOAT,
+    MODEL_IDENTIFIER,
+    MODEL_INTEGER,
+    MODEL_LAMDA,
+    MODEL_LIST,
+    MODEL_MAP,
+    MODEL_MODULE,
+    MODEL_NIL,
+    MODEL_PROTOCOL,
+    MODEL_RANGE,
+    MODEL_RESULT,
+    MODEL_SET,
+    MODEL_STRING,
+    MODEL_TOKEN,
+    MODEL_TYPE,
+    MODEL_WHEN
+} Model;
 
 struct Value {
     void *data;
     Model model;
 };
 
-Value *ValueCreate(Model model, void *data) {
+static Value *ValueCreate(Model model, void *data) {
+    if (data == NULL)
+        return NULL;
     Value *value = MemoryAlloc(sizeof(Value));
     if (value == NULL)
-        return NULL;
+        return NULL; /* missing */
     value->model = model;
     value->data = data;
     return value;
@@ -43,41 +69,41 @@ Value *ValueDecode(Byte **bytes) {
     case OPCODE_BOOLEAN_FALSE:
         return VALUE_FALSE;
     case OPCODE_CASE:
-        return CaseDecode(bytes);
+        return ValueCreate(MODEL_CASE, CaseDecode(bytes));
     case OPCODE_DO:
-        return DoDecode(bytes);
+        return ValueCreate(MODEL_DO, DoDecode(bytes));
     case OPCODE_FLOAT:
-        return FloatDecode(bytes);
+        return ValueCreate(MODEL_FLOAT, FloatDecode(bytes));
     case OPCODE_IDENTIFIER:
-        return IdentifierDecode(bytes);
+        return ValueCreate(MODEL_IDENTIFIER, IdentifierDecode(bytes));
     case OPCODE_INTEGER:
-        return IntegerDecode(bytes);
+        return ValueCreate(MODEL_INTEGER, IntegerDecode(bytes));
     case OPCODE_LAMDA:
-        return LamdaDecode(bytes);
+        return ValueCreate(MODEL_LAMDA, LamdaDecode(bytes));
     case OPCODE_LIST:
-        return ListDecode(bytes);
+        return ValueCreate(MODEL_LIST, ListDecode(bytes));
     case OPCODE_MAP:
-        return MapDecode(bytes);
+        return ValueCreate(MODEL_MAP, MapDecode(bytes));
     case OPCODE_MODULE:
-        return ModuleDecode(bytes);
+        return ValueCreate(MODEL_MODULE, ModuleDecode(bytes));
     case OPCODE_NIL:
         return VALUE_NIL;
     case OPCODE_PROTOCOL:
-        return ProtocolDecode(bytes);
+        return ValueCreate(MODEL_PROTOCOL, ProtocolDecode(bytes));
     case OPCODE_RANGE:
-        return RangeDecode(bytes);
+        return ValueCreate(MODEL_RANGE, RangeDecode(bytes));
     case OPCODE_RESULT:
-        return ResultDecode(bytes);
+        return ValueCreate(MODEL_RESULT, ResultDecode(bytes));
     case OPCODE_SET:
-        return SetDecode(bytes);
+        return ValueCreate(MODEL_SET, SetDecode(bytes));
     case OPCODE_STRING:
-        return StringDecode(bytes);
+        return ValueCreate(MODEL_STRING, StringDecode(bytes));
     case OPCODE_TOKEN:
-        return TokenDecode(bytes);
+        return ValueCreate(MODEL_TOKEN, TokenDecode(bytes));
     case OPCODE_TYPE:
-        return TypeDecode(bytes);
+        return ValueCreate(MODEL_TYPE, TypeDecode(bytes));
     case OPCODE_WHEN:
-        return WhenDecode(bytes);
+        return ValueCreate(MODEL_WHEN, WhenDecode(bytes));
     }
 }
 

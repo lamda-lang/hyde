@@ -20,7 +20,7 @@ static When *WhenCreate(Integer32 count) {
     return block;
 }
 
-Value *WhenDecode(Byte **bytes) {
+When *WhenDecode(Byte **bytes) {
     Integer32 count = DecodeInteger32(bytes);
     When *block = WhenCreate(count);
     if (block == NULL)
@@ -35,7 +35,7 @@ Value *WhenDecode(Byte **bytes) {
         block->branches[index].condition = condition;
         block->branches[index].value = value;
     }
-    return ValueCreate(MODEL_WHEN, block);
+    return block;
 }
 
 Value *WhenEval(When *block, Value *context) {

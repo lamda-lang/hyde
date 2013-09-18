@@ -24,7 +24,7 @@ static Lamda *LamdaCreate(Value *result, Integer8 arity, Integer8 count) {
     return lamda;
 }
 
-Value *LamdaDecode(Byte **bytes) {
+Lamda *LamdaDecode(Byte **bytes) {
     Integer8 arity = DecodeInteger8(bytes);
     Value *result = ValueDecode(bytes);
     if (result == NULL)
@@ -39,7 +39,7 @@ Value *LamdaDecode(Byte **bytes) {
             return LamdaRelease(lamda), NULL;
         lamda->args[index] = arg;
     }
-    return ValueCreate(MODEL_LAMDA, lamda);
+    return lamda;
 }
 
 Value *LamdaEval(Lamda *lamda, Value *context) {
@@ -48,7 +48,7 @@ Value *LamdaEval(Lamda *lamda, Value *context) {
     if (new == NULL)
         return NULL;
     new->context = context;
-    return ValueCreate(MODEL_LAMDA, new);
+    return NULL; /* missing */
 }
 
 Value *LamdaEqual(Lamda *lamda, Lamda *other) {
