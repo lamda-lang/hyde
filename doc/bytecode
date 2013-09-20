@@ -69,7 +69,11 @@ MAP
 
 MODULE
   I8:13
-  ???
+  WHERE
+  
+WHERE
+  I32:count
+  [V:name V:value WHERE].count
 
 NIL
   I8:14
