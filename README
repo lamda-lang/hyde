@@ -1,5 +1,5 @@
-HYDE
+1. Hyde
 
 Hyde is a runtime for the Lamda programming language.
 
-  c99 -g -I src -o lamda src/*.c src/builtin/*.c src/posix/*.c src/util/*.c
+  c99 -o lamda src/*.c
