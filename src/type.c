@@ -5,26 +5,34 @@ struct Type {
     Value *members[];
 }; 
 
-static Type *TypeCreate(Integer32 count) {
-    Type *type = MemoryAlloc(sizeof(Type) + sizeof(Value *) * count);
-    if (type == NULL)
+static Size TypeSize(Integer32 count) {
+    return sizeof(Type) + sizeof(Value *) * count;
+}
+
+static Type *TypeCreate(Integer32 count, Error *error) {
+    Size size = TypeSize(count);
+    Type *type = MemoryAlloc(size, error);
+    if (ERROR(error))
         return NULL;
     type->count = count;
     return type;
 }
 
-Type *TypeDecode(Byte **bytes) {
+Type *TypeDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
-    Type *type = TypeCreate(count);
-    if (type == NULL)
+    Type *type = TypeCreate(count, error);
+    if (ERROR(error))
         return NULL;
     for (Integer32 index = 0; index < count; index += 1) {
-        Value *value = ValueDecode(bytes);
-        if (value == NULL)
-            return TypeRelease(type), NULL;
-        type->members[index] = value;
+        type->members[index] = ValueDecode(bytes, error);
+        if (ERROR(error))
+            goto type;
     }
     return type;
+
+type:
+    TypeRelease(type);
+    return NULL;
 }
 
 Bool TypeEqual(Type *type, Type *other) {
@@ -37,7 +45,7 @@ Bool TypeEqual(Type *type, Type *other) {
 }
 
 Size TypeRelease(Type *type) {
-    Integer32 count = type->count;
+    Size size = TypeSize(type->count);
     MemoryDealloc(type);
-    return sizeof(Type) + sizeof(Value *) * count;
+    return size;
 }

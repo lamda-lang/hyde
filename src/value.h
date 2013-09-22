@@ -7,12 +7,12 @@ extern Value *VALUE_TRUE;
 extern Value *VALUE_FALSE;
 extern Value *VALUE_NIL;
 
-Value *ValueDecode(Byte **bytes);
-Value *ValueEval(Value *value, Value *context);
+Value *ValueDecode(Byte **bytes, Error *error);
+Value *ValueEval(Value *value, Value *context, Error *error);
 Bool ValueEqual(Value *value, Value *other);
-Value *ValueSetValueForKey(Value *collection, Value *value, Value *key);
+Value *ValueSetValueForKey(Value *collection, Value *value, Value *key, Error *error);
 Value *ValueGetValueForKey(Value *collection, Value *key);
-Value *ValueCall(Value *value, Value **args, Integer8 count);
+Value *ValueCall(Value *value, Value **args, Integer8 count, Error *error);
 Size ValueRelease(Value *value);
 
 #endif

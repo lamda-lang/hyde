@@ -3,7 +3,7 @@
 
 #include "runtime.h"
 
-Token *TokenDecode(Byte **bytes);
+Token *TokenDecode(Byte **bytes, Error *error);
 Bool TokenEqual(Token *token, Token *other);
 Size TokenRelease(Token *token);
 

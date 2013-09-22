@@ -3,8 +3,8 @@
 
 #include "runtime.h"
 
-void *MemoryAlloc(Size size);
-void *MemoryClone(void *buffer, Size size);
+void *MemoryAlloc(Size size, Error *error);
+void *MemoryClone(void *buffer, Size size, Error *error);
 void MemoryDealloc(void *buffer);
 void MemoryCopy(void *source, void *target, Size size);
 Bool MemoryEqual(void *buffer, void *other, Size size);

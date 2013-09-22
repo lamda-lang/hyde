@@ -12,9 +12,14 @@ struct Map {
     Pair pairs[];
 };
 
-static Map *MapCreate(Integer32 count) {
-    Map *map = MemoryAlloc(sizeof(Map) + sizeof(Pair) * count);
-    if (map == NULL)
+static Size MapSize(Integer32 count) {
+    return sizeof(Map) + sizeof(Pair) * count;
+}
+
+static Map *MapCreate(Integer32 count, Error *error) {
+    Size size = MapSize(count);
+    Map *map = MemoryAlloc(size, error);
+    if (ERROR(error))
         return NULL;
     map->count = count;
     return map;
@@ -27,39 +32,43 @@ static Value *MapValueForKey(Map *map, Value *key) {
     return NULL;
 }
 
-Map *MapDecode(Byte **bytes) {
+Map *MapDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
-    Map *map = MapCreate(count);
-    if (map == NULL)
+    Map *map = MapCreate(count, error);
+    if (ERROR(error))
         return NULL;
     for (Integer32 index = 0; index < count; index += 1) {
-        Value *key = ValueDecode(bytes);
-        if (key == NULL)
-            return MapRelease(map), NULL;
-        Value *value = ValueDecode(bytes);
-        if (value == NULL)
-            return MapRelease(map), NULL;
-        map->pairs[index].key = key;
-        map->pairs[index].value = value;
+        map->pairs[index].key = ValueDecode(bytes, error);
+        if (ERROR(error))
+            goto map;
+        map->pairs[index].value = ValueDecode(bytes, error);
+        if (ERROR(error))
+            goto map;
     }
     return map;
+
+map:
+    MapRelease(map);
+    return NULL;
 }
 
-Map *MapEval(Map *map, Value *context) {
-    Map *new = MapCreate(map->count);
-    if (new == NULL)
+Map *MapEval(Map *map, Value *context, Error *error) {
+    Map *new = MapCreate(map->count, error);
+    if (ERROR(error))
         return NULL;
     for (Integer32 index = 0; index < map->count; index += 1) {
-        Value *key = ValueEval(map->pairs[index].key, context);
-        if (key == NULL)
-            return MapRelease(new), NULL;
-        Value *value = ValueEval(map->pairs[index].value, context);
-        if (value == NULL)
-            return MapRelease(new), NULL;
-        new->pairs[index].key = key;
-        new->pairs[index].value = value;
+        new->pairs[index].key = ValueEval(map->pairs[index].key, context, error);
+        if (ERROR(error))
+            goto new;
+        new->pairs[index].value = ValueEval(map->pairs[index].value, context, error);
+        if (ERROR(error))
+            goto new;
     }
     return new;
+
+new:
+    MapRelease(map);
+    return NULL;
 }
 
 Bool MapEqual(Map *map, Map *other) {
@@ -74,7 +83,7 @@ Bool MapEqual(Map *map, Map *other) {
 }
 
 Size MapRelease(Map *map) {
-    Integer32 count = map->count;
+    Size size = MapSize(map->count);
     MemoryDealloc(map);
-    return sizeof(Map) + sizeof(Pair) * count;
+    return size;
 }

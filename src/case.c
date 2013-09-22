@@ -14,55 +14,61 @@ struct Case {
     Branch branches[];
 };
 
-static Case *CaseCreate(Value *arg, Integer32 count) {
-    Case *block = MemoryAlloc(sizeof(Case) + sizeof(Branch) * count);
-    if (block == NULL)
+static Size CaseSize(Integer32 count) {
+    return sizeof(Case) + sizeof(Branch) * count;
+}
+
+static Case *CaseCreate(Value *arg, Integer32 count, Error *error) {
+    Size size = CaseSize(count);
+    Case *block = MemoryAlloc(size, error);
+    if (ERROR(error))
         return NULL;
     block->arg = arg;
     block->count = count;
     return block;
 }
 
-Case *CaseDecode(Byte **bytes) {
-    Value *arg = ValueDecode(bytes);
-    if (arg == NULL)
+Case *CaseDecode(Byte **bytes, Error *error) {
+    Value *arg = ValueDecode(bytes, error);
+    if (ERROR(error))
         return NULL;
     Integer32 count = DecodeInteger32(bytes);
-    Case *block = CaseCreate(arg, count);
-    if (block == NULL)
+    Case *block = CaseCreate(arg, count, error);
+    if (ERROR(error))
         return NULL;
     for (Integer32 index = 0; index < count; index += 1) {
-        Value *match = ValueDecode(bytes);
-        if (match == NULL)
-            return CaseRelease(block), NULL;
-        Value *guard = ValueDecode(bytes);
-        if (guard == NULL)
-            return CaseRelease(block), NULL;
-        Value *value = ValueDecode(bytes);
-        if (value == NULL)
-            return CaseRelease(block), NULL;
-        block->branches[index].match = match;
-        block->branches[index].guard = guard;
-        block->branches[index].value = value;
+        block->branches[index].match = ValueDecode(bytes, error);
+        if (ERROR(error))
+            goto block;
+        block->branches[index].guard = ValueDecode(bytes, error);
+        if (ERROR(error))
+            goto block;
+        block->branches[index].value = ValueDecode(bytes, error);
+        if (ERROR(error))
+            goto block;
     }
     return block;
+
+block:
+    CaseRelease(block);
+    return NULL;
 }
 
-Value *CaseEval(Case *block, Value *context) {
-    Value *arg = ValueEval(block->arg, context);
-    if (arg == NULL)
+Value *CaseEval(Case *block, Value *context, Error *error) {
+    Value *arg = ValueEval(block->arg, context, error);
+    if (ERROR(error))
         return NULL;
     for (Integer32 index = 0; index < block->count; index += 1) {
-        Value *match = ValueEval(block->branches[index].match, context);
-        if (match == NULL)
+        Value *match = ValueEval(block->branches[index].match, context, error);
+        if (ERROR(error))
             return NULL;
         if (!ValueEqual(arg, match))
             continue;
-        Value *guard = ValueEval(block->branches[index].guard, context);
-        if (guard == NULL)
+        Value *guard = ValueEval(block->branches[index].guard, context, error);
+        if (ERROR(error))
             return NULL;
         if (guard == VALUE_TRUE)
-            return ValueEval(block->branches[index].value, context);
+            return ValueEval(block->branches[index].value, context, error);
     }
     return VALUE_NIL;
 }
@@ -82,7 +88,7 @@ Bool CaseEqual(Case *block, Case *other) {
 }
 
 Size CaseRelease(Case *block) {
-    Integer32 count = block->count;
+    Size size = CaseSize(block->count);
     MemoryDealloc(block);
-    return sizeof(Case) + sizeof(Branch) * count;
+    return size;
 }

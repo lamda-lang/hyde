@@ -3,8 +3,8 @@
 
 #include "runtime.h"
 
-Result *ResultDecode(Byte **bytes);
-Value *ResultEval(Result *result, Value *context);
+Result *ResultDecode(Byte **bytes, Error *error);
+Value *ResultEval(Result *result, Value *context, Error *error);
 Bool ResultEqual(Result *result, Result *other);
 Size ResultRelease(Result *result);
 

@@ -8,43 +8,50 @@ struct Result {
 
 static Value *args[256] = {NULL};
 
-static Result *ResultCreate(Value *target, Integer8 count) {
-    Result *result = MemoryAlloc(sizeof(Result) + sizeof(Value *) * count);
-    if (result == NULL)
+static Size ResultSize(Integer8 count) {
+    return sizeof(Result) + sizeof(Value *) * count;
+}
+
+static Result *ResultCreate(Value *target, Integer8 count, Error *error) {
+    Size size = ResultSize(count);
+    Result *result = MemoryAlloc(size, error);
+    if (ERROR(error))
         return NULL;
     result->target = target;
     result->count = count;
     return result;
 }
 
-Result *ResultDecode(Byte **bytes) {
-    Value *target = ValueDecode(bytes);
-    if (target == NULL)
+Result *ResultDecode(Byte **bytes, Error *error) {
+    Value *target = ValueDecode(bytes, error);
+    if (ERROR(error))
         return NULL;
     Integer8 count = DecodeInteger8(bytes);
-    Result *result = ResultCreate(target, count);
-    if (result == NULL)
+    Result *result = ResultCreate(target, count, error);
+    if (ERROR(error))
         return NULL;
     for (Integer8 index = 0; index < count; index += 1) {
-        Value *value = ValueDecode(bytes);
-        if (value == NULL)
-            return ResultRelease(result), NULL;
-        result->args[index] = value;
+        result->args[index] = ValueDecode(bytes, error);
+        if (ERROR(error))
+            goto result;
     }
     return result;
+
+result:
+    ResultRelease(result);
+    return NULL;
 }
 
-Value *ResultEval(Result *result, Value *context) {
-    Value *target = ValueEval(result->target, context);
-    if (target == NULL)
+Value *ResultEval(Result *result, Value *context, Error *error) {
+    Value *target = ValueEval(result->target, context, error);
+    if (ERROR(error))
         return NULL;
     for (Integer8 index = 0; index < result->count; index += 1) {
-        Value *arg = ValueEval(result->args[index], context);
-        if (arg == NULL)
+        args[index] = ValueEval(result->args[index], context, error);
+        if (ERROR(error))
             return NULL;
-        args[index] = arg;
     }
-    return ValueCall(target, args, result->count);
+    return ValueCall(target, args, result->count, error);
 }
 
 Bool ResultEqual(Result *result, Result *other) {
@@ -59,7 +66,7 @@ Bool ResultEqual(Result *result, Result *other) {
 }
 
 Size ResultRelease(Result *result) {
-    Integer8 count = result->count;
+    Size size = ResultSize(result->count);
     MemoryDealloc(result);
-    return sizeof(Result) + sizeof(Value *) * count;
+    return size;
 }

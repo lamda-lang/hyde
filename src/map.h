@@ -3,8 +3,8 @@
 
 #include "runtime.h"
 
-Map *MapDecode(Byte **bytes);
-Map *MapEval(Map *map, Value *context);
+Map *MapDecode(Byte **bytes, Error *error);
+Map *MapEval(Map *map, Value *context, Error *error);
 Bool MapEqual(Map *map, Map *other); 
 Size MapRelease(Map *map);
 

@@ -12,10 +12,10 @@ static Size LamdaSize(Integer8 count) {
     return sizeof(Lamda) + sizeof(Value *) * count;
 }
 
-static Lamda *LamdaCreate(Value *result, Integer8 arity, Integer8 count) {
+static Lamda *LamdaCreate(Value *result, Integer8 arity, Integer8 count, Error *error) {
     Size size = LamdaSize(count);
-    Lamda *lamda = MemoryAlloc(size);
-    if (lamda == NULL)
+    Lamda *lamda = MemoryAlloc(size, error);
+    if (ERROR(error))
         return NULL;
     lamda->arity = arity;
     lamda->count = count;
@@ -24,28 +24,31 @@ static Lamda *LamdaCreate(Value *result, Integer8 arity, Integer8 count) {
     return lamda;
 }
 
-Lamda *LamdaDecode(Byte **bytes) {
+Lamda *LamdaDecode(Byte **bytes, Error *error) {
     Integer8 arity = DecodeInteger8(bytes);
-    Value *result = ValueDecode(bytes);
-    if (result == NULL)
+    Value *result = ValueDecode(bytes, error);
+    if (ERROR(error))
         return NULL;
     Integer8 count = DecodeInteger8(bytes);
-    Lamda *lamda = LamdaCreate(result, arity, count);
-    if (lamda == NULL)
+    Lamda *lamda = LamdaCreate(result, arity, count, error);
+    if (ERROR(error))
         return NULL;
     for (Integer8 index = 0; index < count; index += 1) {
-        Value *arg = ValueDecode(bytes);
-        if (arg == NULL)
-            return LamdaRelease(lamda), NULL;
-        lamda->args[index] = arg;
+        lamda->args[index] = ValueDecode(bytes, error);
+        if (ERROR(error))
+            goto lamda;
     }
     return lamda;
+
+lamda:
+    LamdaRelease(lamda);
+    return NULL;
 }
 
-Lamda *LamdaEval(Lamda *lamda, Value *context) {
+Lamda *LamdaEval(Lamda *lamda, Value *context, Error *error) {
     Size size = LamdaSize(lamda->count);
-    Lamda *new = MemoryClone(lamda, size);
-    if (new == NULL)
+    Lamda *new = MemoryClone(lamda, size, error);
+    if (ERROR(error))
         return NULL;
     new->context = context;
     return new;

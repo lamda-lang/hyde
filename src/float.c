@@ -4,17 +4,17 @@ struct Float {
     Float64 value;
 };
 
-static Float *FloatCreate(Float64 value) {
-    Float *fpn = MemoryAlloc(sizeof(Float));
-    if (fpn == NULL)
+static Float *FloatCreate(Float64 value, Error *error) {
+    Float *fpn = MemoryAlloc(sizeof(Float), error);
+    if (ERROR(error))
         return NULL;
     fpn->value = value;
     return fpn;
 }
 
-Float *FloatDecode(Byte **bytes) {
+Float *FloatDecode(Byte **bytes, Error *error) {
     Float64 value = DecodeFloat64(bytes);
-    return FloatCreate(value);
+    return FloatCreate(value, error);
 }
 
 Bool FloatEqual(Float *fpn, Float *other) {

@@ -12,17 +12,27 @@ struct Component {
     Integer8 codepoints[];
 };
 
-static Identifier *IdentifierCreate(Integer8 count) {
-    Identifier *id = MemoryAlloc(sizeof(Identifier) + sizeof(Integer8) * count);
-    if (id == NULL)
+static Size IdentifierSize(Integer8 count) {
+    return sizeof(Identifier) + sizeof(Integer8) * count;
+}
+
+static Size IdentifierComponentSize(Integer8 length) {
+    return sizeof(Component) + sizeof(Integer8) * length;
+}
+
+static Identifier *IdentifierCreate(Integer8 count, Error *error) {
+    Size size = IdentifierSize(count);
+    Identifier *id = MemoryAlloc(size, error);
+    if (ERROR(error))
         return NULL;
     id->count = count;
     return id;
 }
 
-static Component *IdentifierComponentCreate(Integer8 length) {
-    Component *component = MemoryAlloc(sizeof(Component) + sizeof(Integer8) * length);
-    if (component == NULL)
+static Component *IdentifierComponentCreate(Integer8 length, Error *error) {
+    Size size = IdentifierComponentSize(length);
+    Component *component = MemoryAlloc(size, error);
+    if (ERROR(error))
         return NULL;
     component->length = length;
     return component;
@@ -39,21 +49,27 @@ static void IdentifierDealloc(Identifier *id, Integer8 count) {
     MemoryDealloc(id);
 }
 
-Identifier *IdentifierDecode(Byte **bytes) {
+Identifier *IdentifierDecode(Byte **bytes, Error *error) {
     Integer8 count = DecodeInteger8(bytes);
-    Identifier *id = IdentifierCreate(count);
-    if (id == NULL)
+    Identifier *id = IdentifierCreate(count, error);
+    if (ERROR(error))
         return NULL;
-    for (Integer8 index = 0; index < count; index += 1) {
+    Integer8 index = 0;
+    while (index < count) {
         Integer8 length = DecodeInteger8(bytes);
-        Component *component = IdentifierComponentCreate(length);
-        if (component == NULL)
-            return IdentifierDealloc(id, index), NULL;
+        Component *component = IdentifierComponentCreate(length, error);
+        if (ERROR(error))
+            goto id;
         for (Integer8 index = 0; index < length; index += 1)
             component->codepoints[index] = DecodeInteger8(bytes);
         id->components[index] = component;
+        index += 1;
     }
     return id;
+
+id:
+    IdentifierDealloc(id, index);
+    return NULL;
 }
 
 Bool IdentifierEqual(Identifier *id, Identifier *other) {
@@ -66,10 +82,9 @@ Bool IdentifierEqual(Identifier *id, Identifier *other) {
 }
 
 Size IdentifierRelease(Identifier *id) {
-    Integer8 count = id->count;
-    Size size = sizeof(Identifier) + sizeof(Component *) * count;
-    for (Integer8 index = 0; index < count; index += 1)
-        size += sizeof(Component) + sizeof(Integer8) * id->components[index]->length;
-    IdentifierDealloc(id, count);
+    Size size = IdentifierSize(id->count);
+    for (Integer8 index = 0; index < id->count; index += 1)
+        size += IdentifierComponentSize(id->components[index]->length);
+    IdentifierDealloc(id, id->count);
     return size;
 }

@@ -16,41 +16,45 @@ static Size DoSize(Integer32 count) {
     return sizeof(Do) * sizeof(Statement) * count;
 }
 
-static Do *DoCreate(Integer32 count) {
+static Do *DoCreate(Integer32 count, Error *error) {
     Size size = DoSize(count);
-    Do *block = MemoryAlloc(size);
-    if (block == NULL)
+    Do *block = MemoryAlloc(size, error);
+    if (ERROR(error))
         return NULL;
     block->count = count;
     return block;
 }
 
-Do *DoDecode(Byte **bytes) {
+Do *DoDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
-    Do *block = DoCreate(count);
-    if (block == NULL)
+    Do *block = DoCreate(count, error);
+    if (ERROR(error))
         return NULL;
     for (Integer32 index = 0; index < count; index += 1) {
-        Value *name = ValueDecode(bytes);
-        if (name == NULL)
-            return DoRelease(block), NULL;
-        Value *value = ValueDecode(bytes);
-        if (value == NULL)
-            return DoRelease(block), NULL;
-        block->statements[index].name = name;
-        block->statements[index].value = value;
+        block->statements[index].name = ValueDecode(bytes, error);
+        if (ERROR(error))
+            goto block;
+        block->statements[index].value = ValueDecode(bytes, error);
+        if (ERROR(error))
+            goto block;
     }
     return block;
+
+block:
+    DoRelease(block);
+    return NULL;
 }
 
-Value *DoEval(Do *block, Value *context) {
+Value *DoEval(Do *block, Value *context, Error *error) {
     Value *value = NULL;
     for (Integer32 index = 0; index < block->count; index += 1) {
-        value = ValueEval(block->statements[index].value, context);
-        if (value == NULL)
+        value = ValueEval(block->statements[index].value, context, error);
+        if (ERROR(error))
             return NULL;
         if (block->statements[index].name != VALUE_NIL)
-            context = ValueSetValueForKey(context, value, block->statements[index].name);
+            context = ValueSetValueForKey(context, value, block->statements[index].name, error);
+        if (value == NULL)
+            return NULL;
     }
     return value;
 }

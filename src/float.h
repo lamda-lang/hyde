@@ -3,7 +3,7 @@
 
 #include "runtime.h"
 
-Float *FloatDecode(Byte **bytes);
+Float *FloatDecode(Byte **bytes, Error *error);
 Bool FloatEqual(Float *fpn, Float *other);
 Size FloatRelease(Float *fpn);
 

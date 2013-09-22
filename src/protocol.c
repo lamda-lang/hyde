@@ -12,30 +12,37 @@ struct Protocol {
     Signature signatures[];
 };
 
-static Protocol *ProtocolCreate(Integer32 count) {
-    Protocol *protocol = MemoryAlloc(sizeof(Protocol) + sizeof(Signature) * count);
-    if (protocol == NULL)
+static Size ProtocolSize(Integer32 count) {
+    return sizeof(Protocol) + sizeof(Signature) * count;
+}
+
+static Protocol *ProtocolCreate(Integer32 count, Error *error) {
+    Size size = ProtocolSize(count);
+    Protocol *protocol = MemoryAlloc(size, error);
+    if (ERROR(error))
         return NULL;
     protocol->count = count;
     return protocol;
 }
 
-Protocol *ProtocolDecode(Byte **bytes) {
+Protocol *ProtocolDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
-    Protocol *protocol = ProtocolCreate(count);
-    if (protocol == NULL)
+    Protocol *protocol = ProtocolCreate(count, error);
+    if (ERROR(error))
         return NULL;
     for (Integer32 index = 0; index < count; index += 1) {
-        Value *name = ValueDecode(bytes);
-        if (name == NULL)
-            return ProtocolRelease(protocol), NULL;
-        Value *arity = ValueDecode(bytes);
-        if (arity == NULL)
-            return ProtocolRelease(protocol), NULL;
-        protocol->signatures[index].name = name;
-        protocol->signatures[index].arity = arity;
+        protocol->signatures[index].name = ValueDecode(bytes, error);
+        if (ERROR(error))
+            goto protocol;
+        protocol->signatures[index].arity = ValueDecode(bytes, error);
+        if (ERROR(error))
+            goto protocol;
     }
     return protocol;
+
+protocol:
+    ProtocolRelease(protocol);
+    return NULL;
 }
 
 Bool ProtocolEqual(Protocol *protocol, Protocol *other) {
@@ -51,7 +58,7 @@ Bool ProtocolEqual(Protocol *protocol, Protocol *other) {
 }
 
 Size ProtocolRelease(Protocol *protocol) {
-    Integer32 count = protocol->count;
+    Size size = ProtocolSize(protocol->count);
     MemoryDealloc(protocol);
-    return sizeof(Protocol) + sizeof(Signature) * count;
+    return size;
 }

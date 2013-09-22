@@ -1,15 +1,26 @@
 #include "memory.h"
 
-void *MemoryAlloc(Size size) {
-    return malloc(size);
+void *MemoryAlloc(Size size, Error *error) {
+    void *buffer = malloc(size);
+    if (buffer == NULL && error != NULL)
+        goto error;
+    return buffer;
+
+error:
+    *error = ERROR_OF_OF_MEMORY;
+    return NULL;
 }
 
-void *MemoryClone(void *buffer, Size size) {
+void *MemoryClone(void *buffer, Size size, Error *error) {
     void *clone = malloc(size);
-    if (clone == NULL)
-        return NULL;
+    if (clone == NULL && error != NULL)
+        goto error;
     memcpy(clone, buffer, size);
     return clone;
+
+error:
+    *error = ERROR_OF_OF_MEMORY;
+    return NULL;
 }
 
 void MemoryDealloc(void *buffer) {

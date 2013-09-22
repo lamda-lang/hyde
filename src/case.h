@@ -3,8 +3,8 @@
 
 #include "runtime.h"
 
-Case *CaseDecode(Byte **bytes);
-Value *CaseEval(Case *block, Value *context);
+Case *CaseDecode(Byte **bytes, Error *error);
+Value *CaseEval(Case *block, Value *context, Error *error);
 Bool CaseEqual(Case *block, Case *other);
 Size CaseRelease(Case *block);
 

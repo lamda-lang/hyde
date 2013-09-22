@@ -12,39 +12,46 @@ struct When {
     Branch branches[];
 };
 
-static When *WhenCreate(Integer32 count) {
-    When *block = MemoryAlloc(sizeof(When) + sizeof(Branch) * count);
-    if (block == NULL)
+static Size WhenSize(Integer32 count) {
+    return sizeof(When) + sizeof(Branch) * count;
+}
+
+static When *WhenCreate(Integer32 count, Error *error) {
+    Size size = WhenSize(count);
+    When *block = MemoryAlloc(size, error);
+    if (ERROR(error))
         return NULL;
     block->count = count;
     return block;
 }
 
-When *WhenDecode(Byte **bytes) {
+When *WhenDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
-    When *block = WhenCreate(count);
-    if (block == NULL)
+    When *block = WhenCreate(count, error);
+    if (ERROR(error))
         return NULL;
     for (Integer32 index = 0; index < count; index += 1) {
-        Value *condition = ValueDecode(bytes);
-        if (condition == NULL)
-            return WhenRelease(block), NULL;
-        Value *value = ValueDecode(bytes);
-        if (value == NULL)
-            return WhenRelease(block), NULL;
-        block->branches[index].condition = condition;
-        block->branches[index].value = value;
+        block->branches[index].condition = ValueDecode(bytes, error);
+        if (ERROR(error))
+            goto block;
+        block->branches[index].value = ValueDecode(bytes, error);
+        if (ERROR(error))
+            goto block;
     }
     return block;
+
+block:
+    WhenRelease(block);
+    return NULL;
 }
 
-Value *WhenEval(When *block, Value *context) {
+Value *WhenEval(When *block, Value *context, Error *error) {
     for (Integer32 index = 0; index < block->count; index += 1) {
-        Value *condition = ValueEval(block->branches[index].condition, context);
-        if (condition == NULL)
+        Value *condition = ValueEval(block->branches[index].condition, context, error);
+        if (ERROR(error))
             return NULL;
         if (condition == VALUE_TRUE)
-            return ValueEval(block->branches[index].value, context);
+            return ValueEval(block->branches[index].value, context, error);
     }
     return VALUE_NIL;
 }
@@ -62,7 +69,7 @@ Bool WhenEqual(When *block, When *other) {
 }
 
 Size WhenRelease(When *block) {
-    Integer32 count = block->count;
+    Size size = WhenSize(block->count);
     MemoryDealloc(block);
-    return sizeof(When) + sizeof(Branch) * count;
+    return size;
 }

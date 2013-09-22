@@ -4,17 +4,17 @@ struct Integer {
     Integer64 value;
 };
 
-static Integer *IntegerCreate(Integer64 value) {
-    Integer *integer = MemoryAlloc(sizeof(Integer));
-    if (integer != NULL)
+static Integer *IntegerCreate(Integer64 value, Error *error) {
+    Integer *integer = MemoryAlloc(sizeof(Integer), error);
+    if (ERROR(error))
         return NULL;
     integer->value = value;
     return integer;
 }
 
-Integer *IntegerDecode(Byte **bytes) {
+Integer *IntegerDecode(Byte **bytes, Error *error) {
     Integer64 value = DecodeInteger64(bytes);
-    return IntegerCreate(value);
+    return IntegerCreate(value, error);
 }
 
 Bool IntegerEqual(Integer *integer, Integer *other) {

@@ -5,33 +5,33 @@ struct Range {
     Value *upper;
 };
 
-static Range *RangeCreate(Value *lower, Value *upper) {
-    Range *range = MemoryAlloc(sizeof(Range));
-    if (range == NULL)
+static Range *RangeCreate(Value *lower, Value *upper, Error *error) {
+    Range *range = MemoryAlloc(sizeof(Range), error);
+    if (ERROR(error))
         return NULL;
     range->lower = lower;
     range->upper = upper;
     return range;
 }
 
-Range *RangeDecode(Byte **bytes) {
-    Value *lower = ValueDecode(bytes);
-    if (lower == NULL)
+Range *RangeDecode(Byte **bytes, Error *error) {
+    Value *lower = ValueDecode(bytes, error);
+    if (ERROR(error))
         return NULL;
-    Value *upper = ValueDecode(bytes);
-    if (lower == NULL)
+    Value *upper = ValueDecode(bytes, error);
+    if (ERROR(error))
         return NULL;
-    return RangeCreate(lower, upper);
+    return RangeCreate(lower, upper, error);
 }
 
-Range *RangeEval(Range *range, Value *context) {
-    Value *lower = ValueEval(range->lower, context);
-    if (lower == NULL)
+Range *RangeEval(Range *range, Value *context, Error *error) {
+    Value *lower = ValueEval(range->lower, context, error);
+    if (ERROR(error))
         return NULL;
-    Value *upper = ValueEval(range->upper, context);
-    if (upper == NULL)
+    Value *upper = ValueEval(range->upper, context, error);
+    if (ERROR(error))
         return NULL;
-    return RangeCreate(lower, upper);
+    return RangeCreate(lower, upper, error);
 }
 
 Bool RangeEqual(Range *range, Range *other) {

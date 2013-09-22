@@ -3,7 +3,7 @@
 
 #include "runtime.h"
 
-Type *TypeDecode(Byte **bytes);
+Type *TypeDecode(Byte **bytes, Error *error);
 Bool TypeEqual(Type *type, Type *other);
 Size TypeRelease(Type *type);
 

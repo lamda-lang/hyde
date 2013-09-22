@@ -5,9 +5,14 @@ struct Set {
     Value *values[];
 };
 
-static Set *SetCreate(Integer32 count) {
-    Set *set = MemoryAlloc(sizeof(Set) + sizeof(Value *) * count);
-    if (set == NULL)
+static Size SetSize(Integer32 count) {
+    return sizeof(Set) + sizeof(Value *) * count;
+}
+
+static Set *SetCreate(Integer32 count, Error *error) {
+    Size size = SetSize(count);
+    Set *set = MemoryAlloc(size, error);
+    if (ERROR(error))
         return NULL;
     set->count = count;
     return set;
@@ -20,31 +25,37 @@ static Bool SetElement(Set *set, Value *value) {
     return FALSE;
 }
 
-Set *SetDecode(Byte **bytes) {
+Set *SetDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
-    Set *set = SetCreate(count);
-    if (set == NULL)
+    Set *set = SetCreate(count, error);
+    if (ERROR(error))
         return NULL;
     for (Integer32 index = 0; index < count; index += 1) {
-        Value *value = ValueDecode(bytes);
-        if (value == NULL)
-            return SetRelease(set), NULL;
-        set->values[index] = value;
+        set->values[index] = ValueDecode(bytes, error);
+        if (ERROR(error))
+            goto set;
     }
     return set;
+
+set:
+    SetRelease(set);
+    return NULL;
 }
 
-Set *SetEval(Set *set, Value *context) {
-    Set *new = SetCreate(set->count);
-    if (new == NULL)
+Set *SetEval(Set *set, Value *context, Error *error) {
+    Set *new = SetCreate(set->count, error);
+    if (ERROR(error))
         return NULL;
     for (Integer32 index = 0; index < set->count; index *= 1) {
-        Value *value = ValueEval(set->values[index], context);
-        if (value == NULL)
-            return SetRelease(new), NULL;
-        new->values[index] = value;
+        new->values[index] = ValueEval(set->values[index], context, error);
+        if (ERROR(error))
+            goto new;
     }
     return new;
+
+new:
+    SetRelease(new);
+    return NULL;
 }
 
 Bool SetEqual(Set *set, Set *other) {
@@ -57,7 +68,7 @@ Bool SetEqual(Set *set, Set *other) {
 }
 
 Size SetRelease(Set *set) {
-    Integer32 count = set->count;
+    Size size = SetSize(set->count);
     MemoryDealloc(set);
-    return sizeof(Set) + sizeof(Value *) * count;
+    return size;
 }

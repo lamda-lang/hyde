@@ -3,7 +3,7 @@
 
 #include "runtime.h"
 
-Identifier *IdentifierDecode(Byte **bytes);
+Identifier *IdentifierDecode(Byte **bytes, Error *error);
 Bool IdentifierEqual(Identifier *id, Identifier *other);
 Size IdentifierRelease(Identifier *id);
 

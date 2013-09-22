@@ -5,39 +5,50 @@ struct List {
     Value *values[];
 };
 
-static List *ListCreate(Integer32 count) {
-    List *list = MemoryAlloc(sizeof(List) + sizeof(Value *) * count);
-    if (list == NULL)
+static Size ListSize(Integer32 count) {
+    return sizeof(List) + sizeof(Value *) * count;
+}
+
+static List *ListCreate(Integer32 count, Error *error) {
+    Size size = ListSize(count);
+    List *list = MemoryAlloc(size, error);
+    if (ERROR(error))
         return NULL;
     list->count = count;
     return list;
 }
 
-List *ListDecode(Byte **bytes) {
+List *ListDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
-    List *list = ListCreate(count);
-    if (list == NULL)
+    List *list = ListCreate(count, error);
+    if (ERROR(error))
         return NULL;
     for (Integer32 index = 0; index < count; index += 1) {
-        Value *value = ValueDecode(bytes);
-        if (value == NULL)
-            return ListRelease(list), NULL;
-        list->values[index] = value;
+        list->values[index] = ValueDecode(bytes, error);
+        if (ERROR(error))
+            goto list;
     }
     return list;
+
+list:
+    ListRelease(list);
+    return NULL;
 }
 
-List *ListEval(List *list, Value *context) {
-    List *new = ListCreate(list->count);
-    if (new == NULL)
+List *ListEval(List *list, Value *context, Error *error) {
+    List *new = ListCreate(list->count, error);
+    if (ERROR(error))
         return NULL;
     for (Integer32 index = 0; index < list->count; index += 1) {
-        Value *value = ValueEval(list->values[index], context);
-        if (value == NULL)
-            return ListRelease(new), NULL;
-        new->values[index] = value;
+        new->values[index] = ValueEval(list->values[index], context, error);
+        if (ERROR(error))
+            goto new;
     }
     return new;
+
+new:
+    ListRelease(new);
+    return NULL;
 }
 
 Bool ListEqual(List *list, List *other) {
@@ -50,7 +61,7 @@ Bool ListEqual(List *list, List *other) {
 }
 
 Size ListRelease(List *list) {
-    Integer32 count = list->count;
+    Size size = ListSize(list->count);
     MemoryDealloc(list);
-    return sizeof(List) + sizeof(Value *) * count;
+    return size;
 }

@@ -3,8 +3,8 @@
 
 #include "runtime.h"
 
-Set *SetDecode(Byte **bytes);
-Set *SetEval(Set *set, Value *context);
+Set *SetDecode(Byte **bytes, Error *error);
+Set *SetEval(Set *set, Value *context, Error *error);
 Bool SetEqual(Set *set, Set *other);
 Size SetRelease(Set *set);
 

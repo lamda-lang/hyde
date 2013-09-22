@@ -9,6 +9,7 @@
 
 #define TRUE 1
 #define FALSE 0
+#define ERROR(error) (*error != ERROR_NONE)
 
 typedef unsigned char Byte;
 typedef size_t Size;
