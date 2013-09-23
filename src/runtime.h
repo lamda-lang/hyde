@@ -15,6 +15,7 @@ typedef unsigned char Byte;
 typedef size_t Size;
 typedef _Bool Bool;
 typedef uint8_t Integer8;
+typedef uint16_t Integer16;
 typedef uint32_t Integer32;
 typedef uint64_t Integer64;
 typedef double Float64;
@@ -43,6 +44,29 @@ typedef enum {
     ERROR_OF_OF_MEMORY,
     ERROR_PRINT
 } Error;
+
+enum {
+    OPCODE_BOOLEAN_TRUE = 0,
+    OPCODE_BOOLEAN_FALSE = 1,
+    OPCODE_CASE = 2,
+    OPCODE_DO = 6,
+    OPCODE_FLOAT = 7,
+    OPCODE_IDENTIFIER = 8,
+    OPCODE_INTEGER = 9,
+    OPCODE_LAMDA = 10,
+    OPCODE_LIST = 11,
+    OPCODE_MAP = 12,
+    OPCODE_MODULE = 13,
+    OPCODE_NIL = 14,
+    OPCODE_PROTOCOL = 15,
+    OPCODE_RANGE = 16,
+    OPCODE_RESULT = 17,
+    OPCODE_SET = 18,
+    OPCODE_STRING = 19,
+    OPCODE_TOKEN = 20,
+    OPCODE_TYPE = 21,
+    OPCODE_WHEN = 22
+};
 
 #include "case.h"
 #include "decode.h"

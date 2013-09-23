@@ -34,6 +34,14 @@ Size ProtocolSize(Protocol *protocol) {
     return size;
 }
 
+void ProtocolEncode(Protocol *protocol, Byte **bytes) {
+    EncodeInteger8(OPCODE_PROTOCOL, bytes);
+    EncodeInteger32(protocol->count, bytes);
+    for (Integer32 index = 0; index < protocol->count; index += 1) {
+        ValueEncode(protocol->signatures[index].name, bytes);
+        ValueEncode(protocol->signatures[index].arity, bytes);
+    }
+}
 Protocol *ProtocolDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     Protocol *protocol = ProtocolCreate(count, error);

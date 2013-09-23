@@ -22,6 +22,13 @@ Size TokenSize(Token *token) {
     return sizeof(Integer8) + sizeof(Integer8) + sizeof(Integer8) * token->length;
 }
 
+void TokenEncode(Token *token, Byte **bytes) {
+    EncodeInteger8(OPCODE_TOKEN, bytes);
+    EncodeInteger8(token->length, bytes);
+    for (Integer8 index = 0; index < token->length; index += 1)
+        EncodeInteger8(token->codepoints[index], bytes);
+}
+
 Token *TokenDecode(Byte **bytes, Error *error) {
     Integer8 length = DecodeInteger8(bytes);
     Token *token = TokenCreate(length, error);

@@ -29,6 +29,14 @@ Size ResultSize(Result *result) {
     return size;
 }
 
+void ResultEncode(Result *result, Byte **bytes) {
+    EncodeInteger8(OPCODE_RESULT, bytes);
+    ValueEncode(result->target, bytes);
+    EncodeInteger8(result->count, bytes);
+    for (Integer8 index = 0; index < result->count; index += 1)
+        ValueEncode(result->args[index], bytes);
+}
+
 Result *ResultDecode(Byte **bytes, Error *error) {
     Value *target = ValueDecode(bytes, error);
     if (ERROR(error))

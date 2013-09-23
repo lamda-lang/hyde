@@ -25,6 +25,13 @@ Size TypeSize(Type *type) {
     return size;
 }
 
+void TypeEncode(Type *type, Byte **bytes) {
+    EncodeInteger8(OPCODE_TYPE, bytes);
+    EncodeInteger32(type->count, bytes);
+    for (Integer32 index = 0; index < type->count; index += 1)
+        ValueEncode(type->members[index], bytes);
+}
+
 Type *TypeDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     Type *type = TypeCreate(count, error);

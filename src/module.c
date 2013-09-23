@@ -41,6 +41,16 @@ Size ModuleSize(Module *module) {
     return size;
 }
 
+Size ModuleEncode(Module *module, Byte **bytes) {
+    EncodeInteger8(OPCODE_MODULE, bytes);
+    EncodeInteger32(module->count, bytes);
+    for (Integer32 index = 0; index < module->count; index += 1) {
+        ValueEncode(module->definitions[index].name, bytes);
+        ValueEncode(module->definitions[index].value, bytes);
+        ModuleEncode(module->definitions[index].local, bytes);
+    }
+}
+
 Module *ModuleDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     Module *module = ModuleCreate(count, error);

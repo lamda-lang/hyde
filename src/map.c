@@ -41,6 +41,15 @@ Size MapSize(Map *map) {
     return size;
 }
 
+void MapEncode(Map *map, Byte **bytes) {
+    EncodeInteger8(OPCODE_MAP, bytes);
+    EncodeInteger32(map->count, bytes);
+    for (Integer32 index = 0; index < map->count; index += 1) {
+        ValueEncode(map->pairs[index].key, bytes);
+        ValueEncode(map->pairs[index].value, bytes);
+    }
+}
+
 Map *MapDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     Map *map = MapCreate(count, error);

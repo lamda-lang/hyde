@@ -25,6 +25,13 @@ Size ListSize(List *list) {
     return size;
 }
 
+void ListEncode(List *list, Byte **bytes) {
+    EncodeInteger8(OPCODE_LIST, bytes);
+    EncodeInteger32(list->count, bytes);
+    for (Integer32 index = 0; index < list->count; index += 1)
+        ValueEncode(list->values[index], bytes);
+}
+
 List *ListDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     List *list = ListCreate(count, error);

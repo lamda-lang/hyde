@@ -29,6 +29,14 @@ Size LamdaSize(Lamda *lamda) {
     return size;
 }
 
+void LamdaEncode(Lamda *lamda, Byte **bytes) {
+    EncodeInteger8(OPCODE_LAMDA, bytes);
+    EncodeInteger8(lamda->arity, bytes);
+    ValueEncode(lamda->result, bytes);
+    for (Integer8 index = 0; index < lamda->arity; index += 1)
+        ValueEncode(lamda->args[index], bytes);
+}
+
 Lamda *LamdaDecode(Byte **bytes, Error *error) {
     Integer8 arity = DecodeInteger8(bytes);
     Value *result = ValueDecode(bytes, error);

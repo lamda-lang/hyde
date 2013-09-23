@@ -32,6 +32,13 @@ Size SetSize(Set *set) {
     return size;
 }
 
+void SetEncode(Set *set, Byte **bytes) {
+    EncodeInteger8(OPCODE_SET, bytes);
+    EncodeInteger32(set->count, bytes);
+    for (Integer32 index = 0; index < set->count; index += 1)
+        ValueEncode(set->values[index], bytes);
+}
+
 Set *SetDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     Set *set = SetCreate(count, error);

@@ -38,6 +38,17 @@ Size CaseSize(Case *block) {
     return size;
 }
 
+void CaseEncode(Case *block, Byte **bytes) {
+    EncodeInteger8(OPCODE_CASE, bytes);
+    ValueEncode(block->arg, bytes);
+    EncodeInteger32(block->count, bytes);
+    for (Integer32 index = 0; index < block->count; index += 1) {
+        ValueEncode(block->branches[index].match, bytes);
+        ValueEncode(block->branches[index].guard, bytes);
+        ValueEncode(block->branches[index].value, bytes);
+    }
+}
+
 Case *CaseDecode(Byte **bytes, Error *error) {
     Value *arg = ValueDecode(bytes, error);
     if (ERROR(error))

@@ -16,6 +16,11 @@ Size FloatSize(Float *fpn) {
     return sizeof(Integer8) + sizeof(Float64);
 }
 
+void FLoatEncode(Float *fpn, Byte **bytes) {
+    EncodeInteger8(OPCODE_FLOAT, bytes);
+    EncodeFloat64(fpn->value, bytes);
+}
+
 Float *FloatDecode(Byte **bytes, Error *error) {
     Float64 value = DecodeFloat64(bytes);
     return FloatCreate(value, error);

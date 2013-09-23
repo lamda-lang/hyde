@@ -1,28 +1,5 @@
 #include "value.h"
 
-enum {
-    OPCODE_BOOLEAN_TRUE = 0,
-    OPCODE_BOOLEAN_FALSE = 1,
-    OPCODE_CASE = 2,
-    OPCODE_DO = 6,
-    OPCODE_FLOAT = 7,
-    OPCODE_IDENTIFIER = 8,
-    OPCODE_INTEGER = 9,
-    OPCODE_LAMDA = 10,
-    OPCODE_LIST = 11,
-    OPCODE_MAP = 12,
-    OPCODE_MODULE = 13,
-    OPCODE_NIL = 14,
-    OPCODE_PROTOCOL = 15,
-    OPCODE_RANGE = 16,
-    OPCODE_RESULT = 17,
-    OPCODE_SET = 18,
-    OPCODE_STRING = 19,
-    OPCODE_TOKEN = 20,
-    OPCODE_TYPE = 21,
-    OPCODE_WHEN = 22
-};
-
 typedef enum {
     MODEL_BOOLEAN,
     MODEL_CASE,
@@ -63,6 +40,9 @@ static Value *ValueCreate(Model model, void *data, Error *error) {
     value->model = model;
     value->data = data;
     return value;
+}
+
+void ValueEncode(Value *value, Byte **bytes) {
 }
 
 Value *ValueDecode(Byte **bytes, Error *error) {

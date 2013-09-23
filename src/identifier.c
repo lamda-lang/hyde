@@ -56,6 +56,17 @@ Size IdentifierSize(Identifier *id) {
     return size;
 }
 
+void IdentifierEncode(Identifier *id, Byte **bytes) {
+    EncodeInteger8(OPCODE_IDENTIFIER, bytes);
+    EncodeInteger8(id->count, bytes);
+    for (Integer8 index = 0; index < id->count; index += 1) {
+        Component *component = id->components[index];
+        EncodeInteger8(component->length, bytes);
+        for (Integer8 index = 0; index < component->length; index += 1)
+            EncodeInteger8(component->codepoints[index], bytes);
+    }
+}
+
 Identifier *IdentifierDecode(Byte **bytes, Error *error) {
     Integer8 count = DecodeInteger8(bytes);
     Identifier *id = IdentifierCreate(count, error);

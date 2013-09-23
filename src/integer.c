@@ -16,6 +16,11 @@ Size IntegerSize(Integer *integer) {
     return sizeof(Integer8) + sizeof(Integer64);
 }
 
+void IntegerEncode(Integer *integer, Byte **bytes) {
+    EncodeInteger8(OPCODE_INTEGER, bytes);
+    EncodeInteger64(integer->value, bytes);
+}
+
 Integer *IntegerDecode(Byte **bytes, Error *error) {
     Integer64 value = DecodeInteger64(bytes);
     return IntegerCreate(value, error);

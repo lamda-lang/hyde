@@ -18,6 +18,12 @@ Size RangeSize(Range *range) {
     return sizeof(Integer8) + ValueSize(range->lower) + ValueSize(range->upper);
 }
 
+void RangeEncode(Range *range, Byte **bytes) {
+    EncodeInteger8(OPCODE_RANGE, bytes);
+    ValueEncode(range->lower, bytes);
+    ValueEncode(range->upper, bytes);
+}
+
 Range *RangeDecode(Byte **bytes, Error *error) {
     Value *lower = ValueDecode(bytes, error);
     if (ERROR(error))

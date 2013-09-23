@@ -34,6 +34,15 @@ Size DoSize(Do *block) {
     return size;
 }
 
+void DoEncode(Do *block, Byte **bytes) {
+    EncodeInteger8(OPCODE_DO, bytes);
+    EncodeInteger32(block->count, bytes);
+    for (Integer32 index = 0; index < block->count; index += 1) {
+        ValueEncode(block->statements[index].name, bytes);
+        ValueEncode(block->statements[index].value, bytes);
+    }
+}
+
 Do *DoDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     Do *block = DoCreate(count, error);

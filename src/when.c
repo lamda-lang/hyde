@@ -34,6 +34,15 @@ Size WhenSize(When *block) {
     return size;
 }
 
+void WhenEncode(When *block, Byte **bytes) {
+    EncodeInteger8(OPCODE_WHEN, bytes);
+    EncodeInteger32(block->count, bytes);
+    for (Integer32 index = 0; index < block->count; index += 1) {
+        ValueEncode(block->branches[index].condition, bytes);
+        ValueEncode(block->branches[index].value, bytes);
+    }
+}
+
 When *WhenDecode(Byte **bytes, Error *error) {
     Integer32 count = DecodeInteger32(bytes);
     When *block = WhenCreate(count, error);
