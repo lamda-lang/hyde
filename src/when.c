@@ -12,17 +12,26 @@ struct When {
     Branch branches[];
 };
 
-static Size WhenSize(Integer32 count) {
+static Size WhenSizeOf(Integer32 count) {
     return sizeof(When) + sizeof(Branch) * count;
 }
 
 static When *WhenCreate(Integer32 count, Error *error) {
-    Size size = WhenSize(count);
+    Size size = WhenSizeOf(count);
     When *block = MemoryAlloc(size, error);
     if (ERROR(error))
         return NULL;
     block->count = count;
     return block;
+}
+
+Size WhenSize(When *block) {
+    Size size = sizeof(Integer8) + sizeof(Integer32);
+    for (Integer32 index = 0; index < block->count; index += 1) {
+        size += ValueSize(block->branches[index].condition);
+        size += ValueSize(block->branches[index].value);
+    }
+    return size;
 }
 
 When *WhenDecode(Byte **bytes, Error *error) {
@@ -69,7 +78,7 @@ Bool WhenEqual(When *block, When *other) {
 }
 
 Size WhenRelease(When *block) {
-    Size size = WhenSize(block->count);
+    Size size = WhenSizeOf(block->count);
     MemoryDealloc(block);
     return size;
 }

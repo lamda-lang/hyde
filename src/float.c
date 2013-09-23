@@ -12,6 +12,10 @@ static Float *FloatCreate(Float64 value, Error *error) {
     return fpn;
 }
 
+Size FloatSize(Float *fpn) {
+    return sizeof(Integer8) + sizeof(Float64);
+}
+
 Float *FloatDecode(Byte **bytes, Error *error) {
     Float64 value = DecodeFloat64(bytes);
     return FloatCreate(value, error);

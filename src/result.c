@@ -8,18 +8,25 @@ struct Result {
 
 static Value *args[256] = {NULL};
 
-static Size ResultSize(Integer8 count) {
+static Size ResultSizeOf(Integer8 count) {
     return sizeof(Result) + sizeof(Value *) * count;
 }
 
 static Result *ResultCreate(Value *target, Integer8 count, Error *error) {
-    Size size = ResultSize(count);
+    Size size = ResultSizeOf(count);
     Result *result = MemoryAlloc(size, error);
     if (ERROR(error))
         return NULL;
     result->target = target;
     result->count = count;
     return result;
+}
+
+Size ResultSize(Result *result) {
+    Size size = sizeof(Integer8) + ValueSize(result->target) + sizeof(Integer8);
+    for (Integer8 index = 0; index < result->count; index += 1)
+        size += ValueSize(result->args[index]);
+    return size;
 }
 
 Result *ResultDecode(Byte **bytes, Error *error) {
@@ -66,7 +73,7 @@ Bool ResultEqual(Result *result, Result *other) {
 }
 
 Size ResultRelease(Result *result) {
-    Size size = ResultSize(result->count);
+    Size size = ResultSizeOf(result->count);
     MemoryDealloc(result);
     return size;
 }

@@ -12,16 +12,16 @@ struct Component {
     Integer8 codepoints[];
 };
 
-static Size IdentifierSize(Integer8 count) {
+static Size IdentifierSizeOf(Integer8 count) {
     return sizeof(Identifier) + sizeof(Integer8) * count;
 }
 
-static Size IdentifierComponentSize(Integer8 length) {
+static Size IdentifierComponentSizeOf(Integer8 length) {
     return sizeof(Component) + sizeof(Integer8) * length;
 }
 
 static Identifier *IdentifierCreate(Integer8 count, Error *error) {
-    Size size = IdentifierSize(count);
+    Size size = IdentifierSizeOf(count);
     Identifier *id = MemoryAlloc(size, error);
     if (ERROR(error))
         return NULL;
@@ -30,7 +30,7 @@ static Identifier *IdentifierCreate(Integer8 count, Error *error) {
 }
 
 static Component *IdentifierComponentCreate(Integer8 length, Error *error) {
-    Size size = IdentifierComponentSize(length);
+    Size size = IdentifierComponentSizeOf(length);
     Component *component = MemoryAlloc(size, error);
     if (ERROR(error))
         return NULL;
@@ -47,6 +47,13 @@ static void IdentifierDealloc(Identifier *id, Integer8 count) {
     for (Integer8 index = 0; index < count; index += 1)
         MemoryDealloc(id->components[index]);
     MemoryDealloc(id);
+}
+
+Size IdentifierSize(Identifier *id) {
+    Size size = sizeof(Integer8) + sizeof(Integer8);
+    for (Integer8 index = 0; index < id->count; index += 1)
+        size += sizeof(Integer8) * id->components[index]->length;
+    return size;
 }
 
 Identifier *IdentifierDecode(Byte **bytes, Error *error) {
@@ -82,9 +89,9 @@ Bool IdentifierEqual(Identifier *id, Identifier *other) {
 }
 
 Size IdentifierRelease(Identifier *id) {
-    Size size = IdentifierSize(id->count);
+    Size size = IdentifierSizeOf(id->count);
     for (Integer8 index = 0; index < id->count; index += 1)
-        size += IdentifierComponentSize(id->components[index]->length);
+        size += IdentifierComponentSizeOf(id->components[index]->length);
     IdentifierDealloc(id, id->count);
     return size;
 }

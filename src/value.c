@@ -211,6 +211,10 @@ Value *ValueCall(Value *value, Value **args, Integer8 count, Error *error) {
     return NULL;
 }
 
+Size ValueSize(Value *value) {
+    return 0;
+}
+
 Size ValueRelease(Value *value) {
     void *data = value->data;
     Model model = value->model;

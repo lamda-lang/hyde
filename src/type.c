@@ -5,17 +5,24 @@ struct Type {
     Value *members[];
 }; 
 
-static Size TypeSize(Integer32 count) {
+static Size TypeSizeOf(Integer32 count) {
     return sizeof(Type) + sizeof(Value *) * count;
 }
 
 static Type *TypeCreate(Integer32 count, Error *error) {
-    Size size = TypeSize(count);
+    Size size = TypeSizeOf(count);
     Type *type = MemoryAlloc(size, error);
     if (ERROR(error))
         return NULL;
     type->count = count;
     return type;
+}
+
+Size TypeSize(Type *type) {
+    Size size = sizeof(Type) + sizeof(Value *) * type->count;
+    for (Integer32 index = 0; index < type->count; index += 1)
+        size += ValueSize(type->members[index]);
+    return size;
 }
 
 Type *TypeDecode(Byte **bytes, Error *error) {
@@ -45,7 +52,7 @@ Bool TypeEqual(Type *type, Type *other) {
 }
 
 Size TypeRelease(Type *type) {
-    Size size = TypeSize(type->count);
+    Size size = TypeSizeOf(type->count);
     MemoryDealloc(type);
     return size;
 }

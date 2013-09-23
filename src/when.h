@@ -3,6 +3,7 @@
 
 #include "runtime.h"
 
+Size WhenSize(When *block);
 When *WhenDecode(Byte **bytes, Error *error);
 Value *WhenEval(When *block, Value *context, Error *error);
 Bool WhenEqual(When *block, When *other);

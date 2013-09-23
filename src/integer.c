@@ -12,6 +12,10 @@ static Integer *IntegerCreate(Integer64 value, Error *error) {
     return integer;
 }
 
+Size IntegerSize(Integer *integer) {
+    return sizeof(Integer8) + sizeof(Integer64);
+}
+
 Integer *IntegerDecode(Byte **bytes, Error *error) {
     Integer64 value = DecodeInteger64(bytes);
     return IntegerCreate(value, error);

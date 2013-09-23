@@ -3,6 +3,7 @@
 
 #include "runtime.h"
 
+Size ProtocolSize(Protocol *protocol);
 Protocol *ProtocolDecode(Byte **bytes, Error *error);
 Bool ProtocolEqual(Protocol *protocol, Protocol *other);
 Size ProtocolRelease(Protocol *protocol);

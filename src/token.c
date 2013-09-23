@@ -5,17 +5,21 @@ struct Token {
     Integer8 codepoints[];
 };
 
-static Size TokenSize(Integer8 length) {
+static Size TokenSizeOf(Integer8 length) {
     return sizeof(Token) + sizeof(Integer8) * length;
 }
 
 static Token *TokenCreate(Integer8 length, Error *error) {
-    Size size = TokenSize(length);
+    Size size = TokenSizeOf(length);
     Token *token = MemoryAlloc(size, error);
     if (ERROR(error))
         return NULL;
     token->length = length;
     return token;
+}
+
+Size TokenSize(Token *token) {
+    return sizeof(Integer8) + sizeof(Integer8) + sizeof(Integer8) * token->length;
 }
 
 Token *TokenDecode(Byte **bytes, Error *error) {
@@ -34,7 +38,7 @@ Bool TokenEqual(Token *token, Token *other) {
 }
 
 Size TokenRelease(Token *token) {
-    Size size = TokenSize(token->length);
+    Size size = TokenSizeOf(token->length);
     MemoryDealloc(token);
     return size;
 }

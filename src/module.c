@@ -13,12 +13,12 @@ struct Module {
     Definition definitions[];
 };
 
-static Size ModuleSize(Integer32 count) {
+static Size ModuleSizeOf(Integer32 count) {
     return sizeof(Module) + sizeof(Definition) * count;
 }
 
 static Module *ModuleCreate(Integer32 count, Error *error) {
-    Size size = ModuleSize(count);
+    Size size = ModuleSizeOf(count);
     Module *module = MemoryAlloc(size, error);
     if (ERROR(error))
         return NULL;
@@ -27,10 +27,17 @@ static Module *ModuleCreate(Integer32 count, Error *error) {
 }
 
 static Size ModuleDealloc(Module *module, Integer32 count) {
-    Size size = ModuleSize(module->count);
+    Size size = ModuleSizeOf(module->count);
     for (Integer32 index = 0; index < count; index += 1)
         size += ModuleRelease(module->definitions[index].local);
     MemoryDealloc(module);
+    return size;
+}
+
+Size ModuleSize(Module *module) {
+    Size size = sizeof(Integer8) + sizeof(Integer32);
+    for (Integer32 index = 0; index < module->count; index += 1)
+        size += ModuleSize(module->definitions[index].local);
     return size;
 }
 

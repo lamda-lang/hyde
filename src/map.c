@@ -12,12 +12,12 @@ struct Map {
     Pair pairs[];
 };
 
-static Size MapSize(Integer32 count) {
+static Size MapSizeOf(Integer32 count) {
     return sizeof(Map) + sizeof(Pair) * count;
 }
 
 static Map *MapCreate(Integer32 count, Error *error) {
-    Size size = MapSize(count);
+    Size size = MapSizeOf(count);
     Map *map = MemoryAlloc(size, error);
     if (ERROR(error))
         return NULL;
@@ -30,6 +30,15 @@ static Value *MapValueForKey(Map *map, Value *key) {
         if (ValueEqual(key, map->pairs[index].key))
             return map->pairs[index].value;
     return NULL;
+}
+
+Size MapSize(Map *map) {
+    Size size = sizeof(Integer8) + sizeof(Integer32);
+    for (Integer32 index = 0; index < map->count; index += 1) {
+        size += ValueSize(map->pairs[index].key);
+        size += ValueSize(map->pairs[index].value);
+    }
+    return size;
 }
 
 Map *MapDecode(Byte **bytes, Error *error) {
@@ -83,7 +92,7 @@ Bool MapEqual(Map *map, Map *other) {
 }
 
 Size MapRelease(Map *map) {
-    Size size = MapSize(map->count);
+    Size size = MapSizeOf(map->count);
     MemoryDealloc(map);
     return size;
 }

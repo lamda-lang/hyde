@@ -12,17 +12,26 @@ struct Do {
   Statement statements[];
 };
 
-static Size DoSize(Integer32 count) {
+static Size DoSizeOf(Integer32 count) {
     return sizeof(Do) * sizeof(Statement) * count;
 }
 
 static Do *DoCreate(Integer32 count, Error *error) {
-    Size size = DoSize(count);
+    Size size = DoSizeOf(count);
     Do *block = MemoryAlloc(size, error);
     if (ERROR(error))
         return NULL;
     block->count = count;
     return block;
+}
+
+Size DoSize(Do *block) {
+    Size size = sizeof(Integer8) + sizeof(Integer32);
+    for (Integer32 index = 0; index < block->count; index += 1) {
+        size += ValueSize(block->statements[index].name);
+        size += ValueSize(block->statements[index].value);
+    }
+    return size;
 }
 
 Do *DoDecode(Byte **bytes, Error *error) {
@@ -72,7 +81,7 @@ Bool DoEqual(Do *block, Do *other) {
 }
 
 Size DoRelease(Do *block) {
-    Size size = DoSize(block->count);
+    Size size = DoSizeOf(block->count);
     MemoryDealloc(block);
     return size;
 }

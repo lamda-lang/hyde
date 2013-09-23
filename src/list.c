@@ -5,17 +5,24 @@ struct List {
     Value *values[];
 };
 
-static Size ListSize(Integer32 count) {
+static Size ListSizeOf(Integer32 count) {
     return sizeof(List) + sizeof(Value *) * count;
 }
 
 static List *ListCreate(Integer32 count, Error *error) {
-    Size size = ListSize(count);
+    Size size = ListSizeOf(count);
     List *list = MemoryAlloc(size, error);
     if (ERROR(error))
         return NULL;
     list->count = count;
     return list;
+}
+
+Size ListSize(List *list) {
+    Size size = sizeof(Integer8) + sizeof(Integer32);
+    for (Integer32 index = 0; index < list->count; index += 1)
+        size += ValueSize(list->values[index]);
+    return size;
 }
 
 List *ListDecode(Byte **bytes, Error *error) {
@@ -61,7 +68,7 @@ Bool ListEqual(List *list, List *other) {
 }
 
 Size ListRelease(List *list) {
-    Size size = ListSize(list->count);
+    Size size = ListSizeOf(list->count);
     MemoryDealloc(list);
     return size;
 }

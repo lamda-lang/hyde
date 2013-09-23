@@ -12,17 +12,26 @@ struct Protocol {
     Signature signatures[];
 };
 
-static Size ProtocolSize(Integer32 count) {
+static Size ProtocolSizeOf(Integer32 count) {
     return sizeof(Protocol) + sizeof(Signature) * count;
 }
 
 static Protocol *ProtocolCreate(Integer32 count, Error *error) {
-    Size size = ProtocolSize(count);
+    Size size = ProtocolSizeOf(count);
     Protocol *protocol = MemoryAlloc(size, error);
     if (ERROR(error))
         return NULL;
     protocol->count = count;
     return protocol;
+}
+
+Size ProtocolSize(Protocol *protocol) {
+    Size size = sizeof(Integer8) + sizeof(Integer32);
+    for (Integer32 index = 0; index < protocol->count; index += 1) {
+        size += ValueSize(protocol->signatures[index].name);
+        size += ValueSize(protocol->signatures[index].arity);
+    }
+    return size;
 }
 
 Protocol *ProtocolDecode(Byte **bytes, Error *error) {
@@ -58,7 +67,7 @@ Bool ProtocolEqual(Protocol *protocol, Protocol *other) {
 }
 
 Size ProtocolRelease(Protocol *protocol) {
-    Size size = ProtocolSize(protocol->count);
+    Size size = ProtocolSizeOf(protocol->count);
     MemoryDealloc(protocol);
     return size;
 }

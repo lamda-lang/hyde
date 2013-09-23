@@ -14,18 +14,28 @@ struct Case {
     Branch branches[];
 };
 
-static Size CaseSize(Integer32 count) {
+static Size CaseSizeOf(Integer32 count) {
     return sizeof(Case) + sizeof(Branch) * count;
 }
 
 static Case *CaseCreate(Value *arg, Integer32 count, Error *error) {
-    Size size = CaseSize(count);
+    Size size = CaseSizeOf(count);
     Case *block = MemoryAlloc(size, error);
     if (ERROR(error))
         return NULL;
     block->arg = arg;
     block->count = count;
     return block;
+}
+
+Size CaseSize(Case *block) {
+    Size size = sizeof(Integer8) + ValueSize(block->arg) + sizeof(Integer32);
+    for (Integer32 index = 0; index < block->count; index += 1) {
+        size += ValueSize(block->branches[index].match);
+        size += ValueSize(block->branches[index].guard);
+        size += ValueSize(block->branches[index].value);
+    }
+    return size;
 }
 
 Case *CaseDecode(Byte **bytes, Error *error) {
@@ -88,7 +98,7 @@ Bool CaseEqual(Case *block, Case *other) {
 }
 
 Size CaseRelease(Case *block) {
-    Size size = CaseSize(block->count);
+    Size size = CaseSizeOf(block->count);
     MemoryDealloc(block);
     return size;
 }

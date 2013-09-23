@@ -5,17 +5,21 @@ struct String {
     Integer32 codepoints[];
 };
 
-static Size StringSize(Integer32 length) {
+static Size StringSizeOf(Integer32 length) {
     return sizeof(String) + sizeof(Integer32) * length;
 }
 
 static String *StringCreate(Integer32 length, Error *error) {
-    Size size = StringSize(length);
+    Size size = StringSizeOf(length);
     String *string = MemoryAlloc(size, error);
     if (ERROR(error))
         return NULL;
     string->length = length;
     return string;
+}
+
+Size StringSize(String *string) {
+    return sizeof(Integer8) + sizeof(Integer32) + sizeof(Integer32) * string->length;
 }
 
 String *StringDecode(Byte **bytes, Error *error) {
@@ -34,7 +38,7 @@ Bool StringEqual(String *string, String *other) {
 }
 
 Size StringRelease(String *string) {
-    Size size = StringSize(string->length);
+    Size size = StringSizeOf(string->length);
     MemoryDealloc(string);
     return size;
 }

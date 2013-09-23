@@ -14,6 +14,10 @@ static Range *RangeCreate(Value *lower, Value *upper, Error *error) {
     return range;
 }
 
+Size RangeSize(Range *range) {
+    return sizeof(Integer8) + ValueSize(range->lower) + ValueSize(range->upper);
+}
+
 Range *RangeDecode(Byte **bytes, Error *error) {
     Value *lower = ValueDecode(bytes, error);
     if (ERROR(error))

@@ -5,12 +5,12 @@ struct Set {
     Value *values[];
 };
 
-static Size SetSize(Integer32 count) {
+static Size SetSizeOf(Integer32 count) {
     return sizeof(Set) + sizeof(Value *) * count;
 }
 
 static Set *SetCreate(Integer32 count, Error *error) {
-    Size size = SetSize(count);
+    Size size = SetSizeOf(count);
     Set *set = MemoryAlloc(size, error);
     if (ERROR(error))
         return NULL;
@@ -23,6 +23,13 @@ static Bool SetElement(Set *set, Value *value) {
         if (ValueEqual(value, set->values[index]))
             return TRUE;
     return FALSE;
+}
+
+Size SetSize(Set *set) {
+    Size size = sizeof(Integer8) + sizeof(Integer32);
+    for (Integer32 index = 0; index < set->count; index += 1)
+        size += ValueSize(set->values[index]);
+    return size;
 }
 
 Set *SetDecode(Byte **bytes, Error *error) {
@@ -68,7 +75,7 @@ Bool SetEqual(Set *set, Set *other) {
 }
 
 Size SetRelease(Set *set) {
-    Size size = SetSize(set->count);
+    Size size = SetSizeOf(set->count);
     MemoryDealloc(set);
     return size;
 }
