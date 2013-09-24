@@ -2,7 +2,7 @@
 
 File FileOpen(Char *path, Error *error) {
     int file = open(path, O_RDWR);
-    if (file == -1)
+    if (file == -1 && error != NULL)
         goto error;
     return file;
 
@@ -12,13 +12,13 @@ error:
 }
 
 void FileClose(File file, Error *error) {
-    if (close(file) == -1)
+    if (close(file) == -1 && error != NULL)
         *error = ERROR_FILE_CLOSE;
 }
 
 Size FileRead(File file, void *buffer, Size size, Error *error) {
     ssize_t consumed = read(file, buffer, size);
-    if (consumed == -1)
+    if (consumed == -1 && error != NULL)
         goto error;
     return consumed;
 
@@ -29,7 +29,7 @@ error:
 
 Size FileWrite(File file, void *buffer, Size size, Error *error) {
     ssize_t written = write(file, buffer, size);
-    if (written == -1)
+    if (written == -1 && error != NULL)
         goto error;
     return written;
 
@@ -40,7 +40,7 @@ error:
 
 Size FileSize(File file, Error *error) {
     struct stat status = {0};
-    if (fstat(file, &status) == -1)
+    if (fstat(file, &status) == -1 && error != NULL)
         goto error;
     return status.st_size;
 
