@@ -7,5 +7,6 @@ File FileOpen(Char *path, Error *error);
 void FileClose(File file, Error *error);
 Size FileRead(File file, void *buffer, Size size, Error *error);
 Size FileWrite(File file, void *buffer, Size size, Error *error);
+Size FileSize(File file, Error *error);
 
 #endif

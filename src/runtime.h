@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <unistd.h>
 
 #define TRUE 1
@@ -49,7 +50,8 @@ typedef enum {
     ERROR_FILE_OPEN,
     ERROR_FILE_CLOSE,
     ERROR_FILE_READ,
-    ERROR_FILE_WRITE
+    ERROR_FILE_WRITE,
+    ERROR_FILE_STATUS
 } Error;
 
 enum {

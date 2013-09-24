@@ -1,34 +1,39 @@
-#include <fcntl.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/stat.h>
 #include "runtime.h"
 
 int main(int argc, char **argv) {
-    /*
+    Error status = ERROR_NONE;
+    Error *error = &status;
     if (argc != 2)
         return EXIT_FAILURE;
-    int file = open(argv[1], O_RDONLY);
-    if (file == -1)
+    File file = FileOpen(argv[1], error);
+    if (ERROR(error))
         return EXIT_FAILURE;
-    struct stat status = {0};
-    if (fstat(file, &status) == -1)
-        return close(file), EXIT_FAILURE;
-    Byte *buffer = malloc(status.st_size * sizeof(Byte));
-    if (buffer == NULL)
-        return close(file), EXIT_FAILURE;
-    if (read(file, buffer, status.st_size) != status.st_size)
-        return close(file), free(buffer), EXIT_FAILURE;
+    Size size = FileSize(file, error);
+    if (ERROR(error))
+        goto file;
+    Byte *buffer = MemoryAlloc(size, error);
+    if (ERROR(error))
+        goto file;
+    FileRead(file, buffer, size, error);
+    if (ERROR(error))
+        goto buffer;
     Byte *bytes = buffer;
-    Value *decoded = ValueDecode(&bytes);
-    if (decoded == NULL)
-        return close(file), free(buffer), EXIT_FAILURE;
-    Value *evaluated = ValueEval(decoded, NULL);
-    if (evaluated == NULL)
-        return close(file), free(buffer), EXIT_FAILURE;
-    free(buffer);
-    if (close(file) == -1)
-        return EXIT_FAILURE;
+    Value *decoded = ValueDecode(&bytes, error);
+    if (ERROR(error))
+        goto buffer;
+    Value *evaluated = ValueEval(decoded, NULL, error);
+    if (ERROR(error))
+        goto buffer;
+    MemoryDealloc(buffer);
+    FileClose(file, error);
+    if (ERROR(error))
+        goto out;
     return EXIT_SUCCESS;
-    */
+
+buffer:
+    MemoryDealloc(buffer);
+file:
+    FileClose(file, NULL);
+out:
+    return EXIT_FAILURE;
 }

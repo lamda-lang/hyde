@@ -37,3 +37,14 @@ error:
     *error = ERROR_FILE_WRITE;
     return 0;
 }
+
+Size FileSize(File file, Error *error) {
+    struct stat status = {0};
+    if (fstat(file, &status) == -1)
+        goto error;
+    return status.st_size;
+
+error:
+    *error = ERROR_FILE_STATUS;
+    return 0;
+}
