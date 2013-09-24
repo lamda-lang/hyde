@@ -1,11 +1,13 @@
 #ifndef RUNTIME_H
 #define RUNTIME_H
 
+#include <fcntl.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #define TRUE 1
 #define FALSE 0
@@ -19,6 +21,8 @@ typedef uint16_t Integer16;
 typedef uint32_t Integer32;
 typedef uint64_t Integer64;
 typedef double Float64;
+typedef int File;
+typedef char Char;
 
 typedef struct Case Case;
 typedef struct Do Do;
@@ -42,7 +46,10 @@ typedef struct When When;
 typedef enum {
     ERROR_NONE,
     ERROR_OF_OF_MEMORY,
-    ERROR_PRINT
+    ERROR_FILE_OPEN,
+    ERROR_FILE_CLOSE,
+    ERROR_FILE_READ,
+    ERROR_FILE_WRITE
 } Error;
 
 enum {
@@ -72,6 +79,7 @@ enum {
 #include "decode.h"
 #include "do.h"
 #include "encode.h"
+#include "file.h"
 #include "float.h"
 #include "identifier.h"
 #include "integer.h"
