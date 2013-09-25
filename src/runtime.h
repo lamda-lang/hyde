@@ -25,6 +25,7 @@ typedef double Float64;
 typedef int File;
 typedef char Char;
 
+typedef struct Binary Binary;
 typedef struct Case Case;
 typedef struct Do Do;
 typedef struct Float Float;
@@ -55,6 +56,7 @@ typedef enum {
 } Error;
 
 enum {
+    OPCODE_BINARY = 23,
     OPCODE_BOOLEAN_TRUE = 0,
     OPCODE_BOOLEAN_FALSE = 1,
     OPCODE_CASE = 2,
@@ -77,6 +79,7 @@ enum {
     OPCODE_WHEN = 22
 };
 
+#include "binary.h"
 #include "case.h"
 #include "decode.h"
 #include "do.h"
