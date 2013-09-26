@@ -26,7 +26,7 @@ static Do *DoCreate(Integer32 count, Error *error) {
 }
 
 Size DoSize(Do *block) {
-    Size size = sizeof(Integer8) + sizeof(Integer32);
+    Size size = INTEGER_32_SIZE;
     for (Integer32 index = 0; index < block->count; index += 1) {
         size += ValueSize(block->statements[index].name);
         size += ValueSize(block->statements[index].value);
@@ -34,13 +34,13 @@ Size DoSize(Do *block) {
     return size;
 }
 
-void DoEncode(Do *block, Byte **bytes) {
-    EncodeInteger8(OPCODE_DO, bytes);
+Size DoEncode(Do *block, Byte **bytes) {
     EncodeInteger32(block->count, bytes);
     for (Integer32 index = 0; index < block->count; index += 1) {
         ValueEncode(block->statements[index].name, bytes);
         ValueEncode(block->statements[index].value, bytes);
     }
+    return DoSize(block);
 }
 
 Do *DoDecode(Byte **bytes, Error *error) {
@@ -69,7 +69,7 @@ Value *DoEval(Do *block, Value *context, Error *error) {
         value = ValueEval(block->statements[index].value, context, error);
         if (ERROR(error))
             return NULL;
-        if (block->statements[index].name != VALUE_NIL)
+        if (block->statements[index].name != ConstantValue(CONSTANT_NIL))
             context = ValueSetValueForKey(context, value, block->statements[index].name, error);
         if (value == NULL)
             return NULL;

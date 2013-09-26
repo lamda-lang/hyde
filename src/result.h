@@ -4,7 +4,7 @@
 #include "runtime.h"
 
 Size ResultSize(Result *result);
-void ResultEncode(Result *result, Byte **bytes);
+Size ResultEncode(Result *result, Byte **bytes);
 Result *ResultDecode(Byte **bytes, Error *error);
 Value *ResultEval(Result *result, Value *context, Error *error);
 Bool ResultEqual(Result *result, Result *other);

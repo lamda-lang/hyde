@@ -4,7 +4,7 @@
 #include "runtime.h"
 
 Size BinarySize(Binary *binary);
-void BinaryEncode(Binary *binary, Byte **bytes);
+Size BinaryEncode(Binary *binary, Byte **bytes);
 Binary *BinaryDecode(Byte **bytes, Error *error);
 Bool BinaryEqual(Binary *binary, Binary *other);
 Size BinaryRelease(Binary *binary);

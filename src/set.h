@@ -4,7 +4,7 @@
 #include "runtime.h"
 
 Size SetSize(Set *set);
-void SetEncode(Set *set, Byte **bytes);
+Size SetEncode(Set *set, Byte **bytes);
 Set *SetDecode(Byte **bytes, Error *error);
 Set *SetEval(Set *set, Value *context, Error *error);
 Bool SetEqual(Set *set, Set *other);

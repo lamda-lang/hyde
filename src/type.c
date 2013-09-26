@@ -19,17 +19,17 @@ static Type *TypeCreate(Integer32 count, Error *error) {
 }
 
 Size TypeSize(Type *type) {
-    Size size = sizeof(Type) + sizeof(Value *) * type->count;
+    Size size = INTEGER_32_SIZE;
     for (Integer32 index = 0; index < type->count; index += 1)
         size += ValueSize(type->members[index]);
     return size;
 }
 
-void TypeEncode(Type *type, Byte **bytes) {
-    EncodeInteger8(OPCODE_TYPE, bytes);
+Size TypeEncode(Type *type, Byte **bytes) {
     EncodeInteger32(type->count, bytes);
     for (Integer32 index = 0; index < type->count; index += 1)
         ValueEncode(type->members[index], bytes);
+    return TypeSize(type);
 }
 
 Type *TypeDecode(Byte **bytes, Error *error) {

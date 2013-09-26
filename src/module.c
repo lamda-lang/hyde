@@ -35,14 +35,13 @@ static Size ModuleDealloc(Module *module, Integer32 count) {
 }
 
 Size ModuleSize(Module *module) {
-    Size size = sizeof(Integer8) + sizeof(Integer32);
+    Size size = INTEGER_32_SIZE;
     for (Integer32 index = 0; index < module->count; index += 1)
         size += ModuleSize(module->definitions[index].local);
     return size;
 }
 
 Size ModuleEncode(Module *module, Byte **bytes) {
-    EncodeInteger8(OPCODE_MODULE, bytes);
     EncodeInteger32(module->count, bytes);
     for (Integer32 index = 0; index < module->count; index += 1) {
         ValueEncode(module->definitions[index].name, bytes);

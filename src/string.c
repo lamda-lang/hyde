@@ -19,14 +19,14 @@ static String *StringCreate(Integer32 length, Error *error) {
 }
 
 Size StringSize(String *string) {
-    return sizeof(Integer8) + sizeof(Integer32) + sizeof(Integer32) * string->length;
+    return INTEGER_32_SIZE + INTEGER_32_SIZE * string->length;
 }
 
-void StringEncode(String *string, Byte **bytes) {
-    EncodeInteger8(OPCODE_STRING, bytes);
+Size StringEncode(String *string, Byte **bytes) {
     EncodeInteger32(string->length, bytes);
     for (Integer32 index = 0; index < string->length; index += 1)
         EncodeInteger32(string->codepoints[index], bytes);
+    return StringSize(string);
 }
 
 String *StringDecode(Byte **bytes, Error *error) {

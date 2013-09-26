@@ -12,6 +12,12 @@
 
 #define TRUE 1
 #define FALSE 0
+#define BOOL_SIZE 1
+#define INTEGER_8_SIZE 1
+#define INTEGER_16_SIZE 2
+#define INTEGER_32_SIZE 4
+#define INTEGER_64_SIZE 8
+#define FLOAT_64_SIZE 8
 #define ERROR(error) (*error != ERROR_NONE)
 
 typedef unsigned char Byte;
@@ -26,6 +32,7 @@ typedef int File;
 typedef char Char;
 
 typedef struct Binary Binary;
+typedef struct Boolean Boolean;
 typedef struct Case Case;
 typedef struct Do Do;
 typedef struct Float Float;
@@ -35,6 +42,7 @@ typedef struct Lamda Lamda;
 typedef struct List List;
 typedef struct Map Map;
 typedef struct Module Module;
+typedef struct Nil Nil;
 typedef struct Protocol Protocol;
 typedef struct Range Range;
 typedef struct Result Result;
@@ -55,32 +63,16 @@ typedef enum {
     ERROR_FILE_STATUS
 } Error;
 
-enum {
-    OPCODE_BINARY = 23,
-    OPCODE_BOOLEAN_TRUE = 0,
-    OPCODE_BOOLEAN_FALSE = 1,
-    OPCODE_CASE = 2,
-    OPCODE_DO = 6,
-    OPCODE_FLOAT = 7,
-    OPCODE_IDENTIFIER = 8,
-    OPCODE_INTEGER = 9,
-    OPCODE_LAMDA = 10,
-    OPCODE_LIST = 11,
-    OPCODE_MAP = 12,
-    OPCODE_MODULE = 13,
-    OPCODE_NIL = 14,
-    OPCODE_PROTOCOL = 15,
-    OPCODE_RANGE = 16,
-    OPCODE_RESULT = 17,
-    OPCODE_SET = 18,
-    OPCODE_STRING = 19,
-    OPCODE_TOKEN = 20,
-    OPCODE_TYPE = 21,
-    OPCODE_WHEN = 22
-};
+typedef enum {
+    CONSTANT_NIL,
+    CONSTANT_BOOLEAN_TRUE,
+    CONSTANT_BOOLEAN_FALSE
+} Constant;
 
 #include "binary.h"
+#include "boolean.h"
 #include "case.h"
+#include "constant.h"
 #include "decode.h"
 #include "do.h"
 #include "encode.h"
@@ -93,6 +85,7 @@ enum {
 #include "map.h"
 #include "memory.h"
 #include "module.h"
+#include "nil.h"
 #include "protocol.h"
 #include "range.h"
 #include "result.h"

@@ -23,18 +23,18 @@ static Result *ResultCreate(Value *target, Integer8 count, Error *error) {
 }
 
 Size ResultSize(Result *result) {
-    Size size = sizeof(Integer8) + ValueSize(result->target) + sizeof(Integer8);
+    Size size = ValueSize(result->target) + INTEGER_8_SIZE;
     for (Integer8 index = 0; index < result->count; index += 1)
         size += ValueSize(result->args[index]);
     return size;
 }
 
-void ResultEncode(Result *result, Byte **bytes) {
-    EncodeInteger8(OPCODE_RESULT, bytes);
+Size ResultEncode(Result *result, Byte **bytes) {
     ValueEncode(result->target, bytes);
     EncodeInteger8(result->count, bytes);
     for (Integer8 index = 0; index < result->count; index += 1)
         ValueEncode(result->args[index], bytes);
+    return ResultSize(result);
 }
 
 Result *ResultDecode(Byte **bytes, Error *error) {

@@ -2,14 +2,14 @@
 
 void EncodeInteger8(Integer8 value, Byte **bytes) {
     **bytes = value;
-    *bytes += sizeof(Integer8);
+    *bytes += INTEGER_8_SIZE;
 }
 
 void EncodeInteger16(Integer16 value, Byte **bytes) {
     Byte *blocks = *bytes;
     blocks[0] = value >> 8 & 0XFF;
     blocks[1] = value & 0XFF;
-    *bytes += sizeof(Integer16);
+    *bytes += INTEGER_16_SIZE;
 }
 
 void EncodeInteger32(Integer32 value, Byte **bytes) {
@@ -18,7 +18,7 @@ void EncodeInteger32(Integer32 value, Byte **bytes) {
     blocks[1] = value >> 16 & 0XFF;
     blocks[2] = value >> 8 & 0XFF;
     blocks[3] = value & 0XFF;
-    *bytes += sizeof(Integer32);
+    *bytes += INTEGER_32_SIZE;
 }
 
 void EncodeInteger64(Integer64 value, Byte **bytes) {
@@ -31,11 +31,15 @@ void EncodeInteger64(Integer64 value, Byte **bytes) {
     blocks[5] = value >> 16 & 0XFF;
     blocks[6] = value >> 8 & 0XFF;
     blocks[7] = value & 0XFF;
-    *bytes += sizeof(Integer64);
+    *bytes += INTEGER_64_SIZE;
 }
 
 void EncodeFloat64(Float64 value, Byte **bytes) {
     Integer64 binary = 0;
-    MemoryCopy(&value, &binary, sizeof(Integer64));
+    MemoryCopy(&value, &binary, INTEGER_64_SIZE);
     EncodeInteger64(binary, bytes);
+}
+
+void EncodeBool(Bool truth, Byte **bytes) {
+    EncodeInteger8(truth ? 1 : 0, bytes);
 }

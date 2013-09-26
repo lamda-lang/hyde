@@ -3,11 +3,7 @@
 
 #include "runtime.h"
 
-extern Value *VALUE_TRUE;
-extern Value *VALUE_FALSE;
-extern Value *VALUE_NIL;
-
-void ValueEncode(Value *value, Byte **bytes);
+Size ValueEncode(Value *value, Byte **bytes);
 Value *ValueDecode(Byte **bytes, Error *error);
 Value *ValueEval(Value *value, Value *context, Error *error);
 Bool ValueEqual(Value *value, Value *other);

@@ -4,7 +4,7 @@
 #include "runtime.h"
 
 Size ListSize(List *list);
-void ListEncode(List *list, Byte **bytes);
+Size ListEncode(List *list, Byte **bytes);
 List *ListDecode(Byte **bytes, Error *error);
 List *ListEval(List *list, Value *context, Error *error);
 Bool ListEqual(List *list, List *other);

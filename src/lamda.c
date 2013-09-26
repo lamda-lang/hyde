@@ -23,18 +23,18 @@ static Lamda *LamdaCreate(Value *result, Integer8 arity, Error *error) {
 }
 
 Size LamdaSize(Lamda *lamda) {
-    Size size = sizeof(Integer8) + ValueSize(lamda->result) + sizeof(Integer8);
+    Size size = ValueSize(lamda->result) + INTEGER_8_SIZE;
     for (Integer8 index = 0; index < lamda->arity; index += 1)
         size += ValueSize(lamda->args[index]);
     return size;
 }
 
-void LamdaEncode(Lamda *lamda, Byte **bytes) {
-    EncodeInteger8(OPCODE_LAMDA, bytes);
+Size LamdaEncode(Lamda *lamda, Byte **bytes) {
     EncodeInteger8(lamda->arity, bytes);
     ValueEncode(lamda->result, bytes);
     for (Integer8 index = 0; index < lamda->arity; index += 1)
         ValueEncode(lamda->args[index], bytes);
+    return LamdaSize(lamda);
 }
 
 Lamda *LamdaDecode(Byte **bytes, Error *error) {

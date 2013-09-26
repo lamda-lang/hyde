@@ -15,13 +15,13 @@ static Range *RangeCreate(Value *lower, Value *upper, Error *error) {
 }
 
 Size RangeSize(Range *range) {
-    return sizeof(Integer8) + ValueSize(range->lower) + ValueSize(range->upper);
+    return ValueSize(range->lower) + ValueSize(range->upper);
 }
 
-void RangeEncode(Range *range, Byte **bytes) {
-    EncodeInteger8(OPCODE_RANGE, bytes);
+Size RangeEncode(Range *range, Byte **bytes) {
     ValueEncode(range->lower, bytes);
     ValueEncode(range->upper, bytes);
+    return RangeSize(range);
 }
 
 Range *RangeDecode(Byte **bytes, Error *error) {

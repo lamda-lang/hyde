@@ -8,5 +8,6 @@ Integer16 DecodeInteger16(Byte **bytes);
 Integer32 DecodeInteger32(Byte **bytes);
 Integer64 DecodeInteger64(Byte **bytes);
 Float64 DecodeFloat64(Byte **bytes);
+Bool DecodeBool(Byte **bytes);
 
 #endif

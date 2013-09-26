@@ -33,7 +33,7 @@ static Value *MapValueForKey(Map *map, Value *key) {
 }
 
 Size MapSize(Map *map) {
-    Size size = sizeof(Integer8) + sizeof(Integer32);
+    Size size = INTEGER_32_SIZE;
     for (Integer32 index = 0; index < map->count; index += 1) {
         size += ValueSize(map->pairs[index].key);
         size += ValueSize(map->pairs[index].value);
@@ -41,13 +41,13 @@ Size MapSize(Map *map) {
     return size;
 }
 
-void MapEncode(Map *map, Byte **bytes) {
-    EncodeInteger8(OPCODE_MAP, bytes);
+Size MapEncode(Map *map, Byte **bytes) {
     EncodeInteger32(map->count, bytes);
     for (Integer32 index = 0; index < map->count; index += 1) {
         ValueEncode(map->pairs[index].key, bytes);
         ValueEncode(map->pairs[index].value, bytes);
     }
+    return MapSize(map);
 }
 
 Map *MapDecode(Byte **bytes, Error *error) {

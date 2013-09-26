@@ -4,7 +4,7 @@
 #include "runtime.h"
 
 Size FloatSize(Float *fpn);
-void FLoatEncode(Float *fpn, Byte **bytes);
+Size FloatEncode(Float *fpn, Byte **bytes);
 Float *FloatDecode(Byte **bytes, Error *error);
 Bool FloatEqual(Float *fpn, Float *other);
 Size FloatRelease(Float *fpn);

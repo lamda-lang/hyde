@@ -4,7 +4,7 @@
 #include "runtime.h"
 
 Size TypeSize(Type *type);
-void TypeEncode(Type *type, Byte **bytes);
+Size TypeEncode(Type *type, Byte **bytes);
 Type *TypeDecode(Byte **bytes, Error *error);
 Bool TypeEqual(Type *type, Type *other);
 Size TypeRelease(Type *type);

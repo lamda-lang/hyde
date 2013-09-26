@@ -29,7 +29,7 @@ static Case *CaseCreate(Value *arg, Integer32 count, Error *error) {
 }
 
 Size CaseSize(Case *block) {
-    Size size = sizeof(Integer8) + ValueSize(block->arg) + sizeof(Integer32);
+    Size size = ValueSize(block->arg) + INTEGER_32_SIZE;
     for (Integer32 index = 0; index < block->count; index += 1) {
         size += ValueSize(block->branches[index].match);
         size += ValueSize(block->branches[index].guard);
@@ -38,8 +38,7 @@ Size CaseSize(Case *block) {
     return size;
 }
 
-void CaseEncode(Case *block, Byte **bytes) {
-    EncodeInteger8(OPCODE_CASE, bytes);
+Size CaseEncode(Case *block, Byte **bytes) {
     ValueEncode(block->arg, bytes);
     EncodeInteger32(block->count, bytes);
     for (Integer32 index = 0; index < block->count; index += 1) {
@@ -47,6 +46,7 @@ void CaseEncode(Case *block, Byte **bytes) {
         ValueEncode(block->branches[index].guard, bytes);
         ValueEncode(block->branches[index].value, bytes);
     }
+    return CaseSize(block);
 }
 
 Case *CaseDecode(Byte **bytes, Error *error) {
@@ -88,10 +88,10 @@ Value *CaseEval(Case *block, Value *context, Error *error) {
         Value *guard = ValueEval(block->branches[index].guard, context, error);
         if (ERROR(error))
             return NULL;
-        if (guard == VALUE_TRUE)
+        if (guard == ConstantValue(CONSTANT_BOOLEAN_TRUE))
             return ValueEval(block->branches[index].value, context, error);
     }
-    return VALUE_NIL;
+    return ConstantValue(CONSTANT_NIL);
 }
 
 Bool CaseEqual(Case *block, Case *other) {

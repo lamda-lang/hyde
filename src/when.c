@@ -26,7 +26,7 @@ static When *WhenCreate(Integer32 count, Error *error) {
 }
 
 Size WhenSize(When *block) {
-    Size size = sizeof(Integer8) + sizeof(Integer32);
+    Size size = INTEGER_32_SIZE;
     for (Integer32 index = 0; index < block->count; index += 1) {
         size += ValueSize(block->branches[index].condition);
         size += ValueSize(block->branches[index].value);
@@ -34,13 +34,13 @@ Size WhenSize(When *block) {
     return size;
 }
 
-void WhenEncode(When *block, Byte **bytes) {
-    EncodeInteger8(OPCODE_WHEN, bytes);
+Size WhenEncode(When *block, Byte **bytes) {
     EncodeInteger32(block->count, bytes);
     for (Integer32 index = 0; index < block->count; index += 1) {
         ValueEncode(block->branches[index].condition, bytes);
         ValueEncode(block->branches[index].value, bytes);
     }
+    return WhenSize(block);
 }
 
 When *WhenDecode(Byte **bytes, Error *error) {
@@ -68,10 +68,10 @@ Value *WhenEval(When *block, Value *context, Error *error) {
         Value *condition = ValueEval(block->branches[index].condition, context, error);
         if (ERROR(error))
             return NULL;
-        if (condition == VALUE_TRUE)
+        if (condition == ConstantValue(CONSTANT_BOOLEAN_TRUE))
             return ValueEval(block->branches[index].value, context, error);
     }
-    return VALUE_NIL;
+    return ConstantValue(CONSTANT_NIL);
 }
 
 Bool WhenEqual(When *block, When *other) {

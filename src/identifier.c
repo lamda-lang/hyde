@@ -50,14 +50,13 @@ static void IdentifierDealloc(Identifier *id, Integer8 count) {
 }
 
 Size IdentifierSize(Identifier *id) {
-    Size size = sizeof(Integer8) + sizeof(Integer8);
+    Size size = INTEGER_8_SIZE;
     for (Integer8 index = 0; index < id->count; index += 1)
-        size += sizeof(Integer8) * id->components[index]->length;
+        size += INTEGER_8_SIZE * id->components[index]->length;
     return size;
 }
 
-void IdentifierEncode(Identifier *id, Byte **bytes) {
-    EncodeInteger8(OPCODE_IDENTIFIER, bytes);
+Size IdentifierEncode(Identifier *id, Byte **bytes) {
     EncodeInteger8(id->count, bytes);
     for (Integer8 index = 0; index < id->count; index += 1) {
         Component *component = id->components[index];
@@ -65,6 +64,7 @@ void IdentifierEncode(Identifier *id, Byte **bytes) {
         for (Integer8 index = 0; index < component->length; index += 1)
             EncodeInteger8(component->codepoints[index], bytes);
     }
+    return IdentifierSize(id);
 }
 
 Identifier *IdentifierDecode(Byte **bytes, Error *error) {

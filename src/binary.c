@@ -19,14 +19,14 @@ static Binary *BinaryCreate(Integer32 count, Error *error) {
 }
 
 Size BinarySize(Binary *binary) {
-    return sizeof(Integer8) + sizeof(Integer32) + sizeof(Byte) * binary->count;
+    return INTEGER_32_SIZE + binary->count;
 }
 
-void BinaryEncode(Binary *binary, Byte **bytes) {
-    EncodeInteger8(OPCODE_BINARY, bytes);
+Size BinaryEncode(Binary *binary, Byte **bytes) {
     EncodeInteger32(binary->count, bytes);
     MemoryCopy(binary->bytes, *bytes, binary->count);
     *bytes += binary->count;
+    return BinarySize(binary);
 }
 
 Binary *BinaryDecode(Byte **bytes, Error *error) {
@@ -36,6 +36,7 @@ Binary *BinaryDecode(Byte **bytes, Error *error) {
         return NULL;
     MemoryCopy(*bytes, binary->bytes, count);
     *bytes += count;
+    return binary;
 }
 
 Bool BinaryEqual(Binary *binary, Binary *other) {

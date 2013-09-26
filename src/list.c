@@ -19,17 +19,17 @@ static List *ListCreate(Integer32 count, Error *error) {
 }
 
 Size ListSize(List *list) {
-    Size size = sizeof(Integer8) + sizeof(Integer32);
+    Size size = INTEGER_32_SIZE;
     for (Integer32 index = 0; index < list->count; index += 1)
         size += ValueSize(list->values[index]);
     return size;
 }
 
-void ListEncode(List *list, Byte **bytes) {
-    EncodeInteger8(OPCODE_LIST, bytes);
+Size ListEncode(List *list, Byte **bytes) {
     EncodeInteger32(list->count, bytes);
     for (Integer32 index = 0; index < list->count; index += 1)
         ValueEncode(list->values[index], bytes);
+    return ListSize(list);
 }
 
 List *ListDecode(Byte **bytes, Error *error) {

@@ -13,12 +13,12 @@ static Integer *IntegerCreate(Integer64 value, Error *error) {
 }
 
 Size IntegerSize(Integer *integer) {
-    return sizeof(Integer8) + sizeof(Integer64);
+    return INTEGER_64_SIZE;
 }
 
-void IntegerEncode(Integer *integer, Byte **bytes) {
-    EncodeInteger8(OPCODE_INTEGER, bytes);
+Size IntegerEncode(Integer *integer, Byte **bytes) {
     EncodeInteger64(integer->value, bytes);
+    return IntegerSize(integer);
 }
 
 Integer *IntegerDecode(Byte **bytes, Error *error) {

@@ -26,17 +26,17 @@ static Bool SetElement(Set *set, Value *value) {
 }
 
 Size SetSize(Set *set) {
-    Size size = sizeof(Integer8) + sizeof(Integer32);
+    Size size = INTEGER_32_SIZE;
     for (Integer32 index = 0; index < set->count; index += 1)
         size += ValueSize(set->values[index]);
     return size;
 }
 
-void SetEncode(Set *set, Byte **bytes) {
-    EncodeInteger8(OPCODE_SET, bytes);
+Size SetEncode(Set *set, Byte **bytes) {
     EncodeInteger32(set->count, bytes);
     for (Integer32 index = 0; index < set->count; index += 1)
         ValueEncode(set->values[index], bytes);
+    return SetSize(set);
 }
 
 Set *SetDecode(Byte **bytes, Error *error) {

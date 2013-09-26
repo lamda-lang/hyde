@@ -13,12 +13,12 @@ static Float *FloatCreate(Float64 value, Error *error) {
 }
 
 Size FloatSize(Float *fpn) {
-    return sizeof(Integer8) + sizeof(Float64);
+    return FLOAT_64_SIZE;
 }
 
-void FLoatEncode(Float *fpn, Byte **bytes) {
-    EncodeInteger8(OPCODE_FLOAT, bytes);
+Size FloatEncode(Float *fpn, Byte **bytes) {
     EncodeFloat64(fpn->value, bytes);
+    return FloatSize(fpn);
 }
 
 Float *FloatDecode(Byte **bytes, Error *error) {
