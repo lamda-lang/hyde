@@ -28,104 +28,280 @@ struct Value {
     Integer8 model;
 };
 
-Size ValueEncode(Value *value, Byte **bytes) {
-    switch (value->model) {
+static Value *ValueCreate(Integer8 model, void *data, Error *error) {
+    Value *value = MemoryAlloc(sizeof(Value), error);
+    if (ERROR(error))
+        return NULL;
+    value->model = model;
+    value->data = data;
+    return value;
+}
+
+static Size ValueEncodeModel(Integer8 model, void *data, Byte **bytes) {
+    switch (model) {
     case BINARY:
-        return BinaryEncode(value->data, bytes);
+        return BinaryEncode(data, bytes);
     case BOOLEAN:
-        return BooleanEncode(value->data, bytes);
+        return BooleanEncode(data, bytes);
     case CASE:
-        return CaseEncode(value->data, bytes);
+        return CaseEncode(data, bytes);
     case DO:
-        return DoEncode(value->data, bytes);
+        return DoEncode(data, bytes);
     case FLOAT:
-        return FloatEncode(value->data, bytes);
+        return FloatEncode(data, bytes);
     case IDENTIFIER:
-        return IdentifierEncode(value->data, bytes);
+        return IdentifierEncode(data, bytes);
     case INTEGER:
-        return IntegerEncode(value->data, bytes);
+        return IntegerEncode(data, bytes);
     case LAMDA:
-        return LamdaEncode(value->data, bytes);
+        return LamdaEncode(data, bytes);
     case LIST:
-        return ListEncode(value->data, bytes);
+        return ListEncode(data, bytes);
     case MAP:
-        return MapEncode(value->data, bytes);
+        return MapEncode(data, bytes);
     case MODULE:
-        return ModuleEncode(value->data, bytes);
+        return ModuleEncode(data, bytes);
     case NIL:
-        return NilEncode(value->data, bytes);
+        return NilEncode(data, bytes);
     case PROTOCOL:
-        return ProtocolEncode(value->data, bytes);
+        return ProtocolEncode(data, bytes);
     case RANGE:
-        return RangeEncode(value->data, bytes);
+        return RangeEncode(data, bytes);
     case RESULT:
-        return ResultEncode(value->data, bytes);
+        return ResultEncode(data, bytes);
     case SET:
-        return SetEncode(value->data, bytes);
+        return SetEncode(data, bytes);
     case STRING:
-        return StringEncode(value->data, bytes);
+        return StringEncode(data, bytes);
     case TOKEN:
-        return TokenEncode(value->data, bytes);
+        return TokenEncode(data, bytes);
     case TYPE:
-        return TypeEncode(value->data, bytes);
+        return TypeEncode(data, bytes);
     case WHEN:
-        return WhenEncode(value->data, bytes);
+        return WhenEncode(data, bytes);
     }
 }
 
-Value *ValueDecode(Byte **bytes, Error *error) {
-    return NULL;
+static void *ValueDecodeModel(Integer8 model, Byte **bytes, Error *error) {
+    switch (model) {
+    case BINARY:
+        return BinaryDecode(bytes, error);
+    case BOOLEAN:
+        return BooleanDecode(bytes, error);
+    case CASE:
+        return CaseDecode(bytes, error);
+    case DO:
+        return DoDecode(bytes, error);
+    case FLOAT:
+        return FloatDecode(bytes, error);
+    case IDENTIFIER:
+        return IdentifierDecode(bytes, error);
+    case INTEGER:
+        return IntegerDecode(bytes, error);
+    case LAMDA:
+        return LamdaDecode(bytes, error);
+    case LIST:
+        return ListDecode(bytes, error);
+    case MAP:
+        return MapDecode(bytes, error);
+    case MODULE:
+        return ModuleDecode(bytes, error);
+    case NIL:
+        return NilDecode(bytes, error);
+    case PROTOCOL:
+        return ProtocolDecode(bytes, error);
+    case RANGE:
+        return RangeDecode(bytes, error);
+    case RESULT:
+        return ResultDecode(bytes, error);
+    case SET:
+        return SetDecode(bytes, error);
+    case STRING:
+        return StringDecode(bytes, error);
+    case TOKEN:
+        return TokenDecode(bytes, error);
+    case TYPE:
+        return TypeDecode(bytes, error);
+    case WHEN:
+        return WhenDecode(bytes, error);
+    }
 }
 
-Value *ValueEval(Value *value, Value *context, Error *error) {
+static Bool ValueEqualModel(Integer8 model, void *data, void *other) {
+    switch (model) {
+    case BINARY:
+        return BinaryEqual(data, other);
+    case BOOLEAN:
+        return BooleanEqual(data, other);
+    case CASE:
+        return CaseEqual(data, other);
+    case DO:
+        return DoEqual(data, other);
+    case FLOAT:
+        return FloatEqual(data, other);
+    case IDENTIFIER:
+        return IdentifierEqual(data, other);
+    case INTEGER:
+        return IntegerEqual(data, other);
+    case LAMDA:
+        return LamdaEqual(data, other);
+    case LIST:
+        return ListEqual(data, other);
+    case MAP:
+        return MapEqual(data, other);
+    case MODULE:
+        return ModuleEqual(data, other);
+    case NIL:
+        return NilEqual(data, other);
+    case PROTOCOL:
+        return ProtocolEqual(data, other);
+    case RANGE:
+        return RangeEqual(data, other);
+    case RESULT:
+        return ResultEqual(data, other);
+    case SET:
+        return SetEqual(data, other);
+    case STRING:
+        return StringEqual(data, other);
+    case TOKEN:
+        return TokenEqual(data, other);
+    case TYPE:
+        return TypeEqual(data, other);
+    case WHEN:
+        return WhenEqual(data, other);
+    }
+}
+
+static Size ValueSizeModel(Integer8 model, void *data) {
+    switch (model) {
+    case BINARY:
+        return BinarySize(data);
+    case BOOLEAN:
+        return BooleanSize(data);
+    case CASE:
+        return CaseSize(data);
+    case DO:
+        return DoSize(data);
+    case FLOAT:
+        return FloatSize(data);
+    case IDENTIFIER:
+        return IdentifierSize(data);
+    case INTEGER:
+        return IntegerSize(data);
+    case LAMDA:
+        return LamdaSize(data);
+    case LIST:
+        return ListSize(data);
+    case MAP:
+        return MapSize(data);
+    case MODULE:
+        return ModuleSize(data);
+    case NIL:
+        return NilSize(data);
+    case PROTOCOL:
+        return ProtocolSize(data);
+    case RANGE:
+        return RangeSize(data);
+    case RESULT:
+        return ResultSize(data);
+    case SET:
+        return SetSize(data);
+    case STRING:
+        return StringSize(data);
+    case TOKEN:
+        return TokenSize(data);
+    case TYPE:
+        return TypeSize(data);
+    case WHEN:
+        return WhenSize(data);
+    }
+}
+
+static Size ValueReleaseModel(Integer8 model, void *data) {
+    switch (model) {
+    case BOOLEAN:
+        return BooleanRelease(data);
+    case CASE:
+        return CaseRelease(data);
+    case DO:
+        return DoRelease(data);
+    case FLOAT:
+        return FloatRelease(data);
+    case IDENTIFIER:
+        return IdentifierRelease(data);
+    case INTEGER:
+        return IntegerRelease(data);
+    case LAMDA:
+        return LamdaRelease(data);
+    case LIST:
+        return ListRelease(data);
+    case MAP:
+        return MapRelease(data);
+    case MODULE:
+        return ModuleRelease(data);
+    case NIL:
+        return NilRelease(data);
+    case PROTOCOL:
+        return ProtocolRelease(data);
+    case RANGE:
+        return RangeRelease(data);
+    case RESULT:
+        return ResultRelease(data);
+    case SET:
+        return SetRelease(data);
+    case STRING:
+        return StringRelease(data);
+    case TOKEN:
+        return TokenRelease(data);
+    case TYPE:
+        return TypeRelease(data);
+    case WHEN:
+        return WhenRelease(data);
+    }
+}
+
+Size ValueEncode(Value *value, Byte **bytes) {
+    EncodeInteger8(value->model, bytes);
+    ValueEncodeModel(value->model, value->data, bytes);
+    return ValueSize(value);
+}
+
+Value *ValueDecode(Byte **bytes, Error *error) {
+    Integer8 model = DecodeInteger8(bytes);
+    void *data = ValueDecodeModel(model, bytes, error);
+    if (ERROR(error))
+        return NULL;
+    Value *value = ValueCreate(model, data, error);
+    if (ERROR(error))
+        goto data;
+    return value;
+
+data:
+    ValueReleaseModel(model, data);
     return NULL;
 }
 
 Bool ValueEqual(Value *value, Value *other) {
+    if (value == other)
+        return TRUE;
     if (value->model != other->model)
         return FALSE;
-    switch (value->model) {
-    case BINARY:
-        return BinaryEqual(value->data, other->data);
-    case BOOLEAN:
-        return BooleanEqual(value->data, other->data);
-    case CASE:
-        return CaseEqual(value->data, other->data);
-    case DO:
-        return DoEqual(value->data, other->data);
-    case FLOAT:
-        return FloatEqual(value->data, other->data);
-    case IDENTIFIER:
-        return IdentifierEqual(value->data, other->data);
-    case INTEGER:
-        return IntegerEqual(value->data, other->data);
-    case LAMDA:
-        return LamdaEqual(value->data, other->data);
-    case LIST:
-        return ListEqual(value->data, other->data);
-    case MAP:
-        return MapEqual(value->data, other->data);
-    case MODULE:
-        return ModuleEqual(value->data, other->data);
-    case NIL:
-        return NilEqual(value->data, other->data);
-    case PROTOCOL:
-        return ProtocolEqual(value->data, other->data);
-    case RANGE:
-        return RangeEqual(value->data, other->data);
-    case RESULT:
-        return ResultEqual(value->data, other->data);
-    case SET:
-        return SetEqual(value->data, other->data);
-    case STRING:
-        return StringEqual(value->data, other->data);
-    case TOKEN:
-        return TokenEqual(value->data, other->data);
-    case TYPE:
-        return TypeEqual(value->data, other->data);
-    case WHEN:
-        return WhenEqual(value->data, other->data);
-    }
+    return ValueEqualModel(value->model, value->data, other->data);
+}
+
+Size ValueSize(Value *value) {
+    return INTEGER_8_SIZE + ValueSizeModel(value->model, value->data);
+}
+
+Size ValueRelease(Value *value) {
+    Size size = sizeof(Value) + ValueReleaseModel(value->model, value->data);
+    MemoryDealloc(value);
+    return size;
+}
+
+/* missing */
+Value *ValueEval(Value *value, Value *context, Error *error) {
+    return NULL;
 }
 
 Value *ValueSetValueForKey(Value *collection, Value *value, Value *key, Error *error) {
@@ -138,95 +314,4 @@ Value *ValueGetValueForKey(Value *collection, Value *key) {
 
 Value *ValueCall(Value *value, Value **args, Integer8 count, Error *error) {
     return NULL;
-}
-
-Size ValueSize(Value *value) {
-    switch (value->model) {
-    case BINARY:
-        return INTEGER_8_SIZE + BinarySize(value->data);
-    case BOOLEAN:
-        return INTEGER_8_SIZE + BooleanSize(value->data);
-    case CASE:
-        return INTEGER_8_SIZE + CaseSize(value->data);
-    case DO:
-        return INTEGER_8_SIZE + DoSize(value->data);
-    case FLOAT:
-        return INTEGER_8_SIZE + FloatSize(value->data);
-    case IDENTIFIER:
-        return INTEGER_8_SIZE + IdentifierSize(value->data);
-    case INTEGER:
-        return INTEGER_8_SIZE + IntegerSize(value->data);
-    case LAMDA:
-        return INTEGER_8_SIZE + LamdaSize(value->data);
-    case LIST:
-        return INTEGER_8_SIZE + ListSize(value->data);
-    case MAP:
-        return INTEGER_8_SIZE + MapSize(value->data);
-    case MODULE:
-        return INTEGER_8_SIZE + ModuleSize(value->data);
-    case NIL:
-        return INTEGER_8_SIZE + NilSize(value->data);
-    case PROTOCOL:
-        return INTEGER_8_SIZE + ProtocolSize(value->data);
-    case RANGE:
-        return INTEGER_8_SIZE + RangeSize(value->data);
-    case RESULT:
-        return INTEGER_8_SIZE + ResultSize(value->data);
-    case SET:
-        return INTEGER_8_SIZE + SetSize(value->data);
-    case STRING:
-        return INTEGER_8_SIZE + StringSize(value->data);
-    case TOKEN:
-        return INTEGER_8_SIZE + TokenSize(value->data);
-    case TYPE:
-        return INTEGER_8_SIZE + TypeSize(value->data);
-    case WHEN:
-        return INTEGER_8_SIZE + WhenSize(value->data);
-    }
-}
-
-Size ValueRelease(Value *value) {
-    void *data = value->data;
-    Integer8 model = value->model;
-    MemoryDealloc(value);
-    switch (model) {
-    case BOOLEAN:
-        return sizeof(Value) + BooleanRelease(data);
-    case CASE:
-        return sizeof(Value) + CaseRelease(data);
-    case DO:
-        return sizeof(Value) + DoRelease(data);
-    case FLOAT:
-        return sizeof(Value) + FloatRelease(data);
-    case IDENTIFIER:
-        return sizeof(Value) + IdentifierRelease(data);
-    case INTEGER:
-        return sizeof(Value) + IntegerRelease(data);
-    case LAMDA:
-        return sizeof(Value) + LamdaRelease(data);
-    case LIST:
-        return sizeof(Value) + ListRelease(data);
-    case MAP:
-        return sizeof(Value) + MapRelease(data);
-    case MODULE:
-        return sizeof(Value) + ModuleRelease(data);
-    case NIL:
-        return sizeof(Value) + NilRelease(data);
-    case PROTOCOL:
-        return sizeof(Value) + ProtocolRelease(data);
-    case RANGE:
-        return sizeof(Value) + RangeRelease(data);
-    case RESULT:
-        return sizeof(Value) + ResultRelease(data);
-    case SET:
-        return sizeof(Value) + SetRelease(data);
-    case STRING:
-        return sizeof(Value) + StringRelease(data);
-    case TOKEN:
-        return sizeof(Value) + TokenRelease(data);
-    case TYPE:
-        return sizeof(Value) + TypeRelease(data);
-    case WHEN:
-        return sizeof(Value) + WhenRelease(data);
-    }
 }
