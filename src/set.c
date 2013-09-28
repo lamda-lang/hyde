@@ -65,7 +65,7 @@ Value *SetEval(Value *value, Set *set, Value *context, Error *error) {
         if (ERROR(error))
             goto new;
     }
-    return ValueCopy(new, error);
+    return ValueSet(new, error);
 
 new:
     SetRelease(new);

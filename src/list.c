@@ -58,7 +58,7 @@ Value *ListEval(Value *value, List *list, Value *context, Error *error) {
         if (ERROR(error))
             goto new;
     }
-    return ValueCopy(new, error);
+    return ValueList(new, error);
 
 new:
     ListRelease(new);

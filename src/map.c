@@ -82,7 +82,7 @@ Value *MapEval(Value *value, Map *map, Value *context, Error *error) {
         if (ERROR(error))
             goto new;
     }
-    return ValueCopy(new, error);
+    return ValueMap(new, error);
 
 new:
     MapRelease(map);

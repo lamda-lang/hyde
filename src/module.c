@@ -92,7 +92,7 @@ Value *ModuleEval(Value *value, Module *module, Value *context, Error *error) {
         if (ERROR(error))
             goto new;
     }
-    return ValueCopy(new, error);
+    return ValueModule(new, error);
 
 new:
     ModuleRelease(module);

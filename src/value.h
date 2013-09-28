@@ -3,7 +3,12 @@
 
 #include "runtime.h"
 
-Value *ValueCopy(void *data, Error *error);
+Value *ValueList(List *list, Error *error);
+Value *ValueMap(Map *map, Error *error);
+Value *ValueModule(Module *module, Error *error);
+Value *ValueLamda(Lamda *lamda, Error *error);
+Value *ValueSet(Set *set, Error *error);
+Value *ValueRange(Range *range, Error *error);
 Size ValueEncode(Value *value, Byte **bytes);
 Value *ValueDecode(Byte **bytes, Error *error);
 Value *ValueEval(Value *value, Value *context, Error *error);

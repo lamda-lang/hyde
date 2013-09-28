@@ -42,7 +42,9 @@ Value *RangeEval(Value *value, Range *range, Value *context, Error *error) {
     if (ERROR(error))
         return NULL;
     Range *new = RangeCreate(lower, upper, error);
-    return ValueCopy(new, error);
+    if (ERROR(error))
+        return NULL;
+    return ValueRange(new, error);
 }
 
 Bool RangeEqual(Range *range, Range *other) {

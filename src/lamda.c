@@ -63,7 +63,11 @@ Value *LamdaEval(Value *value, Lamda *lamda, Value *context, Error *error) {
     if (ERROR(error))
         return NULL;
     new->context = context;
-    return ValueCopy(new, error);
+    return ValueLamda(new, error);
+
+new:
+    LamdaRelease(new);
+    return NULL;
 }
 
 Bool LamdaEqual(Lamda *lamda, Lamda *other) {

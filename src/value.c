@@ -28,14 +28,61 @@ struct Value {
     Integer8 model;
 };
 
+static Size ValueReleaseModel(Integer8 model, void *data) {
+    switch (model) {
+    case BOOLEAN:
+        return BooleanRelease(data);
+    case CASE:
+        return CaseRelease(data);
+    case DO:
+        return DoRelease(data);
+    case FLOAT:
+        return FloatRelease(data);
+    case IDENTIFIER:
+        return IdentifierRelease(data);
+    case INTEGER:
+        return IntegerRelease(data);
+    case LAMDA:
+        return LamdaRelease(data);
+    case LIST:
+        return ListRelease(data);
+    case MAP:
+        return MapRelease(data);
+    case MODULE:
+        return ModuleRelease(data);
+    case NIL:
+        return NilRelease(data);
+    case PROTOCOL:
+        return ProtocolRelease(data);
+    case RANGE:
+        return RangeRelease(data);
+    case RESULT:
+        return ResultRelease(data);
+    case SET:
+        return SetRelease(data);
+    case STRING:
+        return StringRelease(data);
+    case TOKEN:
+        return TokenRelease(data);
+    case TYPE:
+        return TypeRelease(data);
+    case WHEN:
+        return WhenRelease(data);
+    }
+}
+
 static Value *ValueCreate(Integer8 model, void *data, Error *error) {
     Value *value = MemoryAlloc(sizeof(Value), error);
     if (ERROR(error))
-        return NULL;
+        goto data;
     value->model = model;
     value->data = data;
     return value;
-}
+
+data:
+    ValueReleaseModel(model, data);
+    return NULL;
+}  
 
 static Size ValueEncodeModel(Integer8 model, void *data, Byte **bytes) {
     switch (model) {
@@ -217,49 +264,6 @@ static Size ValueSizeModel(Integer8 model, void *data) {
     }
 }
 
-static Size ValueReleaseModel(Integer8 model, void *data) {
-    switch (model) {
-    case BOOLEAN:
-        return BooleanRelease(data);
-    case CASE:
-        return CaseRelease(data);
-    case DO:
-        return DoRelease(data);
-    case FLOAT:
-        return FloatRelease(data);
-    case IDENTIFIER:
-        return IdentifierRelease(data);
-    case INTEGER:
-        return IntegerRelease(data);
-    case LAMDA:
-        return LamdaRelease(data);
-    case LIST:
-        return ListRelease(data);
-    case MAP:
-        return MapRelease(data);
-    case MODULE:
-        return ModuleRelease(data);
-    case NIL:
-        return NilRelease(data);
-    case PROTOCOL:
-        return ProtocolRelease(data);
-    case RANGE:
-        return RangeRelease(data);
-    case RESULT:
-        return ResultRelease(data);
-    case SET:
-        return SetRelease(data);
-    case STRING:
-        return StringRelease(data);
-    case TOKEN:
-        return TokenRelease(data);
-    case TYPE:
-        return TypeRelease(data);
-    case WHEN:
-        return WhenRelease(data);
-    }
-}
-
 static Value *ValueCallModel(Integer8 model, void *data, Value **args, Integer8 count, Error *error) {
     switch(model) {
     case LAMDA:
@@ -316,7 +320,28 @@ static Value *ValueEvalModel(Value *value, Integer8 model, void *data, Value *co
     }
 }
 
-Value *ValueCopy(void *data, Error *error) {
+Value *ValueList(List *list, Error *error) {
+    return ValueCreate(LIST, list, error);
+}
+
+Value *ValueMap(Map *map, Error *error) {
+    return ValueCreate(MAP, map, error);
+}
+
+Value *ValueModule(Module *module, Error *error) {
+    return ValueCreate(MODULE, module, error);
+}
+
+Value *ValueLamda(Lamda *lamda, Error *error) {
+    return ValueCreate(LAMDA, lamda, error);
+}
+
+Value *ValueSet(Set *set, Error *error) {
+    return ValueCreate(SET, set, error);
+}
+
+Value *ValueRange(Range *range, Error *error) {
+    return ValueCreate(RANGE, range, error);
 }
 
 Size ValueEncode(Value *value, Byte **bytes) {
@@ -330,14 +355,7 @@ Value *ValueDecode(Byte **bytes, Error *error) {
     void *data = ValueDecodeModel(model, bytes, error);
     if (ERROR(error))
         return NULL;
-    Value *value = ValueCreate(model, data, error);
-    if (ERROR(error))
-        goto data;
-    return value;
-
-data:
-    ValueReleaseModel(model, data);
-    return NULL;
+    return ValueCreate(model, data, error);
 }
 
 Bool ValueEqual(Value *value, Value *other) {
