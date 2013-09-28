@@ -34,14 +34,15 @@ Range *RangeDecode(Byte **bytes, Error *error) {
     return RangeCreate(lower, upper, error);
 }
 
-Range *RangeEval(Range *range, Value *context, Error *error) {
+Value *RangeEval(Value *value, Range *range, Value *context, Error *error) {
     Value *lower = ValueEval(range->lower, context, error);
     if (ERROR(error))
         return NULL;
     Value *upper = ValueEval(range->upper, context, error);
     if (ERROR(error))
         return NULL;
-    return RangeCreate(lower, upper, error);
+    Range *new = RangeCreate(lower, upper, error);
+    return ValueCopy(new, error);
 }
 
 Bool RangeEqual(Range *range, Range *other) {

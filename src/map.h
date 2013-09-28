@@ -6,7 +6,7 @@
 Size MapSize(Map *map);
 Size MapEncode(Map *map, Byte **bytes);
 Map *MapDecode(Byte **bytes, Error *error);
-Map *MapEval(Map *map, Value *context, Error *error);
+Value *MapEval(Value *value, Map *map, Value *context, Error *error);
 Bool MapEqual(Map *map, Map *other); 
 Size MapRelease(Map *map);
 

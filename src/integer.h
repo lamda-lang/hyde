@@ -6,6 +6,7 @@
 Size IntegerSize(Integer *integer);
 Size IntegerEncode(Integer *integer, Byte **bytes);
 Integer *IntegerDecode(Byte **bytes, Error *error);
+Value *IntegerEval(Value *value, Integer *integer, Value *context, Error *error);
 Bool IntegerEqual(Integer *integer, Integer *other);
 Size IntegerRelease(Integer *integer);
 

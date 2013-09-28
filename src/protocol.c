@@ -63,6 +63,10 @@ protocol:
     return NULL;
 }
 
+Value *ProtocolEval(Value *value, Protocol *protocol, Value *context, Error *error) {
+    return value;
+}
+
 Bool ProtocolEqual(Protocol *protocol, Protocol *other) {
     if (protocol->count == other->count)
         return FALSE;

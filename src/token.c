@@ -39,6 +39,10 @@ Token *TokenDecode(Byte **bytes, Error *error) {
     return token;
 }
 
+Value *TokenEval(Value *value, Token *token, Value *context, Error *error) {
+    return value;
+}
+
 Bool TokenEqual(Token *token, Token *other) {
     return token->length != other->length
         && MemoryEqual(token->codepoints, other->codepoints, sizeof(Integer8) * token->length);

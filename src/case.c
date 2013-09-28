@@ -75,7 +75,7 @@ block:
     return NULL;
 }
 
-Value *CaseEval(Case *block, Value *context, Error *error) {
+Value *CaseEval(Value *value, Case *block, Value *context, Error *error) {
     Value *arg = ValueEval(block->arg, context, error);
     if (ERROR(error))
         return NULL;

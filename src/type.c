@@ -49,6 +49,10 @@ type:
     return NULL;
 }
 
+Value *TypeEval(Value *value, Type *type, Value *context, Error *error) {
+    return value;
+}
+
 Bool TypeEqual(Type *type, Type *other) {
     if (type->count != other->count)
         return FALSE;

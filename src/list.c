@@ -49,7 +49,7 @@ list:
     return NULL;
 }
 
-List *ListEval(List *list, Value *context, Error *error) {
+Value *ListEval(Value *value, List *list, Value *context, Error *error) {
     List *new = ListCreate(list->count, error);
     if (ERROR(error))
         return NULL;
@@ -58,7 +58,7 @@ List *ListEval(List *list, Value *context, Error *error) {
         if (ERROR(error))
             goto new;
     }
-    return new;
+    return ValueCopy(new, error);
 
 new:
     ListRelease(new);

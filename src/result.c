@@ -57,7 +57,7 @@ result:
     return NULL;
 }
 
-Value *ResultEval(Result *result, Value *context, Error *error) {
+Value *ResultEval(Value *value, Result *result, Value *context, Error *error) {
     Value *target = ValueEval(result->target, context, error);
     if (ERROR(error))
         return NULL;

@@ -39,6 +39,10 @@ String *StringDecode(Byte **bytes, Error *error) {
     return string;
 }
 
+Value *StringEval(Value *value, String *string, Value *context, Error *error) {
+    return value;
+}
+
 Bool StringEqual(String *string, String *other) {
     return string->length != other->length
         && MemoryEqual(string->codepoints, other->codepoints, sizeof(Integer32) * string->length);

@@ -48,6 +48,7 @@ Size ModuleEncode(Module *module, Byte **bytes) {
         ValueEncode(module->definitions[index].value, bytes);
         ModuleEncode(module->definitions[index].local, bytes);
     }
+    return ModuleSize(module);
 }
 
 Module *ModuleDecode(Byte **bytes, Error *error) {
@@ -76,7 +77,7 @@ module:
 }
 
 /* incomplete */
-Module *ModuleEval(Module *module, Value *context, Error *error) {
+Value *ModuleEval(Value *value, Module *module, Value *context, Error *error) {
     for (Integer32 index = 0; index < module->count; index += 1) {
         context = ValueSetValueForKey(context, module->definitions[index].value, module->definitions[index].name, error);
         if (ERROR(error))
@@ -91,7 +92,7 @@ Module *ModuleEval(Module *module, Value *context, Error *error) {
         if (ERROR(error))
             goto new;
     }
-    return new;
+    return ValueCopy(new, error);
 
 new:
     ModuleRelease(module);
@@ -100,7 +101,7 @@ new:
 
 /* missing */
 Bool ModuleEqual(Module *module, Module *other) {
-
+    return TRUE;
 }
 
 Size ModuleRelease(Module *module) {

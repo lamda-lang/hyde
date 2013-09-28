@@ -12,6 +12,10 @@ Nil *NilDecode(Byte **bytes, Error *error) {
     return NULL;
 }
 
+Value *NilEval(Value *value, Nil *nil, Value *context, Error *error) {
+    return value;
+}
+
 Bool NilEqual(Nil *nil, Nil *other) {
     return TRUE;
 }

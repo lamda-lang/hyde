@@ -70,7 +70,7 @@ map:
     return NULL;
 }
 
-Map *MapEval(Map *map, Value *context, Error *error) {
+Value *MapEval(Value *value, Map *map, Value *context, Error *error) {
     Map *new = MapCreate(map->count, error);
     if (ERROR(error))
         return NULL;
@@ -82,7 +82,7 @@ Map *MapEval(Map *map, Value *context, Error *error) {
         if (ERROR(error))
             goto new;
     }
-    return new;
+    return ValueCopy(new, error);
 
 new:
     MapRelease(map);

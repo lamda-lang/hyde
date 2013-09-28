@@ -63,18 +63,18 @@ block:
     return NULL;
 }
 
-Value *DoEval(Do *block, Value *context, Error *error) {
-    Value *value = NULL;
+Value *DoEval(Value *value, Do *block, Value *context, Error *error) {
+    Value *result = NULL;
     for (Integer32 index = 0; index < block->count; index += 1) {
-        value = ValueEval(block->statements[index].value, context, error);
+        result = ValueEval(block->statements[index].value, context, error);
         if (ERROR(error))
             return NULL;
         if (block->statements[index].name != ConstantValue(CONSTANT_NIL))
-            context = ValueSetValueForKey(context, value, block->statements[index].name, error);
-        if (value == NULL)
+            context = ValueSetValueForKey(context, result, block->statements[index].name, error);
+        if (result == NULL)
             return NULL;
     }
-    return value;
+    return result;
 }
 
 Bool DoEqual(Do *block, Do *other) {

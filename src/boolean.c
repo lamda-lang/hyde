@@ -26,6 +26,10 @@ Boolean *BooleanDecode(Byte **bytes, Error *error) {
     return BooleanCreate(truth, error);
 }
 
+Value *BooleanEval(Value *value, Boolean *boolean, Value *context, Error *error) {
+    return value;
+}
+
 Bool BooleanEqual(Boolean *boolean, Boolean *other) {
     return boolean->truth == other->truth;
 }

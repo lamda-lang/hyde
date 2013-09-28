@@ -6,7 +6,7 @@
 Size RangeSize(Range *range);
 Size RangeEncode(Range *range, Byte **bytes);
 Range *RangeDecode(Byte **bytes, Error *error);
-Range *RangeEval(Range *range, Value *context, Error *error);
+Value *RangeEval(Value *value, Range *range, Value *context, Error *error);
 Bool RangeEqual(Range *range, Range *other);
 Size RangeRelease(Range *range);
 

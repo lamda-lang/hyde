@@ -6,8 +6,9 @@
 Size LamdaSize(Lamda *lamda);
 Size LamdaEncode(Lamda *lamda, Byte **bytes);
 Lamda *LamdaDecode(Byte **bytes, Error *error);
-Lamda *LamdaEval(Lamda *lamda, Value *context, Error *error);
+Value *LamdaEval(Value *value, Lamda *lamda, Value *context, Error *error);
 Bool LamdaEqual(Lamda *lamda, Lamda *other);
 Size LamdaRelease(Lamda *lamda);
+Value *LamdaCall(Lamda *lamda, Value **args, Integer8 count, Error *error);
 
 #endif

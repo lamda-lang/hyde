@@ -90,6 +90,10 @@ id:
     return NULL;
 }
 
+Value *IdentifierEval(Value *value, Identifier *id, Value *context, Error *error) {
+    return ValueGetValueForKey(context, value);
+}
+
 Bool IdentifierEqual(Identifier *id, Identifier *other) {
     if (id->count != other->count)
         return FALSE;

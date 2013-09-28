@@ -170,7 +170,7 @@ static Bool ValueEqualModel(Integer8 model, void *data, void *other) {
     case WHEN:
         return WhenEqual(data, other);
     }
-}
+} 
 
 static Size ValueSizeModel(Integer8 model, void *data) {
     switch (model) {
@@ -260,6 +260,65 @@ static Size ValueReleaseModel(Integer8 model, void *data) {
     }
 }
 
+static Value *ValueCallModel(Integer8 model, void *data, Value **args, Integer8 count, Error *error) {
+    switch(model) {
+    case LAMDA:
+        return LamdaCall(data, args, count, error);
+    default:
+        goto error;
+    }
+
+error:
+    *error = ERROR_INVALID_TARGET;
+    return NULL;
+}
+
+static Value *ValueEvalModel(Value *value, Integer8 model, void *data, Value *context, Error *error) {
+    switch (model) {
+    case BOOLEAN:
+        return BooleanEval(value, data, context, error);
+    case CASE:
+        return CaseEval(value, data, context, error);
+    case DO:
+        return DoEval(value, data, context, error);
+    case FLOAT:
+        return FloatEval(value, data, context, error);
+    case IDENTIFIER:
+        return IdentifierEval(value, data, context, error);
+    case INTEGER:
+        return IntegerEval(value, data, context, error);
+    case LAMDA:
+        return LamdaEval(value, data, context, error);
+    case LIST:
+        return ListEval(value, data, context, error);
+    case MAP:
+        return MapEval(value, data, context, error);
+    case MODULE:
+        return ModuleEval(value, data, context, error);
+    case NIL:
+        return NilEval(value, data, context, error);
+    case PROTOCOL:
+        return ProtocolEval(value, data, context, error);
+    case RANGE:
+        return RangeEval(value, data, context, error);
+    case RESULT:
+        return ResultEval(value, data, context, error);
+    case SET:
+        return SetEval(value, data, context, error);
+    case STRING:
+        return StringEval(value, data, context, error);
+    case TOKEN:
+        return TokenEval(value, data, context, error);
+    case TYPE:
+        return TypeEval(value, data, context, error);
+    case WHEN:
+        return WhenEval(value, data, context, error);
+    }
+}
+
+Value *ValueCopy(void *data, Error *error) {
+}
+
 Size ValueEncode(Value *value, Byte **bytes) {
     EncodeInteger8(value->model, bytes);
     ValueEncodeModel(value->model, value->data, bytes);
@@ -299,9 +358,12 @@ Size ValueRelease(Value *value) {
     return size;
 }
 
-/* missing */
+Value *ValueCall(Value *value, Value **args, Integer8 count, Error *error) {
+    return ValueCallModel(value->model, value->data, args, count, error);
+}
+
 Value *ValueEval(Value *value, Value *context, Error *error) {
-    return NULL;
+    return ValueEvalModel(value, value->model, value->data, context, error);
 }
 
 Value *ValueSetValueForKey(Value *collection, Value *value, Value *key, Error *error) {
@@ -309,9 +371,5 @@ Value *ValueSetValueForKey(Value *collection, Value *value, Value *key, Error *e
 }
 
 Value *ValueGetValueForKey(Value *collection, Value *key) {
-    return NULL;
-}
-
-Value *ValueCall(Value *value, Value **args, Integer8 count, Error *error) {
     return NULL;
 }

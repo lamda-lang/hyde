@@ -60,7 +60,9 @@ typedef enum {
     ERROR_FILE_CLOSE,
     ERROR_FILE_READ,
     ERROR_FILE_WRITE,
-    ERROR_FILE_STATUS
+    ERROR_FILE_STATUS,
+    ERROR_INVALID_ARITY,
+    ERROR_INVALID_TARGET
 } Error;
 
 typedef enum {

@@ -3,6 +3,7 @@
 
 #include "runtime.h"
 
+Value *ValueCopy(void *data, Error *error);
 Size ValueEncode(Value *value, Byte **bytes);
 Value *ValueDecode(Byte **bytes, Error *error);
 Value *ValueEval(Value *value, Value *context, Error *error);

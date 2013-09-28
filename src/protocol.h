@@ -6,6 +6,7 @@
 Size ProtocolSize(Protocol *protocol);
 Size ProtocolEncode(Protocol *protocol, Byte **bytes);
 Protocol *ProtocolDecode(Byte **bytes, Error *error);
+Value *ProtocolEval(Value *value, Protocol *protocol, Value *context, Error *error);
 Bool ProtocolEqual(Protocol *protocol, Protocol *other);
 Size ProtocolRelease(Protocol *protocol);
 

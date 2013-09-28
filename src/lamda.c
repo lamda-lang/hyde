@@ -57,13 +57,13 @@ lamda:
     return NULL;
 }
 
-Lamda *LamdaEval(Lamda *lamda, Value *context, Error *error) {
+Value *LamdaEval(Value *value, Lamda *lamda, Value *context, Error *error) {
     Size size = LamdaSizeOf(lamda->arity);
     Lamda *new = MemoryClone(lamda, size, error);
     if (ERROR(error))
         return NULL;
     new->context = context;
-    return new;
+    return ValueCopy(new, error);
 }
 
 Bool LamdaEqual(Lamda *lamda, Lamda *other) {
@@ -83,4 +83,20 @@ Size LamdaRelease(Lamda *lamda) {
     Size size = LamdaSizeOf(lamda->arity);
     MemoryDealloc(lamda);
     return size;
+}
+
+Value *LamdaCall(Lamda *lamda, Value **args, Integer8 count, Error *error) {
+    if (count != lamda->arity)
+        goto error;
+    Value *context = lamda->context;
+    for (Integer8 index = 0; index < count; index += 1) {
+        context = ValueSetValueForKey(context, args[index], lamda->args[index], error);
+        if (ERROR(error))
+            return NULL;
+    }
+    return ValueEval(lamda->result, context, error);
+
+error:
+    *error = ERROR_INVALID_ARITY;
+    return NULL;
 }

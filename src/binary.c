@@ -39,6 +39,10 @@ Binary *BinaryDecode(Byte **bytes, Error *error) {
     return binary;
 }
 
+Value *BinaryEval(Value *value, Binary *binary, Value *context, Error *error) {
+    return value;
+}
+
 Bool BinaryEqual(Binary *binary, Binary *other) {
     return binary->count == other->count
         && MemoryEqual(binary->bytes, other->bytes, binary->count);

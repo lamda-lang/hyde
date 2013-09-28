@@ -26,6 +26,10 @@ Float *FloatDecode(Byte **bytes, Error *error) {
     return FloatCreate(value, error);
 }
 
+Value *FloatEval(Value *value, Float *fpn, Value *context, Error *error) {
+    return value;
+}
+
 Bool FloatEqual(Float *fpn, Float *other) {
     return fpn->value == other->value;
 }

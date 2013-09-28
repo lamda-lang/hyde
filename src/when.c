@@ -63,7 +63,7 @@ block:
     return NULL;
 }
 
-Value *WhenEval(When *block, Value *context, Error *error) {
+Value *WhenEval(Value *value, When *block, Value *context, Error *error) {
     for (Integer32 index = 0; index < block->count; index += 1) {
         Value *condition = ValueEval(block->branches[index].condition, context, error);
         if (ERROR(error))

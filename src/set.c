@@ -56,7 +56,7 @@ set:
     return NULL;
 }
 
-Set *SetEval(Set *set, Value *context, Error *error) {
+Value *SetEval(Value *value, Set *set, Value *context, Error *error) {
     Set *new = SetCreate(set->count, error);
     if (ERROR(error))
         return NULL;
@@ -65,7 +65,7 @@ Set *SetEval(Set *set, Value *context, Error *error) {
         if (ERROR(error))
             goto new;
     }
-    return new;
+    return ValueCopy(new, error);
 
 new:
     SetRelease(new);

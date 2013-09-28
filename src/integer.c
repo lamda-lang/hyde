@@ -26,6 +26,10 @@ Integer *IntegerDecode(Byte **bytes, Error *error) {
     return IntegerCreate(value, error);
 }
 
+Value *IntegerEval(Value *value, Integer *integer, Value *context, Error *error) {
+    return value;
+}
+
 Bool IntegerEqual(Integer *integer, Integer *other) {
     return integer->value == other->value;
 }

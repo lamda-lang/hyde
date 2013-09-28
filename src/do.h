@@ -6,7 +6,7 @@
 Size DoSize(Do *block);
 Size DoEncode(Do *block, Byte **bytes);
 Do *DoDecode(Byte **bytes, Error *error);
-Value *DoEval(Do *block, Value *context, Error *error);
+Value *DoEval(Value *value, Do *block, Value *context, Error *error);
 Bool DoEqual(Do *block, Do *other);
 Size DoRelease(Do *block);
 
