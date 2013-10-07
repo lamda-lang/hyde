@@ -88,7 +88,6 @@ typedef enum {
 #include "memory.h"
 #include "module.h"
 #include "nil.h"
-#include "protocol.h"
 #include "range.h"
 #include "result.h"
 #include "set.h"

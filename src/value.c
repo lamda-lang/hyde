@@ -1,72 +1,71 @@
 #include "value.h"
 
-enum {
-    BINARY = 0,
-    BOOLEAN = 1,
-    CASE = 2,
-    DO = 3,
-    FLOAT = 4,
-    IDENTIFIER = 5,
-    INTEGER = 6,
-    LAMDA = 7,
-    LIST = 8,
-    MAP = 9,
-    MODULE = 10,
-    NIL = 11,
-    PROTOCOL = 12,
-    RANGE = 13,
-    RESULT = 14,
-    SET = 15,
-    STRING = 16,
-    TOKEN = 17,
-    TYPE = 18,
-    WHEN = 19
-};
+typedef enum {
+    MODEL_BINARY = 0,
+    MODEL_BOOLEAN = 1,
+    MODEL_CASE = 2,
+    MODEL_DO = 3,
+    MODEL_FLOAT = 4,
+    MODEL_IDENTIFIER = 5,
+    MODEL_INTEGER = 6,
+    MODEL_LAMDA = 7,
+    MODEL_LIST = 8,
+    MODEL_MAP = 9,
+    MODEL_MODULE = 10,
+    MODEL_NIL = 11,
+    MODEL_RANGE = 12,
+    MODEL_RESULT = 13,
+    MODEL_SET = 14,
+    MODEL_STRING = 15,
+    MODEL_TOKEN = 16,
+    MODEL_TYPE = 17,
+    MODEL_WHEN = 18
+} Model;
 
 struct Value {
     void *data;
     Integer8 model;
 };
 
-static Size ValueReleaseModel(Integer8 model, void *data) {
+static Size ValueReleaseModel(Model model, void *data) {
     switch (model) {
-    case BOOLEAN:
+    case MODEL_BINARY:
+        return BinaryRelease(data);
+    case MODEL_BOOLEAN:
         return BooleanRelease(data);
-    case CASE:
+    case MODEL_CASE:
         return CaseRelease(data);
-    case DO:
+    case MODEL_DO:
         return DoRelease(data);
-    case FLOAT:
+    case MODEL_FLOAT:
         return FloatRelease(data);
-    case IDENTIFIER:
+    case MODEL_IDENTIFIER:
         return IdentifierRelease(data);
-    case INTEGER:
+    case MODEL_INTEGER:
         return IntegerRelease(data);
-    case LAMDA:
+    case MODEL_LAMDA:
         return LamdaRelease(data);
-    case LIST:
+    case MODEL_LIST:
         return ListRelease(data);
-    case MAP:
+    case MODEL_MAP:
         return MapRelease(data);
-    case MODULE:
+    case MODEL_MODULE:
         return ModuleRelease(data);
-    case NIL:
+    case MODEL_NIL:
         return NilRelease(data);
-    case PROTOCOL:
-        return ProtocolRelease(data);
-    case RANGE:
+    case MODEL_RANGE:
         return RangeRelease(data);
-    case RESULT:
+    case MODEL_RESULT:
         return ResultRelease(data);
-    case SET:
+    case MODEL_SET:
         return SetRelease(data);
-    case STRING:
+    case MODEL_STRING:
         return StringRelease(data);
-    case TOKEN:
+    case MODEL_TOKEN:
         return TokenRelease(data);
-    case TYPE:
+    case MODEL_TYPE:
         return TypeRelease(data);
-    case WHEN:
+    case MODEL_WHEN:
         return WhenRelease(data);
     }
 }
@@ -84,189 +83,181 @@ data:
     return NULL;
 }  
 
-static Size ValueEncodeModel(Integer8 model, void *data, Byte **bytes) {
+static Size ValueEncodeModel(Model model, void *data, Byte **bytes) {
     switch (model) {
-    case BINARY:
+    case MODEL_BINARY:
         return BinaryEncode(data, bytes);
-    case BOOLEAN:
+    case MODEL_BOOLEAN:
         return BooleanEncode(data, bytes);
-    case CASE:
+    case MODEL_CASE:
         return CaseEncode(data, bytes);
-    case DO:
+    case MODEL_DO:
         return DoEncode(data, bytes);
-    case FLOAT:
+    case MODEL_FLOAT:
         return FloatEncode(data, bytes);
-    case IDENTIFIER:
+    case MODEL_IDENTIFIER:
         return IdentifierEncode(data, bytes);
-    case INTEGER:
+    case MODEL_INTEGER:
         return IntegerEncode(data, bytes);
-    case LAMDA:
+    case MODEL_LAMDA:
         return LamdaEncode(data, bytes);
-    case LIST:
+    case MODEL_LIST:
         return ListEncode(data, bytes);
-    case MAP:
+    case MODEL_MAP:
         return MapEncode(data, bytes);
-    case MODULE:
+    case MODEL_MODULE:
         return ModuleEncode(data, bytes);
-    case NIL:
+    case MODEL_NIL:
         return NilEncode(data, bytes);
-    case PROTOCOL:
-        return ProtocolEncode(data, bytes);
-    case RANGE:
+    case MODEL_RANGE:
         return RangeEncode(data, bytes);
-    case RESULT:
+    case MODEL_RESULT:
         return ResultEncode(data, bytes);
-    case SET:
+    case MODEL_SET:
         return SetEncode(data, bytes);
-    case STRING:
+    case MODEL_STRING:
         return StringEncode(data, bytes);
-    case TOKEN:
+    case MODEL_TOKEN:
         return TokenEncode(data, bytes);
-    case TYPE:
+    case MODEL_TYPE:
         return TypeEncode(data, bytes);
-    case WHEN:
+    case MODEL_WHEN:
         return WhenEncode(data, bytes);
     }
 }
 
-static void *ValueDecodeModel(Integer8 model, Byte **bytes, Error *error) {
+static void *ValueDecodeModel(Model model, Byte **bytes, Error *error) {
     switch (model) {
-    case BINARY:
+    case MODEL_BINARY:
         return BinaryDecode(bytes, error);
-    case BOOLEAN:
+    case MODEL_BOOLEAN:
         return BooleanDecode(bytes, error);
-    case CASE:
+    case MODEL_CASE:
         return CaseDecode(bytes, error);
-    case DO:
+    case MODEL_DO:
         return DoDecode(bytes, error);
-    case FLOAT:
+    case MODEL_FLOAT:
         return FloatDecode(bytes, error);
-    case IDENTIFIER:
+    case MODEL_IDENTIFIER:
         return IdentifierDecode(bytes, error);
-    case INTEGER:
+    case MODEL_INTEGER:
         return IntegerDecode(bytes, error);
-    case LAMDA:
+    case MODEL_LAMDA:
         return LamdaDecode(bytes, error);
-    case LIST:
+    case MODEL_LIST:
         return ListDecode(bytes, error);
-    case MAP:
+    case MODEL_MAP:
         return MapDecode(bytes, error);
-    case MODULE:
+    case MODEL_MODULE:
         return ModuleDecode(bytes, error);
-    case NIL:
+    case MODEL_NIL:
         return NilDecode(bytes, error);
-    case PROTOCOL:
-        return ProtocolDecode(bytes, error);
-    case RANGE:
+    case MODEL_RANGE:
         return RangeDecode(bytes, error);
-    case RESULT:
+    case MODEL_RESULT:
         return ResultDecode(bytes, error);
-    case SET:
+    case MODEL_SET:
         return SetDecode(bytes, error);
-    case STRING:
+    case MODEL_STRING:
         return StringDecode(bytes, error);
-    case TOKEN:
+    case MODEL_TOKEN:
         return TokenDecode(bytes, error);
-    case TYPE:
+    case MODEL_TYPE:
         return TypeDecode(bytes, error);
-    case WHEN:
+    case MODEL_WHEN:
         return WhenDecode(bytes, error);
     }
 }
 
-static Bool ValueEqualModel(Integer8 model, void *data, void *other) {
+static Bool ValueEqualModel(Model model, void *data, void *other) {
     switch (model) {
-    case BINARY:
+    case MODEL_BINARY:
         return BinaryEqual(data, other);
-    case BOOLEAN:
+    case MODEL_BOOLEAN:
         return BooleanEqual(data, other);
-    case CASE:
+    case MODEL_CASE:
         return CaseEqual(data, other);
-    case DO:
+    case MODEL_DO:
         return DoEqual(data, other);
-    case FLOAT:
+    case MODEL_FLOAT:
         return FloatEqual(data, other);
-    case IDENTIFIER:
+    case MODEL_IDENTIFIER:
         return IdentifierEqual(data, other);
-    case INTEGER:
+    case MODEL_INTEGER:
         return IntegerEqual(data, other);
-    case LAMDA:
+    case MODEL_LAMDA:
         return LamdaEqual(data, other);
-    case LIST:
+    case MODEL_LIST:
         return ListEqual(data, other);
-    case MAP:
+    case MODEL_MAP:
         return MapEqual(data, other);
-    case MODULE:
+    case MODEL_MODULE:
         return ModuleEqual(data, other);
-    case NIL:
+    case MODEL_NIL:
         return NilEqual(data, other);
-    case PROTOCOL:
-        return ProtocolEqual(data, other);
-    case RANGE:
+    case MODEL_RANGE:
         return RangeEqual(data, other);
-    case RESULT:
+    case MODEL_RESULT:
         return ResultEqual(data, other);
-    case SET:
+    case MODEL_SET:
         return SetEqual(data, other);
-    case STRING:
+    case MODEL_STRING:
         return StringEqual(data, other);
-    case TOKEN:
+    case MODEL_TOKEN:
         return TokenEqual(data, other);
-    case TYPE:
+    case MODEL_TYPE:
         return TypeEqual(data, other);
-    case WHEN:
+    case MODEL_WHEN:
         return WhenEqual(data, other);
     }
 } 
 
-static Size ValueSizeModel(Integer8 model, void *data) {
+static Size ValueSizeModel(Model model, void *data) {
     switch (model) {
-    case BINARY:
+    case MODEL_BINARY:
         return BinarySize(data);
-    case BOOLEAN:
+    case MODEL_BOOLEAN:
         return BooleanSize(data);
-    case CASE:
+    case MODEL_CASE:
         return CaseSize(data);
-    case DO:
+    case MODEL_DO:
         return DoSize(data);
-    case FLOAT:
+    case MODEL_FLOAT:
         return FloatSize(data);
-    case IDENTIFIER:
+    case MODEL_IDENTIFIER:
         return IdentifierSize(data);
-    case INTEGER:
+    case MODEL_INTEGER:
         return IntegerSize(data);
-    case LAMDA:
+    case MODEL_LAMDA:
         return LamdaSize(data);
-    case LIST:
+    case MODEL_LIST:
         return ListSize(data);
-    case MAP:
+    case MODEL_MAP:
         return MapSize(data);
-    case MODULE:
+    case MODEL_MODULE:
         return ModuleSize(data);
-    case NIL:
+    case MODEL_NIL:
         return NilSize(data);
-    case PROTOCOL:
-        return ProtocolSize(data);
-    case RANGE:
+    case MODEL_RANGE:
         return RangeSize(data);
-    case RESULT:
+    case MODEL_RESULT:
         return ResultSize(data);
-    case SET:
+    case MODEL_SET:
         return SetSize(data);
-    case STRING:
+    case MODEL_STRING:
         return StringSize(data);
-    case TOKEN:
+    case MODEL_TOKEN:
         return TokenSize(data);
-    case TYPE:
+    case MODEL_TYPE:
         return TypeSize(data);
-    case WHEN:
+    case MODEL_WHEN:
         return WhenSize(data);
     }
 }
 
 static Value *ValueCallModel(Integer8 model, void *data, Value **args, Integer8 count, Error *error) {
     switch(model) {
-    case LAMDA:
+    case MODEL_LAMDA:
         return LamdaCall(data, args, count, error);
     default:
         goto error;
@@ -277,71 +268,71 @@ error:
     return NULL;
 }
 
-static Value *ValueEvalModel(Value *value, Integer8 model, void *data, Value *context, Error *error) {
+static Value *ValueEvalModel(Value *value, Model model, void *data, Value *context, Error *error) {
     switch (model) {
-    case BOOLEAN:
+    case MODEL_BINARY:
+        return BinaryEval(value, data, context, error);
+    case MODEL_BOOLEAN:
         return BooleanEval(value, data, context, error);
-    case CASE:
+    case MODEL_CASE:
         return CaseEval(value, data, context, error);
-    case DO:
+    case MODEL_DO:
         return DoEval(value, data, context, error);
-    case FLOAT:
+    case MODEL_FLOAT:
         return FloatEval(value, data, context, error);
-    case IDENTIFIER:
+    case MODEL_IDENTIFIER:
         return IdentifierEval(value, data, context, error);
-    case INTEGER:
+    case MODEL_INTEGER:
         return IntegerEval(value, data, context, error);
-    case LAMDA:
+    case MODEL_LAMDA:
         return LamdaEval(value, data, context, error);
-    case LIST:
+    case MODEL_LIST:
         return ListEval(value, data, context, error);
-    case MAP:
+    case MODEL_MAP:
         return MapEval(value, data, context, error);
-    case MODULE:
+    case MODEL_MODULE:
         return ModuleEval(value, data, context, error);
-    case NIL:
+    case MODEL_NIL:
         return NilEval(value, data, context, error);
-    case PROTOCOL:
-        return ProtocolEval(value, data, context, error);
-    case RANGE:
+    case MODEL_RANGE:
         return RangeEval(value, data, context, error);
-    case RESULT:
+    case MODEL_RESULT:
         return ResultEval(value, data, context, error);
-    case SET:
+    case MODEL_SET:
         return SetEval(value, data, context, error);
-    case STRING:
+    case MODEL_STRING:
         return StringEval(value, data, context, error);
-    case TOKEN:
+    case MODEL_TOKEN:
         return TokenEval(value, data, context, error);
-    case TYPE:
+    case MODEL_TYPE:
         return TypeEval(value, data, context, error);
-    case WHEN:
+    case MODEL_WHEN:
         return WhenEval(value, data, context, error);
     }
 }
 
 Value *ValueList(List *list, Error *error) {
-    return ValueCreate(LIST, list, error);
+    return ValueCreate(MODEL_LIST, list, error);
 }
 
 Value *ValueMap(Map *map, Error *error) {
-    return ValueCreate(MAP, map, error);
+    return ValueCreate(MODEL_MAP, map, error);
 }
 
 Value *ValueModule(Module *module, Error *error) {
-    return ValueCreate(MODULE, module, error);
+    return ValueCreate(MODEL_MODULE, module, error);
 }
 
 Value *ValueLamda(Lamda *lamda, Error *error) {
-    return ValueCreate(LAMDA, lamda, error);
+    return ValueCreate(MODEL_LAMDA, lamda, error);
 }
 
 Value *ValueSet(Set *set, Error *error) {
-    return ValueCreate(SET, set, error);
+    return ValueCreate(MODEL_SET, set, error);
 }
 
 Value *ValueRange(Range *range, Error *error) {
-    return ValueCreate(RANGE, range, error);
+    return ValueCreate(MODEL_RANGE, range, error);
 }
 
 Size ValueEncode(Value *value, Byte **bytes) {

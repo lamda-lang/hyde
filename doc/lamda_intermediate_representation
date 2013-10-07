@@ -1,0 +1,21 @@
+BINARY          I8:0 I32:length [B:byte].length
+BOOLEAN_TRUE    I8:1 I8:1
+BOOLEAN_FALSE   I8:1 I8:0
+CASE            I8:2 V:arg I32:count [V:match V:guard V:value].count
+DO              I8:3 I32:count [V:name V:value].count
+FLOAT           I8:4 F64:value
+IDENTIFIER      I8:5 I8:count [I8:length [I8:codepoint].length].count
+INTEGER         I8:6 I64:value
+LAMDA           I8:7 V:value I8:arity [V:arg].arity
+LIST            I8:8 I32:count [V:value].count
+MAP             I8:9 I32:count [V:key V:value].count
+MODULE          I8:10 WHERE
+NIL             I8:11
+RANGE           I8:12 V:lower V:upper
+RESULT          I8:13 V:target I8:count [V:arg].count
+SET             I8:14 I32:count [V:value].count
+STRING          I8:15 I32:length [I32:codepoint].length
+TOKEN           I8:16 I8:length [I8:codepoint].length
+TYPE            I8:17 I32:count [V:member].count
+WHEN            I8:18 I32:count [V:condition V:value].count
+WHERE           I32:count [V:name V:value WHERE].count
