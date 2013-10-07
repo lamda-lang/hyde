@@ -62,19 +62,13 @@ typedef enum {
     ERROR_FILE_WRITE,
     ERROR_FILE_STATUS,
     ERROR_INVALID_ARITY,
-    ERROR_INVALID_TARGET
+    ERROR_INVALID_TARGET,
+    ERROR_NO_MATCH
 } Error;
-
-typedef enum {
-    CONSTANT_NIL,
-    CONSTANT_BOOLEAN_TRUE,
-    CONSTANT_BOOLEAN_FALSE
-} Constant;
 
 #include "binary.h"
 #include "boolean.h"
 #include "case.h"
-#include "constant.h"
 #include "decode.h"
 #include "do.h"
 #include "encode.h"

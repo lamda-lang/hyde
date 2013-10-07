@@ -69,7 +69,7 @@ Value *DoEval(Value *value, Do *block, Value *context, Error *error) {
         result = ValueEval(block->statements[index].value, context, error);
         if (ERROR(error))
             return NULL;
-        if (block->statements[index].name != ConstantValue(CONSTANT_NIL))
+        if (!ValueIsNil(block->statements[index].name))
             context = ValueSetValueForKey(context, result, block->statements[index].name, error);
         if (result == NULL)
             return NULL;

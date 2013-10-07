@@ -88,10 +88,11 @@ Value *CaseEval(Value *value, Case *block, Value *context, Error *error) {
         Value *guard = ValueEval(block->branches[index].guard, context, error);
         if (ERROR(error))
             return NULL;
-        if (guard == ConstantValue(CONSTANT_BOOLEAN_TRUE))
+        if (ValueIsTrue(guard))
             return ValueEval(block->branches[index].value, context, error);
     }
-    return ConstantValue(CONSTANT_NIL);
+    *error = ERROR_NO_MATCH;
+    return NULL;
 }
 
 Bool CaseEqual(Case *block, Case *other) {

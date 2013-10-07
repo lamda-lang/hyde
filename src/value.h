@@ -9,6 +9,8 @@ Value *ValueModule(Module *module, Error *error);
 Value *ValueLamda(Lamda *lamda, Error *error);
 Value *ValueSet(Set *set, Error *error);
 Value *ValueRange(Range *range, Error *error);
+Bool ValueIsTrue(Value *value);
+Bool ValueIsNil(Value *value);
 Size ValueEncode(Value *value, Byte **bytes);
 Value *ValueDecode(Byte **bytes, Error *error);
 Value *ValueEval(Value *value, Value *context, Error *error);

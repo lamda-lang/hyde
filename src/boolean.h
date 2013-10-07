@@ -3,6 +3,7 @@
 
 #include "runtime.h"
 
+Bool BooleanTruth(Boolean *boolean);
 Size BooleanSize(Boolean *boolean);
 Size BooleanEncode(Boolean *boolean, Byte **bytes);
 Boolean *BooleanDecode(Byte **bytes, Error *error);

@@ -335,6 +335,14 @@ Value *ValueRange(Range *range, Error *error) {
     return ValueCreate(MODEL_RANGE, range, error);
 }
 
+Bool ValueIsTrue(Value *value) {
+    return value->model == MODEL_BOOLEAN && BooleanTruth(value->data);
+}
+
+Bool ValueIsNil(Value *value) {
+    return value->model == MODEL_NIL;
+}
+
 Size ValueEncode(Value *value, Byte **bytes) {
     EncodeInteger8(value->model, bytes);
     ValueEncodeModel(value->model, value->data, bytes);

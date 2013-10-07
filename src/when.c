@@ -68,10 +68,11 @@ Value *WhenEval(Value *value, When *block, Value *context, Error *error) {
         Value *condition = ValueEval(block->branches[index].condition, context, error);
         if (ERROR(error))
             return NULL;
-        if (condition == ConstantValue(CONSTANT_BOOLEAN_TRUE))
+        if (ValueIsTrue(condition))
             return ValueEval(block->branches[index].value, context, error);
     }
-    return ConstantValue(CONSTANT_NIL);
+    *error = ERROR_NO_MATCH;
+    return NULL;
 }
 
 Bool WhenEqual(When *block, When *other) {

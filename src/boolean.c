@@ -12,6 +12,10 @@ static Boolean *BooleanCreate(Bool truth, Error *error) {
     return boolean;
 }
 
+Bool BooleanTruth(Boolean *boolean) {
+    return boolean->truth;
+}
+
 Size BooleanSize(Boolean *boolean) {
     return BOOL_SIZE;
 }
