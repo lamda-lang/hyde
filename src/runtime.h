@@ -66,6 +66,8 @@ typedef enum {
     ERROR_NO_MATCH
 } Error;
 
+typedef Value *Kernel(Value **args, Error *error);
+
 #include "binary.h"
 #include "boolean.h"
 #include "case.h"

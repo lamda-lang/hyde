@@ -104,3 +104,24 @@ error:
     *error = ERROR_INVALID_ARITY;
     return NULL;
 }
+
+/*
+LamdaNative *LamdaNativeCreate(Integer8 arity, Kernel *kernel, *error) {
+    LamdaNative *lamda = MemoryAlloc(sizeof(LamdaNative), error);
+    if (ERROR(error))
+        return NULL;
+    lamda->arity = arity;
+    lamda->kernel = kernel;
+    return lamda;
+}
+
+Value *LamdaNativeCall(LamdaNative *lamda, Value **args, Integer8 count, Error *error) {
+    if (count != lamda->arity)
+        goto error;
+    return lamda->kernel(args, error);
+
+error:
+    *error = ERROR_INVALID_ARITY;
+    return NULL;
+}
+*/
