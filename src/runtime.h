@@ -18,7 +18,6 @@
 #define INTEGER_32_SIZE 4
 #define INTEGER_64_SIZE 8
 #define FLOAT_64_SIZE 8
-#define ERROR(error) (*error != ERROR_NONE)
 
 typedef unsigned char Byte;
 typedef size_t Size;
@@ -28,9 +27,6 @@ typedef uint16_t Integer16;
 typedef uint32_t Integer32;
 typedef uint64_t Integer64;
 typedef double Float64;
-typedef int File;
-typedef char Char;
-
 typedef struct Binary Binary;
 typedef struct Boolean Boolean;
 typedef struct Case Case;
@@ -43,7 +39,6 @@ typedef struct List List;
 typedef struct Map Map;
 typedef struct Module Module;
 typedef struct Nil Nil;
-typedef struct Protocol Protocol;
 typedef struct Range Range;
 typedef struct Result Result;
 typedef struct Set Set;
@@ -52,29 +47,12 @@ typedef struct Token Token;
 typedef struct Type Type;
 typedef struct Value Value;
 typedef struct When When;
-
-typedef enum {
-    ERROR_NONE,
-    ERROR_OF_OF_MEMORY,
-    ERROR_FILE_OPEN,
-    ERROR_FILE_CLOSE,
-    ERROR_FILE_READ,
-    ERROR_FILE_WRITE,
-    ERROR_FILE_STATUS,
-    ERROR_INVALID_ARITY,
-    ERROR_INVALID_TARGET,
-    ERROR_NO_MATCH
-} Error;
-
-typedef Value *Kernel(Value **args, Error *error);
+typedef Value *Kernel(Value **args);
 
 #include "binary.h"
 #include "boolean.h"
 #include "case.h"
-#include "decode.h"
 #include "do.h"
-#include "encode.h"
-#include "file.h"
 #include "float.h"
 #include "identifier.h"
 #include "integer.h"

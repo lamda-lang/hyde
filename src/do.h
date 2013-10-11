@@ -3,11 +3,6 @@
 
 #include "runtime.h"
 
-Size DoSize(Do *block);
-Size DoEncode(Do *block, Byte **bytes);
-Do *DoDecode(Byte **bytes, Error *error);
-Value *DoEval(Value *value, Do *block, Value *context, Error *error);
-Bool DoEqual(Do *block, Do *other);
-Size DoRelease(Do *block);
+Value *DoDecodePrimitive(Binary *binary, Integer32 *offset);
 
 #endif

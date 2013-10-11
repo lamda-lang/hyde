@@ -4,37 +4,15 @@ struct Integer {
     Integer64 value;
 };
 
-static Integer *IntegerCreate(Integer64 value, Error *error) {
-    Integer *integer = MemoryAlloc(sizeof(Integer), error);
-    if (ERROR(error))
-        return NULL;
+static Value *IntegerCreate(Integer64 value) {
+    Integer *integer = MemoryAllocUnit(sizeof(Integer));
     integer->value = value;
-    return integer;
+    return ValueCreateInteger(integer);
 }
 
-Size IntegerSize(Integer *integer) {
-    return INTEGER_64_SIZE;
-}
-
-Size IntegerEncode(Integer *integer, Byte **bytes) {
-    EncodeInteger64(integer->value, bytes);
-    return IntegerSize(integer);
-}
-
-Integer *IntegerDecode(Byte **bytes, Error *error) {
-    Integer64 value = DecodeInteger64(bytes);
-    return IntegerCreate(value, error);
-}
-
-Value *IntegerEval(Value *value, Integer *integer, Value *context, Error *error) {
-    return value;
-}
-
-Bool IntegerEqual(Integer *integer, Integer *other) {
-    return integer->value == other->value;
-}
-
-Size IntegerRelease(Integer *integer) {
-    MemoryDealloc(integer);
-    return sizeof(Integer);
+Value *IntegerDecodePrimitive(Binary *binary, Integer32 *offset) {
+    Integer64 value;
+    if (BinaryDecodeInteger64(binary, offset, &value))
+        return NULL;
+    return IntegerCreate(value);
 }

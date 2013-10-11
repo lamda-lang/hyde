@@ -4,41 +4,15 @@ struct Boolean {
     Bool truth;
 };
 
-static Boolean *BooleanCreate(Bool truth, Error *error) {
-    Boolean *boolean = MemoryAlloc(sizeof(Boolean), error);
-    if (ERROR(error))
-        return NULL;
+static Value *BooleanCreate(Bool truth) {
+    Boolean *boolean = MemoryAllocUnit(sizeof(Boolean));
     boolean->truth = truth;
-    return boolean;
+    return ValueCreateBoolean(boolean);
 }
 
-Bool BooleanTruth(Boolean *boolean) {
-    return boolean->truth;
-}
-
-Size BooleanSize(Boolean *boolean) {
-    return BOOL_SIZE;
-}
-
-Size BooleanEncode(Boolean *boolean, Byte **bytes) {
-    EncodeBool(boolean->truth, bytes);
-    return BooleanSize(boolean);
-}
-
-Boolean *BooleanDecode(Byte **bytes, Error *error) {
-    Bool truth = DecodeBool(bytes);
-    return BooleanCreate(truth, error);
-}
-
-Value *BooleanEval(Value *value, Boolean *boolean, Value *context, Error *error) {
-    return value;
-}
-
-Bool BooleanEqual(Boolean *boolean, Boolean *other) {
-    return boolean->truth == other->truth;
-}
-
-Size BooleanRelease(Boolean *boolean) {
-    MemoryDealloc(boolean);
-    return sizeof(Boolean);
+Value *BooleanDecodePrimitive(Binary *binary, Integer32 *offset) {
+    Bool truth;
+    if (!BinaryDecodeBool(binary, offset, &truth))
+        return NULL;
+    return BooleanCreate(truth);
 }

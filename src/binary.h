@@ -3,11 +3,11 @@
 
 #include "runtime.h"
 
-Size BinarySize(Binary *binary);
-Size BinaryEncode(Binary *binary, Byte **bytes);
-Binary *BinaryDecode(Byte **bytes, Error *error);
-Value *BinaryEval(Value *value, Binary *binary, Value *context, Error *error);
-Bool BinaryEqual(Binary *binary, Binary *other);
-Size BinaryRelease(Binary *binary);
+Bool BinaryDecodeInteger8(Binary *binary, Integer32 *offset, Integer8 *value);
+Bool BinaryDecodeInteger32(Binary *binary, Integer32 *offset, Integer32 *value);
+Bool BinaryDecodeInteger64(Binary *binary, Integer32 *offset, Integer32 *value);
+Value *BinaryDecodeValue(Binary *binary, Integer32 *offset);
+Value *BinaryDecodePrimitive(Binary *binary, Integer32 *offset);
+Value *BinaryDecodeKernel(Value **args);
 
 #endif
