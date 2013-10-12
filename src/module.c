@@ -1,109 +1,82 @@
 #include "module.h"
 
-typedef struct Definition Definition;
-
-struct Definition {
+typedef struct {
     Value *name;
     Value *value;
     Module *local;
-};
+} Definition;
 
 struct Module {
     Integer32 count;
     Definition definitions[];
 };
 
-static Size ModuleSizeOf(Integer32 count) {
-    return sizeof(Module) + sizeof(Definition) * count;
+static Module *ModuleDecode(Binary *binary, Integer32 *offset);
+
+static void ModuleDealloc(Module *module, Integer32 count) {
+    for (Integer32 index = 0; index < count; index += 1) {
+        Module *local = module->definitions[index].local;
+        ModuleDealloc(local, local->count);
+    }
+    MemoryDealloc(module);
 }
 
-static Module *ModuleCreate(Integer32 count, Error *error) {
-    Size size = ModuleSizeOf(count);
-    Module *module = MemoryAlloc(size, error);
-    if (ERROR(error))
-        return NULL;
+static Module *ModuleCreate(Integer32 count) {
+    Module *module = MemoryAllocRegion(sizeof(Module), sizeof(Definition), count);
     module->count = count;
     return module;
 }
 
-static Size ModuleDealloc(Module *module, Integer32 count) {
-    Size size = ModuleSizeOf(module->count);
-    for (Integer32 index = 0; index < count; index += 1)
-        size += ModuleRelease(module->definitions[index].local);
-    MemoryDealloc(module);
-    return size;
+static Definition *ModuleCreateDefinition(Value *name, Value *value, Module *local) {
+    Definition *definition = MemoryAllocUnit(sizeof(Definition));
+    definition->name = name;
+    definition->value = value;
+    definition->local = local;
+    return definition;
 }
 
-Size ModuleSize(Module *module) {
-    Size size = INTEGER_32_SIZE;
-    for (Integer32 index = 0; index < module->count; index += 1)
-        size += ModuleSize(module->definitions[index].local);
-    return size;
-}
-
-Size ModuleEncode(Module *module, Byte **bytes) {
-    EncodeInteger32(module->count, bytes);
-    for (Integer32 index = 0; index < module->count; index += 1) {
-        ValueEncode(module->definitions[index].name, bytes);
-        ValueEncode(module->definitions[index].value, bytes);
-        ModuleEncode(module->definitions[index].local, bytes);
-    }
-    return ModuleSize(module);
-}
-
-Module *ModuleDecode(Byte **bytes, Error *error) {
-    Integer32 count = DecodeInteger32(bytes);
-    Module *module = ModuleCreate(count, error);
-    if (ERROR(error))
+static Definition *ModuleDecodeDefinition(Binary *binary, Integer32 *offset) {
+    Value *name = BinaryDecodeValue(binary, offset);
+    if (name == NULL)
         return NULL;
+    Value *value = BinaryDecodeValue(binary, offset);
+    if (value == NULL)
+        return NULL;
+    Module *module = ModuleDecode(binary, offset);
+    if (module == NULL)
+        return NULL;
+    Definition *definition = ModuleCreateDefinition(name, value, module);
+    if (definition == NULL)
+        goto out;
+    return definition;
+
+out:
+    ModuleDealloc(module, module->count);
+    return NULL;
+}
+
+static Module *ModuleDecode(Binary *binary, Integer32 *offset) {
+    /*
+    Integer32 count;
+    if (!BinaryDecodeInteger32(binary, offset, &count))
+        return NULL;
+    Module *module = ModuleCreate(count);
     Integer32 index = 0;
     while (index < count) {
-        module->definitions[index].name = ValueDecode(bytes, error);
-        if (ERROR(error))
-            goto module;
-        module->definitions[index].value = ValueDecode(bytes, error);
-        if (ERROR(error))
-            goto module;
-        module->definitions[index].local = ModuleDecode(bytes, error);
-        if (ERROR(error))
-            goto module;
+        Definition *definition = ModuleDecodeDefinition(binary, offset);
+        if (definition == NULL)
+            goto out;
+        module->definitions[index] = definition;
         index += 1;
     }
     return module;
 
-module:
+out:
     ModuleDealloc(module, index);
-    return NULL;
+   */ return NULL;
 }
 
-/* incomplete */
-Value *ModuleEval(Value *value, Module *module, Value *context, Error *error) {
-    for (Integer32 index = 0; index < module->count; index += 1) {
-        context = ValueSetValueForKey(context, module->definitions[index].value, module->definitions[index].name, error);
-        if (ERROR(error))
-            return NULL;
-    }
-    Module *new = ModuleCreate(module->count, error);
-    if (ERROR(error))
-        return NULL;
-    for (Integer32 index = 0; index < module->count; index += 1) {
-        new->definitions[index].name = module->definitions[index].name;
-        new->definitions[index].value = ValueEval(module->definitions[index].value, context, error);
-        if (ERROR(error))
-            goto new;
-    }
-    return ValueModule(new, error);
-
-new:
-    ModuleRelease(module);
-    return NULL;
-}
-
-/* missing */
-Bool ModuleEqual(Module *module, Module *other) {
-    return TRUE;
-}
-
-Size ModuleRelease(Module *module) {
-    return ModuleDealloc(module, module->count);
+Value *ModuleDecodePrimitive(Binary *binary, Integer32 *offset) {
+    Module *module = ModuleDecode(binary, offset);
+    return ValueCreateModule(module);
 }

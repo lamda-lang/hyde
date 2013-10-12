@@ -8,6 +8,7 @@ static Value *FloatCreate(Float64 value) {
     Float *fpn = MemoryAllocUnit(sizeof(Float));
     fpn->value = value;
     return ValueCreateFloat(fpn);
+}
 
 Value *FloatDecodePrimitive(Binary *binary, Integer32 *offset) {
     Float64 value;

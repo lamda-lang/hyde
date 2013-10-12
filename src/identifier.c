@@ -22,7 +22,7 @@ static Identifier *IdentifierCreate(Integer32 count) {
     return id;
 }
 
-static void IdentifierDecodeComponent(Component *component) {
+static void IdentifierDeallocComponent(Component *component) {
     MemoryDealloc(component);
 }
 

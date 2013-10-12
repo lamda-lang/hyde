@@ -3,10 +3,12 @@
 
 #include "runtime.h"
 
-void *MemoryAlloc(Size size, Error *error);
-void *MemoryClone(void *buffer, Size size, Error *error);
+void *MemoryAllocUnit(Size unitSize);
+void *MemoryAllocArray(Size elementSize, Integer32 count);
+void *MemoryAllocRegion(Size unitSize, Size elementSize, Integer32 count);
+void MemoryCopyUnit(void *source, void *target, Size unitSize);
+void MemoryCopyArray(void *source, void *target, Size elementSize, Integer32 count);
+void MemoryCopyRegion(void *source, void *target, Size unitSize, Size elementSize, Integer32 count);
 void MemoryDealloc(void *buffer);
-void MemoryCopy(void *source, void *target, Size size);
-Bool MemoryEqual(void *buffer, void *other, Size size);
 
 #endif

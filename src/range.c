@@ -5,57 +5,19 @@ struct Range {
     Value *upper;
 };
 
-static Range *RangeCreate(Value *lower, Value *upper, Error *error) {
-    Range *range = MemoryAlloc(sizeof(Range), error);
-    if (ERROR(error))
-        return NULL;
+static Value *RangeCreate(Value *lower, Value *upper) {
+    Range *range = MemoryAllocUnit(sizeof(Range));
     range->lower = lower;
     range->upper = upper;
-    return range;
+    return ValueCreateRange(range);
 }
 
-Size RangeSize(Range *range) {
-    return ValueSize(range->lower) + ValueSize(range->upper);
-}
-
-Size RangeEncode(Range *range, Byte **bytes) {
-    ValueEncode(range->lower, bytes);
-    ValueEncode(range->upper, bytes);
-    return RangeSize(range);
-}
-
-Range *RangeDecode(Byte **bytes, Error *error) {
-    Value *lower = ValueDecode(bytes, error);
-    if (ERROR(error))
+Value *RangeDecodePrimitive(Binary *binary, Integer32 *offset) {
+    Value *lower = BinaryDecodeValue(binary, offset);
+    if (lower == NULL)
         return NULL;
-    Value *upper = ValueDecode(bytes, error);
-    if (ERROR(error))
+    Value *upper = BinaryDecodeValue(binary, offset);
+    if (upper == NULL)
         return NULL;
-    return RangeCreate(lower, upper, error);
-}
-
-Value *RangeEval(Value *value, Range *range, Value *context, Error *error) {
-    Value *lower = ValueEval(range->lower, context, error);
-    if (ERROR(error))
-        return NULL;
-    Value *upper = ValueEval(range->upper, context, error);
-    if (ERROR(error))
-        return NULL;
-    Range *new = RangeCreate(lower, upper, error);
-    if (ERROR(error))
-        return NULL;
-    return ValueRange(new, error);
-}
-
-Bool RangeEqual(Range *range, Range *other) {
-    if (!ValueEqual(range->lower, other->lower))
-        return FALSE;
-    if (!ValueEqual(range->upper, other->upper))
-        return FALSE;
-    return TRUE;
-}
-
-Size RangeRelease(Range *range) {
-    MemoryDealloc(range);
-    return sizeof(Range);
+    return RangeCreate(lower, upper);
 }

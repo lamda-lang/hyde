@@ -7,121 +7,35 @@ struct Lamda {
     Value *args[];
 };
 
-static Size LamdaSizeOf(Integer8 count) {
-    return sizeof(Lamda) + sizeof(Value *) * count;
-}
-
-static Lamda *LamdaCreate(Value *result, Integer8 arity, Error *error) {
-    Size size = LamdaSizeOf(arity);
-    Lamda *lamda = MemoryAlloc(size, error);
-    if (ERROR(error))
-        return NULL;
+static Lamda *LamdaCreate(Integer8 arity, Value *result) {
+    Lamda *lamda = MemoryAllocRegion(sizeof(Lamda), sizeof(Value *), arity);
     lamda->arity = arity;
     lamda->result = result;
     lamda->context = NULL;
     return lamda;
 }
 
-Size LamdaSize(Lamda *lamda) {
-    Size size = ValueSize(lamda->result) + INTEGER_8_SIZE;
-    for (Integer8 index = 0; index < lamda->arity; index += 1)
-        size += ValueSize(lamda->args[index]);
-    return size;
-}
-
-Size LamdaEncode(Lamda *lamda, Byte **bytes) {
-    EncodeInteger8(lamda->arity, bytes);
-    ValueEncode(lamda->result, bytes);
-    for (Integer8 index = 0; index < lamda->arity; index += 1)
-        ValueEncode(lamda->args[index], bytes);
-    return LamdaSize(lamda);
-}
-
-Lamda *LamdaDecode(Byte **bytes, Error *error) {
-    Integer8 arity = DecodeInteger8(bytes);
-    Value *result = ValueDecode(bytes, error);
-    if (ERROR(error))
-        return NULL;
-    Lamda *lamda = LamdaCreate(result, arity, error);
-    if (ERROR(error))
-        return NULL;
-    for (Integer8 index = 0; index < arity; index += 1) {
-        lamda->args[index] = ValueDecode(bytes, error);
-        if (ERROR(error))
-            goto lamda;
-    }
-    return lamda;
-
-lamda:
-    LamdaRelease(lamda);
-    return NULL;
-}
-
-Value *LamdaEval(Value *value, Lamda *lamda, Value *context, Error *error) {
-    Size size = LamdaSizeOf(lamda->arity);
-    Lamda *new = MemoryClone(lamda, size, error);
-    if (ERROR(error))
-        return NULL;
-    new->context = context;
-    return ValueLamda(new, error);
-
-new:
-    LamdaRelease(new);
-    return NULL;
-}
-
-Bool LamdaEqual(Lamda *lamda, Lamda *other) {
-    if (lamda->arity != other->arity)
-        return FALSE;
-    if (!ValueEqual(lamda->result, other->result))
-        return FALSE;
-    if (!ValueEqual(lamda->context, other->context))
-        return FALSE;
-    for (Integer8 index = 0; index < lamda->arity; index += 1)
-        if (!ValueEqual(lamda->args[index], other->args[index]))
-            return FALSE;
-    return TRUE;
-}
-
-Size LamdaRelease(Lamda *lamda) {
-    Size size = LamdaSizeOf(lamda->arity);
+static void LamdaDealloc(Lamda *lamda) {
     MemoryDealloc(lamda);
-    return size;
 }
 
-Value *LamdaCall(Lamda *lamda, Value **args, Integer8 count, Error *error) {
-    if (count != lamda->arity)
-        goto error;
-    Value *context = lamda->context;
-    for (Integer8 index = 0; index < count; index += 1) {
-        context = ValueSetValueForKey(context, args[index], lamda->args[index], error);
-        if (ERROR(error))
-            return NULL;
-    }
-    return ValueEval(lamda->result, context, error);
-
-error:
-    *error = ERROR_INVALID_ARITY;
-    return NULL;
-}
-
-/*
-LamdaNative *LamdaNativeCreate(Integer8 arity, Kernel *kernel, *error) {
-    LamdaNative *lamda = MemoryAlloc(sizeof(LamdaNative), error);
-    if (ERROR(error))
+Value *LamdaDecodePrimitive(Binary *binary, Integer32 *offset) {
+    Integer8 arity;
+    if (!BinaryDecodeInteger8(binary, offset, &arity))
         return NULL;
-    lamda->arity = arity;
-    lamda->kernel = kernel;
-    return lamda;
-}
+    Value *result = BinaryDecodeValue(binary, offset);
+    if (result == NULL)
+        return NULL;
+    Lamda *lamda = LamdaCreate(arity, result);
+    for (Integer8 index = 0; index < arity; index += 1) {
+        Value *arg = BinaryDecodeValue(binary, offset);
+        if (arg == NULL)
+            goto out;
+        lamda->args[index] = arg;
+    }
+    return ValueCreateLamda(lamda);
 
-Value *LamdaNativeCall(LamdaNative *lamda, Value **args, Integer8 count, Error *error) {
-    if (count != lamda->arity)
-        goto error;
-    return lamda->kernel(args, error);
-
-error:
-    *error = ERROR_INVALID_ARITY;
+out:
+    LamdaDealloc(lamda);
     return NULL;
 }
-*/

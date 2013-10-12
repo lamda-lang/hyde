@@ -5,51 +5,30 @@ struct Token {
     Integer8 codepoints[];
 };
 
-static Size TokenSizeOf(Integer8 length) {
-    return sizeof(Token) + sizeof(Integer8) * length;
-}
-
-static Token *TokenCreate(Integer8 length, Error *error) {
-    Size size = TokenSizeOf(length);
-    Token *token = MemoryAlloc(size, error);
-    if (ERROR(error))
-        return NULL;
+static Token *TokenCreate(Integer8 length) {
+    Token *token = MemoryAllocRegion(sizeof(Token), sizeof(Integer8), length);
     token->length = length;
     return token;
 }
 
-Size TokenSize(Token *token) {
-    return INTEGER_8_SIZE + INTEGER_8_SIZE * token->length;
-}
-
-Size TokenEncode(Token *token, Byte **bytes) {
-    EncodeInteger8(token->length, bytes);
-    for (Integer8 index = 0; index < token->length; index += 1)
-        EncodeInteger8(token->codepoints[index], bytes);
-    return TokenSize(token);
-}
-
-Token *TokenDecode(Byte **bytes, Error *error) {
-    Integer8 length = DecodeInteger8(bytes);
-    Token *token = TokenCreate(length, error);
-    if (ERROR(error))
-        return NULL;
-    for (Integer8 index = 0; index < length; index += 1)
-        token->codepoints[index] = DecodeInteger8(bytes);
-    return token;
-}
-
-Value *TokenEval(Value *value, Token *token, Value *context, Error *error) {
-    return value;
-}
-
-Bool TokenEqual(Token *token, Token *other) {
-    return token->length != other->length
-        && MemoryEqual(token->codepoints, other->codepoints, sizeof(Integer8) * token->length);
-}
-
-Size TokenRelease(Token *token) {
-    Size size = TokenSizeOf(token->length);
+static void TokenDealloc(Token *token) {
     MemoryDealloc(token);
-    return size;
+}
+
+Value *TokenDecodePrimitive(Binary *binary, Integer32 *offset) {
+    Integer8 length;
+    if (!BinaryDecodeInteger8(binary, offset, &length))
+        return NULL;
+    Token *token = TokenCreate(length);
+    for (Integer8 index = 0; index < length; index += 1) {
+        Integer8 codepoint;
+        if (!BinaryDecodeInteger8(binary, offset, &codepoint))
+            goto out;
+        token->codepoints[index] = codepoint;
+    }
+    return ValueCreateToken(token);
+
+out:
+    TokenDealloc(token);
+    return NULL;
 }

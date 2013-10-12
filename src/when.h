@@ -3,11 +3,6 @@
 
 #include "runtime.h"
 
-Size WhenSize(When *block);
-Size WhenEncode(When *block, Byte **bytes);
-When *WhenDecode(Byte **bytes, Error *error);
-Value *WhenEval(Value *value, When *block, Value *context, Error *error);
-Bool WhenEqual(When *block, When *other);
-Size WhenRelease(When *block);
+Value *WhenDecodePrimitive(Binary *binary, Integer32 *offset);
 
 #endif

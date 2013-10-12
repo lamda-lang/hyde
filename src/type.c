@@ -5,65 +5,30 @@ struct Type {
     Value *members[];
 }; 
 
-static Size TypeSizeOf(Integer32 count) {
-    return sizeof(Type) + sizeof(Value *) * count;
-}
-
-static Type *TypeCreate(Integer32 count, Error *error) {
-    Size size = TypeSizeOf(count);
-    Type *type = MemoryAlloc(size, error);
-    if (ERROR(error))
-        return NULL;
+static Type *TypeCreate(Integer32 count) {
+    Type *type = MemoryAllocRegion(sizeof(Type), sizeof(Value *), count);
     type->count = count;
     return type;
 }
 
-Size TypeSize(Type *type) {
-    Size size = INTEGER_32_SIZE;
-    for (Integer32 index = 0; index < type->count; index += 1)
-        size += ValueSize(type->members[index]);
-    return size;
-}
-
-Size TypeEncode(Type *type, Byte **bytes) {
-    EncodeInteger32(type->count, bytes);
-    for (Integer32 index = 0; index < type->count; index += 1)
-        ValueEncode(type->members[index], bytes);
-    return TypeSize(type);
-}
-
-Type *TypeDecode(Byte **bytes, Error *error) {
-    Integer32 count = DecodeInteger32(bytes);
-    Type *type = TypeCreate(count, error);
-    if (ERROR(error))
-        return NULL;
-    for (Integer32 index = 0; index < count; index += 1) {
-        type->members[index] = ValueDecode(bytes, error);
-        if (ERROR(error))
-            goto type;
-    }
-    return type;
-
-type:
-    TypeRelease(type);
-    return NULL;
-}
-
-Value *TypeEval(Value *value, Type *type, Value *context, Error *error) {
-    return value;
-}
-
-Bool TypeEqual(Type *type, Type *other) {
-    if (type->count != other->count)
-        return FALSE;
-    for (Integer32 index = 0; index < type->count; index += 1) 
-        if (!ValueEqual(type->members[index], other->members[index]))
-            return FALSE;
-    return TRUE;
-}
-
-Size TypeRelease(Type *type) {
-    Size size = TypeSizeOf(type->count);
+static void TypeDealloc(Type *type) {
     MemoryDealloc(type);
-    return size;
+}
+
+Value *TypeDecodePrimitive(Binary *binary, Integer32 *offset) {
+    Integer32 count;
+    if (!BinaryDecodeInteger32(binary, offset, &count))
+        return NULL;
+    Type *type = TypeCreate(count);
+    for (Integer32 index = 0; index < count; index += 1) {
+        Value *member = BinaryDecodeValue(binary, offset);
+        if (member == NULL)
+            goto out;
+        type->members[index] = member;
+    }
+    return ValueCreateType(type);
+
+out:
+    TypeDealloc(type);
+    return NULL;
 }

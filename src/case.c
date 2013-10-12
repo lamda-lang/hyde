@@ -12,9 +12,10 @@ struct Case {
     Branch branches[];
 };
 
-static Case *CaseCreate(Integer32 count) {
+static Case *CaseCreate(Integer32 count, Value *arg) {
     Case *block = MemoryAllocRegion(sizeof(Case), sizeof(Branch), count);
     block->count = count;
+    block->arg = arg;
     return block;
 }
 
@@ -37,8 +38,8 @@ Value *CaseDecodePrimitive(Binary *binary, Integer32 *offset) {
         Value *guard = BinaryDecodeValue(binary, offset);
         if (guard == NULL)
             goto out;
-        Value *match = BinaryDecodeValue(binary, offset);
-        if (match == NULL)
+        Value *value = BinaryDecodeValue(binary, offset);
+        if (value == NULL)
             goto out;
         block->branches[index].match = match;
         block->branches[index].guard = guard;
