@@ -15,7 +15,7 @@ static void SetDealloc(Set *set) {
     MemoryDealloc(set);
 }
 
-Value *SetDecodePrimitive(Binary *binary, Integer32 *offset) {
+Value *SetDecode(Binary *binary, Integer32 *offset) {
     Integer32 count;
     if (!BinaryDecodeInteger32(binary, offset, &count))
         return NULL;

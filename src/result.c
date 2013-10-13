@@ -16,7 +16,7 @@ static void ResultDealloc(Result *result) {
     MemoryDealloc(result);
 }
 
-Value *ResultDecodePrimitive(Binary *binary, Integer32 *offset) {
+Value *ResultDecode(Binary *binary, Integer32 *offset) {
     Value *target = BinaryDecodeValue(binary, offset);
     if (target == NULL)
         return NULL;

@@ -23,7 +23,7 @@ static void CaseDealloc(Case *block) {
     MemoryDealloc(block);
 }
 
-Value *CaseDecodePrimitive(Binary *binary, Integer32 *offset) {
+Value *CaseDecode(Binary *binary, Integer32 *offset) {
     Integer32 count;
     if (!BinaryDecodeInteger32(binary, offset, &count))
         return NULL;

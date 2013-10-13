@@ -3,6 +3,6 @@
 
 #include "runtime.h"
 
-Value *MapDecodePrimitive(Binary *binary, Integer32 *offset);
+Value *MapDecode(Binary *binary, Integer32 *offset);
 
 #endif

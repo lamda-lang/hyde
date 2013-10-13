@@ -3,6 +3,6 @@
 
 #include "runtime.h"
 
-Value *CaseDecodePrimitive(Binary *binary, Integer32 *offset);
+Value *CaseDecode(Binary *binary, Integer32 *offset);
 
 #endif

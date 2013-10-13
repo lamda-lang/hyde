@@ -19,7 +19,7 @@ static void LamdaDealloc(Lamda *lamda) {
     MemoryDealloc(lamda);
 }
 
-Value *LamdaDecodePrimitive(Binary *binary, Integer32 *offset) {
+Value *LamdaDecode(Binary *binary, Integer32 *offset) {
     Integer8 arity;
     if (!BinaryDecodeInteger8(binary, offset, &arity))
         return NULL;

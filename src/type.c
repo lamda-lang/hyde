@@ -15,7 +15,7 @@ static void TypeDealloc(Type *type) {
     MemoryDealloc(type);
 }
 
-Value *TypeDecodePrimitive(Binary *binary, Integer32 *offset) {
+Value *TypeDecode(Binary *binary, Integer32 *offset) {
     Integer32 count;
     if (!BinaryDecodeInteger32(binary, offset, &count))
         return NULL;

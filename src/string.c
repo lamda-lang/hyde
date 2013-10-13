@@ -15,7 +15,7 @@ static void StringDealloc(String *string) {
     MemoryDealloc(string);
 }
 
-Value *StringDecodePrimitive(Binary *binary, Integer32 *offset) {
+Value *StringDecode(Binary *binary, Integer32 *offset) {
     Integer32 length;
     if (!BinaryDecodeInteger32(binary, offset, &length))
         return NULL;

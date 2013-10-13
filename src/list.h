@@ -3,6 +3,6 @@
 
 #include "runtime.h"
 
-Value *ListDecodePrimitive(Binary *binary, Integer32 *offset);
+Value *ListDecode(Binary *binary, Integer32 *offset);
 
 #endif

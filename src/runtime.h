@@ -56,6 +56,7 @@ typedef Value *Kernel(Value **args);
 #include "float.h"
 #include "identifier.h"
 #include "integer.h"
+#include "kernel.h"
 #include "lamda.h"
 #include "list.h"
 #include "map.h"

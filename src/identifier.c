@@ -47,7 +47,7 @@ out:
     return NULL;
 }
 
-Value *IdentifierDecodePrimitive(Binary *binary, Integer32 *offset) {
+Value *IdentifierDecode(Binary *binary, Integer32 *offset) {
     Integer8 count;
     if (!BinaryDecodeInteger8(binary, offset, &count))
         return NULL;

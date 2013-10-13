@@ -9,7 +9,7 @@ Bool BinaryDecodeInteger64(Binary *binary, Integer32 *offset, Integer64 *value);
 Bool BinaryDecodeFloat64(Binary *binary, Integer32 *offset, Float64 *value);
 Bool BinaryDecodeBool(Binary *binary, Integer32 *offset, Bool *value);
 Value *BinaryDecodeValue(Binary *binary, Integer32 *offset);
-Value *BinaryDecodePrimitive(Binary *binary, Integer32 *offset);
-Value *BinaryDecodeKernel(Value **args);
+Value *BinaryDecode(Binary *binary, Integer32 *offset);
+Value *BinaryEqual(Binary *binary, Binary *other);
 
 #endif

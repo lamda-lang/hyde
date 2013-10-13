@@ -3,6 +3,6 @@
 
 #include "runtime.h"
 
-Value *TokenDecodePrimitive(Binary *binary, Integer32 *offset);
+Value *TokenDecode(Binary *binary, Integer32 *offset);
 
 #endif

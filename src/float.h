@@ -3,6 +3,7 @@
 
 #include "runtime.h"
 
-Value *FloatDecodePrimitive(Binary *binary, Integer32 *offset);
+Value *FloatDecode(Binary *binary, Integer32 *offset);
+Value *FloatEqual(Float *fpn, Float *other);
 
 #endif

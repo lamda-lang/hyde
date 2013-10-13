@@ -10,7 +10,7 @@ static Value *IntegerCreate(Integer64 value) {
     return ValueCreateInteger(integer);
 }
 
-Value *IntegerDecodePrimitive(Binary *binary, Integer32 *offset) {
+Value *IntegerDecode(Binary *binary, Integer32 *offset) {
     Integer64 value;
     if (BinaryDecodeInteger64(binary, offset, &value))
         return NULL;

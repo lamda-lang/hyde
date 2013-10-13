@@ -12,7 +12,7 @@ static Value *RangeCreate(Value *lower, Value *upper) {
     return ValueCreateRange(range);
 }
 
-Value *RangeDecodePrimitive(Binary *binary, Integer32 *offset) {
+Value *RangeDecode(Binary *binary, Integer32 *offset) {
     Value *lower = BinaryDecodeValue(binary, offset);
     if (lower == NULL)
         return NULL;

@@ -15,7 +15,7 @@ static void TokenDealloc(Token *token) {
     MemoryDealloc(token);
 }
 
-Value *TokenDecodePrimitive(Binary *binary, Integer32 *offset) {
+Value *TokenDecode(Binary *binary, Integer32 *offset) {
     Integer8 length;
     if (!BinaryDecodeInteger8(binary, offset, &length))
         return NULL;

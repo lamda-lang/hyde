@@ -20,7 +20,7 @@ static void DoDealloc(Do *block) {
     MemoryDealloc(block);
 }
 
-Value *DoDecodePrimitive(Binary *binary, Integer32 *offset) {
+Value *DoDecode(Binary *binary, Integer32 *offset) {
     Integer32 count;
     if (!BinaryDecodeInteger32(binary, offset, &count))
         return NULL;

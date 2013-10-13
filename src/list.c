@@ -15,7 +15,7 @@ static void ListDealloc(List *list) {
     MemoryDealloc(list);
 }
 
-Value *ListDecodePrimitive(Binary *binary, Integer32 *offset) {
+Value *ListDecode(Binary *binary, Integer32 *offset) {
     Integer32 count;
     if (!BinaryDecodeInteger32(binary, offset, &count))
         return NULL;

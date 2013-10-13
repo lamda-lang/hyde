@@ -3,6 +3,6 @@
 
 #include "runtime.h"
 
-Value *WhenDecodePrimitive(Binary *binary, Integer32 *offset);
+Value *WhenDecode(Binary *binary, Integer32 *offset);
 
 #endif

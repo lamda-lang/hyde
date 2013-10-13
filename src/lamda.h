@@ -3,6 +3,6 @@
 
 #include "runtime.h"
 
-Value *LamdaDecodePrimitive(Binary *binary, Integer32 *offset);
+Value *LamdaDecode(Binary *binary, Integer32 *offset);
 
 #endif

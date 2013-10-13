@@ -84,64 +84,64 @@ Value *BinaryDecodeValue(Binary *binary, Integer32 *offset) {
         return NULL;
     switch (opcode) {
     case 0:
-        return BinaryDecodePrimitive(binary, offset);
+        return BinaryDecode(binary, offset);
     case 1:
-        return BooleanDecodePrimitive(binary, offset);
+        return BooleanDecode(binary, offset);
     case 2:
-        return CaseDecodePrimitive(binary, offset);
+        return CaseDecode(binary, offset);
     case 3:
-        return DoDecodePrimitive(binary, offset);
+        return DoDecode(binary, offset);
     case 4:
-        return FloatDecodePrimitive(binary, offset);
+        return FloatDecode(binary, offset);
     case 5:
-        return IdentifierDecodePrimitive(binary, offset);
+        return IdentifierDecode(binary, offset);
     case 6:
-        return IntegerDecodePrimitive(binary, offset);
+        return IntegerDecode(binary, offset);
     case 7:
-        return LamdaDecodePrimitive(binary, offset);
+        return LamdaDecode(binary, offset);
     case 8:
-        return ListDecodePrimitive(binary, offset);
+        return ListDecode(binary, offset);
     case 9:
-        return MapDecodePrimitive(binary, offset);
+        return MapDecode(binary, offset);
     case 10:
-        return ModuleDecodePrimitive(binary, offset);
+        return ModuleDecode(binary, offset);
     case 11:
-        return NilDecodePrimitive(binary, offset);
+        return NilDecode(binary, offset);
     case 12:
-        return RangeDecodePrimitive(binary, offset);
+        return RangeDecode(binary, offset);
     case 13:
-        return ResultDecodePrimitive(binary, offset);
+        return ResultDecode(binary, offset);
     case 14:
-        return SetDecodePrimitive(binary, offset);
+        return SetDecode(binary, offset);
     case 15:
-        return StringDecodePrimitive(binary, offset);
+        return StringDecode(binary, offset);
     case 16:
-        return TokenDecodePrimitive(binary, offset);
+        return TokenDecode(binary, offset);
     case 17:
-        return TypeDecodePrimitive(binary, offset);
+        return TypeDecode(binary, offset);
     case 18:
-        return WhenDecodePrimitive(binary, offset);
+        return WhenDecode(binary, offset);
     }
     return NULL;
 }
  
-Value *BinaryDecodePrimitive(Binary *binary, Integer32 *offset) {
+Value *BinaryDecode(Binary *binary, Integer32 *offset) {
     Integer32 count;
     if (!BinaryDecodeInteger32(binary, offset, &count))
         return NULL;
     if (*offset + count > binary->count)
         return NULL; 
     Binary *result = BinaryCreate(count);
-    MemoryCopyArray(binary->bytes, result->bytes, sizeof(Byte), count);
+    for (Integer32 index = 0; index < binary->count; index += 1)
+        result->bytes[index] = binary->bytes[index];
     return ValueCreateBinary(binary);
 }
 
-Value *BinaryDecodeKernel(Value **args) {
-    Binary *binary = ValueBinaryPrimitive(args[0]);
-    Integer32 offset = 0;
-    Value *value = BinaryDecodeValue(binary, &offset);
-    if (value == NULL)
-        /* missing */
-        return NULL;
-    return value;
+Value *BinaryEqual(Binary *binary, Binary *other) {
+    if (binary->count != other->count)
+        return BooleanCreate(FALSE);
+    for (Integer32 index = 0; index < binary->count; index += 1)
+        if (binary->bytes[index] != other->bytes[index])
+            return BooleanCreate(FALSE);
+    return BooleanCreate(TRUE);
 }

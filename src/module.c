@@ -25,7 +25,7 @@ static void ModuleDealloc(Module *module, Integer32 count) {
     MemoryDealloc(module);
 }
 
-static Module *ModuleDecode(Binary *binary, Integer32 *offset) {
+static Module *ModuleDecodePrimitive(Binary *binary, Integer32 *offset) {
     Integer32 count;
     if (!BinaryDecodeInteger32(binary, offset, &count))
         return NULL;
@@ -38,7 +38,7 @@ static Module *ModuleDecode(Binary *binary, Integer32 *offset) {
         Value *value = BinaryDecodeValue(binary, offset);
         if (value == NULL)
             goto out;
-        Module *local = ModuleDecode(binary, offset);
+        Module *local = ModuleDecodePrimitive(binary, offset);
         if (module == NULL)
             goto out;
         module->definitions[index].name = name;
@@ -53,7 +53,7 @@ out:
     return NULL;
 }
 
-Value *ModuleDecodePrimitive(Binary *binary, Integer32 *offset) {
-    Module *module = ModuleDecode(binary, offset);
+Value *ModuleDecode(Binary *binary, Integer32 *offset) {
+    Module *module = ModuleDecodePrimitive(binary, offset);
     return ValueCreateModule(module);
 }

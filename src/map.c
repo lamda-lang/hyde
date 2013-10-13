@@ -20,7 +20,7 @@ static void MapDealloc(Map *map) {
     MemoryDealloc(map);
 }
 
-Value *MapDecodePrimitive(Binary *binary, Integer32 *offset) {
+Value *MapDecode(Binary *binary, Integer32 *offset) {
     Integer32 count;
     if (!BinaryDecodeInteger32(binary, offset, &count))
         return NULL;
