@@ -3,6 +3,6 @@
 
 #include "runtime.h"
 
-Value *KernelDecode(Value **args);
+void *KernelDecode(Stack *stack);
 
 #endif

@@ -1,11 +1,15 @@
 #include "kernel.h"
 
-Value *KernelDecode(Value **args) {
-    Binary *binary = ValueBinaryPrimitive(args[0]);
+void *KernelDecode(Stack *stack);
+    Value *binaryValue = StackPopValue(stack);
+    Binary *binary = ValueBinaryPrimitive(binaryValue);
     Integer32 offset = 0;
     Value *value = BinaryDecodeValue(binary, &offset);
     if (value == NULL)
-        /* missing */
-        return NULL;
-    return value;
+        goto out;
+    return;
+
+out:
+    Exception *exception = ExceptionInvalidBinary(binaryValue);
+    StackRaiseException(exception);
 }

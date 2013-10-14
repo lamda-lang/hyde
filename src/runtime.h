@@ -42,6 +42,7 @@ typedef struct Nil Nil;
 typedef struct Range Range;
 typedef struct Result Result;
 typedef struct Set Set;
+typedef struct Stack Stack;
 typedef struct String String;
 typedef struct Token Token;
 typedef struct Type Type;
@@ -66,6 +67,7 @@ typedef Value *Kernel(Value **args);
 #include "range.h"
 #include "result.h"
 #include "set.h"
+#include "stack.h"
 #include "string.h"
 #include "token.h"
 #include "type.h"
