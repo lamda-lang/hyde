@@ -5,13 +5,12 @@
 struct Stack {
     Integer32 size;
     Integer32 count;
-    Value *exception;
     Value **values;
-}
+};
 
 static void StackIncrease(Stack *stack) {
     Value **values = MemoryAllocArray(sizeof(Value *), stack->size * 2);
-    for (Integer32 index = 0; index < stack->count)
+    for (Integer32 index = 0; index < stack->count; index += 1)
         values[index] = stack->values[index];
     MemoryDealloc(stack->values);
     stack->size *= 2;
@@ -24,8 +23,13 @@ Stack *StackCreate(Integer32 size) {
     Stack *stack = MemoryAllocUnit(sizeof(Stack));
     stack->size = size;
     stack->count = 0;
-    stack->exception = NULL;
+    stack->values = MemoryAllocArray(sizeof(Value *), size);
     return stack;
+}
+
+void StackDealloc(Stack *stack) {
+    MemoryDealloc(stack->values);
+    MemoryDealloc(stack);
 }
 
 void StackPushValue(Stack *stack, Value *value) {
@@ -40,6 +44,6 @@ Value *StackPopValue(Stack *stack) {
     return stack->values[stack->count];
 }
 
-void StackRaiseException(Stack *stack, Value *exception) {
-    stack->exception = exception;
+void StackReplaceTop(Stack *stack, Value *value) {
+    stack->values[stack->count - 1] = value;
 }

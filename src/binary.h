@@ -3,6 +3,7 @@
 
 #include "runtime.h"
 
+Value *BinaryCreateValue(Byte *bytes, Integer32 count);
 Bool BinaryDecodeInteger8(Binary *binary, Integer32 *offset, Integer8 *value);
 Bool BinaryDecodeInteger32(Binary *binary, Integer32 *offset, Integer32 *value);
 Bool BinaryDecodeInteger64(Binary *binary, Integer32 *offset, Integer64 *value);

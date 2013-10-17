@@ -3,6 +3,7 @@
 
 #include "runtime.h"
 
+Bool ValueEval(Value *value, Stack *stack);
 Value *ValueCreateBinary(Binary *binary);
 Value *ValueCreateBoolean(Boolean *boolean);
 Value *ValueCreateCase(Case *block);

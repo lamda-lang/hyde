@@ -32,3 +32,19 @@ out:
     ListDealloc(list);
     return NULL;
 }
+
+Bool ListEval(List *list, Stack *stack) {
+    List *eval = ListCreate(list->count);
+    for (Integer32 index = 0; index < list->count; index += 1) {
+        if (!ValueEval(list->values[index], stack))
+            goto out;
+        eval->values[index] = StackPopValue(stack);
+    }
+    Value *value = ValueCreateList(eval);
+    StackReplaceTop(stack, value);
+    return TRUE;
+
+out:
+    ListDealloc(eval);
+    return FALSE;
+}

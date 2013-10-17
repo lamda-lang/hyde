@@ -11,6 +11,13 @@ static Binary *BinaryCreate(Integer32 count) {
     return binary;
 }
 
+Value *BinaryCreateValue(Byte *bytes, Integer32 count) {
+    Binary *binary = BinaryCreate(count);
+    for (Integer32 index = 0; index < count; index += 1)
+        binary->bytes[index] = bytes[index];
+    return ValueCreateBinary(binary);
+}
+
 Bool BinaryDecodeInteger8(Binary *binary, Integer32 *offset, Integer8 *value) {
     if (*offset + INTEGER_8_SIZE > binary->count)
         return FALSE;

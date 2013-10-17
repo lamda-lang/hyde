@@ -3,6 +3,4 @@
 
 #include "runtime.h"
 
-void *KernelDecode(Stack *stack);
-
 #endif

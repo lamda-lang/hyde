@@ -1,193 +1,203 @@
 #include "value.h"
 
 enum {
-    MODEL_BINARY = 0,
-    MODEL_BOOLEAN = 1,
-    MODEL_CASE = 2,
-    MODEL_DO = 3,
-    MODEL_FLOAT = 4,
-    MODEL_IDENTIFIER = 5,
-    MODEL_INTEGER = 6,
-    MODEL_LAMDA = 7,
-    MODEL_LIST = 8,
-    MODEL_MAP = 9,
-    MODEL_MODULE = 10,
-    MODEL_NIL = 11,
-    MODEL_RANGE = 12,
-    MODEL_RESULT = 13,
-    MODEL_SET = 14,
-    MODEL_STRING = 15,
-    MODEL_TOKEN = 16,
-    MODEL_TYPE = 17,
-    MODEL_WHEN = 18
+    BINARY = 0,
+    BOOLEAN = 1,
+    CASE = 2,
+    DO = 3,
+    FLOAT = 4,
+    IDENTIFIER = 5,
+    INTEGER = 6,
+    LAMDA = 7,
+    LIST = 8,
+    MAP = 9,
+    MODULE = 10,
+    NIL = 11,
+    RANGE = 12,
+    RESULT = 13,
+    SET = 14,
+    STRING = 15,
+    TOKEN = 16,
+    TYPE = 17,
+    WHEN = 18
 };
 
 struct Value {
     void *primitive;
-    Integer8 model;
+    Integer8 type;
 };
 
-static Value *ValueCreate(Integer8 model, void *primitive) {
+Bool ValueEval(Value *value, Stack *stack) {
+    StackPushValue(stack, value);
+    switch (value->type) {
+    case LIST:
+        return ListEval(value->primitive, stack);
+    default:
+        return TRUE;
+    }
+}
+
+static Value *ValueCreate(Integer8 type, void *primitive) {
     Value *value = MemoryAllocUnit(sizeof(Value));
-    value->model = model;
+    value->type = type;
     value->primitive = primitive;
     return value;
 }
 
-static void *ValuePrimitive(Value *value, Integer8 model) {
-    if (value->model != model)
+static void *ValuePrimitive(Value *value, Integer8 type) {
+    if (value->type != type)
         abort();
     return value->primitive;
 }
 
 Value *ValueCreateBinary(Binary *binary) {
-    return ValueCreate(MODEL_BINARY, binary);
+    return ValueCreate(BINARY, binary);
 }
 
 Value *ValueCreateBoolean(Boolean *boolean) {
-    return ValueCreate(MODEL_BOOLEAN, boolean);
+    return ValueCreate(BOOLEAN, boolean);
 }
 
 Value *ValueCreateCase(Case *block) {
-    return ValueCreate(MODEL_CASE, block);
+    return ValueCreate(CASE, block);
 }
 
 Value *ValueCreateDo(Do *block) {
-    return ValueCreate(MODEL_DO, block);
+    return ValueCreate(DO, block);
 }
 
 Value *ValueCreateFloat(Float *fpn) {
-    return ValueCreate(MODEL_FLOAT, fpn);
+    return ValueCreate(FLOAT, fpn);
 }
 
 Value *ValueCreateIdentifier(Identifier *id) {
-    return ValueCreate(MODEL_IDENTIFIER, id);
+    return ValueCreate(IDENTIFIER, id);
 }
 
 Value *ValueCreateInteger(Integer *integer) {
-    return ValueCreate(MODEL_INTEGER, integer);
+    return ValueCreate(INTEGER, integer);
 }
 
 Value *ValueCreateLamda(Lamda *lamda) {
-    return ValueCreate(MODEL_LAMDA, lamda);
+    return ValueCreate(LAMDA, lamda);
 }
 
 Value *ValueCreateList(List *list) {
-    return ValueCreate(MODEL_LIST, list);
+    return ValueCreate(LIST, list);
 }
 
 Value *ValueCreateMap(Map *map) {
-    return ValueCreate(MODEL_MAP, map);
+    return ValueCreate(MAP, map);
 }
 
 Value *ValueCreateModule(Module *module) {
-    return ValueCreate(MODEL_MODULE, module);
+    return ValueCreate(MODULE, module);
 }
 
 Value *ValueCreateNil(Nil *nil) {
-    return ValueCreate(MODEL_NIL, nil);
+    return ValueCreate(NIL, nil);
 }
 
 Value *ValueCreateRange(Range *range) {
-    return ValueCreate(MODEL_RANGE, range);
+    return ValueCreate(RANGE, range);
 }
 
 Value *ValueCreateResult(Result *result) {
-    return ValueCreate(MODEL_RESULT, result);
+    return ValueCreate(RESULT, result);
 }
 
 Value *ValueCreateSet(Set *set) {
-    return ValueCreate(MODEL_SET, set);
+    return ValueCreate(SET, set);
 }
 
 Value *ValueCreateString(String *string) {
-    return ValueCreate(MODEL_STRING, string);
+    return ValueCreate(STRING, string);
 }
 
 Value *ValueCreateToken(Token *token) {
-    return ValueCreate(MODEL_TOKEN, token);
+    return ValueCreate(TOKEN, token);
 }
 
 Value *ValueCreateType(Type *type) {
-    return ValueCreate(MODEL_TYPE, type);
+    return ValueCreate(TYPE, type);
 }
 
 Value *ValueCreateWhen(When *block) {
-    return ValueCreate(MODEL_WHEN, block);
+    return ValueCreate(WHEN, block);
 }
 
 Binary *ValueBinaryPrimitive(Value *value) {
-    return ValuePrimitive(value, MODEL_BINARY);
+    return ValuePrimitive(value, BINARY);
 }
 
 Boolean *ValueBooleanPrimitive(Value *value) {
-    return ValuePrimitive(value, MODEL_BOOLEAN);
+    return ValuePrimitive(value, BOOLEAN);
 }
 
 Case *ValueCasePrimitive(Value *value) {
-    return ValuePrimitive(value, MODEL_CASE);
+    return ValuePrimitive(value, CASE);
 }
 
 Do *ValueDoPrimitive(Value *value) {
-    return ValuePrimitive(value, MODEL_DO);
+    return ValuePrimitive(value, DO);
 }
 
 Float *ValueFloatPrimitive(Value *value) {
-    return ValuePrimitive(value, MODEL_FLOAT);
+    return ValuePrimitive(value, FLOAT);
 }
 
 Identifier *ValueIdentifierPrimitive(Value *value) {
-    return ValuePrimitive(value, MODEL_IDENTIFIER);
+    return ValuePrimitive(value, IDENTIFIER);
 }
 
 Integer *ValueIntegerPrimitive(Value *value) {
-    return ValuePrimitive(value, MODEL_INTEGER);
+    return ValuePrimitive(value, INTEGER);
 }
 
 Lamda *ValueLamdaPrimitive(Value *value) {
-    return ValuePrimitive(value, MODEL_LAMDA);
+    return ValuePrimitive(value, LAMDA);
 }
 
 List *ValueListPrimitive(Value *value) {
-    return ValuePrimitive(value, MODEL_LIST);
+    return ValuePrimitive(value, LIST);
 }
 
 Map *ValueMapPrimitive(Value *value) {
-    return ValuePrimitive(value, MODEL_MAP);
+    return ValuePrimitive(value, MAP);
 }
 
 Module *ValueModulePrimitive(Value *value) {
-    return ValuePrimitive(value, MODEL_MODULE);
+    return ValuePrimitive(value, MODULE);
 }
 
 Nil *ValueNilPrimitive(Value *value) {
-    return ValuePrimitive(value, MODEL_NIL);
+    return ValuePrimitive(value, NIL);
 }
 
 Range *ValueRangePrimitive(Value *value) {
-    return ValuePrimitive(value, MODEL_RANGE);
+    return ValuePrimitive(value, RANGE);
 }
 
 Result *ValueResultPrimitive(Value *value) {
-    return ValuePrimitive(value, MODEL_RESULT);
+    return ValuePrimitive(value, RESULT);
 }
 
 Set *ValueSetPrimitive(Value *value) {
-    return ValuePrimitive(value, MODEL_SET);
+    return ValuePrimitive(value, SET);
 }
 
 String *ValueStringPrimitive(Value *value) {
-    return ValuePrimitive(value, MODEL_STRING);
+    return ValuePrimitive(value, STRING);
 }
 
 Token *ValueTokenPrimitive(Value *value) {
-    return ValuePrimitive(value, MODEL_TOKEN);
+    return ValuePrimitive(value, TOKEN);
 }
 
 Type *ValueTypePrimitive(Value *value) {
-    return ValuePrimitive(value, MODEL_TYPE);
+    return ValuePrimitive(value, TYPE);
 }
 
 When *ValueWhenPrimitive(Value *value) {
-    return ValuePrimitive(value, MODEL_WHEN);
+    return ValuePrimitive(value, WHEN);
 }

@@ -31,9 +31,11 @@ typedef struct Binary Binary;
 typedef struct Boolean Boolean;
 typedef struct Case Case;
 typedef struct Do Do;
+typedef struct Exception Exception;
 typedef struct Float Float;
 typedef struct Identifier Identifier;
 typedef struct Integer Integer;
+typedef struct Kernel Kernel;
 typedef struct Lamda Lamda;
 typedef struct List List;
 typedef struct Map Map;
@@ -48,12 +50,12 @@ typedef struct Token Token;
 typedef struct Type Type;
 typedef struct Value Value;
 typedef struct When When;
-typedef Value *Kernel(Value **args);
 
 #include "binary.h"
 #include "boolean.h"
 #include "case.h"
 #include "do.h"
+#include "exception.h"
 #include "float.h"
 #include "identifier.h"
 #include "integer.h"
