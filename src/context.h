@@ -1,0 +1,9 @@
+#ifndef CONTEXT_H
+#define CONTEXT_H
+
+#include "runtime.h"
+
+void ContextSetValueForIdentifier(Context *context, Value *value, Identifier *id);
+Value *ContextGetValueForIdentifier(Context *context, Identifier *id);
+
+#endif

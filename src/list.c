@@ -15,28 +15,29 @@ static void ListDealloc(List *list) {
     MemoryDealloc(list);
 }
 
-Value *ListDecode(Binary *binary, Integer32 *offset) {
+Bool ListDecode(Binary *binary, Integer32 *offset, Value **value) {
     Integer32 count;
     if (!BinaryDecodeInteger32(binary, offset, &count))
-        return NULL;
+        return FALSE;
     List *list = ListCreate(count);
     for (Integer32 index = 0; index < count; index += 1) {
-        Value *value = BinaryDecodeValue(binary, offset);
-        if (value == NULL)
+        Value *value;
+        if (!BinaryDecodeValue(binary, offset, &value))
             goto out;
         list->values[index] = value;
     }
-    return ValueCreateList(list);
+    *value = ValueCreateList(list);
+    return TRUE;
 
 out:
     ListDealloc(list);
-    return NULL;
+    return FALSE;
 }
 
-Bool ListEval(List *list, Stack *stack) {
+Bool ListEval(List *list, Context *context, Stack *stack) {
     List *eval = ListCreate(list->count);
     for (Integer32 index = 0; index < list->count; index += 1) {
-        if (!ValueEval(list->values[index], stack))
+        if (!ValueEval(list->values[index], context, stack))
             goto out;
         eval->values[index] = StackPopValue(stack);
     }

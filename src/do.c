@@ -1,7 +1,7 @@
 #include "do.h"
 
 typedef struct {
-    Value *name;
+    Identifier *name;
     Value *value;
 } Statement;
 
@@ -20,24 +20,45 @@ static void DoDealloc(Do *block) {
     MemoryDealloc(block);
 }
 
-Value *DoDecode(Binary *binary, Integer32 *offset) {
+Bool DoDecode(Binary *binary, Integer32 *offset, Value **value) {
     Integer32 count;
     if (!BinaryDecodeInteger32(binary, offset, &count))
-        return NULL;
+        return FALSE;
     Do *block = DoCreate(count);
     for (Integer32 index = 0; index < count; index += 1) {
-        Value *name = BinaryDecodeValue(binary, offset);
-        if (name == NULL)
+        Identifier *name;
+        Value *value;
+        if (!IdentifierDecodePrimitive(binary, offset, &name))
             goto out;
-        Value *value = BinaryDecodeValue(binary, offset);
-        if (value == NULL)
+        if (!BinaryDecodeValue(binary, offset, &value))
             goto out;
         block->statements[index].name = name;
         block->statements[index].value = value;
     }
-    return ValueCreateDo(block);
+    *value = ValueCreateDo(block);
+    return TRUE;
 
 out:
     DoDealloc(block);
-    return NULL;
+    return FALSE;
+}
+
+Bool DoExecute(Do *block, Context *context, Stack *stack) {
+    Value *value = NULL;
+    for (Integer32 index = 0; index < block->count; index += 1) {
+        if (!ValueEval(block->statements[index].value, context, stack))
+            return FALSE;
+        value = StackPopValue(stack);
+        Do *executable = ValueDoPrimitive(value);
+        if (executable != NULL) {
+            if (!DoExecute(executable, context, stack))
+                return FALSE;
+            value = StackPopValue(stack);
+        }
+        Identifier *name = block->statements[index].name;
+        if (name != NULL)
+            ContextSetValueForIdentifier(context, value, name);
+    }
+    StackReplaceTop(stack, value);
+    return TRUE;
 }

@@ -85,63 +85,60 @@ Bool BinaryDecodeBool(Binary *binary, Integer32 *offset, Bool *value) {
     return TRUE;
 }
 
-Value *BinaryDecodeValue(Binary *binary, Integer32 *offset) {
+Bool BinaryDecodeValue(Binary *binary, Integer32 *offset, Value **value) {
     Integer8 opcode;
     if (!BinaryDecodeInteger8(binary, offset, &opcode))
-        return NULL;
+        return FALSE;
     switch (opcode) {
     case 0:
-        return BinaryDecode(binary, offset);
+        return BinaryDecode(binary, offset, value);
     case 1:
-        return BooleanDecode(binary, offset);
+        return BooleanDecode(binary, offset, value);
     case 2:
-        return CaseDecode(binary, offset);
+        return CaseDecode(binary, offset, value);
     case 3:
-        return DoDecode(binary, offset);
+        return DoDecode(binary, offset, value);
     case 4:
-        return FloatDecode(binary, offset);
+        return FloatDecode(binary, offset, value);
     case 5:
-        return IdentifierDecode(binary, offset);
+        return IdentifierDecode(binary, offset, value);
     case 6:
-        return IntegerDecode(binary, offset);
+        return IntegerDecode(binary, offset, value);
     case 7:
-        return LamdaDecode(binary, offset);
+        return LamdaDecode(binary, offset, value);
     case 8:
-        return ListDecode(binary, offset);
+        return ListDecode(binary, offset, value);
     case 9:
-        return MapDecode(binary, offset);
+        return MapDecode(binary, offset, value);
     case 10:
-        return ModuleDecode(binary, offset);
+        return ModuleDecode(binary, offset, value);
     case 11:
-        return NilDecode(binary, offset);
+        return NilDecode(binary, offset, value);
     case 12:
-        return RangeDecode(binary, offset);
+        return ResultDecode(binary, offset, value);
     case 13:
-        return ResultDecode(binary, offset);
+        return SetDecode(binary, offset, value);
     case 14:
-        return SetDecode(binary, offset);
+        return StringDecode(binary, offset, value);
     case 15:
-        return StringDecode(binary, offset);
+        return TokenDecode(binary, offset, value);
     case 16:
-        return TokenDecode(binary, offset);
-    case 17:
-        return TypeDecode(binary, offset);
-    case 18:
-        return WhenDecode(binary, offset);
+        return WhenDecode(binary, offset, value);
     }
-    return NULL;
+    return FALSE;
 }
  
-Value *BinaryDecode(Binary *binary, Integer32 *offset) {
+Bool BinaryDecode(Binary *binary, Integer32 *offset, Value **value) {
     Integer32 count;
     if (!BinaryDecodeInteger32(binary, offset, &count))
-        return NULL;
+        return FALSE;
     if (*offset + count > binary->count)
-        return NULL; 
+        return FALSE; 
     Binary *result = BinaryCreate(count);
     for (Integer32 index = 0; index < binary->count; index += 1)
         result->bytes[index] = binary->bytes[index];
-    return ValueCreateBinary(binary);
+    *value = ValueCreateBinary(binary);
+    return TRUE;
 }
 
 Value *BinaryEqual(Binary *binary, Binary *other) {

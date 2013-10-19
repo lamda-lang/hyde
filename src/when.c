@@ -3,15 +3,15 @@
 typedef struct {
     Value *condition;
     Value *value;
-} Branch;
+} Clause;
 
 struct When {
     Integer32 count;
-    Branch branches[];
-};
+    Clause clauses[];
+}; 
 
 static When *WhenCreate(Integer32 count) {
-    When *block = MemoryAllocRegion(sizeof(When), sizeof(Branch), count);
+    When *block = MemoryAllocRegion(sizeof(When), sizeof(Clause), count);
     block->count = count;
     return block;
 }
@@ -20,27 +20,41 @@ static void WhenDealloc(When *block) {
     MemoryDealloc(block);
 }
 
-Value *WhenDecode(Binary *binary, Integer32 *offset) {
+Bool WhenDecode(Binary *binary, Integer32 *offset, Value **value) {
     Integer32 count;
+    Value *arg;
     if (!BinaryDecodeInteger32(binary, offset, &count))
-        return NULL;
-    Value *arg = BinaryDecodeValue(binary, offset);
-    if (arg == NULL)
-        return NULL;
+        return FALSE;
+    if (!BinaryDecodeValue(binary, offset, &arg))
+        return FALSE;
     When *block = WhenCreate(count);
     for (Integer32 index = 0; index < count; index += 1) {
-        Value *condition = BinaryDecodeValue(binary, offset);
-        if (condition == NULL)
+        Value *condition;
+        Value *value;
+        if (!BinaryDecodeValue(binary, offset, &condition))
             goto out;
-        Value *value = BinaryDecodeValue(binary, offset);
-        if (value == NULL)
+        if (!BinaryDecodeValue(binary, offset, &value))
             goto out;
-        block->branches[index].condition = condition;
-        block->branches[index].value = value;
+        block->clauses[index].condition = condition;
+        block->clauses[index].value = value;
     }
-    return ValueCreateWhen(block);
+    *value = ValueCreateWhen(block);
+    return TRUE;
 
 out:
     WhenDealloc(block);
-    return NULL;
+    return FALSE;
+}
+
+Bool WhenEval(When *block, Context *context, Stack *stack) {
+    for (Integer32 index = 0; index < block->count; index += 1) {
+        if (!ValueEval(block->clauses[index].condition, context, stack))
+            return FALSE;
+        Value *condition = StackPopValue(stack);
+        if (ValueIsTrue(condition))
+            return ValueEval(block->clauses[index].value, context, stack);
+    }
+    Value *exception = ExceptionWhenClause(stack);
+    StackPushValue(stack, exception);
+    return FALSE;
 }

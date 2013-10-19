@@ -10,11 +10,12 @@ Value *BooleanCreate(Bool truth) {
     return ValueCreateBoolean(boolean);
 }
 
-Value *BooleanDecode(Binary *binary, Integer32 *offset) {
+Bool BooleanDecode(Binary *binary, Integer32 *offset, Value **value) {
     Bool truth;
     if (!BinaryDecodeBool(binary, offset, &truth))
-        return NULL;
-    return BooleanCreate(truth);
+        return FALSE;
+    *value = BooleanCreate(truth);
+    return TRUE;
 }
 
 Value *BooleanEqual(Boolean *boolean, Boolean *other) {

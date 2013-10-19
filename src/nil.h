@@ -3,6 +3,6 @@
 
 #include "runtime.h"
 
-Value *NilDecode(Binary *binary, Integer32 *offset);
+Bool NilDecode(Binary *binary, Integer32 *offset, Value **value);
 
 #endif

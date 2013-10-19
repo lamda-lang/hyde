@@ -1,7 +1,7 @@
 #include "module.h"
 
 typedef struct {
-    Value *name;
+    Identifier *name;
     Value *value;
     Module *local;
 } Definition;
@@ -25,35 +25,38 @@ static void ModuleDealloc(Module *module, Integer32 count) {
     MemoryDealloc(module);
 }
 
-static Module *ModuleDecodePrimitive(Binary *binary, Integer32 *offset) {
+static Bool ModuleDecodePrimitive(Binary *binary, Integer32 *offset, Module **module) {
     Integer32 count;
     if (!BinaryDecodeInteger32(binary, offset, &count))
-        return NULL;
-    Module *module = ModuleCreate(count);
+        return FALSE;
+    *module = ModuleCreate(count);
     Integer32 index = 0;
     while (index < count) {
-        Value *name = BinaryDecodeValue(binary, offset);
-        if (name == NULL)
+        Identifier *name;
+        Value *value;
+        Module *local;
+        if (!IdentifierDecodePrimitive(binary, offset, &name))
             goto out;
-        Value *value = BinaryDecodeValue(binary, offset);
-        if (value == NULL)
+        if (!BinaryDecodeValue(binary, offset, &value))
             goto out;
-        Module *local = ModuleDecodePrimitive(binary, offset);
-        if (module == NULL)
+        if (!ModuleDecodePrimitive(binary, offset, &local))
             goto out;
-        module->definitions[index].name = name;
-        module->definitions[index].value = value;
-        module->definitions[index].local = local;
+        (*module)->definitions[index].name = name;
+        (*module)->definitions[index].value = value;
+        (*module)->definitions[index].local = local;
         index += 1;
     }
-    return module;
+    return TRUE;
 
 out:
-    ModuleDealloc(module, index);
-    return NULL;
+    ModuleDealloc(*module, index);
+    return FALSE;
 }
 
-Value *ModuleDecode(Binary *binary, Integer32 *offset) {
-    Module *module = ModuleDecodePrimitive(binary, offset);
-    return ValueCreateModule(module);
+Bool ModuleDecode(Binary *binary, Integer32 *offset, Value **value) {
+    Module *module;
+    if (!ModuleDecodePrimitive(binary, offset, &module))
+        return FALSE;
+    *value = ValueCreateModule(module);
+    return TRUE;
 }

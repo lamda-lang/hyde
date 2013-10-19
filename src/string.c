@@ -15,10 +15,10 @@ static void StringDealloc(String *string) {
     MemoryDealloc(string);
 }
 
-Value *StringDecode(Binary *binary, Integer32 *offset) {
+Bool StringDecode(Binary *binary, Integer32 *offset, Value **value) {
     Integer32 length;
     if (!BinaryDecodeInteger32(binary, offset, &length))
-        return NULL;
+        return FALSE;
     String *string = StringCreate(length);
     for (Integer32 index = 0; index < length; index += 1) {
         Integer32 codepoint;
@@ -26,9 +26,10 @@ Value *StringDecode(Binary *binary, Integer32 *offset) {
             goto out;
         string->codepoints[index] = codepoint;
     }
-    return ValueCreateString(string);
+    *value = ValueCreateString(string);
+    return TRUE;
 
 out:
     StringDealloc(string);
-    return NULL;
+    return FALSE;
 }

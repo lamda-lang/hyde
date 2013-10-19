@@ -4,16 +4,16 @@ typedef struct {
     Value *match;
     Value *guard;
     Value *value;
-} Branch;
+} Clause;
 
 struct Case {
     Integer32 count;
     Value *arg;
-    Branch branches[];
+    Clause clauses[];
 };
 
 static Case *CaseCreate(Integer32 count, Value *arg) {
-    Case *block = MemoryAllocRegion(sizeof(Case), sizeof(Branch), count);
+    Case *block = MemoryAllocRegion(sizeof(Case), sizeof(Clause), count);
     block->count = count;
     block->arg = arg;
     return block;
@@ -23,31 +23,59 @@ static void CaseDealloc(Case *block) {
     MemoryDealloc(block);
 }
 
-Value *CaseDecode(Binary *binary, Integer32 *offset) {
+Bool CaseDecode(Binary *binary, Integer32 *offset, Value **value) {
     Integer32 count;
+    Value *arg;
     if (!BinaryDecodeInteger32(binary, offset, &count))
-        return NULL;
-    Value *arg = BinaryDecodeValue(binary, offset);
-    if (arg == NULL)
-        return NULL;
+        return FALSE;
+    if (!BinaryDecodeValue(binary, offset, &arg))
+        return FALSE;
     Case *block = CaseCreate(count, arg);
     for (Integer32 index = 0; index < count; index += 1) {
-        Value *match = BinaryDecodeValue(binary, offset);
-        if (match == NULL)
+        Value *match;
+        Value *guard;
+        Value *value;
+        if (!BinaryDecodeValue(binary, offset, &match))
             goto out;
-        Value *guard = BinaryDecodeValue(binary, offset);
-        if (guard == NULL)
+        if (!BinaryDecodeValue(binary, offset, &guard))
             goto out;
-        Value *value = BinaryDecodeValue(binary, offset);
-        if (value == NULL)
+        if (!BinaryDecodeValue(binary, offset, &value))
             goto out;
-        block->branches[index].match = match;
-        block->branches[index].guard = guard;
-        block->branches[index].value = value;
+        block->clauses[index].match = match;
+        block->clauses[index].guard = guard;
+        block->clauses[index].value = value;
     }
-    return ValueCreateCase(block);
+    *value = ValueCreateCase(block);
+    return TRUE;
 
 out:
     CaseDealloc(block);
-    return NULL;
+    return FALSE;
+}
+
+Bool CaseEval(Case *block, Context *context, Stack *stack) {
+    if (!ValueEval(block->arg, context, stack))
+        return FALSE;
+    Value *arg = StackPopValue(stack);
+    for (Integer32 index = 0; index < block->count; index += 1) {
+        Clause clause = block->clauses[index];
+        if (!ValueEval(clause.match, context, stack))
+            return FALSE;
+        Value *match = StackPopValue(stack);
+        if (!ValueEqual(arg, match))
+            continue;
+        if (!ValueEval(clause.guard, context, stack))
+            return FALSE;
+        Value *guard = StackPopValue(stack);
+        if (!ValueIsTrue(guard))
+            continue;
+        if (!ValueEval(clause.value, context, stack))
+            return FALSE;
+        Value *value = StackPopValue(stack);
+        StackReplaceTop(stack, value);
+        return TRUE;
+    }
+    Value *exception = ExceptionCaseClause(arg, stack);
+    StackPushValue(stack, exception);
+    return FALSE;
 }

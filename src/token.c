@@ -15,10 +15,10 @@ static void TokenDealloc(Token *token) {
     MemoryDealloc(token);
 }
 
-Value *TokenDecode(Binary *binary, Integer32 *offset) {
+Bool TokenDecode(Binary *binary, Integer32 *offset, Value **value) {
     Integer8 length;
     if (!BinaryDecodeInteger8(binary, offset, &length))
-        return NULL;
+        return FALSE;
     Token *token = TokenCreate(length);
     for (Integer8 index = 0; index < length; index += 1) {
         Integer8 codepoint;
@@ -26,9 +26,10 @@ Value *TokenDecode(Binary *binary, Integer32 *offset) {
             goto out;
         token->codepoints[index] = codepoint;
     }
-    return ValueCreateToken(token);
+    *value = ValueCreateToken(token);
+    return TRUE;
 
 out:
     TokenDealloc(token);
-    return NULL;
+    return FALSE;
 }

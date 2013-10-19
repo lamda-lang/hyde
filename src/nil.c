@@ -1,5 +1,6 @@
 #include "nil.h"
 
-Value *NilDecode(Binary *binary, Integer32 *offset) {
-    return ValueCreateNil(NULL);
+Bool NilDecode(Binary *binary, Integer32 *offset, Value **value) {
+    *value = ValueCreateNil(NULL);
+    return TRUE;
 }

@@ -16,23 +16,24 @@ static void ResultDealloc(Result *result) {
     MemoryDealloc(result);
 }
 
-Value *ResultDecode(Binary *binary, Integer32 *offset) {
-    Value *target = BinaryDecodeValue(binary, offset);
-    if (target == NULL)
-        return NULL;
+Bool ResultDecode(Binary *binary, Integer32 *offset, Value **value) {
+    Value *target;
     Integer8 count;
+    if (!BinaryDecodeValue(binary, offset, &target))
+        return FALSE;
     if (!BinaryDecodeInteger8(binary, offset, &count))
-        return NULL;
+        return FALSE;
     Result *result = ResultCreate(count);
     for (Integer8 index = 0; index < count; index += 1) {
-        Value *arg = BinaryDecodeValue(binary, offset);
-        if (arg == NULL)
+        Value *arg;
+        if (!BinaryDecodeValue(binary, offset, &arg))
             goto out;
         result->args[index] = arg;
     }
-    return ValueCreateResult(result);
+    *value = ValueCreateResult(result);
+    return TRUE;
 
 out:
     ResultDealloc(result);
-    return NULL;
+    return FALSE;
 }

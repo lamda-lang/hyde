@@ -3,6 +3,7 @@
 
 #include "runtime.h"
 
-Value *ResultDecode(Binary *binary, Integer32 *offset);
+Bool ResultDecode(Binary *binary, Integer32 *offset, Value **value);
+Bool ResultEval(Result *result, Context *context, Stack *stack);
 
 #endif

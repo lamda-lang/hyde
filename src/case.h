@@ -3,6 +3,7 @@
 
 #include "runtime.h"
 
-Value *CaseDecode(Binary *binary, Integer32 *offset);
+Bool CaseDecode(Binary *binary, Integer32 *offset, Value **value);
+Bool CaseEval(Case *block, Context *context, Stack *stack);
 
 #endif

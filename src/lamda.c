@@ -2,16 +2,16 @@
 
 struct Lamda {
     Integer8 arity;
+    Context *context;
     Value *result;
-    Value *context;
-    Value *args[];
+    Identifier *args[];
 };
 
-static Lamda *LamdaCreate(Integer8 arity, Value *result) {
+static Lamda *LamdaCreate(Integer8 arity, Value *result, Context *context) {
     Lamda *lamda = MemoryAllocRegion(sizeof(Lamda), sizeof(Value *), arity);
     lamda->arity = arity;
+    lamda->context = context;
     lamda->result = result;
-    lamda->context = NULL;
     return lamda;
 }
 
@@ -19,23 +19,33 @@ static void LamdaDealloc(Lamda *lamda) {
     MemoryDealloc(lamda);
 }
 
-Value *LamdaDecode(Binary *binary, Integer32 *offset) {
+Bool LamdaDecode(Binary *binary, Integer32 *offset, Value **value) {
     Integer8 arity;
+    Value *result;
     if (!BinaryDecodeInteger8(binary, offset, &arity))
-        return NULL;
-    Value *result = BinaryDecodeValue(binary, offset);
-    if (result == NULL)
-        return NULL;
-    Lamda *lamda = LamdaCreate(arity, result);
+        return FALSE;
+    if (!BinaryDecodeValue(binary, offset, &result))
+        return FALSE;
+    Lamda *lamda = LamdaCreate(arity, result, NULL);
     for (Integer8 index = 0; index < arity; index += 1) {
-        Value *arg = BinaryDecodeValue(binary, offset);
-        if (arg == NULL)
+        Identifier *arg;
+        if (!IdentifierDecodePrimitive(binary, offset, &arg))
             goto out;
         lamda->args[index] = arg;
     }
-    return ValueCreateLamda(lamda);
+    *value = ValueCreateLamda(lamda);
+    return TRUE;
 
 out:
     LamdaDealloc(lamda);
-    return NULL;
+    return FALSE;
+}
+
+Bool LamdaEval(Lamda *lamda, Context *context, Stack *stack) {
+    Lamda *eval = LamdaCreate(lamda->arity, lamda->result, context);
+    for (Integer8 index = 0; index < lamda->arity; index += 1)
+        eval->args[index] = lamda->args[index];
+    Value *value = ValueCreateLamda(eval);
+    StackReplaceTop(stack, value);
+    return TRUE;
 }

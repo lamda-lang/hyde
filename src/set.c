@@ -15,20 +15,37 @@ static void SetDealloc(Set *set) {
     MemoryDealloc(set);
 }
 
-Value *SetDecode(Binary *binary, Integer32 *offset) {
+Bool SetDecode(Binary *binary, Integer32 *offset, Value **value) {
     Integer32 count;
     if (!BinaryDecodeInteger32(binary, offset, &count))
-        return NULL;
+        return FALSE;
     Set *set = SetCreate(count);
     for (Integer32 index = 0; index < count; index += 1) {
-        Value *value = BinaryDecodeValue(binary, offset);
-        if (value == NULL)
+        Value *value;
+        if (!BinaryDecodeValue(binary, offset, &value))
             goto out;
         set->values[index] = value;
     }
-    return ValueCreateSet(set);
+    *value = ValueCreateSet(set);
+    return TRUE;
 
 out:
     SetDealloc(set);
-    return NULL;
+    return FALSE;
+}
+
+Bool SetEval(Set *set, Context *context, Stack *stack) {
+    Set *eval = SetCreate(set->count);
+    for (Integer32 index = 0; index < set->count; index += 1) {
+        if (!ValueEval(set->values[index], context, stack))
+            goto out;
+        eval->values[index] = StackPopValue(stack);
+    }
+    Value *value = ValueCreateSet(eval);
+    StackReplaceTop(stack, value);
+    return TRUE;
+
+out:
+    SetDealloc(eval);
+    return FALSE;
 }

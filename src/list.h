@@ -3,7 +3,7 @@
 
 #include "runtime.h"
 
-Value *ListDecode(Binary *binary, Integer32 *offset);
-Bool ListEval(List *list, Stack *stack);
+Bool ListDecode(Binary *binary, Integer32 *offset, Value **value);
+Bool ListEval(List *list, Context *context, Stack *stack);
 
 #endif

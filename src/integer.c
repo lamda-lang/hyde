@@ -10,9 +10,10 @@ static Value *IntegerCreate(Integer64 value) {
     return ValueCreateInteger(integer);
 }
 
-Value *IntegerDecode(Binary *binary, Integer32 *offset) {
-    Integer64 value;
-    if (BinaryDecodeInteger64(binary, offset, &value))
-        return NULL;
-    return IntegerCreate(value);
+Bool IntegerDecode(Binary *binary, Integer32 *offset, Value **value) {
+    Integer64 data;
+    if (!BinaryDecodeInteger64(binary, offset, &data))
+        return FALSE;
+    *value = IntegerCreate(data);
+    return TRUE;
 }

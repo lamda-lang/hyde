@@ -3,6 +3,7 @@
 
 #include "runtime.h"
 
-Value *SetDecode(Binary *binary, Integer32 *offset);
+Bool SetDecode(Binary *binary, Integer32 *offset, Value **value);
+Bool SetEval(Set *set, Context *context, Stack *stack);
 
 #endif

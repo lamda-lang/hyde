@@ -20,24 +20,44 @@ static void MapDealloc(Map *map) {
     MemoryDealloc(map);
 }
 
-Value *MapDecode(Binary *binary, Integer32 *offset) {
+Bool MapDecode(Binary *binary, Integer32 *offset, Value **value) {
     Integer32 count;
     if (!BinaryDecodeInteger32(binary, offset, &count))
-        return NULL;
+        return FALSE;
     Map *map = MapCreate(count);
     for (Integer32 index = 0; index < count; index += 1) {
-        Value *key = BinaryDecodeValue(binary, offset);
-        if (key == NULL)
+        Value *key;
+        Value *value;
+        if (!BinaryDecodeValue(binary, offset, &key))
             goto out;
-        Value *value = BinaryDecodeValue(binary, offset);
-        if (value == NULL)
+        if (!BinaryDecodeValue(binary, offset, &value))
             goto out;
         map->pairs[index].key = key;
         map->pairs[index].value = value;
     }
-    return ValueCreateMap(map);
+    *value = ValueCreateMap(map);
+    return TRUE;
 
 out:
     MapDealloc(map);
-    return NULL;
+    return FALSE;
+}
+
+Bool MapEval(Map *map, Context *context, Stack *stack) {
+    Map *eval = MapCreate(map->count);
+    for (Integer32 index = 0; index < map->count; index += 1) {
+        if (!ValueEval(map->pairs[index].key, context, stack))
+            goto out;
+        eval->pairs[index].key = StackPopValue(stack);
+        if (!ValueEval(map->pairs[index].value, context, stack))
+            goto out;
+        eval->pairs[index].value = StackPopValue(stack);
+    }
+    Value *value = ValueCreateMap(eval);
+    StackReplaceTop(stack, value);
+    return TRUE;
+
+out:
+    MapDealloc(eval);
+    return FALSE;
 }

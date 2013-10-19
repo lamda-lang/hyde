@@ -32,36 +32,56 @@ static void IdentifierDealloc(Identifier *id, Integer32 count) {
     MemoryDealloc(id);
 }
 
-static Component *IdentifierDecodeComponent(Binary *binary, Integer32 *offset) {
+static Bool IdentifierDecodeComponent(Binary *binary, Integer32 *offset, Component **component) {
     Integer8 length;
     if (!BinaryDecodeInteger8(binary, offset, &length))
-        return NULL;
-    Component *component = IdentifierCreateComponent(length);
+        return FALSE;
+    *component = IdentifierCreateComponent(length);
     for (Integer8 index = 0; index < length; index += 1)
-        if (!BinaryDecodeInteger8(binary, offset, component->codepoints + index))
+        if (!BinaryDecodeInteger8(binary, offset, (*component)->codepoints + index))
             goto out;
-    return component;
+    return TRUE;
 
 out:
-    IdentifierDeallocComponent(component);
-    return NULL;
+    IdentifierDeallocComponent(*component);
+    return FALSE;
 }
 
-Value *IdentifierDecode(Binary *binary, Integer32 *offset) {
+Bool IdentifierDecodePrimitive(Binary *binary, Integer32 *offset, Identifier **id) {
     Integer8 count;
     if (!BinaryDecodeInteger8(binary, offset, &count))
-        return NULL;
-    Identifier *id = IdentifierCreate(count);
+        return FALSE;
+    *id = IdentifierCreate(count);
     Integer8 index = 0;
     while (index < count) {
-        Component *component = IdentifierDecodeComponent(binary, offset);
-        if (component == NULL)
+        Component *component;
+        if (!IdentifierDecodeComponent(binary, offset, &component))
             goto out;
         index += 1;
     }
-    return ValueCreateIdentifier(id);
+    return TRUE;
 
 out:
-    IdentifierDealloc(id, index);
-    return NULL;
+    IdentifierDealloc(*id, index);
+    return FALSE;
+}
+
+Bool IdentifierDecode(Binary *binary, Integer32 *offset, Value **value) {
+    Identifier *id;
+    if (!IdentifierDecodePrimitive(binary, offset, &id))
+        return FALSE;
+    *value = ValueCreateIdentifier(id);
+    return TRUE;
+}
+
+Bool IdentifierEval(Identifier *id, Context *context, Stack *stack) {
+    Value *value = ContextGetValueForIdentifier(context, id);
+    if (value == NULL)
+        goto out;
+    StackReplaceTop(stack, value);
+    return TRUE;
+
+out:
+    StackPushValue(stack, ExceptionIdentifierUnbound(stack));
+    return FALSE;
 }

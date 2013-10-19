@@ -10,11 +10,12 @@ static Value *FloatCreate(Float64 value) {
     return ValueCreateFloat(fpn);
 }
 
-Value *FloatDecode(Binary *binary, Integer32 *offset) {
-    Float64 value;
-    if (!BinaryDecodeFloat64(binary, offset, &value))
-        return NULL;
-    return FloatCreate(value);
+Bool FloatDecode(Binary *binary, Integer32 *offset, Value **value) {
+    Float64 data;
+    if (!BinaryDecodeFloat64(binary, offset, &data))
+        return FALSE;
+    *value = FloatCreate(data);
+    return TRUE;
 }
 
 Value *FloatEqual(Float *fpn, Float *other) {

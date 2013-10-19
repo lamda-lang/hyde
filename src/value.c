@@ -5,37 +5,26 @@ enum {
     BOOLEAN = 1,
     CASE = 2,
     DO = 3,
-    FLOAT = 4,
-    IDENTIFIER = 5,
-    INTEGER = 6,
-    LAMDA = 7,
-    LIST = 8,
-    MAP = 9,
-    MODULE = 10,
-    NIL = 11,
-    RANGE = 12,
+    EXCEPTION = 4,
+    FLOAT = 5,
+    IDENTIFIER = 6,
+    INTEGER = 7,
+    LAMDA = 8,
+    LIST = 9,
+    MAP = 10,
+    MODULE = 11,
+    NIL = 12,
     RESULT = 13,
     SET = 14,
     STRING = 15,
     TOKEN = 16,
-    TYPE = 17,
-    WHEN = 18
+    WHEN = 17
 };
 
 struct Value {
     void *primitive;
     Integer8 type;
 };
-
-Bool ValueEval(Value *value, Stack *stack) {
-    StackPushValue(stack, value);
-    switch (value->type) {
-    case LIST:
-        return ListEval(value->primitive, stack);
-    default:
-        return TRUE;
-    }
-}
 
 static Value *ValueCreate(Integer8 type, void *primitive) {
     Value *value = MemoryAllocUnit(sizeof(Value));
@@ -46,8 +35,36 @@ static Value *ValueCreate(Integer8 type, void *primitive) {
 
 static void *ValuePrimitive(Value *value, Integer8 type) {
     if (value->type != type)
-        abort();
+        return NULL;
     return value->primitive;
+}
+
+Bool ValueEval(Value *value, Context *context, Stack *stack) {
+    StackPushValue(stack, value);
+    switch (value->type) {
+    case CASE:
+        return CaseEval(value->primitive, context, stack);
+    case EXCEPTION:
+        return FALSE;
+    case IDENTIFIER:
+        return IdentifierEval(value->primitive, context, stack);
+    case LAMDA:
+        return LamdaEval(value->primitive, context, stack);
+    case LIST:
+        return ListEval(value->primitive, context, stack);
+    case MAP:
+        return MapEval(value->primitive, context, stack);
+    case MODULE:
+        return ModuleEval(value->primitive, context, stack);
+    case RESULT:
+        return ResultEval(value->primitive, context, stack);
+    case SET:
+        return SetEval(value->primitive, context, stack);
+    case WHEN:
+        return WhenEval(value->primitive, context, stack);
+    default:
+        return TRUE;
+    }
 }
 
 Value *ValueCreateBinary(Binary *binary) {
@@ -64,6 +81,10 @@ Value *ValueCreateCase(Case *block) {
 
 Value *ValueCreateDo(Do *block) {
     return ValueCreate(DO, block);
+}
+
+Value *ValueCreateException(Exception *exception) {
+    return ValueCreate(EXCEPTION, exception);
 }
 
 Value *ValueCreateFloat(Float *fpn) {
@@ -98,10 +119,6 @@ Value *ValueCreateNil(Nil *nil) {
     return ValueCreate(NIL, nil);
 }
 
-Value *ValueCreateRange(Range *range) {
-    return ValueCreate(RANGE, range);
-}
-
 Value *ValueCreateResult(Result *result) {
     return ValueCreate(RESULT, result);
 }
@@ -116,10 +133,6 @@ Value *ValueCreateString(String *string) {
 
 Value *ValueCreateToken(Token *token) {
     return ValueCreate(TOKEN, token);
-}
-
-Value *ValueCreateType(Type *type) {
-    return ValueCreate(TYPE, type);
 }
 
 Value *ValueCreateWhen(When *block) {
@@ -174,10 +187,6 @@ Nil *ValueNilPrimitive(Value *value) {
     return ValuePrimitive(value, NIL);
 }
 
-Range *ValueRangePrimitive(Value *value) {
-    return ValuePrimitive(value, RANGE);
-}
-
 Result *ValueResultPrimitive(Value *value) {
     return ValuePrimitive(value, RESULT);
 }
@@ -192,10 +201,6 @@ String *ValueStringPrimitive(Value *value) {
 
 Token *ValueTokenPrimitive(Value *value) {
     return ValuePrimitive(value, TOKEN);
-}
-
-Type *ValueTypePrimitive(Value *value) {
-    return ValuePrimitive(value, TYPE);
 }
 
 When *ValueWhenPrimitive(Value *value) {

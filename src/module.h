@@ -3,6 +3,7 @@
 
 #include "runtime.h"
 
-Value *ModuleDecode(Binary *binary, Integer32 *offset);
+Bool ModuleDecode(Binary *binary, Integer32 *offset, Value **value);
+Bool ModuleEval(Module *module, Context *context, Stack *stack);
 
 #endif

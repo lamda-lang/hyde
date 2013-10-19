@@ -30,6 +30,7 @@ typedef double Float64;
 typedef struct Binary Binary;
 typedef struct Boolean Boolean;
 typedef struct Case Case;
+typedef struct Context Context;
 typedef struct Do Do;
 typedef struct Exception Exception;
 typedef struct Float Float;
@@ -41,19 +42,18 @@ typedef struct List List;
 typedef struct Map Map;
 typedef struct Module Module;
 typedef struct Nil Nil;
-typedef struct Range Range;
 typedef struct Result Result;
 typedef struct Set Set;
 typedef struct Stack Stack;
 typedef struct String String;
 typedef struct Token Token;
-typedef struct Type Type;
 typedef struct Value Value;
 typedef struct When When;
 
 #include "binary.h"
 #include "boolean.h"
 #include "case.h"
+#include "context.h"
 #include "do.h"
 #include "exception.h"
 #include "float.h"
@@ -66,13 +66,11 @@ typedef struct When When;
 #include "memory.h"
 #include "module.h"
 #include "nil.h"
-#include "range.h"
 #include "result.h"
 #include "set.h"
 #include "stack.h"
 #include "string.h"
 #include "token.h"
-#include "type.h"
 #include "value.h"
 #include "when.h"
 
