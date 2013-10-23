@@ -6,6 +6,8 @@ struct Result {
     Value *args[];
 };
 
+static Value *args[256] = {NULL};
+
 static Result *ResultCreate(Integer8 count) {
     Result *result = MemoryAllocRegion(sizeof(Result), sizeof(Value *), count);
     result->count = count;
@@ -36,4 +38,15 @@ Bool ResultDecode(Binary *binary, Integer32 *offset, Value **value) {
 out:
     ResultDealloc(result);
     return FALSE;
+}
+
+Bool ResultEqual(Result *result, Result *other) {
+    if (result->count != other->count)
+        return FALSE;
+    if (!ValueEqual(result->target, other->target))
+        return FALSE;
+    for (Integer8 index = 0; index < result->count; index += 1)
+        if (!ValueEqual(result->args[index], other->args[index]))
+            return FALSE;
+    return TRUE;
 }

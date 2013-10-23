@@ -47,6 +47,15 @@ out:
     return FALSE;
 }
 
+static Bool IdentifierEqualComponent(Component *component, Component *other) {
+    if (component->length != other->length)
+        return FALSE;
+    for (Integer8 index = 0; index < component->length; index += 1)
+        if (component->codepoints[index] != other->codepoints[index])
+            return FALSE;
+    return TRUE;
+}
+
 Bool IdentifierDecodePrimitive(Binary *binary, Integer32 *offset, Identifier **id) {
     Integer8 count;
     if (!BinaryDecodeInteger8(binary, offset, &count))
@@ -84,4 +93,13 @@ Bool IdentifierEval(Identifier *id, Context *context, Stack *stack) {
 out:
     StackPushValue(stack, ExceptionIdentifierUnbound(stack));
     return FALSE;
+}
+
+Bool IdentifierEqual(Identifier *id, Identifier *other) {
+    if (id->count != other->count)
+        return FALSE;
+    for (Integer8 index = 0; index < id->count; index += 1)
+        if (!IdentifierEqualComponent(id->components[index], other->components[index]))
+            return FALSE;
+    return TRUE;
 }

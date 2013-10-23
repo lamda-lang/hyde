@@ -62,3 +62,15 @@ Bool DoExecute(Do *block, Context *context, Stack *stack) {
     StackReplaceTop(stack, value);
     return TRUE;
 }
+
+Bool DoEqual(Do *block, Do *other) {
+    if (block->count != other->count)
+        return FALSE;
+    for (Integer32 index = 0; index < block->count; index += 1) {
+        if (!IdentifierEqual(block->statements[index].name, other->statements[index].name))
+            return FALSE;
+        if (!ValueEqual(block->statements[index].value, other->statements[index].value))
+            return FALSE;
+    }
+    return TRUE;
+}

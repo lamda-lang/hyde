@@ -9,7 +9,7 @@ typedef struct {
 struct Module {
     Integer32 count;
     Definition definitions[];
-};
+}; 
 
 static Module *ModuleCreate(Integer32 count) {
     Module *module = MemoryAllocRegion(sizeof(Module), sizeof(Definition), count);
@@ -58,5 +58,22 @@ Bool ModuleDecode(Binary *binary, Integer32 *offset, Value **value) {
     if (!ModuleDecodePrimitive(binary, offset, &module))
         return FALSE;
     *value = ValueCreateModule(module);
+    return TRUE;
+}
+
+Bool ModuleEval(Module *module, Context *context, Stack *stack) {
+}
+
+Bool ModuleEqual(Module *module, Module *other) {
+    if (module->count != other->count)
+        return FALSE;
+    for (Integer32 index = 0; index < module->count; index += 1) {
+        if (!IdentifierEqual(module->definitions[index].name, other->definitions[index].name))
+            return FALSE;
+        if (!ValueEqual(module->definitions[index].value, other->definitions[index].value))
+            return FALSE;
+        if (!ModuleEqual(module->definitions[index].local, other->definitions[index].local))
+            return FALSE;
+    }
     return TRUE;
 }

@@ -5,5 +5,6 @@
 
 Bool ModuleDecode(Binary *binary, Integer32 *offset, Value **value);
 Bool ModuleEval(Module *module, Context *context, Stack *stack);
+Bool ModuleEqual(Module *module, Module *other);
 
 #endif

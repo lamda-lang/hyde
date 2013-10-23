@@ -49,3 +49,12 @@ out:
     SetDealloc(eval);
     return FALSE;
 }
+ 
+Bool SetEqual(Set *set, Set *other) {
+    if (set->count != other->count)
+        return FALSE;
+    for (Integer32 index = 0; index < set->count; index += 1)
+        if (!ValueEqual(set->values[index], other->values[index]))
+            return FALSE;
+    return TRUE;
+}

@@ -5,5 +5,6 @@
 
 Bool DoDecode(Binary *binary, Integer32 *offset, Value **value);
 Bool DoEval(Do *block, Context *context, Stack *stack);
+Bool DoEqual(Do *block, Do *other);
 
 #endif

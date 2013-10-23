@@ -5,5 +5,6 @@
 
 Bool SetDecode(Binary *binary, Integer32 *offset, Value **value);
 Bool SetEval(Set *set, Context *context, Stack *stack);
+Bool SetEqual(Set *set, Set *other);
 
 #endif

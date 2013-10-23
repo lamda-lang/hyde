@@ -5,5 +5,6 @@
 
 Bool WhenDecode(Binary *binary, Integer32 *offset, Value **value);
 Bool WhenEval(When *block, Context *context, Stack *stack);
+Bool WhenEqual(When *block, When *other);
 
 #endif

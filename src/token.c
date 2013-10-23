@@ -33,3 +33,12 @@ out:
     TokenDealloc(token);
     return FALSE;
 }
+
+Bool TokenEqual(Token *token, Token *other) {
+    if (token->length != other->length)
+        return FALSE;
+    for (Integer8 index = 0; index < token->length; index += 1)
+        if (token->codepoints[index] != other->codepoints[index])
+            return FALSE;
+    return TRUE;
+}

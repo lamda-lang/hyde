@@ -9,16 +9,17 @@ enum {
     FLOAT = 5,
     IDENTIFIER = 6,
     INTEGER = 7,
-    LAMDA = 8,
-    LIST = 9,
-    MAP = 10,
-    MODULE = 11,
-    NIL = 12,
-    RESULT = 13,
-    SET = 14,
-    STRING = 15,
-    TOKEN = 16,
-    WHEN = 17
+    KERNEL = 8,
+    LAMDA = 9,
+    LIST = 10,
+    MAP = 11,
+    MODULE = 12,
+    NIL = 13,
+    RESULT = 14,
+    SET = 15,
+    STRING = 16,
+    TOKEN = 17,
+    WHEN = 18
 };
 
 struct Value {
@@ -67,6 +68,57 @@ Bool ValueEval(Value *value, Context *context, Stack *stack) {
     }
 }
 
+Bool ValueEqual(Value *value, Value *other) {
+    if (value->type != other->type)
+        return FALSE;
+    switch (value->type) {
+    case BINARY:
+        return BinaryEqual(value->primitive, other->primitive);
+    case BOOLEAN:
+        return BooleanEqual(value->primitive, other->primitive);
+    case CASE:
+        return CaseEqual(value->primitive, other->primitive);
+    case DO:
+        return DoEqual(value->primitive, other->primitive);
+    case EXCEPTION:
+        return ExceptionEqual(value->primitive, other->primitive);
+    case FLOAT:
+        return FloatEqual(value->primitive, other->primitive);
+    case IDENTIFIER:
+        return IdentifierEqual(value->primitive, other->primitive);
+    case INTEGER:
+        return IntegerEqual(value->primitive, other->primitive);
+    case KERNEL:
+        return KernelEqual(value->primitive, other->primitive);
+    case LAMDA:
+        return LamdaEqual(value->primitive, other->primitive);
+    case LIST:
+        return ListEqual(value->primitive, other->primitive);
+    case MAP:
+        return MapEqual(value->primitive, other->primitive);
+    case MODULE:
+        return ModuleEqual(value->primitive, other->primitive);
+    case NIL:
+        return TRUE;
+    case RESULT:
+        return ResultEqual(value->primitive, other->primitive);
+    case SET:
+        return SetEqual(value->primitive, other->primitive);
+    case STRING:
+        return StringEqual(value->primitive, other->primitive);
+    case TOKEN:
+        return TokenEqual(value->primitive, other->primitive);
+    case WHEN:
+        return WhenEqual(value->primitive, other->primitive);
+    default:
+        return FALSE;
+    }
+}
+
+Bool ValueIsTrue(Value *value) {
+    return value->type == BOOLEAN && BooleanTruth(value->primitive);
+}
+
 Value *ValueCreateBinary(Binary *binary) {
     return ValueCreate(BINARY, binary);
 }
@@ -97,6 +149,10 @@ Value *ValueCreateIdentifier(Identifier *id) {
 
 Value *ValueCreateInteger(Integer *integer) {
     return ValueCreate(INTEGER, integer);
+}
+
+Value *ValueCreateKernel(Kernel *kernel) {
+    return ValueCreate(KERNEL, kernel);
 }
 
 Value *ValueCreateLamda(Lamda *lamda) {
@@ -165,6 +221,10 @@ Identifier *ValueIdentifierPrimitive(Value *value) {
 
 Integer *ValueIntegerPrimitive(Value *value) {
     return ValuePrimitive(value, INTEGER);
+}
+
+Kernel *ValueKernelPrimitive(Value *value) {
+    return ValuePrimitive(value, KERNEL);
 }
 
 Lamda *ValueLamdaPrimitive(Value *value) {

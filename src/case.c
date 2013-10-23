@@ -79,3 +79,19 @@ Bool CaseEval(Case *block, Context *context, Stack *stack) {
     StackPushValue(stack, exception);
     return FALSE;
 }
+
+Bool CaseEqual(Case *block, Case *other) {
+    if (block->count != other->count)
+        return FALSE;
+    if (!ValueEqual(block->arg, other->arg))
+        return FALSE;
+    for (Integer32 index = 0; index < block->count; index += 1) {
+        if (!ValueEqual(block->clauses[index].match, other->clauses[index].match))
+            return FALSE;
+        if (!ValueEqual(block->clauses[index].guard, other->clauses[index].guard))
+            return FALSE;
+        if (!ValueEqual(block->clauses[index].value, other->clauses[index].value))
+            return FALSE;
+    }
+    return TRUE;
+}

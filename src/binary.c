@@ -141,11 +141,11 @@ Bool BinaryDecode(Binary *binary, Integer32 *offset, Value **value) {
     return TRUE;
 }
 
-Value *BinaryEqual(Binary *binary, Binary *other) {
+Bool BinaryEqual(Binary *binary, Binary *other) {
     if (binary->count != other->count)
-        return BooleanCreate(FALSE);
+        return FALSE;
     for (Integer32 index = 0; index < binary->count; index += 1)
         if (binary->bytes[index] != other->bytes[index])
-            return BooleanCreate(FALSE);
-    return BooleanCreate(TRUE);
+            return FALSE;
+    return TRUE;
 }

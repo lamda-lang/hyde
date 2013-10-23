@@ -17,3 +17,7 @@ Bool IntegerDecode(Binary *binary, Integer32 *offset, Value **value) {
     *value = IntegerCreate(data);
     return TRUE;
 }
+
+Bool IntegerEqual(Integer *integer, Integer *other) {
+    return integer->value == other->value;
+}

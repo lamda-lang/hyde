@@ -5,5 +5,6 @@
 
 Bool ListDecode(Binary *binary, Integer32 *offset, Value **value);
 Bool ListEval(List *list, Context *context, Stack *stack);
+Bool ListEqual(List *list, List *other);
 
 #endif

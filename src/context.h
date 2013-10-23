@@ -5,5 +5,6 @@
 
 void ContextSetValueForIdentifier(Context *context, Value *value, Identifier *id);
 Value *ContextGetValueForIdentifier(Context *context, Identifier *id);
+Bool ContextEqual(Context *context, Context *other);
 
 #endif

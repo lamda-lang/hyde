@@ -49,3 +49,16 @@ Bool LamdaEval(Lamda *lamda, Context *context, Stack *stack) {
     StackReplaceTop(stack, value);
     return TRUE;
 }
+
+Bool LamdaEqual(Lamda *lamda, Lamda *other) {
+    if (lamda->arity != other->arity)
+        return FALSE;
+    if (!ContextEqual(lamda->context, other->context))
+        return FALSE;
+    if (!ValueEqual(lamda->result, other->result))
+        return FALSE;
+    for (Integer8 index = 0; index < lamda->arity; index += 1)
+        if (!IdentifierEqual(lamda->args[index], other->args[index]))
+            return FALSE;
+    return TRUE;
+}

@@ -11,6 +11,6 @@ Bool BinaryDecodeFloat64(Binary *binary, Integer32 *offset, Float64 *value);
 Bool BinaryDecodeBool(Binary *binary, Integer32 *offset, Bool *value);
 Bool BinaryDecodeValue(Binary *binary, Integer32 *offset, Value **value);
 Bool BinaryDecode(Binary *binary, Integer32 *offset, Value **value);
-Value *BinaryEqual(Binary *binary, Binary *other);
+Bool BinaryEqual(Binary *binary, Binary *other);
 
 #endif

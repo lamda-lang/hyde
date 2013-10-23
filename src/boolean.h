@@ -4,7 +4,8 @@
 #include "runtime.h"
 
 Value *BooleanCreate(Bool truth);
+Bool BooleanTruth(Boolean *boolean);
 Bool BooleanDecode(Binary *binary, Integer32 *offset, Value **value);
-Value *BooleanEqual(Boolean *boolean, Boolean *other);
+Bool BooleanEqual(Boolean *boolean, Boolean *other);
 
 #endif

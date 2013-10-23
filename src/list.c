@@ -49,3 +49,12 @@ out:
     ListDealloc(eval);
     return FALSE;
 }
+
+Bool ListEqual(List *list, List *other) {
+    if (list->count != other->count)
+        return FALSE;
+    for (Integer32 index = 0; index < list->count; index += 1)
+        if (!ValueEqual(list->values[index], other->values[index]))
+            return FALSE;
+    return TRUE;
+}

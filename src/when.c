@@ -58,3 +58,15 @@ Bool WhenEval(When *block, Context *context, Stack *stack) {
     StackPushValue(stack, exception);
     return FALSE;
 }
+
+Bool WhenEqual(When *block, When *other) {
+    if (block->count != other->count)
+        return FALSE;
+    for (Integer32 index = 0; index < block->count; index += 1) {
+        if (!ValueEqual(block->clauses[index].condition, other->clauses[index].condition))
+            return FALSE;
+        if (!ValueEqual(block->clauses[index].value, other->clauses[index].value))
+            return FALSE;
+    }
+    return TRUE;
+}

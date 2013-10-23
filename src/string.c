@@ -33,3 +33,12 @@ out:
     StringDealloc(string);
     return FALSE;
 }
+
+Bool StringEqual(String *string, String *other) {
+    if (string->length != other->length)
+        return FALSE;
+    for (Integer32 index = 0; index < string->length; index += 1)
+        if (string->codepoints[index] != other->codepoints[index])
+            return FALSE;
+    return TRUE;
+}
